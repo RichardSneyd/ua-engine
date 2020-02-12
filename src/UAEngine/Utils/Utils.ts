@@ -73,25 +73,10 @@ export enum SubType {
     IMAGES, TEXT, IMAGES_TEXT
 }
 
-export default class Utils {
-    public static basicFont: object = { font: "55px 'gothic'", fill: "#fff", align: "left" };
-    public static darkSmall: object = { font: "bolder 22px 'gothic'", fill: "#000000", align: "left" };
-    public static basicFontWhite: object = { font: "bolder 45px 'gothic'", fill: "#B7CAFF", align: "left" };
-    public static whiteSmall: object = { font: "bolder 32px 'gothic'", fill: "#B7CAFF", align: "left" };
-    public static highlightFont: object = { font: "50px 'gothic'", fill: "#114ba3", align: "left" };
-    public static basicFontDark: object = { font: "bolder 90px 'gothic'", fill: "#00769f", align: "left" };
-    public static basicFontYellow: object = { font: "bolder 130px 'gothic'", fill: "#ffff00", align: "left" };
-    public static fillColor: string = "#282828";
-    public static highlight: string = "#114ba3";
+class Utils {
+   
 
-    // return the index of the smallest number in array
-    public static indexOfSmallest(a) {
-        var lowest = 0;
-        for (var i = 1; i < a.length; i++) {
-            if (a[i] < a[lowest]) lowest = i;
-        }
-        return lowest;
-    }
+   
 
     /**
      * @description concatenate an array of strings, with a spacer substring. For no spacer, use ""
@@ -379,3 +364,4 @@ export default class Utils {
 
 }
 
+export default Utils;

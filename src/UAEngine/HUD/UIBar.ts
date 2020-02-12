@@ -1,9 +1,9 @@
 import UIButton, { ButtonConfig } from './UIButton';
 import { CONST } from '../../CONST/CONST';
-import Utils from '../Utils';
+import Utils from '../Utils/Utils';
 
 
-export default class UIBar extends Phaser.GameObjects.Sprite {
+class UIBar extends Phaser.GameObjects.Sprite {
      protected scene: Phaser.Scene;
     public buttons: Array<UIButton>;
     protected parent: Phaser.GameObjects.Container;
@@ -46,3 +46,5 @@ export default class UIBar extends Phaser.GameObjects.Sprite {
         this.nextArrow.play('continue_over');
     }
 }
+
+export default UIBar;

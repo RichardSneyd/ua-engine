@@ -26,7 +26,7 @@ export interface Vector2D {
     y: number;
 }
 
-export default class UIButton extends Phaser.GameObjects.Sprite {
+class UIButton extends Phaser.GameObjects.Sprite {
     callback: Function;
     callbackContext: any;
     animsConfig: ButtonAnimationConfig;
@@ -70,3 +70,5 @@ export default class UIButton extends Phaser.GameObjects.Sprite {
         }
     }
 }
+
+export default UIButton;
