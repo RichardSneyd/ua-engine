@@ -1,6 +1,6 @@
 import BaseComponent from "./BaseComponent";
 
-export default abstract class Componentable {
+abstract class Componentable {
     components: {};
 
     removeComponent(name: string){
@@ -17,3 +17,5 @@ export default abstract class Componentable {
         }
     }
 }
+
+export default Componentable;

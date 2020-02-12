@@ -1,7 +1,7 @@
 import _ = require("lodash");
 
 
-export default class SoundArray {
+class SoundArray {
     scene: Phaser.Scene;
     protected allFiles: string[] = [];
     activeSound: Phaser.Sound.BaseSound;
@@ -44,4 +44,6 @@ export default class SoundArray {
       this.destroyActive();
     }
 }
+
+export default SoundArray;
 

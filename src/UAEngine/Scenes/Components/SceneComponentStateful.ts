@@ -2,7 +2,7 @@ import BaseScene from "../BaseScene";
 import State from './State';
 import SceneComponent from "./SceneComponent";
 
-export default abstract class SceneComponentStateful extends SceneComponent {
+abstract class SceneComponentStateful extends SceneComponent {
     public abstract name: string;
 
     state: State;
@@ -10,3 +10,5 @@ export default abstract class SceneComponentStateful extends SceneComponent {
     public abstract update();
     
 }
+
+export default SceneComponentStateful;

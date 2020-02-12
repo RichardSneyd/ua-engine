@@ -1,4 +1,4 @@
-import SceneComponent from "./Behaviors/SceneComponent";
+//import SceneComponent from "./Behaviors/SceneComponent";
 import Componentable from "../Componentable";
 import Mixin from "../Mixin";
 

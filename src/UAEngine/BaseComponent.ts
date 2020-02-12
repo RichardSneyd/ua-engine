@@ -1,4 +1,5 @@
-export default abstract class BaseComponent {
+import BaseScene from './Scenes/BaseScene';
+abstract class BaseComponent {
     public name: string;
     enabled: boolean = false;
 
@@ -28,3 +29,5 @@ export default abstract class BaseComponent {
 
     protected abstract update();
 }
+
+export default BaseComponent;
