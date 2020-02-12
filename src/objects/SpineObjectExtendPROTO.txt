@@ -1,0 +1,44 @@
+///<reference path= '../game.ts' />
+namespace DemoClass {
+    // scene, pluginManager, x, y [, key] [, animationName] [, loop])
+    
+    export class SpineObject extends SpineGameObject {
+        constructor(scene: Phaser.Scene, x: number, y: number, key: string, animation?: string, loop?: boolean) {
+            // @ts-ignore
+            super(scene,  window.SpineWEBGLPlugin, x, y, key);
+            // @ts-ignore
+            scene.add.existing(this);
+        }
+    
+        public getAttachments() {
+            return this.skeleton.skin.attachments;
+        }
+    
+    
+        public getSlots() {
+    
+            return this.skeleton.slots;
+        }
+   /*  
+        public setAttachment(slotName: string, attachmentName: string) {
+    
+            this.skeleton.setAttachment(slotName, attachmentName)
+        } */
+    
+        public changeSkin(skinName: string) {
+            // @ts-ignore
+            this.setSkin(null);
+            // @ts-ignore
+            this.setSkinByName(skinName);
+        }
+    
+   /*      public setAnimation(animation: string, loop: boolean) {
+            // @ts-ignore
+            this.play(animation, loop);
+        } */
+    
+    
+    
+    
+    }
+}

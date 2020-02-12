@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+      "target": "es5",
+      "strict": false,
+      "watch": true,
+      "module": "commonjs",
+      "noImplicitAny": false,
+      "importHelpers": false,
+      "sourceMap": true,
+      "stripInternal": true,
+      "noUnusedLocals": false,
+      "esModuleInterop": false,
+      "experimentalDecorators": false,
+      "declaration": false,
+      "strictNullChecks": false,
+      "removeComments": true
+    },
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "node_modules"
+    ]
+  }

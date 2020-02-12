@@ -1,0 +1,20 @@
+
+starburst.png
+size: 766,503
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Glow
+  rotate: true
+  xy: 2, 2
+  size: 499, 505
+  orig: 643, 643
+  offset: 64, 82
+  index: -1
+Star0001
+  rotate: true
+  xy: 509, 236
+  size: 265, 255
+  orig: 349, 334
+  offset: 42, 41
+  index: -1
