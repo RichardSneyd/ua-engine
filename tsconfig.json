@@ -10,6 +10,7 @@
       "stripInternal": true,
       "noUnusedLocals": false,
       "esModuleInterop": false,
+      "allowSyntheticDefaultImports": true,
       "experimentalDecorators": false,
       "declaration": false,
       "strictNullChecks": false,

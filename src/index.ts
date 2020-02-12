@@ -1,11 +1,9 @@
-///<reference path='../types/spine.d.ts' />
-///<reference path='../types/phaser.d.ts' />
-///<reference path='../types/spine.plugin.d.ts' />
-
+import Phaser from 'phaser';
+import 'phaser/plugins/spine/dist/SpinePlugin';
 import * as _ from 'lodash';
 
 var config: Phaser.Types.Core.GameConfig = {
-  title: "demo-class",
+  title: "ua-engine",
   type: Phaser.AUTO,
   scene: [
    
@@ -16,8 +14,12 @@ var config: Phaser.Types.Core.GameConfig = {
     width: 1920,
     height: 1080,
     parent: 'phaser-game'
-  }
-
+  },
+  plugins: {
+		scene: [
+			{ key: 'SpinePlugin', plugin: window.SpinePlugin, mapping: 'spine' }
+		]
+	}
 }
 var game = new Phaser.Game(config);
 
