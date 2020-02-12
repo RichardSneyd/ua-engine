@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import Text from './Text';
 export const Transitions = {
     In: {
         SlideRight: {
@@ -73,191 +74,25 @@ export enum SubType {
     IMAGES, TEXT, IMAGES_TEXT
 }
 
+
 class Utils {
+    public static Text: Text; 
+
+
+    
    
-
-   
-
-    /**
-     * @description concatenate an array of strings, with a spacer substring. For no spacer, use ""
-     * @param array the array of strings to combine
-     * @param seperator the seperator substring to insert between entries. For no seperator, use ""
-     */
-    public static concatStrings(array: string[], seperator: string) : string {
-        let result: string = array[0];
-        for(let x = 1; x < array.length; x++) {
-            result = result + seperator + array[x];
-        }
-    //    console.log(result);
-        
-        return result;
-    }
-
-    public static getSceneKeys(scene: Phaser.Scene) : string[]{
-        let scenes = scene.scene.manager.getScenes(false);
-        let keys: string[] = [];
-        for(let x = 0; x < scenes.length; x++){
-            keys.push(scenes[x].scene.key);
-        }
-
-        return keys;
-    }
-
-    // tween tint a sprite from color X to color Y
-    public static tweenTint(spriteToTween: Phaser.GameObjects.Sprite, startColor: Phaser.Display.Color, endColor: Phaser.Display.Color, duration: number, scene: Phaser.Scene): void {
-        var colorBlend = { step: 0 };
-        let rgb = Phaser.Display.Color.Interpolate.ColorWithColor(startColor, endColor, 100);
-        let seed = "" + rgb.r + rgb.g + rgb.b;
-        scene.tweens.add({
-            tint: Number(seed),
-            targets: spriteToTween,
-            duration: duration
-        });
-    }
-
-
-
-    public static cleanUnravel(text: string, seperator: string): string[] {
-        return _.compact(text.replace(' ', '').split(seperator));
-    }
-
-    public static numberArray(start: number, finish: number): number[] {
-        let arr: number[] = [];
-
-        for (let x = start; x <= finish; x++)
-            arr.push(x);
-
-        return arr;
-    }
-
-    // return object in array OR array-like object (Object.keys implementation) with properties of specified values
-    public static findArrElWithPropVal(array: any[] | object, properties: string[], values: any[]): any {
-        let row: any = null;
-        if (Array.isArray(array)) {
-            //  console.trace('isArray');
-            elements: for (let x = 0; x < array.length; x++) {
-                props: for (let y = 0; y < properties.length; y++) {
-                    // console.trace(array[x][properties[y]] + ', ' + values[y]);
-                    if (array[x][properties[y]] === values[y]) {
-                        //   console.trace('matching pair at ' + y);
-                        if (y == properties.length - 1) {
-                            row = array[x];
-                            break elements;
-                        }
-                    }
-                    else {
-
-                        break props;
-                    }
-                }
-            }
-        }
-        else if (Object(array)) {
-            elements: for (let x = 0; x < Object.keys(array).length; x++) {
-                for (let y = 0; y < properties.length; y++) {
-
-                    if (array[x][properties[y]] == values[y]) {
-                        //   console.trace('matching pair at ' + y);
-                        if (y == properties.length - 1) {
-                            //   console.trace('found FULL match!');
-                            row = array[x];
-                            break elements;
-                        }
-                    }
-                }
-            }
-        } else {
-            //  console.trace('wrong type provided; array or object required');
-        }
-
-        if (row == null) {
-            console.trace('no match found for ' + properties.toString() + " & " + values.toString());
-        }
-
-        return row;
-    }
-
-    // return the number of rows that match the criteria
-    public static numElementsWithPropVal(array: any[] | object, properties: string[], values: any[]): number {
-        let count: number = 0;
-        if (Array.isArray(array)) {
-            elements: for (let x = 0; x < array.length; x++) {
-                props: for (let y = 0; y < properties.length; y++) {
-                    if (array[x][properties[y]] === values[y]) {
-                        if (y == properties.length - 1) {
-                            count++;
-                        }
-                    }
-                    else {
-                        break props;
-                    }
-                }
-            }
-        }
-        else if (Object(array)) {
-            elements: for (let x = 0; x < Object.keys(array).length; x++) {
-                for (let y = 0; y < properties.length; y++) {
-
-                    if (array[x][properties[y]] == values[y]) {
-                        if (y == properties.length - 1) {
-                            count++;
-                        }
-                    }
-                }
-            }
-        } else {
-            console.error('wrong type provided; array or object required');
-        }
-        return count;
-    }
-
-    public static allElementsWithPropVal(array: any[] | object, properties: string[], values: any[]): any[] {
-        let all: any[] = [];
-        if (Array.isArray(array)) {
-           // console.log('isArray');
-            elements: for (let x = 0; x < array.length; x++) {
-                props: for (let y = 0; y < properties.length; y++) {
-                   // console.log(array[x][properties[y]] + ', ' + values[y]);
-                    if (array[x][properties[y]] === values[y]) {
-                        if (y == properties.length - 1) {
-                            all.push(array[x]);
-                        }
-                    }
-                    else {
-                        break props;
-                    }
-                }
-            }
-        }
-        else if (Object(array)) {
-            elements: for (let x = 0; x < Object.keys(array).length; x++) {
-                for (let y = 0; y < properties.length; y++) {
-
-                    if (array[x][properties[y]] == values[y]) {
-                        if (y == properties.length - 1) {
-                            all.push(array[x]);
-                        }
-                    }
-                }
-            }
-        } else {
-            console.error('wrong type provided; array or object required');
-        }
-        return all;
-    }
-
     /**
      * @description a function to generate an array of objects from a column with 'stringified' tabular data. Use this for activity scripts with cells in columns which contain
      * more than one property, all baked into one string, with a : delineated, one line per property
      * @param array the array to pull the column from -- intended for object arrays generated from CSV files (tabular)
      * @param column the name of the column to generate objects from in the array
      */
-    public static objectizeColumn(array: any, column: string): any[] {
+    public static objectArrayifyScriptColumn(array: any, column: string): any[] {
         let arr: any[] = [];
         for (let x = 0; x < array.length; x++) {
             let text =array[x][column];
             if(text != ""){
-                arr.push(Utils.getObjFromRawText(text));
+                arr.push(Utils.objectifyScriptCell(text));
             }
             else {
                 arr.push({});
@@ -266,13 +101,22 @@ class Utils {
         return arr;
     }
 
-    // convert raw text into a javascript object, like properties in cell
-    public static getObjFromRawText(rawText: any): any {
+    /**
+     * @description generates an object with properties from a string, where each key-value pair is on a new line, colon assigns a value, and
+     * comma seperates multiple values.
+     * @param cellString the string that the cell was converted to from the Activity Script
+     */
+    public static objectifyScriptCell(cellString: string): object {
+        return this.propertiesFromString(cellString, '\n', ':', ',');
+    }
+
+
+    public static propertiesFromString(rawText: string, lineSeperator: string, valueAssigner: string, valueSeperator: string): object {
         let obj: object = {};
-        let lines: string[] = rawText.trim().split('\n');
+        let lines: string[] = rawText.trim().split(lineSeperator);
         for (let x = 0; x < lines.length; x++) {
-            let sublines = lines[x].split(':');
-            let vals = sublines[1].trim().split(',');
+            let sublines = lines[x].split(valueAssigner);
+            let vals = sublines[1].trim().split(valueSeperator);
             if (vals.length <= 1) {
                 obj[sublines[0]] = vals[0]
             }
@@ -283,6 +127,8 @@ class Utils {
 
         return obj;
     }
+
+
 
     // get the maximum fontSize to fit the with of the sprite object and set it such
     public static reduceTextToFit(text: Phaser.GameObjects.Text, obj: any, padding: number) {

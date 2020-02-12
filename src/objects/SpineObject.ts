@@ -1,4 +1,4 @@
-///<reference path= '../../types/phaser3-spine-plugin.d.ts' />
+///<reference path= '../../typings/phaser3-spine-plugin.d.ts' />
 
 import _ = require("lodash");
 

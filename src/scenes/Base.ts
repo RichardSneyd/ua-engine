@@ -1,8 +1,7 @@
-///<reference path='../../types/phaser.d.ts' />
+///<reference path='../../typings/phaser.d.ts' />
 
 import { CONST } from "../CONST/CONST";
-import Utils from "../Generic/Utils";
-import AudioManager from "../Generic/Audio/Manager";
+import UAE from 
 
 
 export default class Base extends Phaser.Scene {

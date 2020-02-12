@@ -10,8 +10,7 @@
     ],
     "dependencies": {
         "lodash": "^4.17.15",
-        "parcel-plugin-static-files-copy": "^2.2.1",
-        "phaser": "^3.19.0",
+        "phaser": "^3.22.0",
         "systemjs": "^6.1.1"
     },
     "devDependencies": {
