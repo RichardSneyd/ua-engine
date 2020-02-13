@@ -1,4 +1,5 @@
 class Colors {
+    private constructor() { }
 
     // tween tint a sprite from color X to color Y
     public static tweenTint(spriteToTween: Phaser.GameObjects.Sprite, startColor: Phaser.Display.Color, endColor: Phaser.Display.Color, duration: number, scene: Phaser.Scene): void {

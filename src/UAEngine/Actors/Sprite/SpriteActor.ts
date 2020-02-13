@@ -1,5 +1,5 @@
 import Actor from "../Actor";
-import Mixin from "../../Mixin";
+import Mixin from "../../Utils/Mixins";
 
 class SpriteActor extends Phaser.GameObjects.Sprite {
 

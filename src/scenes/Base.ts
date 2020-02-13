@@ -1,10 +1,10 @@
 ///<reference path='../../typings/phaser.d.ts' />
 
 import { CONST } from "../CONST/CONST";
-import UAE from 
+import Utils from "../UAEngine/Utils/Utils";
+//import UAE from 
 
-
-export default class Base extends Phaser.Scene {
+class Base extends Phaser.Scene {
     loadBg: Phaser.GameObjects.Sprite;
     loadbarBg: Phaser.GameObjects.Sprite;
     loadbarTime: Phaser.GameObjects.Sprite;
@@ -22,6 +22,7 @@ export default class Base extends Phaser.Scene {
 
     constructor(key: string) {
         super({ key: key, pack: Base.pack });
+        Utils.Text.
     }
     setFestival() {
         let festival = CONST.FESTIVAL;
@@ -113,3 +114,4 @@ export default class Base extends Phaser.Scene {
     }
 }
 
+export default Base;
