@@ -1,7 +1,7 @@
 ///<reference path='../../typings/phaser.d.ts' />
 
 import { CONST } from "../CONST/CONST";
-import Utils from "../UAEngine/Utils/Utils";
+import Utils from "../UAEngine/Utils";
 //import UAE from 
 
 class Base extends Phaser.Scene {
@@ -22,7 +22,6 @@ class Base extends Phaser.Scene {
 
     constructor(key: string) {
         super({ key: key, pack: Base.pack });
-        Utils.Text.
     }
     setFestival() {
         let festival = CONST.FESTIVAL;

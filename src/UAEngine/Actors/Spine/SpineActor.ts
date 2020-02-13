@@ -1,4 +1,4 @@
-import Componentable from '../../Componentable';
+import Componentable from '../../Components/Componentable';
 import Mixin from '../../Utils/Mixins';
 import Actor from '../Actor';
 

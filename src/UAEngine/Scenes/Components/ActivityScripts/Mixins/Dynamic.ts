@@ -1,6 +1,6 @@
-import ActivityScript from "./ActivityScript";
+import ActivityScript from "../ActivityScript";
 
-abstract class DynamicMixin extends ActivityScript {
+abstract class Dynamic extends ActivityScript {
     allRounds: any[];
     expiredRounds: any[];
     availableRounds: any[];
@@ -43,3 +43,5 @@ abstract class DynamicMixin extends ActivityScript {
     }
     
 }
+
+export default Dynamic;

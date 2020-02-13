@@ -1,5 +1,5 @@
 import ActorComponent from "./Components/ActorComponent";
-import Componentable from "../Componentable";
+import Componentable from "../Components/Componentable";
 
 abstract class Actor extends Componentable {
 

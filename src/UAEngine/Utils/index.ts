@@ -69,7 +69,9 @@ export const Transitions = {
     }
 }
 
-
+/**
+ * @description A Collection of Utility classes
+ */
 let Utils = {
     Text: Text,
     Scenes: Scenes,
