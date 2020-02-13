@@ -1,6 +1,6 @@
 //import SceneComponent from "./Behaviors/SceneComponent";
-import Componentable from "../Componentable";
-import Mixin from "../Mixin";
+import Componentable from "../Components/Componentable";
+import Mixin from "../Utils/Mixins";
 
 abstract class BaseScene extends Phaser.Scene{
    

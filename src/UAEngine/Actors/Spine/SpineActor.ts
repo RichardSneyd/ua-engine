@@ -1,5 +1,5 @@
-import Componentable from '../../Componentable';
-import Mixin from '../../Mixin';
+import Componentable from '../../Components/Componentable';
+import Mixin from '../../Utils/Mixins';
 import Actor from '../Actor';
 
 class SpineActor extends Actor {

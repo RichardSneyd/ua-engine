@@ -1,4 +1,4 @@
-import BaseComponent from "../../BaseComponent";
+import BaseComponent from "../../Components/BaseComponent";
 import Actor from "../Actor";
 
 abstract class ActorComponent extends BaseComponent {

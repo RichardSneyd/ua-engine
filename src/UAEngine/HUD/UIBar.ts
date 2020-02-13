@@ -1,6 +1,6 @@
 import UIButton, { ButtonConfig } from './UIButton';
 import { CONST } from '../../CONST/CONST';
-import Utils from '../Utils/Utils';
+import Utils from '../Utils';
 
 
 class UIBar extends Phaser.GameObjects.Sprite {

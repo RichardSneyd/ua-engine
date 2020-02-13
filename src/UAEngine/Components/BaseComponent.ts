@@ -1,4 +1,5 @@
-import BaseScene from './Scenes/BaseScene';
+import BaseScene from '../Scenes/BaseScene';
+
 abstract class BaseComponent {
     public name: string;
     enabled: boolean = false;

@@ -1,7 +1,7 @@
 // use this to implement multiple inheritance functionality where necessary, via Mixin pattern
 // use interfaces to allow resulting objects to be used as the mixin type, and intellisense
 
-class Mixin {
+class Mixins {
     private constructor(){}
 
     public static applyMixins(derivedCtor: any, baseCtors: any[]) {
@@ -13,4 +13,4 @@ class Mixin {
     }
 }
 
-export default Mixin;
+export default Mixins;
