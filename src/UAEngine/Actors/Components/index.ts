@@ -1,7 +1,8 @@
+import ActorComponent from "./ActorComponent";
 
 
-let Components = {
-    
+const Components = {
+    ActorComponent: ActorComponent
 }
 
 export default Components;

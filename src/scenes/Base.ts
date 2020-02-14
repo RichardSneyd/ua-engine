@@ -2,6 +2,8 @@
 
 import { CONST } from "../CONST/CONST";
 import Utils from "../UAEngine/Utils";
+import UAE from '../UAEngine';
+
 //import UAE from 
 
 class Base extends Phaser.Scene {
@@ -22,6 +24,7 @@ class Base extends Phaser.Scene {
 
     constructor(key: string) {
         super({ key: key, pack: Base.pack });
+        
     }
     setFestival() {
         let festival = CONST.FESTIVAL;

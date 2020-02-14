@@ -1,6 +1,6 @@
 import BaseScene from "../BaseScene";
 import SceneBehaviorState from './State';
-import BaseComponent from "../../Components/BaseComponent";
+import BaseComponent from '../../Components/BaseComponent';
 
 abstract class SceneComponent extends BaseComponent {
     public abstract name: string;

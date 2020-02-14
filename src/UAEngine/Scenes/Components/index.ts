@@ -1,10 +1,11 @@
-import ActivityScripts from './ActivityScripts/index';
+import ActivityScripts from './ActivityScripts';
+import SceneComponent from './SceneComponent';
 
 /**
  * @description a collection of Scene Component related base classes and mixins
  */
 
- let Components = {
+ const Components = {
     ActivityScripts: ActivityScripts,
     SceneComponent: SceneComponent,
  }
