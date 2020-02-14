@@ -118,4 +118,36 @@ class Collections {
         return all;
     }
 
+    static getUniqValsFromArrays(rows: any, arrs: string[]): string[] {
+        let all: string[] = [];
+        for (let x = 0; x < arrs.length; x++) {
+            if (_.has(rows[0], arrs[x])) {
+                for (let y = 0; y < rows.length; y++) {
+                    all = all.concat(rows[y][arrs[x]].trim().split(','));
+                }
+            }
+            else {
+                console.warn('no col with name ' + arrs[x]);
+            }
+
+        }
+
+        all = _.uniq(all);
+        all = _.compact(all);
+
+        return all;
+    }
+
+      // shuffle any array and return
+      public static shuffle(a) {
+        let j, x, i;
+        for (i = a.length - 1; i > 0; i--) {
+            j = Math.floor(Math.random() * (i + 1));
+            x = a[i];
+            a[i] = a[j];
+            a[j] = x;
+        }
+        return a;
+    }
+
 }

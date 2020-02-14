@@ -2,7 +2,7 @@ import BaseComponent from "./BaseComponent";
 import Componentable from "./Componentable";
 
 
-let Components = {
+const Components = {
     BaseComponent: BaseComponent,
     Componentable: Componentable
 }

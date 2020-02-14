@@ -1,10 +1,10 @@
-import Components from './Components/index';
+import Components from './Components';
 import BaseScene from './BaseScene';
 
 /**
  * @description A collection of Scene related classes
  */
-let Scenes = {
+const Scenes = {
     Components: Components,
     BaseScene: BaseScene,
 }

@@ -1,7 +1,7 @@
 import ActivityScript from './ActivityScript';
-import Mixins from '../../../Utils/Mixins';
+import Mixins from './Mixins';
 
-let ActivityScripts = {
+const ActivityScripts = {
     ActivityScript: ActivityScript,
     Mixins: Mixins
 }
