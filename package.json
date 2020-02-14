@@ -1,5 +1,5 @@
 {
-    "name": "au-engine",
+    "name": "ua-engine",
     "main": "src/index.ts",
     "scripts": {
         "dev": "parcel src/index.ts -o main.js",
