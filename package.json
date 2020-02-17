@@ -1,5 +1,11 @@
 {
     "name": "ua-engine",
+    "license": "ISC",
+    "version": "1.0.0",
+    "author": "Richard Sneyd",
+    "repository": {
+        "url": "git+github.com:RichardSneyd/ua-engine.git"
+    },
     "main": "src/index.ts",
     "scripts": {
         "dev": "parcel src/index.ts -o main.js",

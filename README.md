@@ -6,3 +6,5 @@ One of the core goals is to make it almost unnecessary for the 'client' (the pro
 
 This has several key advantages; it allows for the seperation of concerns (single purpose for each object), and minimizes code duplication; it simplifies the creation of activity types for these products; creates a common programming framework (universality and homogeny); and seperate the business logic more completely from the lower level code; This means that, theoretically, were it necessary,the engine could be alterned in the future to output to a different HTML framework.
 
+## Installing through NPM
+UA Engine os available on NPM. To install, simply run *npm install ua-engine*. 

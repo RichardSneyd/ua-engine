@@ -22,11 +22,5 @@ const Utils = {
     Scenes: Scenes,
     Text: Text,
 }
-class UtilsOld {
-    
-    private constructor() { }
-
-
-}
 
 export default Utils;
