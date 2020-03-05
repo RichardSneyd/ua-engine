@@ -8,16 +8,20 @@ import Components from "./Components";
 import Spine from "./Spine";
 import Sprite from "./Sprite";
 import Actor from './Actor';
+import Shapes from './Shapes';
+import TextPackage from "./Text";
 
 /**
  * @namespace UAEngine.Actors
  * @description the Actors module houses all classes and modules related to actors of all kinds
  */
 const Actors = {
+    Actor: Actor,
     Components: Components,
+    Shapes: Shapes,
     Spine: Spine,
     Sprite: Sprite,
-    Actor: Actor
+    Text: TextPackage
 }
 
 export default Actors;

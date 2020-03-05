@@ -13,6 +13,8 @@ import Actors from "./Actors";
 import GUI from './GUI/index';
 import Audio from './Audio';
 import Game from './Game';
+import Graphics from './Shapes';
+import MathPackage from './Math';
 
 /**
  * @namespace UAEngine
@@ -23,7 +25,9 @@ let UAEngine = {
     Audio: Audio,
     Components: Components,
     Game: Game,
+    Graphics: Graphics,
     GUI: GUI,
+    Math: MathPackage,
     Scenes: Scenes,
     Utils: Utils
 }
