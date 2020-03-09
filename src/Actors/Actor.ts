@@ -10,4 +10,3 @@ abstract class Actor extends Componentable {
 }
 
 export default Actor;
-
