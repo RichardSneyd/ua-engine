@@ -10,7 +10,7 @@ class Game {
   }
 
   public startGame() {
-    this._world.init(500, 500);
+    this._world.init(800, 800);
 
     this._world.startLevel(this._mainLevel);
     

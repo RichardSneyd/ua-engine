@@ -5,16 +5,28 @@ class Loader {
   private _resource: Resource; _imgLoader: IImgLoader;
   private _imgList: Resource[];
 
+  private _base: string;
+
+  get base(): string {
+    return this._base;
+  }
+
+  set base(base: string) {
+    this._base = base;
+  }
+
   constructor(resource: Resource, imgLoader: IImgLoader) {
     this._resource = resource;
     this._imgLoader = imgLoader;
+
+    this._base = "";
 
     this._imgList = [];
   }
 
   addImage(url: string) {
     let res = this._createResource();
-    res.initImage(url, false);
+    res.initImage(this._base + url, false);
 
     this._imgList.push(res);
   }
@@ -51,7 +63,8 @@ class Loader {
 
   private _downloadImages() {
     let urlList = this._getUrls(this._imgList);
-    this._imgLoader.loadImages(urlList, this._imgDone, this._imgLoaded, this);
+    this._imgLoader.loadImages(urlList, this._imgLoaded, this._imgDone, this);
+    this._imgLoader.download();
   }
 }
 

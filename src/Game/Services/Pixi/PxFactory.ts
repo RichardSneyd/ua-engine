@@ -1,4 +1,4 @@
-import {Application} from 'pixi.js';
+import {Application, Loader} from 'pixi.js';
 
 class PxFactory {
   constructor() {
@@ -10,6 +10,10 @@ class PxFactory {
       width: w,
       height: h
     });
+  }
+
+  public createLoader(): Loader {
+    return new Loader();
   }
 }
 

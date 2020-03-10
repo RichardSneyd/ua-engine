@@ -21,6 +21,7 @@ import Screen        from        '../Game/Services/Screen';
   //Pixi
   import PxFactory   from        '../Game/Services/Pixi/PxFactory';
   import PxGame      from        '../Game/Services/Pixi/PxGame';
+  import PxLoader    from        '../Game/Services/Pixi/PxLoader';
 
 
 class ControlContainer {
@@ -31,7 +32,7 @@ class ControlContainer {
   private _mainLevel: any;
 
   private _screen: any; _imgLoader:any; _objectHandler: any;
-  private _pxFactory: any; _pxGame: any;
+  private _pxFactory: any; _pxGame: any; _pxLoader: any;
 
   constructor() {
     this._smartDepend = new SmartDepend();
@@ -68,6 +69,7 @@ class ControlContainer {
         //Pixi
           this._pxFactory     = this._smartDepend.addModule(PxFactory, false);
           this._pxGame        = this._smartDepend.addModule(PxGame, true);
+          this._pxLoader      = this._smartDepend.addModule(PxLoader, true);
 
 
   }
@@ -94,9 +96,13 @@ class ControlContainer {
         this._smartDepend.addDependency(this._mainLevel, this._loader);
 
       //Services
+      this._smartDepend.addDependency(this._imgLoader, this._pxLoader);
+
       this._smartDepend.addDependency(this._screen, this._pxGame);
         //Pixi
         this._smartDepend.addDependency(this._pxGame, this._pxFactory);
+
+        this._smartDepend.addDependency(this._pxLoader, this._pxFactory);
   }
 
 }
