@@ -51,7 +51,7 @@ class Loader {
 
   private _downloadImages() {
     let urlList = this._getUrls(this._imgList);
-    this._imgLoader.loadImages(urlList, this._imgDone, this._imgLoaded, this);
+    this._imgLoader.loadImages(urlList, this._imgLoaded, this._imgDone, this);
   }
 }
 
