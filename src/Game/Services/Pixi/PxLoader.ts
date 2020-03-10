@@ -1,15 +1,13 @@
 import {Loader} from 'pixi.js';
 
 import PxFactory from './PxFactory';
-import Resource from '../../Core/Data/Resource';
 
 class PxLoader {
-  private _pxFactory: PxFactory; _resource: Resource;
+  private _pxFactory: PxFactory;;
   private _loader: Loader;
 
-  constructor(pxFactory: PxFactory, resource: Resource) {
+  constructor(pxFactory: PxFactory) {
     this._pxFactory = pxFactory;
-    this._resource = resource;
 
     this._loader = this._createLoader();
   }
@@ -22,9 +20,8 @@ class PxLoader {
     this._loader.onComplete.add(onComplete);
   }
 
-  public addImages(images: Resource[]) {
-    let imageList = this._createImageList(images);
-    this._loader.add(imageList);
+  public addImages(images: string[]) {
+    this._loader.add(images);
   }
 
   public download() {
@@ -35,17 +32,6 @@ class PxLoader {
   //Foreign dependencies
   private _createLoader(): Loader {
     return this._pxFactory.createLoader();
-  }
-
-  private _createImageList(images: Resource[]): string[] {
-    let imgList: string[] = [];
-
-    for (let c = 0; c < images.length; c++) {
-      let img = images[c];
-      imgList.push(img.url);
-    }
-
-    return imgList;
   }
 
 }

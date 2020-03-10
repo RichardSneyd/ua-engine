@@ -1,17 +1,22 @@
 import IImgLoader from './IImgLoader';
 
-class ImgLoader implements IImgLoader {
-  constructor() {
+import PxLoader from './Pixi/PxLoader';
 
+class ImgLoader implements IImgLoader {
+  private _pxLoader: PxLoader;
+
+  constructor(pxLoader: PxLoader) {
+    this._pxLoader = pxLoader;
   }
 
   public loadImages(images: string[], onProgress: any, onDone: any, context: any): void {
-    console.log("loding: ", images);
-    let a = onProgress.bind(context);
-    let b = onDone.bind(context);
+    this._pxLoader.addOnLoad(onProgress.bind(context));
+    this._pxLoader.addOnComplete(onDone.bind(context));
+    this._pxLoader.addImages(images);
+  }
 
-    a({progress: 100, file: 'unknown.png'});
-    b();
+  public download(): void {
+    this._pxLoader.download();
   }
 }
 
