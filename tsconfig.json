@@ -1,25 +1,11 @@
 {
-    "compilerOptions": {
-      "target": "es5",
-      "strict": false,
-      "watch": true,
-      "module": "commonjs",
-      "noImplicitAny": false,
-      "importHelpers": false,
-      "sourceMap": true,
-      "stripInternal": true,
-      "noUnusedLocals": false,
-      "esModuleInterop": false,
-      "allowSyntheticDefaultImports": true,
-      "experimentalDecorators": false,
-      "declaration": false,
-      "strictNullChecks": false,
-      "removeComments": true
-    },
-    "include": [
-      "src/**/*.ts"
-    ],
-    "exclude": [
-      "node_modules"
-    ]
+  "compilerOptions": {
+    // this aligns with Vue's browser support
+    "target": "es2015",
+    // this enables stricter inference for data properties on `this`
+    "strict": true,
+    // if using webpack 2+ or rollup, to leverage tree shaking:
+    "module": "es2015",
+    "moduleResolution": "node"
   }
+}
