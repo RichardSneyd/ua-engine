@@ -4,8 +4,10 @@ import SmartDepend from '../Dep/SmartDepend';
 import Game          from        '../Game/Core/Game';
   //Data
   import FunObj      from        '../Game/Core/Data/FunObj';
+  import Resource    from        '../Game/Core/Data/Resource';
   //Engine
   import Entity      from        '../Game/Core/Engine/Entity';
+  import Loader      from        '../Game/Core/Engine/Loader';
   import Loop        from        '../Game/Core/Engine/Loop';
   import World       from        '../Game/Core/Engine/World';
   //Levels
@@ -13,23 +15,23 @@ import Game          from        '../Game/Core/Game';
 
 
 //Services
+import ImgLoader     from        '../Game/Services/ImgLoader';
 import ObjectHandler from        '../Game/Services/ObjectHandler';
 import Screen        from        '../Game/Services/Screen';
-  //Phaser
-  import PhFactory   from        '../Game/Services/Phaser/PhFactory';
-  import PhGame      from        '../Game/Services/Phaser/PhGame';
-  import PhGraphics  from        '../Game/Services/Phaser/PhGraphics';
+  //Pixi
+  import PxFactory   from        '../Game/Services/Pixi/PxFactory';
+  import PxGame      from        '../Game/Services/Pixi/PxGame';
 
 
 class ControlContainer {
   private _smartDepend:SmartDepend;
   private _game: any;
-  private _funObj: any;
-  private _entity: any; _world: any; _loop: any;
+  private _funObj: any; _resource: any;
+  private _entity: any; _world: any; _loop: any; _loader: any;
   private _mainLevel: any;
 
-  private _screen: any; _objectHandler: any;
-  private _phFactory: any; _phGame: any; _phGraphics: any;
+  private _screen: any; _imgLoader:any; _objectHandler: any;
+  private _pxFactory: any; _pxGame: any;
 
   constructor() {
     this._smartDepend = new SmartDepend();
@@ -50,20 +52,22 @@ class ControlContainer {
         this._game            = this._smartDepend.addModule(Game, false);
         //Data
           this._funObj        = this._smartDepend.addModule(FunObj, false);
+          this._resource      = this._smartDepend.addModule(Resource, false);
         //Engine
           this._entity        = this._smartDepend.addModule(Entity, false);
+          this._loader        = this._smartDepend.addModule(Loader, true);
           this._loop          = this._smartDepend.addModule(Loop, false);
           this._world         = this._smartDepend.addModule(World, false);
         //Levels
           this._mainLevel     = this._smartDepend.addModule(MainLevel, false);
 
       //Services
+        this._imgLoader       = this._smartDepend.addModule(ImgLoader, true);
         this._objectHandler   = this._smartDepend.addModule(ObjectHandler, false);
         this._screen          = this._smartDepend.addModule(Screen, true);
-        //Phaser
-          this._phFactory     = this._smartDepend.addModule(PhFactory, false);
-          this._phGame        = this._smartDepend.addModule(PhGame, true);
-          this._phGraphics    = this._smartDepend.addModule(PhGraphics, false);
+        //Pixi
+          this._pxFactory     = this._smartDepend.addModule(PxFactory, false);
+          this._pxGame        = this._smartDepend.addModule(PxGame, true);
 
 
   }
@@ -80,18 +84,19 @@ class ControlContainer {
         this._smartDepend.addDependency(this._world, this._entity);
         this._smartDepend.addDependency(this._world, this._screen);
 
+        this._smartDepend.addDependency(this._loader, this._resource);
+        this._smartDepend.addDependency(this._loader, this._imgLoader);
+
         this._smartDepend.addDependency(this._loop, this._funObj);
         //Levels
         this._smartDepend.addDependency(this._mainLevel, this._loop);
         this._smartDepend.addDependency(this._mainLevel, this._entity);
+        this._smartDepend.addDependency(this._mainLevel, this._loader);
 
       //Services
-      this._smartDepend.addDependency(this._screen, this._phGame);
-      this._smartDepend.addDependency(this._screen, this._phGraphics);
-        //Phaser
-        this._smartDepend.addDependency(this._phGame, this._phFactory);
-
-        this._smartDepend.addDependency(this._phGraphics, this._phFactory);
+      this._smartDepend.addDependency(this._screen, this._pxGame);
+        //Pixi
+        this._smartDepend.addDependency(this._pxGame, this._pxFactory);
   }
 
 }

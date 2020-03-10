@@ -1,30 +1,27 @@
-import {Game, GameObjects, Scene} from 'phaser';
+import {Application} from 'pixi.js';
 
 import IScreen from '../Services/IScreen';
-import PhGame from '../Services/Phaser/PhGame';
-import PhGraphics from '../Services/Phaser/PhGraphics';
+import PxGame from '../Services/Pixi/PxGame';
 
 class Screen implements IScreen {
-  private _phGame: PhGame; _phGraphics: PhGraphics;
+  private _pxGame: PxGame;
 
-  constructor(phGame: PhGame, phGraphics: PhGraphics) {
-    this._phGame = phGame;
-    this._phGraphics = phGraphics;
+  constructor(pxGame: PxGame) {
+    this._pxGame = pxGame;
 
     console.log("a screen has been createed!");
   }
 
   createScreen(width: number, height: number, elementId: string): void {
-    this._phGame.init(width, height, elementId);
+    this._pxGame.init(width, height, elementId);
   }
 
-  createReact(x: number, y: number, width: number, height: number): GameObjects.Graphics {
-    console.log('scene', this._phGame.scene)
-    return this._phGraphics.drawRect(this._phGame.scene, x, y, width, height);
+  createReact(x: number, y: number, width: number, height: number): any {
+    console.log("rect creation issued");
   }
 
   clearScreen(): void {
-    this._phGame.clearScreen();
+    this._pxGame.clearScreen();
   }
 }
 
