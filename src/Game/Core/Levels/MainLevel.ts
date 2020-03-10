@@ -18,8 +18,9 @@ class MainLevel implements ILevel {
 
     this._player.init(100, 100);
 
-    this._loader.addImage('assets/img/virus1.png');
-    this._loader.addImage('assets/img/virus2.png');
+    this._loader.base = 'assets/img/';
+    this._loader.addImage('virus1.png');
+    this._loader.addImage('virus2.png');
     this._loader.download();
 
     this._loop.addFunction(this.update, this);
