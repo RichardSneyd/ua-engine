@@ -1,4 +1,4 @@
-import ResourceType from './ResourceType';
+import ResType from './ResType';
 
 class Resource {
   private _type: string;
