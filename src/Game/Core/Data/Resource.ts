@@ -42,7 +42,7 @@ class Resource {
   }
 
   public isImg(): boolean {
-    if (this._type == ResourceType.IMG) {
+    if (this._type == ResType.IMG) {
       return true;
     } else {
       return false;
@@ -50,7 +50,7 @@ class Resource {
   }
 
   public isSnd(): boolean {
-    if (this._type == ResourceType.SND) {
+    if (this._type == ResType.SND) {
       return true;
     } else {
       return false;
@@ -69,11 +69,11 @@ class Resource {
   }
 
   private _getImgTag(): string {
-    return ResourceType.IMG;
+    return ResType.IMG;
   }
 
   private _getSndTag(): string {
-    return ResourceType.SND;
+    return ResType.SND;
   }
   
   private _getName(url: string): string {
