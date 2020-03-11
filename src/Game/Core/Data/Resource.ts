@@ -27,13 +27,20 @@ class Resource {
     return this._url;
   }
 
+  get loaded(): boolean {
+    return this._loaded;
+  }
+
   set data(dat: any) {
     this._data = dat;
   }
 
+  set loaded(ld: boolean) {
+    this._loaded = ld;
+  }
+
   public initImage(url: string, loaded: boolean) {
     let type = this._getImgTag();
-
     this._init(type, url, loaded);
   }
 
@@ -83,5 +90,4 @@ class Resource {
     return arr[arr.length - 1];
   }
 }
-
 export default Resource;
