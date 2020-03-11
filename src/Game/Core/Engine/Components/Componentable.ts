@@ -1,13 +1,14 @@
-import BaseComponent from "./BaseComponent";
+import IComponent from "./Component";
+import IComponentable from "./IComponentable";
 
-abstract class Componentable {
+abstract class Componentable implements IComponentable {
     components: {};
 
     removeComponent(name: string){
         delete this.components[name];
     }
 
-    addComponent(component: BaseComponent) {
+    addComponent(component: IComponent) {
         this.components[component.name] = component;
     }
 

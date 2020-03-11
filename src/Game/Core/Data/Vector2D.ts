@@ -23,6 +23,10 @@ class Vector2D {
     set y(y: number) {
         this._y = y;
     }
+
+    public createNew(x: number, y: number): Vector2D {
+        return new Vector2D(x, y);
+    }
 }
 
 export default Vector2D;

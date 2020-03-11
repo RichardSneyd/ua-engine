@@ -4,4 +4,3 @@ cache.db
 uglifycache.db
 js/*
 dist/
-package-lock.json
