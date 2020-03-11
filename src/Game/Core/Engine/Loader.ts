@@ -1,9 +1,11 @@
 import Resource from '../Data/Resource';
 import IImgLoader from '../../Services/IImgLoader';
+import SndLoader from '../../Services/SndLoader';
 
 class Loader {
-  private _resource: Resource; _imgLoader: IImgLoader;
+  private _resource: Resource; _imgLoader: IImgLoader; _sndLoader: SndLoader;
   private _imgList: Resource[];
+  private _sndList: Resource[];
 
   private _base: string;
 
@@ -22,9 +24,17 @@ class Loader {
     this._base = "";
 
     this._imgList = [];
+    this._sndList = [];
   }
 
   addImage(url: string) {
+    let res = this._createResource();
+    res.initImage(this._base + url, false);
+
+    this._imgList.push(res);
+  }
+
+  addSnd(url: string) {
     let res = this._createResource();
     res.initImage(this._base + url, false);
 
