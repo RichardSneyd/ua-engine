@@ -1,3 +1,5 @@
+import ResourceType from './ResourceType';
+
 class Resource {
   private _type: string;
   private _url: string;
@@ -31,12 +33,24 @@ class Resource {
 
   public initImage(url: string, loaded: boolean) {
     let type = this._getImgTag();
+    this._init(type, url, loaded);
+  }
 
+  public initSnd(url: string, loaded: boolean) {
+    let type = this._getImgTag();
     this._init(type, url, loaded);
   }
 
   public isImg(): boolean {
-    if (this._type == 'img') {
+    if (this._type == ResourceType.IMG) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public isSnd(): boolean {
+    if (this._type == ResourceType.SND) {
       return true;
     } else {
       return false;
@@ -55,13 +69,16 @@ class Resource {
   }
 
   private _getImgTag(): string {
-    return 'img';
+    return ResourceType.IMG;
   }
 
+  private _getSndTag(): string {
+    return ResourceType.SND;
+  }
+  
   private _getName(url: string): string {
     let arr = url.split('/');
     return arr[arr.length - 1];
   }
 }
-
 export default Resource;
