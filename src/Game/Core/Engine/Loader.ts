@@ -46,12 +46,24 @@ class Loader {
     return urlList;
   }
 
-  _imgDone() {
+  private _imgDone() {
     console.log('all images loaded');
   }
 
-  _imgLoaded(data: any) {
-    console.log('loaded', data);
+  private _imgLoaded(data: any, data2: any) {
+    console.log('url:(%s) texture(%s)', data2.url, data2.texture);
+    this._downloadedResource(data2.url, data2.texture);
+  }
+
+  private _downloadedResource(url: string, data: any) {
+    for (let c = 0; c < this._imgList.length; c++) {
+      let currentUrl = this._imgList[c].url;
+
+      if (currentUrl == url) {
+        this._imgList[c].loaded = true;
+        this._imgList[c].data = data;
+      }
+    }
   }
 
 
