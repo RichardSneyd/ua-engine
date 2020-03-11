@@ -1,3 +1,5 @@
+// this is a legacy file, coupled to Phaser. Requires extensive rewrites
+
 import SoundArray from './SoundArray';
 import _ = require('lodash');
 

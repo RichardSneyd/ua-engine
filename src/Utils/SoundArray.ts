@@ -1,5 +1,6 @@
 import _ = require("lodash");
-
+// this is a legacy file, which is tightly coupled to Phaser. 
+// Requires extensive rewrites and refactoring.
 
 class SoundArray {
     scene: Phaser.Scene;
