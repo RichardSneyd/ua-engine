@@ -1,3 +1,5 @@
+import ResType from './ResType';
+
 class Resource {
   private _type: string;
   private _url: string;
@@ -25,18 +27,38 @@ class Resource {
     return this._url;
   }
 
+  get loaded(): boolean {
+    return this._loaded;
+  }
+
   set data(dat: any) {
     this._data = dat;
   }
 
+  set loaded(ld: boolean) {
+    this._loaded = ld;
+  }
+
   public initImage(url: string, loaded: boolean) {
     let type = this._getImgTag();
+    this._init(type, url, loaded);
+  }
 
+  public initSnd(url: string, loaded: boolean) {
+    let type = this._getImgTag();
     this._init(type, url, loaded);
   }
 
   public isImg(): boolean {
-    if (this._type == 'img') {
+    if (this._type == ResType.IMG) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public isSnd(): boolean {
+    if (this._type == ResType.SND) {
       return true;
     } else {
       return false;
@@ -55,13 +77,16 @@ class Resource {
   }
 
   private _getImgTag(): string {
-    return 'img';
+    return ResType.IMG;
   }
 
+  private _getSndTag(): string {
+    return ResType.SND;
+  }
+  
   private _getName(url: string): string {
     let arr = url.split('/');
     return arr[arr.length - 1];
   }
 }
-
 export default Resource;

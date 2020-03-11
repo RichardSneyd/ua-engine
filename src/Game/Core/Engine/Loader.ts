@@ -24,15 +24,26 @@ class Loader {
     this._imgList = [];
   }
 
-  addImage(url: string) {
+  public addImage(url: string) {
     let res = this._createResource();
     res.initImage(this._base + url, false);
 
     this._imgList.push(res);
   }
 
-  download(): void {
+  public download(): void {
     this._downloadImages();
+  }
+
+  public getTexture(name: string): any {
+    let url = this._base + name;
+    let res = this._getResource(url);
+
+    if (res != null) {
+      return res.data;
+    } else {
+      console.warn("Resource named '%s' doesn't exist.", name);
+    }
   }
 
   private _getUrls(arr: Resource[]): string[] {
@@ -46,12 +57,39 @@ class Loader {
     return urlList;
   }
 
-  _imgDone() {
+  private _imgDone() {
     console.log('all images loaded');
   }
 
-  _imgLoaded(data: any) {
-    console.log('loaded', data);
+  private _imgLoaded(data: any, data2: any) {
+    console.log('url:(%s) texture(%s)', data2.url, data2.texture);
+    this._downloadedResource(data2.url, data2.texture);
+  }
+
+  private _downloadedResource(url: string, data: any) {
+    for (let c = 0; c < this._imgList.length; c++) {
+      let currentUrl = this._imgList[c].url;
+
+      let res = this._getResource(currentUrl);
+
+      if (res != null) {
+        res.loaded = true;
+        res.data = data;
+      } else {
+        console.error("no resource exists with url: %s", currentUrl);
+      }
+    }
+  }
+
+
+  private _getResource(url: string): Resource | null {
+    for (let c = 0; c < this._imgList.length; c++) {
+      let currentUrl = this._imgList[c].url;
+
+      if (currentUrl == url) return this._imgList[c];
+    }
+
+    return null;
   }
 
 
