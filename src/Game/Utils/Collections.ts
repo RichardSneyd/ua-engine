@@ -181,3 +181,5 @@ class Collections {
     }
 
 }
+
+export default Collections;

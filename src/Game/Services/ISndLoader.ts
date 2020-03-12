@@ -1,6 +1,6 @@
 
 interface ISndLoader {
-    loadSounds(sounds: string[], onProgress: Function, onComplete: Function, context: any): void;
+    loadSounds(urls: string[], extensions: string[], onProgress: Function, onComplete: Function, context: any): void;
     download(): void;
     baseURL: string;
 }
