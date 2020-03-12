@@ -1,6 +1,7 @@
 enum ResType {
-  IMG = 'img',
-  SND = 'snd'
+    IMG = 'img',
+    SND = 'snd',
+    BLANK = ''
 }
 
 export default ResType;

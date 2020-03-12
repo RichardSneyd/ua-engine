@@ -1,9 +1,11 @@
 import Resource from '../Data/Resource';
 import IImgLoader from '../../Services/IImgLoader';
+import SndLoader from '../../Services/SndLoader';
 
 class Loader {
-  private _resource: Resource; _imgLoader: IImgLoader;
+  private _resource: Resource; _imgLoader: IImgLoader; _sndLoader: SndLoader;
   private _imgList: Resource[];
+  private _sndList: Resource[];
 
   private _base: string;
 
@@ -22,6 +24,7 @@ class Loader {
     this._base = "";
 
     this._imgList = [];
+    this._sndList = [];
   }
 
   public addImage(url: string) {
@@ -31,7 +34,18 @@ class Loader {
     this._imgList.push(res);
   }
 
+  addSnd(url: string) {
+    let res = this._createResource();
+    res.initImage(this._base + url, false);
+
+    this._imgList.push(res);
+  }
+
+  /**
+   * @description download all resources
+   */
   public download(): void {
+    this._downloadSounds();
     this._downloadImages();
   }
 
@@ -64,6 +78,16 @@ class Loader {
   private _imgLoaded(data: any, data2: any) {
     console.log('url:(%s) texture(%s)', data2.url, data2.texture);
     this._downloadedResource(data2.url, data2.texture);
+  }
+
+  private _sndDone(){
+    // WIP
+    console.log('all sounds loaded')
+  }
+
+  private _sndLoaded(data: any){
+    // WIP
+    console.log(data);
   }
 
   private _downloadedResource(url: string, data: any) {
@@ -103,6 +127,13 @@ class Loader {
     let urlList = this._getUrls(this._imgList);
     this._imgLoader.loadImages(urlList, this._imgLoaded, this._imgDone, this);
     this._imgLoader.download();
+  }
+
+  private _downloadSounds() {
+    // WIP
+    let urlList = this._getUrls(this._sndList);
+    this._sndLoader.loadSounds(urlList, this._sndLoaded, this._sndDone, this);
+    this._sndLoader.download();
   }
 }
 

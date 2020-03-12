@@ -8,7 +8,7 @@ class Resource {
   private _data: any;
 
   constructor() {
-    this._type = '';
+    this._type = ResType.BLANK;
     this._url = '';
     this._name = '';
     this._loaded = false;
@@ -46,6 +46,7 @@ class Resource {
 
   public initSnd(url: string, loaded: boolean) {
     let type = this._getImgTag();
+
     this._init(type, url, loaded);
   }
 
@@ -83,7 +84,7 @@ class Resource {
   private _getSndTag(): string {
     return ResType.SND;
   }
-  
+
   private _getName(url: string): string {
     let arr = url.split('/');
     return arr[arr.length - 1];
