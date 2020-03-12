@@ -4,6 +4,7 @@ import IObjectHandler from '../../Services/IObjectHandler';
 class Entity {
   private _x: number;
   private _y: number;
+  private _sprite: string;
   private _initialized: boolean;
 
   private _screen: IScreen; _objectHandler: IObjectHandler;
@@ -15,6 +16,7 @@ class Entity {
 
     this._x = 0;
     this._y = 0;
+    this._sprite = '';
 
     this._initialized = false;
   }
@@ -31,13 +33,12 @@ class Entity {
     this._objectHandler.setXy(this._data, this._x, this._y);
   }
 
-  init(x: number, y: number): void {
+  init(x: number, y: number, sprite: string): void {
     this._x = x;
     this._y = y;
+    this._sprite = sprite;
 
-    console.log("making rect at %s %s", x, y);
-
-    this._data = this._screen.createReact(x, y, 100, 100);
+    this._data = this._screen.createSprite(x, y, sprite);
   }
 
   createNew(): Entity {

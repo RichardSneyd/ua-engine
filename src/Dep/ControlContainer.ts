@@ -88,6 +88,7 @@ class ControlContainer {
 
   private _addDepends() {
     //Game
+<<<<<<< HEAD
     //Core
     this._smartDepend.addDependency(this._game, this._world);
     this._smartDepend.addDependency(this._game, this._mainLevel);
@@ -119,6 +120,36 @@ class ControlContainer {
 
     //Howler
     this._smartDepend.addDependency(this._hwLoader, this._hwFactory);
+=======
+      //Core
+      this._smartDepend.addDependency(this._game, this._world);
+      this._smartDepend.addDependency(this._game, this._mainLevel);
+        //Engine
+        this._smartDepend.addDependency(this._entity, this._screen);
+        this._smartDepend.addDependency(this._entity, this._objectHandler);
+        
+        this._smartDepend.addDependency(this._world, this._entity);
+        this._smartDepend.addDependency(this._world, this._screen);
+
+        this._smartDepend.addDependency(this._loader, this._resource);
+        this._smartDepend.addDependency(this._loader, this._imgLoader);
+
+        this._smartDepend.addDependency(this._loop, this._funObj);
+        //Levels
+        this._smartDepend.addDependency(this._mainLevel, this._loop);
+        this._smartDepend.addDependency(this._mainLevel, this._entity);
+        this._smartDepend.addDependency(this._mainLevel, this._loader);
+
+      //Services
+      this._smartDepend.addDependency(this._imgLoader, this._pxLoader);
+
+      this._smartDepend.addDependency(this._screen, this._pxGame);
+        //Pixi
+        this._smartDepend.addDependency(this._pxGame, this._pxFactory);
+        this._smartDepend.addDependency(this._pxGame, this._loader);
+
+        this._smartDepend.addDependency(this._pxLoader, this._pxFactory);
+>>>>>>> 685a3e548c5f371ee2107582c0ccd1dfc7ffda51
   }
 
 }

@@ -32,7 +32,6 @@ module.exports = (grunt) => {
         }
       }
     },
-
     connect: {
       server: {
         options: {
@@ -85,5 +84,6 @@ module.exports = (grunt) => {
 
   //grunt.registerTask('default', ['connect', 'browserify', 'exorcise', 'uglify', 'watch']);
   grunt.registerTask('default', ['connect', 'browserify', 'exorcise', 'watch']);
+  grunt.register
 }
 

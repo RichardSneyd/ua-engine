@@ -1,12 +1,14 @@
-import {Application} from 'pixi.js';
+import {Application, Sprite} from 'pixi.js';
 import PxFactory from './PxFactory';
+import Loader from '../../Core/Engine/Loader';
 
 class PxGame {
-  private _pxFactory: PxFactory;
+  private _pxFactory: PxFactory; _loader: Loader;
   private _game: Application | null;
 
-  constructor(pxFactory: PxFactory) {
+  constructor(pxFactory: PxFactory, loader: Loader) {
     this._pxFactory = pxFactory;
+    this._loader = loader;
     this._game = null;
   }
 
@@ -21,6 +23,19 @@ class PxGame {
       console.warn("No element by id: '%s', appending to the body.", container);
       document.body.appendChild(this._game.view);
     }
+  }
+
+  public addSprite(x: number, y: number, sprName: string): Sprite {
+    let texture = this._loader.getTexture(sprName);
+    let sprite = this._pxFactory.createSprite(texture);
+    sprite.x = x;
+    sprite.y = y;
+
+    if(this._game != null) {
+      this._game.stage.addChild(sprite);
+    }
+
+    return sprite;
   }
 
   public clearScreen() {

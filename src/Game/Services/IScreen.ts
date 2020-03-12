@@ -1,9 +1,11 @@
-//import {Game, GameObjects, Scene} from 'phaser';
+import {Sprite} from 'pixi.js';
 
 interface IScreen {
   createScreen(width: number, height: number, elementId: string): void;
+
+  createSprite(x: number, y: number, name: string): Sprite;
+
   clearScreen(): void;
-  createReact(x: number, y: number, width: number, height: number): any;
 }
 
 export default IScreen;

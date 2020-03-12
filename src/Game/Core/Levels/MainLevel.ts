@@ -16,7 +16,9 @@ class MainLevel implements ILevel {
   init(): void {
     console.log('started main!');
 
-    this._player.init(100, 100);
+    setTimeout(() => {
+      this._player.init(100, 100, 'virus1.png');
+    }, 5000);
 
     this._loader.base = 'assets/img/';
     this._loader.addImage('virus1.png');
