@@ -62,23 +62,19 @@ class Loader {
   }
 
   private _imgLoaded(data: any, data2: any) {
-    console.log('url:(%s) texture(%s)', data2.url, data2.texture);
+    //console.log('url:(%s) texture(%s)', data2.url, data2.texture);
     this._downloadedResource(data2.url, data2.texture);
   }
 
   private _downloadedResource(url: string, data: any) {
-    for (let c = 0; c < this._imgList.length; c++) {
-      let currentUrl = this._imgList[c].url;
+    let res = this._getResource(url);
 
-      let res = this._getResource(currentUrl);
-
-      if (res != null) {
+    if (res != null) {
         res.loaded = true;
         res.data = data;
       } else {
-        console.error("no resource exists with url: %s", currentUrl);
+        console.error("no resource exists with url: %s", url);
       }
-    }
   }
 
 
@@ -86,7 +82,10 @@ class Loader {
     for (let c = 0; c < this._imgList.length; c++) {
       let currentUrl = this._imgList[c].url;
 
-      if (currentUrl == url) return this._imgList[c];
+
+      if (currentUrl == url) {
+        return this._imgList[c];
+      }
     }
 
     return null;
