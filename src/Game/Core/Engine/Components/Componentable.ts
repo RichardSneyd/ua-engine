@@ -2,7 +2,11 @@ import IComponent from "./Component";
 import IComponentable from "./IComponentable";
 
 abstract class Componentable implements IComponentable {
-    components: {};
+    components: any;
+
+    constructor(){
+        this.components = {};
+    }
 
     removeComponent(name: string){
         delete this.components[name];

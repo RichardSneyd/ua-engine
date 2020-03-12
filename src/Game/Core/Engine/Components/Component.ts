@@ -32,12 +32,12 @@ abstract class Component implements IComponent {
 
     
     public update() {
-        if(this.isEnabled){
+        if(this.isEnabled()){
             this.update();
         }
     }
     
-    public abstract remove();
+    public abstract remove() : void;
 }
 
 export default Component;

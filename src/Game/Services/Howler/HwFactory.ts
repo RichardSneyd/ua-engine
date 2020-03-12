@@ -7,17 +7,10 @@ class HwFactory {
 
   createHowl(src: string[], baseURL: string = ''): Howl {
     return new Howl({
-        src: 
+        src: src
     })
   }
   
 }
 
 export default HwFactory;
-
-{
-    "I": Howl,
-    "Am": Howl,
-    "A": Howl,
-    "Sound": Howl
-}

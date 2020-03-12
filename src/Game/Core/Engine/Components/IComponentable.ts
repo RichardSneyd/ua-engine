@@ -3,11 +3,11 @@ import IComponent from "./IComponent";
 interface IComponentable {
     components: {};
 
-    removeComponent(name: string);
+    removeComponent(name: string): void;
 
-    addComponent(component: IComponent);
+    addComponent(component: IComponent): void;
 
-    updateComponents();
+    updateComponents(): void;
 }
 
 export default IComponentable;

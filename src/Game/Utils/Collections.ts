@@ -2,10 +2,10 @@ import * as _ from 'lodash';
 
 class Collections {
 
-    private constructor() {} // make it instantiatable
+    private constructor() { } // make it instantiatable
 
-     // return object in array OR array-like object (Object.keys implementation) with properties of specified values
-     public findArrElWithPropVal(array: any[] | object, properties: string[], values: any[]): any {
+    // return object in array OR array-like object (Object.keys implementation) with properties of specified values
+    public findArrElWithPropVal(array: any[], properties: string[], values: any[]): any {
         let row: any = null;
         if (Array.isArray(array)) {
             //  console.trace('isArray');
@@ -26,11 +26,10 @@ class Collections {
                 }
             }
         }
-        else if (Object(array)) {
-            
+        else if (Object(array)){
             elements: for (let x = 0; x < Object.keys(array).length; x++) {
                 for (let y = 0; y < properties.length; y++) {
-
+    
                     if (array[x][properties[y]] == values[y]) {
                         //   console.trace('matching pair at ' + y);
                         if (y == properties.length - 1) {
@@ -39,10 +38,34 @@ class Collections {
                             break elements;
                         }
                     }
+             
                 }
             }
-        } else {
-            //  console.trace('wrong type provided; array or object required');
+        }
+
+        if (row == null) {
+            console.trace('no match found for ' + properties.toString() + " & " + values.toString());
+        }
+
+        return row;
+    }
+
+    public findObjElWithPropVal(array: any | object, properties: string[], values: any[]): any {
+        let row: any = null;
+        
+        elements: for (let x = 0; x < Object.keys(array).length; x++) {
+            for (let y = 0; y < properties.length; y++) {
+
+                if (array[x][properties[y]] == values[y]) {
+                    //   console.trace('matching pair at ' + y);
+                    if (y == properties.length - 1) {
+                        //   console.trace('found FULL match!');
+                        row = array[x];
+                        break elements;
+                    }
+                }
+         
+            }
         }
 
         if (row == null) {
@@ -53,7 +76,7 @@ class Collections {
     }
 
     // return the number of rows that match the criteria
-    public numElementsWithPropVal(array: any[] | object, properties: string[], values: any[]): number {
+    public numElementsWithPropVal(array: any[], properties: string[], values: any[]): number {
         let count: number = 0;
         if (Array.isArray(array)) {
             elements: for (let x = 0; x < array.length; x++) {
@@ -86,13 +109,13 @@ class Collections {
         return count;
     }
 
-    public allElementsWithPropVal(array: any[] | object, properties: string[], values: any[]): any[] {
+    public allElementsWithPropVal(array: any[], properties: string[], values: any[]): any[] {
         let all: any[] = [];
         if (Array.isArray(array)) {
-           // console.log('isArray');
+            // console.log('isArray');
             elements: for (let x = 0; x < array.length; x++) {
                 props: for (let y = 0; y < properties.length; y++) {
-                   // console.log(array[x][properties[y]] + ', ' + values[y]);
+                    // console.log(array[x][properties[y]] + ', ' + values[y]);
                     if (array[x][properties[y]] === values[y]) {
                         if (y == properties.length - 1) {
                             all.push(array[x]);
@@ -142,11 +165,11 @@ class Collections {
         return all;
     }
 
-      /**
-       * @description shuffle and return an array
-       * @param a array to be shuffled
-       */
-      public shuffle(a) : any[]{
+    /**
+     * @description shuffle and return an array
+     * @param a array to be shuffled
+     */
+    public shuffle(a: any): any[] {
         let j, x, i;
         for (i = a.length - 1; i > 0; i--) {
             j = Math.floor(Math.random() * (i + 1));

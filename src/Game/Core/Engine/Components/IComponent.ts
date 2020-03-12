@@ -9,9 +9,9 @@ interface IComponent {
     disable(): void;
 
 
-    remove();
+    remove(): void;
 
-    update();
+    update(): void;
 }
 
 export default IComponent;

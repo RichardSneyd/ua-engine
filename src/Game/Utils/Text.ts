@@ -30,10 +30,10 @@ class Text {
     }
 
     public propertiesFromString(rawText: string, lineSeperator: string, valueAssigner: string, valueSeperator: string): object {
-        let obj: object = {};
+        let obj: any = {};
         let lines: string[] = rawText.trim().split(lineSeperator);
         for (let x = 0; x < lines.length; x++) {
-            let sublines = lines[x].split(valueAssigner);
+            let sublines : string[] = lines[x].split(valueAssigner);
             let vals = sublines[1].trim().split(valueSeperator);
             if (vals.length <= 1) {
                 obj[sublines[0]] = vals[0]

@@ -1,9 +1,10 @@
 import Resource from '../Data/Resource';
 import IImgLoader from '../../Services/IImgLoader';
 import SndLoader from '../../Services/SndLoader';
+import ISndLoader from '../../Services/ISndLoader';
 
 class Loader {
-  private _resource: Resource; _imgLoader: IImgLoader; _sndLoader: SndLoader;
+  private _resource: Resource; _imgLoader: IImgLoader; _sndLoader: ISndLoader;
   private _imgList: Resource[];
   private _sndList: Resource[];
 
@@ -17,9 +18,10 @@ class Loader {
     this._base = base;
   }
 
-  constructor(resource: Resource, imgLoader: IImgLoader) {
+  constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader) {
     this._resource = resource;
     this._imgLoader = imgLoader;
+    this._sndLoader = sndLoader;
 
     this._base = "";
 

@@ -1,7 +1,7 @@
 import ISndLoader from './ISndLoader';
 import HwLoader from './Howler/HwLoader';
 
-class SoundLoader implements ISndLoader {
+class SndLoader implements ISndLoader {
     private _loader: HwLoader;
     private _baseURL: string;
 
@@ -17,6 +17,10 @@ class SoundLoader implements ISndLoader {
 
     get baseURL(): string {
         return this._baseURL;
+    }
+
+    download() {
+        
     }
 
 }

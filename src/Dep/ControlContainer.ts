@@ -24,7 +24,7 @@ import PxFactory from '../Game/Services/Pixi/PxFactory';
 import PxGame from '../Game/Services/Pixi/PxGame';
 import PxLoader from '../Game/Services/Pixi/PxLoader';
 //Howler
-//import HwFactory from '../Game/Services/Howler/HwFactory';
+import HwFactory from '../Game/Services/Howler/HwFactory';
 import HwLoader from '../Game/Services/Howler/HwLoader';
 
 
