@@ -1,8 +1,9 @@
-import {Application, Loader} from 'pixi.js';
+import {Application, Loader, Sprite} from 'pixi.js';
 
 class PxFactory {
+
   constructor() {
-    
+   
   }
 
   public createGame(w: number, h: number, container: string, renderer: string = "null"): Application {
@@ -10,6 +11,11 @@ class PxFactory {
       width: w,
       height: h
     });
+  }
+
+  public createSprite(texture: any): Sprite {
+
+    return new Sprite(texture);
   }
 
   public createLoader(): Loader {

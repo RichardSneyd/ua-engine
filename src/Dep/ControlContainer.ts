@@ -101,6 +101,7 @@ class ControlContainer {
       this._smartDepend.addDependency(this._screen, this._pxGame);
         //Pixi
         this._smartDepend.addDependency(this._pxGame, this._pxFactory);
+        this._smartDepend.addDependency(this._pxGame, this._loader);
 
         this._smartDepend.addDependency(this._pxLoader, this._pxFactory);
   }
