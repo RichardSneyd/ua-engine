@@ -100,6 +100,7 @@ class ControlContainer {
 
         this._smartDepend.addDependency(this._loader, this._resource);
         this._smartDepend.addDependency(this._loader, this._imgLoader);
+        this._smartDepend.addDependency(this._loader, this._sndLoader);
 
         this._smartDepend.addDependency(this._loop, this._funObj);
         //Levels
@@ -110,12 +111,15 @@ class ControlContainer {
       //Services
       this._smartDepend.addDependency(this._imgLoader, this._pxLoader);
 
+      this._smartDepend.addDependency(this._sndLoader, this._hwLoader);
+
       this._smartDepend.addDependency(this._screen, this._pxGame);
         //Pixi
         this._smartDepend.addDependency(this._pxGame, this._pxFactory);
         this._smartDepend.addDependency(this._pxGame, this._loader);
-
         this._smartDepend.addDependency(this._pxLoader, this._pxFactory);
+        //Howler
+        this._smartDepend.addDependency(this._hwLoader, this._hwFactory);
   }
 
 }
