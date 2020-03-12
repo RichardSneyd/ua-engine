@@ -31,14 +31,13 @@ abstract class Component implements IComponent {
     }
 
     
-    public requestUpdate() {
+    public update() {
         if(this.isEnabled){
             this.update();
         }
     }
     
     public abstract remove();
-    public abstract update();
 }
 
 export default Component;
