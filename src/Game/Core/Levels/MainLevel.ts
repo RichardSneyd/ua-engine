@@ -17,12 +17,13 @@ class MainLevel implements ILevel {
     console.log('started main!');
 
     setTimeout(() => {
-      this._player.init(100, 100, 'virus1.png');
+      this._player.init(100, 100, 'professor.json');
     }, 5000);
 
     this._loader.base = 'assets/img/';
     this._loader.addImage('virus1.png');
     this._loader.addImage('virus2.png');
+    this._loader.addSpine('professor', 'professor.json');
     this._loader.download();
 
     this._loop.addFunction(this.update, this);

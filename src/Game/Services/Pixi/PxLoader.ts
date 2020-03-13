@@ -1,4 +1,5 @@
 import {Loader} from 'pixi.js';
+import 'pixi-spine';
 
 import PxFactory from './PxFactory';
 
@@ -10,6 +11,8 @@ class PxLoader {
     this._pxFactory = pxFactory;
 
     this._loader = this._createLoader();
+
+    this._loader.use(PIXI.spine.AtlasParser.use);
   }
 
   public addOnLoad(onLoad: any) {
@@ -22,6 +25,11 @@ class PxLoader {
 
   public addImages(images: string[]) {
     this._loader.add(images);
+  }
+
+  public addSpine(name: string, jsonUrl: string) {
+    console.log("adding spine(%s): %s", name, jsonUrl);
+    this._loader.add(name, jsonUrl);
   }
 
   public download() {

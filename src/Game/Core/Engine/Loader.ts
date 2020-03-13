@@ -4,6 +4,7 @@ import IImgLoader from '../../Services/IImgLoader';
 class Loader {
   private _resource: Resource; _imgLoader: IImgLoader;
   private _imgList: Resource[];
+  private _spineList: Resource[];
 
   private _base: string;
 
@@ -18,6 +19,7 @@ class Loader {
   constructor(resource: Resource, imgLoader: IImgLoader) {
     this._resource = resource;
     this._imgLoader = imgLoader;
+    this._spineList = [];
 
     this._base = "";
 
@@ -29,6 +31,13 @@ class Loader {
     res.initImage(this._base + url, false);
 
     this._imgList.push(res);
+  }
+
+  public addSpine(name: string, jsonUrl: string) {
+    let res = this._createResource();
+    res.initImage(this._base + jsonUrl, false);
+
+    this._spineList.push(res);
   }
 
   public download(): void {
@@ -62,8 +71,15 @@ class Loader {
   }
 
   private _imgLoaded(data: any, data2: any) {
-    //console.log('url:(%s) texture(%s)', data2.url, data2.texture);
-    this._downloadedResource(data2.url, data2.texture);
+    if (data2.texture != null) {
+      this._downloadedResource(data2.url, data2.texture);
+    } else {
+      this._downloadedResource(data2.url, data2);
+      console.log(data2);
+
+      (<any>window).spine_ = data2;
+    }
+    
   }
 
   private _downloadedResource(url: string, data: any) {
@@ -73,18 +89,22 @@ class Loader {
         res.loaded = true;
         res.data = data;
       } else {
-        console.error("no resource exists with url: %s", url);
+        console.warn("no resource exists with url: %s", url);
       }
   }
 
 
   private _getResource(url: string): Resource | null {
-    for (let c = 0; c < this._imgList.length; c++) {
-      let currentUrl = this._imgList[c].url;
+    let resArr = this._imgList;
+
+    if (url.indexOf('.json') > -1) resArr = this._spineList;
+
+    for (let c = 0; c < resArr.length; c++) {
+      let currentUrl = resArr[c].url;
 
 
       if (currentUrl == url) {
-        return this._imgList[c];
+        return resArr[c];
       }
     }
 
@@ -101,7 +121,18 @@ class Loader {
   private _downloadImages() {
     let urlList = this._getUrls(this._imgList);
     this._imgLoader.loadImages(urlList, this._imgLoaded, this._imgDone, this);
+
+    this._downloadSpines();
+
     this._imgLoader.download();
+  }
+
+  private _downloadSpines() {
+    for (let c = 0; c < this._spineList.length; c++) {
+      let res = this._spineList[c];
+
+      this._imgLoader.loadSpine(res.name, res.url);
+    }
   }
 }
 
