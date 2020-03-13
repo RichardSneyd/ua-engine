@@ -3,14 +3,20 @@ import ILevel from '../Engine/ILevel';
 import Loader from '../Engine/Loader';
 import Loop from '../Engine/Loop';
 import Entity from '../Engine/Entity';
+import LevelManager from '../../Services/LevelManager';
 
 class MainLevel implements ILevel {
-  private _loop: Loop; _player: Entity; _loader: Loader;
+  private _manager: LevelManager;_loop: Loop; _player: Entity; _loader: Loader;
 
-  constructor(loop: Loop, player: Entity, loader: Loader) {
+  constructor(manager: LevelManager, loop: Loop, player: Entity, loader: Loader) {
+    this._manager = manager;
     this._loop = loop;
     this._player = player;
     this._loader = loader;
+  }
+
+  get manager() : LevelManager {
+    return this._manager;
   }
 
   init(): void {
@@ -23,7 +29,9 @@ class MainLevel implements ILevel {
     this._loader.base = 'assets/img/';
     this._loader.addImage('virus1.png');
     this._loader.addImage('virus2.png');
-    this._loader.download();
+    this._loader.download(()=>{
+      console.log('loaded!!');
+    });
 
     this._loop.addFunction(this.update, this);
     this._loop.start();

@@ -42,33 +42,10 @@ class Loader {
     this._imgList.push(res);
   }
 
-  /**
-   * @description load one sound and store in _sndList
-   * @param filename the filename of the sound to be loaded, without extension.
-   */
-  addSnd(name: string) {
-    // all sounds will be housed in the same directory, so..
-    this.base = conf.PATHS.SND;
-    let res = this._createResource();
-    res.initSnd(this._base + name, false);
-
-    this._sndList.push(res);
-  }
-
-  /**
- * @description load one sound and store in _sndList
- * @param filenames filenames array of the sounds to be loaded, without extension (extentions are defined in config file).
- */
-  addSnds(filenames: string[]) {
-    for (let x = 0; x < filenames.length; x++) {
-      this.addSnd(filenames[x]);
-    }
-  }
-
-  addJSON(base_fn: string) {
+  public addJSON(basename: string) {
     this.base = conf.PATHS.JSN;
     let res = this._createResource();
-    res.initJSON(this._base + base_fn, false);
+    res.initJSON(this._base + basename + '.json', false);
 
     this._sndList.push(res);
   }
@@ -76,9 +53,26 @@ class Loader {
   /**
    * @description download all resources
    */
-  public download(): void {
-    this._downloadSounds();
-    this._downloadImages();
+  public download(onDone?: Function): void {
+    let _imgsDone: boolean = false, _sndsDone: boolean = false;
+
+    this._downloadSounds(() => {
+      _sndsDone = true;
+      if (_imgsDone) {
+        if(onDone !== undefined){
+          onDone();
+        }
+      }
+    });
+
+    this._downloadImages(() => {
+      _imgsDone = true;
+      if (_sndsDone) {
+        if(onDone !== undefined){
+          onDone();
+        }
+      }
+    });
   }
 
   public getTexture(name: string): any {
@@ -152,9 +146,23 @@ class Loader {
     return this._getResourceByBasename(basename, this._jsnList);
   }
 
-  private _getResourceByBasename(basename: string, resList: Resource[]) : Resource | null {
-    for (let c = 0; c <resList.length; c++) {
-      let bname =resList[c].url;
+  private _getResourceByBasename(basename: string, resList: Resource[]): Resource | null {
+    for (let c = 0; c < resList.length; c++) {
+      let bname = resList[c].url;
+
+
+      if (bname == basename) {
+        return resList[c];
+      }
+    }
+
+    return null;
+  }
+
+  getSndResByBasename(basename: string): Resource | null {
+    let resList = this._sndList;
+    for (let c = 0; c < resList.length; c++) {
+      let bname = resList[c].basename;
 
 
       if (bname == basename) {
@@ -172,17 +180,52 @@ class Loader {
     return this._resource.createNew();
   }
 
-  private _downloadImages() {
+  private _downloadImages(onDone: Function) {
     let urlList = this._getUrls(this._imgList);
     this._imgLoader.loadImages(urlList, this._imgLoaded, this._imgDone, this);
-    this._imgLoader.download();
+    this._imgLoader.download(onDone);
   }
 
-  private _downloadSounds() {
+  /**
+   * @description load one sound and store in _sndList
+   * @param filename the filename of the sound to be loaded, without extension.
+   */
+  addSnd(name: string) {
+    // all sounds will be housed in the same directory, so..
+    this.base = conf.PATHS.SND;
+    let res = this._createResource();
+    res.initSnd(this._base + name, false);
+
+    this._sndList.push(res);
+  }
+
+  /**
+ * @description load one sound and store in _sndList
+ * @param filenames filenames array of the sounds to be loaded, without extension (extentions are defined in config file).
+ */
+  addSnds(filenames: string[]) {
+    for (let x = 0; x < filenames.length; x++) {
+      this.addSnd(filenames[x]);
+    }
+    console.log(this._sndList);
+  }
+
+  private _downloadSounds(onDone: Function) {
     // WIP
     let urlList = this._getUrls(this._sndList);
-    this._sndLoader.loadSounds(urlList, conf.SND.FL_TYPES, this._sndLoaded, this._sndDone, this);
-    this._sndLoader.download();
+    this._sndLoader.loadSounds(urlList, conf.SND.EXT, this._sndLoaded, (howls: any) => {
+      this._injectHowlsToSnds(howls);
+      onDone();
+    }, this);
+  }
+
+  private _injectHowlsToSnds(howls: any[]) {
+    for (let x = 0; x < howls.length; x++) {
+      this._sndList[x].data = howls[x];
+    }
+
+    console.log(howls);
+    console.log(this._sndList);
   }
 
 
@@ -195,9 +238,9 @@ class Loader {
     this._downloadJSON(callback, context);
   }
 
-  public getActScript(basename: string) : any | null {
+  public getActScript(basename: string): any | null {
     let scriptRes = this._getJSONByBasename(basename);
-    if(scriptRes !== null){
+    if (scriptRes !== null) {
       return JSON.parse(scriptRes.data);
     }
     return null;

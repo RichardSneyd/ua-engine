@@ -15,7 +15,7 @@ class ImgLoader implements IImgLoader {
     this._pxLoader.addImages(images);
   }
 
-  public download(): void {
+  public download(onDone?: Function): void {
     this._pxLoader.download();
   }
 }

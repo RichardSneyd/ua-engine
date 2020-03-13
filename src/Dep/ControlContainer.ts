@@ -24,6 +24,8 @@ import MainLevel from '../Game/Core/Levels/MainLevel';
 
 
 //Services
+import LevelManager from '../Game/Services/LevelManager';
+import AudioManager from '../Game/Services/AudioManager';
 import ImgLoader from '../Game/Services/ImgLoader';
 import SndLoader from '../Game/Services/SndLoader';
 import AjaxLoader from '../Game/Services/AjaxLoader';
@@ -36,7 +38,10 @@ import PxLoader from '../Game/Services/Pixi/PxLoader';
 //Howler
 import HwFactory from '../Game/Services/Howler/HwFactory';
 import HwLoader from '../Game/Services/Howler/HwLoader';
+import HwPlayer from '../Game/Services/Howler/HwPlayer';
+//Levels
 import SndTestLevel from '../Game/Core/Levels/SndTestLevel';
+import BaseLevel from '../Game/Core/Levels/BaseLevel';
 
 
 
@@ -48,13 +53,14 @@ class ControlContainer {
   private _game: any;
   private _funObj: any; _resource: any;
   private _entity: any; _world: any; _loop: any; _loader: any;
-  private _mainLevel: any; _sndTestLevel: any;
+  private _mainLevel: any; _sndTestLevel: any; _baseLevel: any;
 
-  private _screen: any; 
+  private _screen: any;
+  private _levelManager: any; _audioManager: any;
   private _imgLoader: any; _sndLoader: any; _ajaxLoader: any;
   _objectHandler: any;
   private _pxFactory: any; _pxGame: any; _pxLoader: any;
-  private _hwFactory: any; _hwLoader: any;
+  private _hwFactory: any; _hwLoader: any; _hwPlayer: any;
 
   // utils
   private _utils: any; _actScripts: any; _collections: any; _colors: any; 
@@ -73,6 +79,12 @@ class ControlContainer {
     return spEntity;
   }
 
+  public getAudioManager(): AudioManager {
+    let audio = <AudioManager>this._smartDepend.resolve(this._audioManager);
+
+    return audio;
+  }
+
   private _addModules() {
     //Game
     //Core
@@ -86,10 +98,13 @@ class ControlContainer {
     this._loop = this._smartDepend.addModule(Loop, false);
     this._world = this._smartDepend.addModule(World, false);
     //Levels
+    this._baseLevel = this._smartDepend.addModule(BaseLevel, false);
     this._mainLevel = this._smartDepend.addModule(MainLevel, false);
     this._sndTestLevel = this._smartDepend.addModule(SndTestLevel, false);
 
     //Services
+    this._levelManager = this._smartDepend.addModule(LevelManager, false);
+    this._audioManager = this._smartDepend.addModule(AudioManager, true);
     this._imgLoader = this._smartDepend.addModule(ImgLoader, true);
     this._sndLoader = this._smartDepend.addModule(SndLoader, true);
     this._ajaxLoader = this._smartDepend.addModule(AjaxLoader, true);
@@ -102,6 +117,7 @@ class ControlContainer {
     //Howler
     this._hwFactory = this._smartDepend.addModule(HwFactory, true);
     this._hwLoader = this._smartDepend.addModule(HwLoader, true);
+    this._hwPlayer = this._smartDepend.addModule(HwPlayer, true);
     //Utils
     this._utils = this._smartDepend.addModule(Utils, true);
     this._actScripts = this._smartDepend.addModule(ActScripts, true);
@@ -147,15 +163,21 @@ class ControlContainer {
         this._smartDepend.addDependency(this._utils, this._vectors);
 
         //Levels
+        this._smartDepend.addDependency(this._sndTestLevel, this._levelManager);
+        this._smartDepend.addDependency(this._sndTestLevel, this._loop);
+        this._smartDepend.addDependency(this._sndTestLevel, this._entity);
+        this._smartDepend.addDependency(this._sndTestLevel, this._loader);
+        this._smartDepend.addDependency(this._mainLevel, this._levelManager);
         this._smartDepend.addDependency(this._mainLevel, this._loop);
         this._smartDepend.addDependency(this._mainLevel, this._entity);
         this._smartDepend.addDependency(this._mainLevel, this._loader);
 
       //Services
+      this._smartDepend.addDependency(this._levelManager, this._audioManager);
+      this._smartDepend.addDependency(this._audioManager, this._loader);
+      this._smartDepend.addDependency(this._audioManager, this._hwPlayer);
       this._smartDepend.addDependency(this._imgLoader, this._pxLoader);
-
       this._smartDepend.addDependency(this._sndLoader, this._hwLoader);
-
       this._smartDepend.addDependency(this._screen, this._pxGame);
         //Pixi
         this._smartDepend.addDependency(this._pxGame, this._pxFactory);
@@ -163,6 +185,7 @@ class ControlContainer {
         this._smartDepend.addDependency(this._pxLoader, this._pxFactory);
         //Howler
         this._smartDepend.addDependency(this._hwLoader, this._hwFactory);
+        this._smartDepend.addDependency(this._hwPlayer, this._loader);
   }
 
 }

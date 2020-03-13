@@ -1,12 +1,12 @@
 const config = {
     PATHS: {
-        IMG: 'assets/images/',
+        IMG: 'assets/img/',
         JSN: 'assets/json/',
-        SND: 'assets/sounds/',
+        SND: 'assets/snd/',
         SPN: 'assets/spine/'
     },
     SND: {
-        FL_TYPES: ['ogg', 'mp3']
+        EXT: ['ogg', 'mp3']
     }
 }
 
