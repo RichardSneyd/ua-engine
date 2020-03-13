@@ -87,6 +87,7 @@ class ControlContainer {
         this._smartDepend.addDependency(this._animationManager, this._anim);
         
         this._smartDepend.addDependency(this._entity, this._screen);
+        this._smartDepend.addDependency(this._entity, this._animationManager);
         this._smartDepend.addDependency(this._entity, this._objectHandler);
         
         this._smartDepend.addDependency(this._world, this._entity);

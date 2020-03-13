@@ -20,6 +20,10 @@ class Screen implements IScreen {
     return this._pxGame.addSprite(x, y, name);
   }
 
+  public changeTexture(sprite: Sprite, name: string): void {
+    this._pxGame.updateTexture(sprite, name);
+  }
+
   public clearScreen(): void {
     this._pxGame.clearScreen();
   }

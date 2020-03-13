@@ -4,6 +4,7 @@ class Anim {
   private _max: number;
   private _fps: number;
   private _data: any;
+  private _index: number;
 
   constructor() {
     this._name = '';
@@ -11,6 +12,7 @@ class Anim {
     this._fps = 0;
     this._max = 0;
     this._data = null;
+    this._index = 0;
   }
 
   get name(): string {
@@ -37,6 +39,17 @@ class Anim {
     this._data = data;
   }
 
+  public getNextFrame(): string {
+    let frames = this._getFrames();
+    let frm = frames[this._index];
+
+    this._index++;
+
+    if (this._index > (frames.length - 1)) this._index = 0;
+
+    return frm;
+  }
+
   public createNew(): Anim {
     return new Anim();
   }
@@ -45,7 +58,7 @@ class Anim {
     let arr: string[] = [];
 
     for (let c = 0; c < this._max; c++) {
-      arr.push(this._base + this._max.toString());
+      arr.push(this._base + this._name + (c+1).toString() + '.png');
     }
 
     return arr;

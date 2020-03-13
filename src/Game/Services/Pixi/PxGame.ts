@@ -48,6 +48,11 @@ class PxGame {
     return sprite;
   }
 
+  public updateTexture(sprite: Sprite, sprName: string): void {
+    let texture = this._loader.getTexture(sprName);
+    sprite.texture = texture;
+  }
+
   public clearScreen() {
     console.log('clearning screen');
   }

@@ -1,11 +1,14 @@
 import Anim from '../Data/Anim';
 
 class AnimationManager {
-  private _anim: Anim;
+  private _anim: Anim; _activeAnimation: Anim | null;
   private _animations: Anim[];
+  private _loopIndex: number;
 
   constructor(anim: Anim) {
     this._anim = anim;
+    this._activeAnimation = null;
+    this._loopIndex = 0;
 
     this._animations = [];
   }
@@ -32,8 +35,42 @@ class AnimationManager {
     }
   }
 
+  public createNew(): AnimationManager {
+    return new AnimationManager(this._anim);
+  }
+
+  public getUpdatedFrame(): string | null {
+    if (this._loopIndex < 60) {
+      this._loopIndex++;
+    } else {
+      this._loopIndex = 1;
+    }
+
+    if (this._activeAnimation != null) {
+      let canUpdate = this._canUpdate(this._activeAnimation.fps, this._loopIndex);
+
+      if (canUpdate) {
+        return this._activeAnimation.getNextFrame();
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  private _canUpdate(fps: number, loopIndex: number): boolean {
+    let difference = 60 / fps;
+
+    if (loopIndex % difference == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   private _play(anim: Anim) {
-    console.log("playing implemented!");
+    this._activeAnimation = anim;
   }
 
   private _getAnim(name: string): Anim | null {

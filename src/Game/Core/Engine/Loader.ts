@@ -74,10 +74,7 @@ class Loader {
     if (data2.texture != null) {
       this._downloadedResource(data2.url, data2.texture);
     } else {
-      this._downloadedResource(data2.url, data2);
-      console.log(data2);
-
-      (<any>window).spine_ = data2;
+      this._downloadedResource(data2.url, data2); //Spine!
     }
     
   }
