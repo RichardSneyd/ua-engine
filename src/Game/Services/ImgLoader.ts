@@ -15,6 +15,10 @@ class ImgLoader implements IImgLoader {
     this._pxLoader.addImages(images);
   }
 
+  public loadSpine(name: string, jsonUrl: string): void {
+    this._pxLoader.addSpine(name, jsonUrl);
+  }
+
   public download(): void {
     this._pxLoader.download();
   }

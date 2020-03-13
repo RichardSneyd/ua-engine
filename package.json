@@ -9,10 +9,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+<<<<<<< HEAD
     "@types/howler": "^2.1.2",
     "@types/lodash": "^4.14.149",
     "howler": "^2.1.3",
     "lodash": "^4.17.15",
+=======
+    "pixi-spine": "^2.1.7",
+>>>>>>> 49bb9a32f712c6a4d766dd15cfa8c27d8cb504cb
     "pixi.js": "^5.2.1"
   },
   "devDependencies": {

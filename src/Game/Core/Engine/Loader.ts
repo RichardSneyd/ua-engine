@@ -7,6 +7,7 @@ class Loader {
   private _resource: Resource; _imgLoader: IImgLoader; _sndLoader: ISndLoader;
   private _imgList: Resource[];
   private _sndList: Resource[];
+  private _spineList: Resource[];
 
   private _base: string;
 
@@ -22,6 +23,7 @@ class Loader {
     this._resource = resource;
     this._imgLoader = imgLoader;
     this._sndLoader = sndLoader;
+    this._spineList = [];
 
     this._base = "";
 
@@ -46,6 +48,13 @@ class Loader {
   /**
    * @description download all resources
    */
+  public addSpine(name: string, jsonUrl: string) {
+    let res = this._createResource();
+    res.initImage(this._base + jsonUrl, false);
+
+    this._spineList.push(res);
+  }
+
   public download(): void {
     this._downloadSounds();
     this._downloadImages();
@@ -78,8 +87,12 @@ class Loader {
   }
 
   private _imgLoaded(data: any, data2: any) {
-    //console.log('url:(%s) texture(%s)', data2.url, data2.texture);
-    this._downloadedResource(data2.url, data2.texture);
+    if (data2.texture != null) {
+      this._downloadedResource(data2.url, data2.texture);
+    } else {
+      this._downloadedResource(data2.url, data2); //Spine!
+    }
+    
   }
 
   private _sndDone(){
@@ -99,18 +112,22 @@ class Loader {
         res.loaded = true;
         res.data = data;
       } else {
-        console.error("no resource exists with url: %s", url);
+        console.warn("no resource exists with url: %s", url);
       }
   }
 
 
   private _getResource(url: string): Resource | null {
-    for (let c = 0; c < this._imgList.length; c++) {
-      let currentUrl = this._imgList[c].url;
+    let resArr = this._imgList;
+
+    if (url.indexOf('.json') > -1) resArr = this._spineList;
+
+    for (let c = 0; c < resArr.length; c++) {
+      let currentUrl = resArr[c].url;
 
 
       if (currentUrl == url) {
-        return this._imgList[c];
+        return resArr[c];
       }
     }
 
@@ -127,6 +144,9 @@ class Loader {
   private _downloadImages() {
     let urlList = this._getUrls(this._imgList);
     this._imgLoader.loadImages(urlList, this._imgLoaded, this._imgDone, this);
+
+    this._downloadSpines();
+
     this._imgLoader.download();
   }
 
@@ -135,6 +155,14 @@ class Loader {
     let urlList = this._getUrls(this._sndList);
     this._sndLoader.loadSounds(urlList, this._sndLoaded, this._sndDone, this);
     this._sndLoader.download();
+  }
+  
+  private _downloadSpines() {
+    for (let c = 0; c < this._spineList.length; c++) {
+      let res = this._spineList[c];
+
+      this._imgLoader.loadSpine(res.name, res.url);
+    }
   }
 }
 

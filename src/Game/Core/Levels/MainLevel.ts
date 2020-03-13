@@ -17,12 +17,18 @@ class MainLevel implements ILevel {
     console.log('started main!');
 
     setTimeout(() => {
-      this._player.init(100, 100, 'virus1.png');
+      this._player.init(150, 150, 'virus1_active1.png');
+      this._player.addAnimation('active', 'virus1_', 6, 20, null);
+      this._player.playAnimation('active');
     }, 5000);
 
     this._loader.base = 'assets/img/';
-    this._loader.addImage('virus1.png');
-    this._loader.addImage('virus2.png');
+    this._loader.addImage('virus1_active1.png');
+    this._loader.addImage('virus1_active2.png');
+    this._loader.addImage('virus1_active3.png');
+    this._loader.addImage('virus1_active4.png');
+    this._loader.addImage('virus1_active5.png');
+    this._loader.addImage('virus1_active6.png');
     this._loader.download();
 
     this._loop.addFunction(this.update, this);
@@ -30,7 +36,7 @@ class MainLevel implements ILevel {
   }
 
   update(): void {
-    //console.log('updating main');
+    this._player.update();
   }
 
   shutdown(): void {
