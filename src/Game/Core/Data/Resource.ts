@@ -4,6 +4,7 @@ class Resource {
   private _type: string;
   private _url: string;
   private _name: string;
+  private _basename: string; // filename, without extension
   private _loaded: boolean;
   private _data: any;
 
@@ -11,6 +12,7 @@ class Resource {
     this._type = ResType.BLANK;
     this._url = '';
     this._name = '';
+    this._basename = '';
     this._loaded = false;
     this._data = null;
   }
@@ -22,6 +24,14 @@ class Resource {
   get name(): string {
     return this._name;
   }
+
+  /**
+   * @description returns the basename of the file, without file extension
+   */
+  get basename(): string {
+    return this._basename;
+  }
+
 
   get url(): string {
     return this._url;
@@ -45,7 +55,13 @@ class Resource {
   }
 
   public initSnd(url: string, loaded: boolean) {
-    let type = this._getImgTag();
+    let type = this._getSndTag();
+
+    this._init(type, url, loaded);
+  }
+
+  public initJSON(url: string, loaded: boolean) {
+    let type = this._getJSONTag();
 
     this._init(type, url, loaded);
   }
@@ -75,6 +91,7 @@ class Resource {
     this._url = url;
     this._loaded = loaded;
     this._name = this._getName(url);
+    this._basename = this._getBaseName(url);
   }
 
   private _getImgTag(): string {
@@ -85,9 +102,39 @@ class Resource {
     return ResType.SND;
   }
 
+  private _getJSONTag(): string {
+    return ResType.JSN;
+  }
+
   private _getName(url: string): string {
-    let arr = url.split('/');
+    let arr = this._getURLChunks(url);
     return arr[arr.length - 1];
+  }
+
+  // WIP
+  private _getBaseName(url: string) {
+    return this._filenameArrFromURL(url)[0];
+  }
+
+  private _getExtension(url: string) {
+    let arr = this._filenameArrFromURL(url);
+    if(arr.length > 1){
+
+    }
+    return arr[1];
+  }
+
+  private _getURLChunks(url: string) : string[] {
+    return url.trim().split('/');
+  }
+
+  /**
+   * @description extracts the basename, and extension from a URL.
+   * @param url the URL to extract from
+   */
+  private _filenameArrFromURL(url: string): string[]{
+    let chunks = this._getURLChunks(url);
+    return chunks[chunks.length - 1].split('.');
   }
 }
 export default Resource;

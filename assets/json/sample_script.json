@@ -1,0 +1,13 @@
+[
+    {
+        "audio_id": "adult, air, airplane",
+        "images": "virus1, virus2",
+        "trigger": "act_start"
+    },
+    {
+        "audio_id": "adult, air, airplane",
+        "images": "virus1, virus2",
+        "trigger": "act_end",
+        "music": "jp_congratulatory_music1"
+    }
+]

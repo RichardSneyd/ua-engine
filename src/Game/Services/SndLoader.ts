@@ -10,17 +10,13 @@ class SndLoader implements ISndLoader {
         this._baseURL = baseURL;
     }
 
-    loadSounds(sounds: string[], onProgress: Function, onComplete: Function, context: any): void {
-        this._loader.loadSounds();
+    loadSounds(urls: string[], extensions: string[], onProgress: Function, onDone: Function, context: any): void {
+        this._loader.loadSounds(urls, extensions, onDone, context);
     }
 
 
     get baseURL(): string {
         return this._baseURL;
-    }
-
-    download() {
-        
     }
 
 }

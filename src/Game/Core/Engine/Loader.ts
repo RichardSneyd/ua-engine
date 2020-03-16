@@ -2,12 +2,16 @@ import Resource from '../Data/Resource';
 import IImgLoader from '../../Services/IImgLoader';
 import SndLoader from '../../Services/SndLoader';
 import ISndLoader from '../../Services/ISndLoader';
+import conf from '../config';
+import AjaxLoader from '../../Services/AjaxLoader';
 
 class Loader {
-  private _resource: Resource; _imgLoader: IImgLoader; _sndLoader: ISndLoader;
+  private _resource: Resource;
+  private _imgLoader: IImgLoader; _sndLoader: ISndLoader; _ajaxLoader: AjaxLoader;
   private _imgList: Resource[];
   private _sndList: Resource[];
   private _spineList: Resource[];
+  private _jsnList: Resource[];
 
   private _base: string;
 
@@ -19,16 +23,18 @@ class Loader {
     this._base = base;
   }
 
-  constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader) {
+  constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader, ajaxLoader: AjaxLoader) {
     this._resource = resource;
     this._imgLoader = imgLoader;
     this._sndLoader = sndLoader;
     this._spineList = [];
+    this._ajaxLoader = ajaxLoader;
 
     this._base = "";
 
     this._imgList = [];
     this._sndList = [];
+    this._jsnList = [];
   }
 
   public addImage(url: string) {
@@ -38,11 +44,12 @@ class Loader {
     this._imgList.push(res);
   }
 
-  addSnd(url: string) {
+  public addJSON(basename: string) {
+    this.base = conf.PATHS.JSN;
     let res = this._createResource();
-    res.initImage(this._base + url, false);
+    res.initJSON(this._base + basename + '.json', false);
 
-    this._imgList.push(res);
+    this._sndList.push(res);
   }
 
   /**
@@ -55,9 +62,26 @@ class Loader {
     this._spineList.push(res);
   }
 
-  public download(): void {
-    this._downloadSounds();
-    this._downloadImages();
+  public download(onDone?: Function): void {
+    let _imgsDone: boolean = false, _sndsDone: boolean = false;
+
+    this._downloadSounds(() => {
+      _sndsDone = true;
+      if (_imgsDone) {
+        if (onDone !== undefined) {
+          onDone();
+        }
+      }
+    });
+
+    this._downloadImages(() => {
+      _imgsDone = true;
+      if (_sndsDone) {
+        if (onDone !== undefined) {
+          onDone();
+        }
+      }
+    });
   }
 
   public getTexture(name: string): any {
@@ -92,15 +116,15 @@ class Loader {
     } else {
       this._downloadedResource(data2.url, data2); //Spine!
     }
-    
+
   }
 
-  private _sndDone(){
+  private _sndDone() {
     // WIP
     console.log('all sounds loaded')
   }
 
-  private _sndLoaded(data: any){
+  private _sndLoaded(data: any) {
     // WIP
     console.log(data);
   }
@@ -109,15 +133,16 @@ class Loader {
     let res = this._getResource(url);
 
     if (res != null) {
-        res.loaded = true;
-        res.data = data;
-      } else {
-        console.warn("no resource exists with url: %s", url);
-      }
+      res.loaded = true;
+      res.data = data;
+    } else console.warn("no resource exists with url: %s", url);
   }
 
 
+
   private _getResource(url: string): Resource | null {
+    //  let _allList = this._imgList.concat(this._sndList);
+
     let resArr = this._imgList;
 
     if (url.indexOf('.json') > -1) resArr = this._spineList;
@@ -134,6 +159,37 @@ class Loader {
     return null;
   }
 
+  private _getJSONByBasename(basename: string): Resource | null {
+    return this._getResourceByBasename(basename, this._jsnList);
+  }
+
+  private _getResourceByBasename(basename: string, resList: Resource[]): Resource | null {
+    for (let c = 0; c < resList.length; c++) {
+      let bname = resList[c].url;
+
+
+      if (bname == basename) {
+        return resList[c];
+      }
+    }
+
+    return null;
+  }
+
+  getSndResByBasename(basename: string): Resource | null {
+    let resList = this._sndList;
+    for (let c = 0; c < resList.length; c++) {
+      let bname = resList[c].basename;
+
+
+      if (bname == basename) {
+        return resList[c];
+      }
+    }
+
+    return null;
+  }
+
 
 
   //Foreign dependencies
@@ -141,22 +197,76 @@ class Loader {
     return this._resource.createNew();
   }
 
-  private _downloadImages() {
+  private _downloadImages(onDone: Function) {
     let urlList = this._getUrls(this._imgList);
     this._imgLoader.loadImages(urlList, this._imgLoaded, this._imgDone, this);
 
     this._downloadSpines();
 
     this._imgLoader.download();
+    this._imgLoader.download(onDone);
   }
 
-  private _downloadSounds() {
+  /**
+   * @description load one sound and store in _sndList
+   * @param filename the filename of the sound to be loaded, without extension.
+   */
+  addSnd(name: string) {
+    // all sounds will be housed in the same directory, so..
+    this.base = conf.PATHS.SND;
+    let res = this._createResource();
+    res.initSnd(this._base + name, false);
+
+    this._sndList.push(res);
+  }
+
+  /**
+  * @description load one sound and store in _sndList
+  * @param filenames filenames array of the sounds to be loaded, without extension (extentions are defined in config file).
+  */
+  addSnds(filenames: string[]) {
+    for (let x = 0; x < filenames.length; x++) {
+      this.addSnd(filenames[x]);
+    }
+    console.log(this._sndList);
+  }
+
+  private _downloadSounds(onDone: Function) {
     // WIP
     let urlList = this._getUrls(this._sndList);
-    this._sndLoader.loadSounds(urlList, this._sndLoaded, this._sndDone, this);
-    this._sndLoader.download();
+    this._sndLoader.loadSounds(urlList, conf.SND.EXT, this._sndLoaded, (howls: any) => {
+      this._injectHowlsToSnds(howls);
+      onDone();
+    }, this);
   }
-  
+
+  private _injectHowlsToSnds(howls: any[]) {
+    for (let x = 0; x < howls.length; x++) {
+      this._sndList[x].data = howls[x];
+    }
+
+    console.log(howls);
+    console.log(this._sndList);
+  }
+
+
+  private _downloadJSON(callback?: Function, context?: any) {
+    let urlList = this._getUrls(this._jsnList);
+    this._ajaxLoader.loadFile(urlList[0], callback, context);
+  }
+
+  public downloadJSON(callback?: Function, context?: any) {
+    this._downloadJSON(callback, context);
+  }
+
+  public getActScript(basename: string): any | null {
+    let scriptRes = this._getJSONByBasename(basename);
+    if (scriptRes !== null) {
+      return JSON.parse(scriptRes.data);
+    }
+    return null;
+  }
+
   private _downloadSpines() {
     for (let c = 0; c < this._spineList.length; c++) {
       let res = this._spineList[c];

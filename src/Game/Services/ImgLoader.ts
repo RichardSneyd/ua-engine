@@ -19,7 +19,7 @@ class ImgLoader implements IImgLoader {
     this._pxLoader.addSpine(name, jsonUrl);
   }
 
-  public download(): void {
+  public download(onDone?: Function): void {
     this._pxLoader.download();
   }
 }
