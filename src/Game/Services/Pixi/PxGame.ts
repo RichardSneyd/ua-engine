@@ -26,17 +26,11 @@ class PxGame {
     }
   }
 
-  public addSprite(x: number, y: number, sprName: string): any {
+  public addSprite(x: number, y: number, sprName: string, frame: string | null): any {
     let texture = this._loader.getTexture(sprName);
     let sprite;
     
-
-    if (sprName.indexOf('.json') > -1) {
-      console.log(texture.spineData);
-      sprite = new PIXI.spine.Spine(texture.data);
-    } else {
-      sprite = this._createSprite(x, y, sprName);
-    }
+    sprite = this._createSprite(x, y, sprName, frame);
 
     sprite.x = x;
     sprite.y = y;
@@ -48,8 +42,8 @@ class PxGame {
     return sprite;
   }
 
-  public updateTexture(sprite: Sprite, sprName: string): void {
-    let texture = this._loader.getTexture(sprName);
+  public updateTexture(sprite: Sprite, sprName: string, frame: string | null = null): void {
+    let texture = this._loader.getTexture(sprName, frame);
     sprite.texture = texture;
   }
 
@@ -57,8 +51,8 @@ class PxGame {
     console.log('clearning screen');
   }
 
-  private _createSprite(x: number, y: number, sprName: string) {
-    let texture = this._loader.getTexture(sprName);
+  private _createSprite(x: number, y: number, sprName: string, frame: string | null = null) {
+    let texture = this._loader.getTexture(sprName, frame);
     let sprite = this._pxFactory.createSprite(texture);
     sprite.x = x;
     sprite.y = y;

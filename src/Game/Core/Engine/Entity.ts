@@ -7,6 +7,7 @@ class Entity {
   private _y: number;
   private _sprite: string;
   private _initialized: boolean;
+  private _atlas: string | null;
 
   private _screen: IScreen; _animationManager: AnimationManger; _objectHandler: IObjectHandler;
   private _data: any;
@@ -19,6 +20,7 @@ class Entity {
     this._x = 0;
     this._y = 0;
     this._sprite = '';
+    this._atlas = null;
 
     this._initialized = false;
   }
@@ -35,12 +37,16 @@ class Entity {
     this._objectHandler.setXy(this._data, this._x, this._y);
   }
 
-  public init(x: number, y: number, sprite: string): void {
+  public init(x: number, y: number, sprite: string, frame: string | null = null): void {
     this._x = x;
     this._y = y;
     this._sprite = sprite;
 
-    this._data = this._screen.createSprite(x, y, sprite);
+    this._data = this._screen.createSprite(x, y, sprite, frame);
+
+    if (frame != null) this._atlas = sprite;
+
+    
     this._initialized = true;
   }
 
@@ -63,7 +69,13 @@ class Entity {
 
     let updatedFrame = this._animationManager.getUpdatedFrame();
 
-    if (updatedFrame != null) this._screen.changeTexture(this._data, updatedFrame);
+    if (updatedFrame != null) {
+      if (this._atlas != null) {
+        this._screen.changeTexture(this._data, this._atlas, updatedFrame);
+      } else {
+        this._screen.changeTexture(this._data, updatedFrame);
+      }
+    }
   }
 
 

@@ -33,6 +33,14 @@ class Loader {
     this._imgList.push(res);
   }
 
+  public addAtlas(url: string) {
+    let res = this._createResource();
+    res.initImage(this._base + url, false);
+    console.log("atlas location '%s'", this._base + url);
+
+    this._imgList.push(res);
+  }
+
   public addSpine(name: string, jsonUrl: string) {
     let res = this._createResource();
     res.initImage(this._base + jsonUrl, false);
@@ -44,14 +52,14 @@ class Loader {
     this._downloadImages();
   }
 
-  public getTexture(name: string): any {
-    let url = this._base + name;
+  public getTexture(name1: string, name2: string | null = null): any {
+    let url = this._base + name1;
     let res = this._getResource(url);
 
     if (res != null) {
-      return res.data;
+      return this._extractTexture(res.data, name2);
     } else {
-      console.warn("Resource named '%s' doesn't exist.", name);
+      console.warn("Resource named '%s' doesn't exist.", name1);
     }
   }
 
@@ -68,15 +76,15 @@ class Loader {
 
   private _imgDone() {
     console.log('all images loaded');
+    this._imgLoader.getResources((blob: any) => {
+      console.log(blob.url, blob.data);
+
+      this._downloadedResource(blob.url, blob.data);
+     })
   }
 
   private _imgLoaded(data: any, data2: any) {
-    if (data2.texture != null) {
-      this._downloadedResource(data2.url, data2.texture);
-    } else {
-      this._downloadedResource(data2.url, data2); //Spine!
-    }
-    
+    //this._downloadedResource(data2.url, data2.texture);
   }
 
   private _downloadedResource(url: string, data: any) {
@@ -94,7 +102,7 @@ class Loader {
   private _getResource(url: string): Resource | null {
     let resArr = this._imgList;
 
-    if (url.indexOf('.json') > -1) resArr = this._spineList;
+    //if (url.indexOf('.json') > -1) resArr = this._spineList;
 
     for (let c = 0; c < resArr.length; c++) {
       let currentUrl = resArr[c].url;
@@ -130,6 +138,10 @@ class Loader {
 
       this._imgLoader.loadSpine(res.name, res.url);
     }
+  }
+
+  private _extractTexture(data: any, frame: any = null) {
+    return this._imgLoader.getTexture(data, frame);
   }
 }
 

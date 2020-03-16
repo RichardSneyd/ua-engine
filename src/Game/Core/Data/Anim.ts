@@ -58,7 +58,7 @@ class Anim {
     let arr: string[] = [];
 
     for (let c = 0; c < this._max; c++) {
-      arr.push(this._base + this._name + (c+1).toString() + '.png');
+      arr.push(this._base + this._name + (c+1).toString());
     }
 
     return arr;

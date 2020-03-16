@@ -16,12 +16,12 @@ class Screen implements IScreen {
     this._pxGame.init(width, height, elementId);
   }
 
-  public createSprite(x: number, y: number, name: string): any {
-    return this._pxGame.addSprite(x, y, name);
+  public createSprite(x: number, y: number, name: string, frame: string | null): any {
+    return this._pxGame.addSprite(x, y, name, frame);
   }
 
-  public changeTexture(sprite: Sprite, name: string): void {
-    this._pxGame.updateTexture(sprite, name);
+  public changeTexture(sprite: Sprite, name: string, frame: string | null = null): void {
+    this._pxGame.updateTexture(sprite, name, frame);
   }
 
   public clearScreen(): void {

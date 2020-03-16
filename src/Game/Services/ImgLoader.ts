@@ -22,6 +22,14 @@ class ImgLoader implements IImgLoader {
   public download(): void {
     this._pxLoader.download();
   }
+
+  public getResources(foo: Function): void {
+    this._pxLoader.getResources(foo);
+  }
+
+  public getTexture(resource: any, frame: any = null): any {
+    return this._pxLoader.getTexture(resource, frame);
+  }
 }
 
 export default ImgLoader;
