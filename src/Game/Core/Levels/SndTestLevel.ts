@@ -34,41 +34,48 @@ abstract class SndTestLevel implements ILevel {
 
         //  let actScript: any = this._loader.getActScript('sample_script');
 
+        setTimeout(() => {
+            this._player.init(150, 150, 'virus1_active1.png');
+            this._player.addAnimation('active', 'virus1_', 6, 20, null);
+            this._player.playAnimation('active');
+        }, 5000);
+
         this._loader.base = 'assets/img/';
-        this._loader.addImage('virus1.png');
-        this._loader.addImage('virus2.png');
+        this._loader.addImage('virus1_active1.png');
+        this._loader.addImage('virus1_active2.png');
+        this._loader.addImage('virus1_active3.png');
+        this._loader.addImage('virus1_active4.png');
+        this._loader.addImage('virus1_active5.png');
+        this._loader.addImage('virus1_active6.png');
 
         //test load 3 audio files
 
         this._loader.addSnds(['airplane', 'air', 'adult']);
         console.log('addSounds completed');
 
-        console.log('loader.download called');
+
         this._loader.download();
-        console.log('loader.download finished');
 
-        setTimeout(() => {
-
-            this.start();
-        }, 4000);
-    }
-
-    start(): void {
-        this._player.init(100, 100, 'virus1.png');
-
-
-        console.log('calling audio.play');
-        this.manager.audio.play('airplane', () => {
-            console.log('finished playing airplane!');
-        });
-
+        this._player.init(100, 100, 'virus1_active1.png');
 
         this._loop.addFunction(this.update, this);
         this._loop.start();
+
+        // a hack to test the audio management system -- input events will be handled by an input handler ultimately 
+        let canvas = document.getElementsByTagName('canvas')[0];
+        console.log('click event')
+        canvas.addEventListener('click', () => {
+            console.log('calling audio.play');
+            this.manager.audio.playInstructionArr(['airplane', 'air', 'adult'], () => {
+                console.log('finished playing airplane!');
+            });
+
+        });
     }
 
     update(): void {
         //console.log('updating main');
+        this._player.update();
     }
 
     shutdown(): void {

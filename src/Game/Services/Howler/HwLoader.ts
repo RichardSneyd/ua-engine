@@ -22,8 +22,8 @@ class HwLoader {
         let _i = i;
         console.log('in HwLoader.loadSound..');
         if(_i<urls.length){
-            let howl = this._factory.createHowl(urls[i], extensions, ()=>{
-                console.log('loaded %{urls[i]} successfully...', [urls[i]]); 
+            let howl = this._factory.createHowl(urls[_i], extensions, ()=>{
+                console.log('loaded %s successfully...', [urls[_i].toString()]); 
                 _i++;     
                 this.loadSound(_i, urls, extensions, onDone, context);
             });
@@ -32,7 +32,7 @@ class HwLoader {
             }
         }
         else {
-            console.log('loaded %{i} sounds, finished now....', i);
+            console.log('loaded %s sounds, finished now....', i);
             onDone(this._howls);
         }
     }

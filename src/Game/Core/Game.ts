@@ -15,7 +15,7 @@ class Game {
     this._world.init(800, 800);
 
     //this._world.startLevel(this._mainLevel);
-    this._world.startLevel(this._sndTestLevel);
+    this._world.startLevel(this._mainLevel);
     
   }
 }

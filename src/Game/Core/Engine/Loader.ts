@@ -85,7 +85,7 @@ class Loader {
   }
 
   public getTexture(name: string): any {
-    let url = this._base + name;
+    let url = conf.PATHS.IMG + name;
     let res = this._getResource(url);
 
     if (res != null) {
@@ -208,7 +208,7 @@ class Loader {
   }
 
   /**
-   * @description load one sound and store in _sndList
+   * @description create a sound resource, to be inject with data later, at download
    * @param filename the filename of the sound to be loaded, without extension.
    */
   addSnd(name: string) {
@@ -221,7 +221,7 @@ class Loader {
   }
 
   /**
-  * @description load one sound and store in _sndList
+  * @description create several sound resources, to be injected with data (howls) at download phase
   * @param filenames filenames array of the sounds to be loaded, without extension (extentions are defined in config file).
   */
   addSnds(filenames: string[]) {
@@ -234,6 +234,7 @@ class Loader {
   private _downloadSounds(onDone: Function) {
     // WIP
     let urlList = this._getUrls(this._sndList);
+
     this._sndLoader.loadSounds(urlList, conf.SND.EXT, this._sndLoaded, (howls: any) => {
       this._injectHowlsToSnds(howls);
       onDone();
