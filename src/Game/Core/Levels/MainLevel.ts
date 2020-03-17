@@ -17,7 +17,7 @@ class MainLevel implements ILevel {
     console.log('started main!');
 
     setTimeout(() => {
-      this._player.init(150, 150, 'fly_atlas.json', 'idle1');
+      this._player.init(150, 150, 'fly_atlas', 'idle1');
       this._player.addAnimation('idle', '', 5, 2, null);
       this._player.playAnimation('idle');
     }, 5000);

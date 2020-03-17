@@ -36,7 +36,7 @@ class Loader {
   public addAtlas(url: string) {
     let res = this._createResource();
     res.initImage(this._base + url, false);
-    console.log("atlas location '%s'", this._base + url);
+    //console.log("atlas location '%s'", this._base + url);
 
     this._imgList.push(res);
   }
@@ -52,14 +52,14 @@ class Loader {
     this._downloadImages();
   }
 
-  public getTexture(name1: string, name2: string | null = null): any {
-    let url = this._base + name1;
-    let res = this._getResource(url);
+  public getTexture(sprite: string, frame: string | null = null): any {
+    //let url = this._base + sprite;
+    let res = this._getResource(sprite, true);
 
     if (res != null) {
-      return this._extractTexture(res.data, name2);
+      return this._extractTexture(res.data, frame);
     } else {
-      console.warn("Resource named '%s' doesn't exist.", name1);
+      console.warn("Resource named '%s' doesn't exist.", sprite);
     }
   }
 
@@ -75,9 +75,9 @@ class Loader {
   }
 
   private _imgDone() {
-    console.log('all images loaded');
+    //console.log('all images loaded');
     this._imgLoader.getResources((blob: any) => {
-      console.log(blob.url, blob.data);
+      //console.log(blob.url, blob.data);
 
       this._downloadedResource(blob.url, blob.data);
      })
@@ -99,17 +99,18 @@ class Loader {
   }
 
 
-  private _getResource(url: string): Resource | null {
+  private _getResource(url: string, byName: boolean = false): Resource | null {
     let resArr = this._imgList;
-
-    //if (url.indexOf('.json') > -1) resArr = this._spineList;
 
     for (let c = 0; c < resArr.length; c++) {
       let currentUrl = resArr[c].url;
+      let currentName = resArr[c].name;
 
-
-      if (currentUrl == url) {
-        return resArr[c];
+      if (!byName) {
+        if (currentUrl == url) return resArr[c];
+      } else {
+        //console.log("currentName(%s) == name(%s)", currentName, url)
+        if (currentName == url) return resArr[c];
       }
     }
 

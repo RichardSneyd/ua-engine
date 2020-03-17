@@ -86,7 +86,23 @@ class Resource {
   
   private _getName(url: string): string {
     let arr = url.split('/');
-    return arr[arr.length - 1];
+    let filename = arr[arr.length - 1];
+    let nameArr = filename.split('.');
+    nameArr.pop();
+    let name = '';
+
+    for (let c = 0; c < nameArr.length; c++) {
+      let current = nameArr[c];
+      if (c > 0) {
+        name = name + '.' + current;
+      } else {
+        name = current;
+      }
+    }
+
+    //console.log("name: %s", name);
+
+    return name;
   }
 }
 export default Resource;
