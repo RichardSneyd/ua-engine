@@ -1,7 +1,7 @@
 import Entity from '../Engine/Entity';
 import IScreen from '../../Services/IScreen';
 import ILevel from '../Engine/ILevel';
-import LevelManager from '../../Services/LevelManager';
+import LevelManager from './LevelManager';
 
 
 class World {

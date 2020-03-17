@@ -3,7 +3,7 @@ import ILevel from '../Engine/ILevel';
 import Loader from '../Engine/Loader';
 import Loop from '../Engine/Loop';
 import Entity from '../Engine/Entity';
-import LevelManager from '../../Services/LevelManager';
+import LevelManager from '../Engine/LevelManager';
 
 class MainLevel implements ILevel {
   protected _manager: LevelManager; _loop: Loop; _player: Entity; _loader: Loader;
@@ -61,15 +61,39 @@ class MainLevel implements ILevel {
 
     // a hack to test the audio management system -- input events will be handled by an input handler ultimately 
     let canvas = document.getElementsByTagName('canvas')[0];
-    console.log('click event')
     canvas.addEventListener('click', () => {
-      console.log('calling audio.play');
       this.manager.audio.playInstructionArr(['airplane', 'air', 'adult'], () => {
-        console.log('finished playing airplane!');
+        console.log('audio arr playback completed');
       });
 
     });
+
+    this.manager.events.on('kissme', () => {
+      console.log('you kissed me!');
+    })
+
+    this.manager.events.on('kissme', this.hugMe.bind(this));
+    console.log(this.manager.events.events);
+    this.manager.events.fire('kissme');
+    this.manager.events.off('kissme', this.hugMe);
+    console.log(this.manager.events.events);
+    this.manager.events.fire('kissme');
+    console.log('removing kissme event...');
+    this.manager.events.removeEvent('kissme');
+    this.manager.events.fire('kissme');
+    this.manager.events.once('testonce', ()=>{
+      console.log('called oncetest, and it executed!!');
+    });
+    this.manager.events.fire('testonce');
+    console.log('if once works, it should not execute next');
+    this.manager.events.fire('testonce');
+    debugger;
   }
+
+  hugMe() {
+    console.log('and you hugged me');
+  }
+
 
   update(): void {
     //console.log('updating main');

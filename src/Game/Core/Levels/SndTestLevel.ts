@@ -5,7 +5,7 @@ import Loop from '../Engine/Loop';
 import Entity from '../Engine/Entity';
 import Utils from '../../Utils/Utils';
 import BaseLevel from './BaseLevel';
-import LevelManager from '../../Services/LevelManager';
+import LevelManager from '../Engine/LevelManager';
 
 abstract class SndTestLevel implements ILevel {
     protected _manager: LevelManager; _loop: Loop; _player: Entity; _loader: Loader;

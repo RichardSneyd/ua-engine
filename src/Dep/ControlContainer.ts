@@ -12,6 +12,7 @@ import AnimationManager from '../Game/Core/Engine/AnimationManager';
 import Loader from '../Game/Core/Engine/Loader';
 import Loop from '../Game/Core/Engine/Loop';
 import World from '../Game/Core/Engine/World';
+import Events from '../Game/Core/Engine/Events';
 //Levels
 
 
@@ -29,7 +30,7 @@ import MainLevel from '../Game/Core/Levels/MainLevel';
 
 
 //Services
-import LevelManager from '../Game/Services/LevelManager';
+import LevelManager from '../Game/Core/Engine/LevelManager';
 import AudioManager from '../Game/Services/AudioManager';
 import ImgLoader from '../Game/Services/ImgLoader';
 import SndLoader from '../Game/Services/SndLoader';
@@ -57,7 +58,7 @@ class ControlContainer {
 
   private _game: any;
   private _funObj: any; _resource: any; _anim: any;
-  private _entity: any; _world: any; _loop: any; _loader: any; _animationManager: any;
+  private _entity: any; _world: any; _loop: any; _loader: any; _animationManager: any; private _events: any;
   private _mainLevel: any;
 
   private _sndTestLevel: any; _baseLevel: any;
@@ -86,11 +87,11 @@ class ControlContainer {
     return spEntity;
   }
 
-  public getAudioManager(): AudioManager {
+ /*  public getAudioManager(): AudioManager {
     let audio = <AudioManager>this._smartDepend.resolve(this._audioManager);
 
     return audio;
-  }
+  } */
 
   private _addModules() {
     //Game
@@ -106,6 +107,7 @@ class ControlContainer {
     this._loader = this._smartDepend.addModule(Loader, true);
     this._loop = this._smartDepend.addModule(Loop, false);
     this._world = this._smartDepend.addModule(World, false);
+    this._events = this._smartDepend.addModule(Events, true);
     //Levels
     this._baseLevel = this._smartDepend.addModule(BaseLevel, false);
     this._mainLevel = this._smartDepend.addModule(MainLevel, false);
@@ -186,6 +188,7 @@ class ControlContainer {
 
     //Services
     this._smartDepend.addDependency(this._levelManager, this._audioManager);
+    this._smartDepend.addDependency(this._levelManager, this._events);
     this._smartDepend.addDependency(this._audioManager, this._loader);
     this._smartDepend.addDependency(this._audioManager, this._hwPlayer);
     this._smartDepend.addDependency(this._imgLoader, this._pxLoader);

@@ -1,5 +1,5 @@
 import Loop from './Loop';
-import LevelManager from '../../Services/LevelManager';
+import LevelManager from './LevelManager';
 
 interface ILevel {
   manager: LevelManager;
