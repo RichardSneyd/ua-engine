@@ -7,6 +7,7 @@ import LevelManager from '../Engine/LevelManager';
 
 class MainLevel implements ILevel {
   protected _manager: LevelManager; _loop: Loop; _player: Entity; _loader: Loader;
+  protected _script: any;
 
 
   constructor(manager: LevelManager, loop: Loop, player: Entity, loader: Loader) {
@@ -14,6 +15,7 @@ class MainLevel implements ILevel {
     this._loop = loop;
     this._player = player;
     this._loader = loader;
+    this._script = [];
     // this._utils = utils;
   }
 
@@ -21,16 +23,22 @@ class MainLevel implements ILevel {
     return this._manager;
   }
 
+  set script(script: any[]) {
+    this._script = script;
+  }
+
 
   init(): void {
     //test load a json file
 
-    /*   this._loader.addJSON('sample_script.json');
-      this._loader.downloadJSON(()=>{
-          console.log('loaded json')
-    }, this); */
 
-    //  let actScript: any = this._loader.getActScript('sample_script');
+    this._loader.loadActScript('sample_script', (script: any, data: any) => {
+      this.script = script;
+      console.log(this.script);
+    });
+
+
+    /* //  let actScript: any = this._loader.getActScript('sample_script');
 
     setTimeout(() => {
       this._player.init(150, 150, 'fly_atlas', 'idle1');
@@ -84,11 +92,11 @@ class MainLevel implements ILevel {
     this.manager.events.removeEvent('callme');
     this.manager.events.fire('callme');
     this.manager.events.once('testonce', ()=>{
-      console.log('called oncetest, and it executed!!');
+      console.log('called testonce, and it executed!!');
     });
     this.manager.events.fire('testonce');
     console.log('if once works, it should not execute next');
-    this.manager.events.fire('testonce');
+    this.manager.events.fire('testonce'); */
   }
 
   callMe() {

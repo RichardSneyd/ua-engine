@@ -11,7 +11,7 @@ class Loader {
   private _imgList: Resource[];
   private _sndList: Resource[];
   private _spineList: Resource[];
-  private _jsnList: Resource[];
+  private _scripts: any;
 
   private _base: string;
 
@@ -21,6 +21,10 @@ class Loader {
 
   set base(base: string) {
     this._base = base;
+  }
+
+  get scripts(){
+    return this._scripts;
   }
 
   constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader, ajaxLoader: AjaxLoader) {
@@ -34,7 +38,7 @@ class Loader {
 
     this._imgList = [];
     this._sndList = [];
-    this._jsnList = [];
+    this._scripts = {}
   }
 
   public addImage(url: string) {
@@ -174,9 +178,9 @@ class Loader {
     return null;
   }
 
-  private _getJSONByBasename(basename: string): Resource | null {
+/*   private _getJSONByName(basename: string): Resource | null {
     return this._getResourceByBasename(basename, this._jsnList);
-  }
+  } */
 
   private _getResourceByBasename(basename: string, resList: Resource[]): Resource | null {
     for (let c = 0; c < resList.length; c++) {
@@ -204,8 +208,6 @@ class Loader {
 
     return null;
   }
-
-
 
   //Foreign dependencies
   private _createResource(): Resource {
@@ -250,38 +252,49 @@ class Loader {
     // WIP
     let urlList = this._getUrls(this._sndList);
 
-    this._sndLoader.loadSounds(urlList, conf.SND.EXT, this._sndLoaded, (howls: any) => {
-      this._injectHowlsToSnds(howls);
+    this._sndLoader.loadSounds(urlList, conf.SND.EXT, this._sndLoaded, (data: any) => {
+      this._injectDataToSnds(data);
       onDone();
     }, this);
   }
 
-  private _injectHowlsToSnds(howls: any[]) {
-    for (let x = 0; x < howls.length; x++) {
-      this._sndList[x].data = howls[x];
+  private _injectDataToSnds(data: any[]) {
+    for (let x = 0; x < data.length; x++) {
+      this._sndList[x].data = data[x];
     }
 
-    console.log(howls);
+    console.log(data);
     console.log(this._sndList);
   }
 
+  public loadActScript(file: string, callback?: Function): any{
+    this._ajaxLoader.loadFile(conf.PATHS.JSN + file + '.json', (data: any)=>{
+      if(callback !== undefined){
+        console.log('in Loader.loadActivityScript callback for %s', file);
+        this._scripts[file] = JSON.parse(data.data);
+        callback(data.data, data);
+      }
+    });
 
-  private _downloadJSON(callback?: Function, context?: any) {
+    return this._scripts[file];
+  }
+
+ /*  private _downloadJSON(callback?: Function) {
     let urlList = this._getUrls(this._jsnList);
-    this._ajaxLoader.loadFile(urlList[0], callback, context);
-  }
+    this._ajaxLoader.loadFile(urlList[0], callback);
+  } */
 
-  public downloadJSON(callback?: Function, context?: any) {
-    this._downloadJSON(callback, context);
-  }
+ /*  public downloadJSON(callback?: Function) {
+    this._downloadJSON(callback);
+  } */
 
-  public getActScript(basename: string): any | null {
+ /*  public getActScript(basename: string): any | null {
     let scriptRes = this._getJSONByBasename(basename);
     if (scriptRes !== null) {
       return JSON.parse(scriptRes.data);
     }
     return null;
-  }
+  } */
 
   private _downloadSpines() {
     for (let c = 0; c < this._spineList.length; c++) {
