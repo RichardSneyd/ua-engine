@@ -68,30 +68,30 @@ class MainLevel implements ILevel {
 
     });
 
-    this.manager.events.on('kissme', () => {
-      console.log('you kissed me!');
+    this.manager.events.on('callme', () => {
+      console.log('you called me!');
     })
 
-    this.manager.events.on('kissme', this.hugMe.bind(this));
+    // testing out the Event system...
+    this.manager.events.on('callme', this.callMe.bind(this));
     console.log(this.manager.events.events);
-    this.manager.events.fire('kissme');
-    this.manager.events.off('kissme', this.hugMe);
+    this.manager.events.fire('callme');
+    this.manager.events.off('callme', this.callMe);
     console.log(this.manager.events.events);
-    this.manager.events.fire('kissme');
-    console.log('removing kissme event...');
-    this.manager.events.removeEvent('kissme');
-    this.manager.events.fire('kissme');
+    this.manager.events.fire('callme');
+    console.log('removing called me event...');
+    this.manager.events.removeEvent('callme');
+    this.manager.events.fire('callme');
     this.manager.events.once('testonce', ()=>{
       console.log('called oncetest, and it executed!!');
     });
     this.manager.events.fire('testonce');
     console.log('if once works, it should not execute next');
     this.manager.events.fire('testonce');
-    debugger;
   }
 
-  hugMe() {
-    console.log('and you hugged me');
+  callMe() {
+    console.log('and you called me as well!');
   }
 
 
