@@ -8,6 +8,8 @@ interface IScreen {
   clearScreen(): void;
 
   changeTexture(sprite: Sprite, name: string, frame?: string | null): void;
+
+  createSpine(name: string): any;
 }
 
 export default IScreen;

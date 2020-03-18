@@ -6,6 +6,7 @@ import Game from '../Game/Core/Game';
 import Anim from '../Game/Core/Data/Anim';
 import FunObj from '../Game/Core/Data/FunObj';
 import Resource from '../Game/Core/Data/Resource';
+import Tween from '../Game/Core/Data/Tween';
 //Engine
 import Entity from '../Game/Core/Engine/Entity';
 import AnimationManager from '../Game/Core/Engine/AnimationManager';
@@ -59,7 +60,7 @@ class ControlContainer {
   private _game: any;
   private _funObj: any; _resource: any; _anim: any;
   private _entity: any; _world: any; _loop: any; _loader: any; _animationManager: any; private _events: any;
-  private _mainLevel: any;
+  private _mainLevel: any; _tween: any;
 
   private _sndTestLevel: any; _baseLevel: any;
 
@@ -101,6 +102,7 @@ class ControlContainer {
     this._anim = this._smartDepend.addModule(Anim, false);
     this._funObj = this._smartDepend.addModule(FunObj, false);
     this._resource = this._smartDepend.addModule(Resource, false);
+    this._tween = this._smartDepend.addModule(Tween, false);
     //Engine
     this._animationManager = this._smartDepend.addModule(AnimationManager, false);
     this._entity = this._smartDepend.addModule(Entity, false);
@@ -152,6 +154,7 @@ class ControlContainer {
     this._smartDepend.addDependency(this._game, this._utils);
     //Engine
     this._smartDepend.addDependency(this._animationManager, this._anim);
+    this._smartDepend.addDependency(this._animationManager, this._tween);
 
     this._smartDepend.addDependency(this._entity, this._screen);
     this._smartDepend.addDependency(this._entity, this._animationManager);

@@ -54,6 +54,22 @@ class Anim {
     return new Anim();
   }
 
+  public startSpineAnimation() {
+    this._data.state.setAnimation(0, this._name, true);
+    this._data.state.timeScale = this._fps;
+  }
+
+/*
+  setAnimation (trackIndex: number, animationName: string, loop: boolean) {
+    let animation = this.data.skeletonData.findAnimation(animationName);
+    if (animation == null) throw new Error("Animation not found: " + animationName);
+
+    return this.setAnimationWith(trackIndex, animation, loop);
+  }
+ */
+
+
+
   private _getFrames(): string[] {
     let arr: string[] = [];
 

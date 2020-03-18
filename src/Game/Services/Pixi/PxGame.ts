@@ -26,7 +26,7 @@ class PxGame {
     }
   }
 
-  public addSprite(x: number, y: number, sprName: string, frame: string | null): any {
+  public addSprite(x: number, y: number, sprName: string, frame: string | null): Sprite {
     let texture = this._loader.getTexture(sprName);
     let sprite;
     
@@ -37,6 +37,26 @@ class PxGame {
 
     if(this._game != null) {
       this._game.stage.addChild(sprite);
+    } else {
+      console.error("Can not add sprite before initializing the game!");
+    }
+
+    return sprite;
+  }
+
+  public addSpine(name: string): PIXI.spine.Spine | null {
+    let spineResource = this._loader.getResource(name);
+    let sprite = null;
+
+    if (spineResource != null) {
+      sprite = new PIXI.spine.Spine(spineResource.data.spineData);
+      if (this._game != null) {
+        this._game.stage.addChild(sprite);
+      } else {
+        console.error("Can not add sprite before initializing the game!");
+      }
+    } else {
+      console.log('spine resource named "%s" not found', name);
     }
 
     return sprite;

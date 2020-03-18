@@ -12,7 +12,7 @@ class PxLoader {
 
     this._loader = this._createLoader();
 
-    //this._loader.use(PIXI.spine.AtlasParser.use);
+    this._loader.use(PIXI.spine.AtlasParser.use);
   }
 
   public addOnLoad(onLoad: any) {

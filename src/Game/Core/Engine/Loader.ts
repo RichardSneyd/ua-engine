@@ -95,6 +95,14 @@ class Loader {
     });
   }
 
+  public getResource(name: string): Resource | null {
+    for (let c = 0; c < this._imgList.length; c++) {
+      if (this._imgList[c].name == name) return this._imgList[c];
+    }
+
+    return null;
+  }
+
 
   public getTexture(sprite: string, frame: string | null = null): any {
     //let url = this._base + sprite;

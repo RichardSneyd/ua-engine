@@ -33,9 +33,26 @@ class MainLevel implements ILevel {
     //  let actScript: any = this._loader.getActScript('sample_script');
 
     setTimeout(() => {
-      this._player.init(150, 150, 'fly_atlas', 'idle1');
-      this._player.addAnimation('idle', '', 5, 2, null);
-      this._player.playAnimation('idle');
+      this._player.initSpine(400, 500, 'professor');
+      this._player.addSpineAnimation('prof_dance', 0.1);
+      this._player.playSpineAnimation('prof_dance');
+
+
+
+
+
+      //this._player.addAnimation('idle', '', 5, 2, null);
+      //this._player.playAnimation('idle');
+
+      /*
+      let spineResource = this._loader.getResource('professor');
+
+      if (spineResource != null) {
+        let sprite = new PIXI.spine.Spine(spineResource.data.spineData);
+
+        console.log(sprite);
+      }
+      */
     }, 5000);
 
     this._loader.base = 'assets/img/';
@@ -45,6 +62,7 @@ class MainLevel implements ILevel {
     this._loader.addImage('virus1_active4.png');
     this._loader.addImage('virus1_active5.png');
     this._loader.addImage('virus1_active6.png');
+    this._loader.addAtlas('professor.json');
     this._loader.addAtlas('fly_atlas.json');
 
 

@@ -37,6 +37,16 @@ class Entity {
     this._objectHandler.setXy(this._data, this._x, this._y);
   }
 
+  public initSpine(x: number, y: number, spine: string): void {
+    this._x = x;
+    this._y = y;
+    this._data = this._screen.createSpine(spine);
+    this._data.x = x;
+    this._data.y = y;
+
+    this._initialized = true;
+  }
+
   public init(x: number, y: number, sprite: string, frame: string | null = null): void {
     this._x = x;
     this._y = y;
@@ -54,8 +64,16 @@ class Entity {
     this._animationManager.addAnimation(name, base, max, fps, data);
   }
 
+  public addSpineAnimation(name: string, fps: number) {
+    this._animationManager.addSpineAnimation(name, fps, this._data);
+  }
+
   public playAnimation(name: string) {
     this._animationManager.play(name);
+  }
+
+  public playSpineAnimation(name: string) {
+    this._animationManager.playSpine(name);
   }
 
   public createNew(): Entity {
