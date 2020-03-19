@@ -2,12 +2,17 @@ import * as TWEEN from '@tweenjs/tween.js';
 
 class Tween {
   private _name: string; _easing: string; _object: any; _data: TWEEN.Tween | null;
+  private _paused: boolean; _pausedTime: number; _time: number; _pauseDiff: number;
 
   constructor() {
     this._name = '';
     this._easing = '';
     this._object = null;
     this._data = null;
+    this._paused = false;
+    this._pausedTime = 0;
+    this._time = 0;
+    this._pauseDiff = 0;
   }
 
   get name(): string {
@@ -44,7 +49,33 @@ class Tween {
   }
 
   update(time: number) {
-    if (this._data != null) this._data.update(time);
+    if (this._data != null) {
+      if (!this._paused) {
+
+        this._data.update(time - this._pauseDiff);
+      }
+    }
+
+    this._time = time;
+  }
+
+  pause() {
+    if (this._data != null) {
+      this._paused = true;
+      this._pausedTime = this._time;
+    } else {
+      console.warn("Tween doesn't exist to be paused!");
+    }
+  }
+
+  resume() {
+    if (this._data != null) {
+      this._paused = false;
+      let diff = this._time - this._pausedTime;
+      this._pauseDiff = this._pauseDiff + diff;
+    } else {
+      console.warn("Tween doesn't exist to be resumed!");
+    }
   }
 
 

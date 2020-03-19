@@ -5,6 +5,8 @@ class Anim {
   private _fps: number;
   private _data: any;
   private _index: number;
+  private _paused: boolean;
+  private _isSpine: boolean;
 
   constructor() {
     this._name = '';
@@ -13,6 +15,8 @@ class Anim {
     this._max = 0;
     this._data = null;
     this._index = 0;
+    this._isSpine = false;
+    this._paused = false;
   }
 
   get name(): string {
@@ -40,6 +44,8 @@ class Anim {
   }
 
   public getNextFrame(): string {
+    if (this._paused) return this._getFrames()[this._index - 1];
+
     let frames = this._getFrames();
     let frm = frames[this._index];
 
@@ -55,19 +61,23 @@ class Anim {
   }
 
   public startSpineAnimation() {
+    this._isSpine = true;
+
     this._data.state.setAnimation(0, this._name, true);
     this._data.state.timeScale = this._fps;
   }
 
-/*
-  setAnimation (trackIndex: number, animationName: string, loop: boolean) {
-    let animation = this.data.skeletonData.findAnimation(animationName);
-    if (animation == null) throw new Error("Animation not found: " + animationName);
-
-    return this.setAnimationWith(trackIndex, animation, loop);
+  public pause() {
+    this._paused = true;
+    
+    if (this._isSpine) this._data.state.timeScale = 0;
   }
- */
 
+  public resume() {
+    this._paused = false;
+
+    if (this._isSpine) this._data.state.timeScale = this._fps;
+  }
 
 
   private _getFrames(): string[] {

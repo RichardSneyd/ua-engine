@@ -184,10 +184,12 @@ class ControlContainer {
     this._smartDepend.addDependency(this._sndTestLevel, this._loop);
     this._smartDepend.addDependency(this._sndTestLevel, this._entity);
     this._smartDepend.addDependency(this._sndTestLevel, this._loader);
+
     this._smartDepend.addDependency(this._mainLevel, this._levelManager);
     this._smartDepend.addDependency(this._mainLevel, this._loop);
-    this._smartDepend.addDependency(this._mainLevel, this._entity);
     this._smartDepend.addDependency(this._mainLevel, this._loader);
+    this._smartDepend.addDependency(this._mainLevel, this._entity);
+    this._smartDepend.addDependency(this._mainLevel, this._entity);
 
     //Services
     this._smartDepend.addDependency(this._levelManager, this._audioManager);

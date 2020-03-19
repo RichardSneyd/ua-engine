@@ -37,6 +37,22 @@ class AnimationManager {
     }
   }
 
+  public pause(name: string) {
+    let anim = this._getAnim(name);
+
+    if (anim != null) {
+      anim.pause();
+    }
+  }
+
+  public resume(name: string) {
+    let anim = this._getAnim(name);
+
+    if (anim != null) {
+      anim.resume();
+    }
+  }
+
   public addTween(name: string, easing: string, object: any) {
     let tween = this._tween.createNew();
     tween.init(name, easing, object);
@@ -46,6 +62,26 @@ class AnimationManager {
   public playTween(name: string, toObject: any, time: number, updateFunction: Function = ()=>{}) {
     let tween = this._getTween(name);
     if (tween != null) tween.to(toObject, time, updateFunction);
+  }
+
+  public pauseTween(name: string) {
+    let tween = this._getTween(name);
+
+    if (tween != null) {
+      tween.pause();
+    } else {
+      console.warn("Tween named '%s' doesn't exist to be paused!", name);
+    }
+  }
+
+  public resumeTween(name: string) {
+    let tween = this._getTween(name);
+
+    if (tween = this._getTween(name)) {
+      tween.resume();
+    } else {
+      console.warn("Tween named '%s' doesn't exist to be paused!", name);
+    }
   }
 
   public addSpineAnimation(name: string, fps: number, data: any) {
@@ -73,7 +109,7 @@ class AnimationManager {
   }
 
   public createNew(): AnimationManager {
-    return new AnimationManager(this._anim, this._tween);
+    return new AnimationManager(this._anim.createNew(), this._tween.createNew());
   }
 
   public getUpdatedFrame(): string | null {

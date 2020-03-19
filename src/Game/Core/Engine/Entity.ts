@@ -78,6 +78,22 @@ class Entity {
     });
   }
 
+  public pauseTween(name: string) {
+    this._animationManager.pauseTween(name);
+  }
+
+  public resumeTween(name: string) {
+    this._animationManager.resumeTween(name);
+  }
+
+  public pauseAnimation(name: string) {
+    this._animationManager.pause(name);
+  }
+
+  public resumeAnimation(name: string) {
+    this._animationManager.resume(name);
+  }
+
   public addAnimation(name: string, base: string, max: number, fps: number, data: any): void {
     this._animationManager.addAnimation(name, base, max, fps, data);
   }
