@@ -37,6 +37,14 @@ class Entity {
     this._objectHandler.setXy(this._data, this._x, this._y);
   }
 
+  get x(): number {
+    return this._x;
+  }
+
+  get y(): number {
+    return this._y;
+  }
+
   public initSpine(x: number, y: number, spine: string): void {
     this._x = x;
     this._y = y;
@@ -56,8 +64,18 @@ class Entity {
 
     if (frame != null) this._atlas = sprite;
 
-    
     this._initialized = true;
+  }
+
+  public addTween(name: string, easing: string) {
+    this._animationManager.addTween(name, easing, this);
+  }
+
+  public playTween(name: string, toObject: any, time: number, updateFunction: Function = ()=>{}) {
+    this._animationManager.playTween(name, toObject, time, () =>{
+
+      updateFunction();
+    });
   }
 
   public addAnimation(name: string, base: string, max: number, fps: number, data: any): void {
@@ -82,7 +100,7 @@ class Entity {
     return new Entity(this._screen, am, this._objectHandler);
   }
 
-  public update() {
+  public update(time: number) {
     if (!this._initialized) return;
 
     let updatedFrame = this._animationManager.getUpdatedFrame();
@@ -94,6 +112,8 @@ class Entity {
         this._screen.changeTexture(this._data, updatedFrame);
       }
     }
+
+    this._animationManager.update(time);
   }
 
 

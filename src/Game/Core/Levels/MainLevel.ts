@@ -33,9 +33,13 @@ class MainLevel implements ILevel {
     //  let actScript: any = this._loader.getActScript('sample_script');
 
     setTimeout(() => {
-      this._player.initSpine(400, 500, 'professor');
+      this._player.initSpine(200, 200, 'professor');
       this._player.addSpineAnimation('prof_dance', 0.1);
       this._player.playSpineAnimation('prof_dance');
+      this._player.addTween('xyTween', 'Bounce.Out');
+      this._player.playTween('xyTween', {x: 500, y: 500}, 2500, ()=> {
+        
+      });
 
 
 
@@ -114,9 +118,9 @@ class MainLevel implements ILevel {
   }
 
 
-  update(): void {
+  update(time: number): void {
     //console.log('updating main');
-    this._player.update();
+    this._player.update(time);
   }
 
   shutdown(): void {

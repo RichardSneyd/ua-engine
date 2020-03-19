@@ -38,9 +38,9 @@ class Loop {
     window.requestAnimationFrame(this._boundExecuteAll);
   }
 
-  private _executeAll() {
+  private _executeAll(time: number) {
     for (let c = 0; c < this._fList.length; c++) {
-      this._fList[c].execute();
+      this._fList[c].execute(time);
     }
 
     window.requestAnimationFrame(this._boundExecuteAll);

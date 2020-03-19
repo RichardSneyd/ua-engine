@@ -40,6 +40,7 @@ class AnimationManager {
   public addTween(name: string, easing: string, object: any) {
     let tween = this._tween.createNew();
     tween.init(name, easing, object);
+    this._tweens.push(tween);
   }
 
   public playTween(name: string, toObject: any, time: number, updateFunction: Function = ()=>{}) {
@@ -95,6 +96,13 @@ class AnimationManager {
     }
   }
 
+  public update(time: number) {
+    for (let c = 0; c < this._tweens.length; c++) {
+      let tween = this._tweens[c];
+      tween.update(time);
+    }
+  }
+
   private _canUpdate(fps: number, loopIndex: number): boolean {
     let difference = 60 / fps;
 
@@ -125,6 +133,7 @@ class AnimationManager {
   private _getTween(name: string): Tween | null {
     for (let c = 0; c < this._tweens.length; c++) {
       let tween = this._tweens[c];
+      //console.log("tween.name(%s) == name(%s)", tween.name, name);
       if (tween.name == name) return tween;
     }
 

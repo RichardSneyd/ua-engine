@@ -73,9 +73,9 @@ abstract class SndTestLevel implements ILevel {
         });
     }
 
-    update(): void {
+    update(time: number): void {
         //console.log('updating main');
-        this._player.update();
+        this._player.update(time);
     }
 
     shutdown(): void {

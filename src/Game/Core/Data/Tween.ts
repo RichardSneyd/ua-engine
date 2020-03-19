@@ -28,12 +28,23 @@ class Tween {
     if (this._data != null) {
       let easing = this._easing.split('.')[0];
       let inOut = this._easing.split('.')[1];
-      this._data.to(toObject, time).easing((<any>TWEEN).Easing[easing][inOut]).onUpdate(updateFunction()).start();
+      this._data.to(toObject, time)
+      .easing((<any>TWEEN).Easing[easing][inOut])
+      .onUpdate(() => {
+        updateFunction();
+      })
+      .start();
+    } else {
+      //console.error("no animation data exists");
     }
   }
 
   createNew(): Tween {
     return new Tween();
+  }
+
+  update(time: number) {
+    if (this._data != null) this._data.update(time);
   }
 
 
