@@ -3,7 +3,7 @@ import LevelManager from './LevelManager';
 
 interface ILevel {
   manager: LevelManager;
-  init(): void;
+  init(scriptName: string): void;
   shutdown(): void;
 }
 

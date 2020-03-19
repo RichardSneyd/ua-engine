@@ -17,21 +17,23 @@ import Events from '../Game/Core/Engine/Events';
 
 
 //Utils
-import Utils from '../Game/Utils/Utils';
-import ActScripts from '../Game/Utils/ActScripts';
-import Collections from '../Game/Utils/Collections';
-import Colors from '../Game/Utils/Colors';
-import Mixins from '../Game/Utils/Mixins';
-import Numbers from '../Game/Utils/Numbers';
-import Text from '../Game/Utils/Text';
-import Vectors from '../Game/Utils/Vectors'
+import Utils from '../Game/Core/Engine/Utils/Utils';
+import ActScripts from '../Game/Core/Engine/Utils/ActScripts';
+import Collections from '../Game/Core/Engine/Utils/Collections';
+import Colors from '../Game/Core/Engine/Utils/Colors';
+import Mixins from '../Game/Core/Engine/Utils/Mixins';
+import Numbers from '../Game/Core/Engine/Utils/Numbers';
+import Text from '../Game/Core/Engine/Utils/Text';
+import Vectors from '../Game/Core/Engine/Utils/Vectors'
 //Levels
 import MainLevel from '../Game/Core/Levels/MainLevel';
 
 
-//Services
 import LevelManager from '../Game/Core/Engine/LevelManager';
-import AudioManager from '../Game/Services/AudioManager';
+import AudioManager from '../Game/Core/Engine/AudioManager';
+import ScriptHandler from '../Game/Core/Engine/ScriptHandler';
+
+//Services
 import ImgLoader from '../Game/Services/ImgLoader';
 import SndLoader from '../Game/Services/SndLoader';
 import AjaxLoader from '../Game/Services/AjaxLoader';
@@ -59,6 +61,7 @@ class ControlContainer {
   private _game: any;
   private _funObj: any; _resource: any; _anim: any;
   private _entity: any; _world: any; _loop: any; _loader: any; _animationManager: any; private _events: any;
+  private _script: any;
   private _mainLevel: any;
 
   private _sndTestLevel: any; _baseLevel: any;
@@ -103,6 +106,7 @@ class ControlContainer {
     this._resource = this._smartDepend.addModule(Resource, false);
     //Engine
     this._animationManager = this._smartDepend.addModule(AnimationManager, false);
+    this._script = this._smartDepend.addModule(ScriptHandler, false);
     this._entity = this._smartDepend.addModule(Entity, false);
     this._loader = this._smartDepend.addModule(Loader, true);
     this._loop = this._smartDepend.addModule(Loop, false);
@@ -175,6 +179,8 @@ class ControlContainer {
     this._smartDepend.addDependency(this._utils, this._numbers);
     this._smartDepend.addDependency(this._utils, this._text);
     this._smartDepend.addDependency(this._utils, this._vectors);
+    this._smartDepend.addDependency(this._actScripts, this._text);
+    this._smartDepend.addDependency(this._actScripts, this._collections);
 
     //Levels
     this._smartDepend.addDependency(this._sndTestLevel, this._levelManager);
@@ -189,10 +195,14 @@ class ControlContainer {
     //Services
     this._smartDepend.addDependency(this._levelManager, this._audioManager);
     this._smartDepend.addDependency(this._levelManager, this._events);
+    this._smartDepend.addDependency(this._levelManager, this._script);
+    this._smartDepend.addDependency(this._levelManager, this._utils);
     this._smartDepend.addDependency(this._audioManager, this._loader);
     this._smartDepend.addDependency(this._audioManager, this._hwPlayer);
     this._smartDepend.addDependency(this._imgLoader, this._pxLoader);
     this._smartDepend.addDependency(this._sndLoader, this._hwLoader);
+    this._smartDepend.addDependency(this._script, this._actScripts);
+    this._smartDepend.addDependency(this._script, this._events);
     this._smartDepend.addDependency(this._screen, this._pxGame);
     //Pixi
     this._smartDepend.addDependency(this._pxGame, this._pxFactory);

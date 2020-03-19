@@ -7,7 +7,7 @@ import LevelManager from '../Engine/LevelManager';
 
 class MainLevel implements ILevel {
   protected _manager: LevelManager; _loop: Loop; _player: Entity; _loader: Loader;
-  protected _script: any;
+  //protected _script: any;
 
 
   constructor(manager: LevelManager, loop: Loop, player: Entity, loader: Loader) {
@@ -15,7 +15,7 @@ class MainLevel implements ILevel {
     this._loop = loop;
     this._player = player;
     this._loader = loader;
-    this._script = [];
+   // this._script = [];
     // this._utils = utils;
   }
 
@@ -23,47 +23,48 @@ class MainLevel implements ILevel {
     return this._manager;
   }
 
-  set script(script: any[]) {
-    this._script = script;
-  }
-
-
-  init(): void {
+  init(scriptName: string): void {
     //test load a json file
 
+    this.manager.events.once('preload', this.preload.bind(this));
+    this.manager.events.once('start', this.start.bind(this));
+    this.manager.events.on('newRow', this.onNewRow.bind(this));
 
-    this._loader.loadActScript('sample_script', (script: any, data: any) => {
-      this.script = script;
-      console.log(this.script);
+    this._loader.loadActScript(scriptName, (script: any, data: any) => {
+      
+      this.manager.init(scriptName, script, ['images', 'audio_id'], ['settings']);
+      this.manager.events.fire('preload');
     });
-
-
-    /* //  let actScript: any = this._loader.getActScript('sample_script');
-
-    setTimeout(() => {
-      this._player.init(150, 150, 'fly_atlas', 'idle1');
-      this._player.addAnimation('idle', '', 5, 2, null);
-      this._player.playAnimation('idle');
-    }, 5000);
-
+    
+  }
+  
+  preload() {
+    
     this._loader.base = 'assets/img/';
-    this._loader.addImage('virus1_active1.png');
-    this._loader.addImage('virus1_active2.png');
-    this._loader.addImage('virus1_active3.png');
-    this._loader.addImage('virus1_active4.png');
-    this._loader.addImage('virus1_active5.png');
-    this._loader.addImage('virus1_active6.png');
     this._loader.addAtlas('fly_atlas.json');
-
-
-    //test load 3 audio files
-    this._loader.addSnds(['airplane', 'air', 'adult']);
+ 
+    let audio = this.manager.script.fileList(['audio_id']);
+    console.log(audio);
+    this._loader.addSnds(audio);
     console.log('addSounds completed');
-
 
     this._loader.download();
 
-    this._player.init(100, 100, 'virus1_active1.png');
+    setTimeout(() => {
+     this.manager.events.fire('start');
+    // this.start();
+    }, 4000);
+  }
+
+  start() {
+
+    //  let actScript: any = this._loader.getActScript('sample_script');
+    //this._player.init(100, 100, 'virus1_active1.png');
+
+    this._player.init(150, 150, 'fly_atlas', 'idle1');
+    this._player.addAnimation('idle', '', 5, 24, null);
+    this._player.playAnimation('idle');
+
 
     this._loop.addFunction(this.update, this);
     this._loop.start();
@@ -71,36 +72,16 @@ class MainLevel implements ILevel {
     // a hack to test the audio management system -- input events will be handled by an input handler ultimately 
     let canvas = document.getElementsByTagName('canvas')[0];
     canvas.addEventListener('click', () => {
-      this.manager.audio.playInstructionArr(['airplane', 'air', 'adult'], () => {
-        console.log('audio arr playback completed');
-      });
-
+        this.manager.script.goTo(this.manager.script.rows[0]);
     });
 
-    this.manager.events.on('callme', () => {
-      console.log('you called me!');
-    })
-
-    // testing out the Event system...
-    this.manager.events.on('callme', this.callMe.bind(this));
-    console.log(this.manager.events.events);
-    this.manager.events.fire('callme');
-    this.manager.events.off('callme', this.callMe);
-    console.log(this.manager.events.events);
-    this.manager.events.fire('callme');
-    console.log('removing called me event...');
-    this.manager.events.removeEvent('callme');
-    this.manager.events.fire('callme');
-    this.manager.events.once('testonce', ()=>{
-      console.log('called testonce, and it executed!!');
-    });
-    this.manager.events.fire('testonce');
-    console.log('if once works, it should not execute next');
-    this.manager.events.fire('testonce'); */
   }
 
-  callMe() {
-    console.log('and you called me as well!');
+  onNewRow(){
+    
+    this.manager.audio.playInstructionArr(this.manager.script.active.audio_id, () => {
+      this.manager.script.goToAutoNext();
+    });
   }
 
 

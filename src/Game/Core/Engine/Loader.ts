@@ -270,8 +270,7 @@ class Loader {
   public loadActScript(file: string, callback?: Function): any{
     this._ajaxLoader.loadFile(conf.PATHS.JSN + file + '.json', (data: any)=>{
       if(callback !== undefined){
-        console.log('in Loader.loadActivityScript callback for %s', file);
-        this._scripts[file] = JSON.parse(data.data);
+        this._scripts[file] = data.data;
         callback(data.data, data);
       }
     });

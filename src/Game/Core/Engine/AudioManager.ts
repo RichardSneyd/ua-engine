@@ -1,5 +1,5 @@
-import Loader from '../Core/Engine/Loader';
-import HwPlayer from './Howler/HwPlayer';
+import Loader from './Loader';
+import HwPlayer from '../../Services/Howler/HwPlayer';
 
 class AudioManager {
 

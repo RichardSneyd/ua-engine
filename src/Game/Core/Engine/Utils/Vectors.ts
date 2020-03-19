@@ -1,4 +1,4 @@
-import Vector2D from "../Core/Data/Vector2D";
+import Vector2D from "../../Data/Vector2D";
 
 
 class Vectors {

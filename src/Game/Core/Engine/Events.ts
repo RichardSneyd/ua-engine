@@ -21,7 +21,12 @@ class Events {
     }
 
     private _addEvent(event: string){
-        this._events[event] = [];
+        if(this._eventNames().indexOf(event) == -1){
+            this._events[event] = [];
+        }
+        else {
+            console.warn('event %s already exists, so cannot be added', event);
+        }
     }
 
     public removeEvent(event: string){
