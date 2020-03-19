@@ -3,7 +3,7 @@ import ILevel from '../Engine/ILevel';
 import Loader from '../Engine/Loader';
 import Loop from '../Engine/Loop';
 import Entity from '../Engine/Entity';
-import Utils from '../../Utils/Utils';
+import Utils from '../Engine/Utils/Utils';
 import BaseLevel from './BaseLevel';
 import LevelManager from '../Engine/LevelManager';
 

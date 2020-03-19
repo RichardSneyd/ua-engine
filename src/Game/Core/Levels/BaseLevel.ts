@@ -2,7 +2,7 @@ import ILevel from '../Engine/ILevel';
 import Loader from '../Engine/Loader';
 import Loop from '../Engine/Loop';
 import Entity from '../Engine/Entity';
-import Utils from '../../Utils/Utils';
+import Utils from '../Engine/Utils/Utils';
 import LevelManager from '../Engine/LevelManager';
 
 abstract class BaseLevel implements ILevel {
@@ -22,10 +22,20 @@ abstract class BaseLevel implements ILevel {
 
     init(): void {
 
+        this.manager.events.once('preload', this.preload.bind(this));
+        this.manager.events.once('start', this.start.bind(this));
     }
 
-    update(): void {
-        //console.log('updating main');
+    public preload() {
+        // load assets
+    }
+
+    public start() {
+        // create the
+    }
+
+    public update() {
+        // raf loop (animation and game loop)
     }
 
     shutdown(): void {

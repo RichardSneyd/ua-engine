@@ -38,19 +38,18 @@ class Collections {
                             break elements;
                         }
                     }
-             
                 }
             }
         }
 
         if (row == null) {
-            console.trace('no match found for ' + properties.toString() + " & " + values.toString());
+            console.warn('no match found for ' + properties.toString() + " & " + values.toString());
         }
 
         return row;
     }
 
-    public findObjElWithPropVal(array: any | object, properties: string[], values: any[]): any {
+  /*   public findObjElWithPropVal(array: any | object, properties: string[], values: any[]): any {
         let row: any = null;
         
         elements: for (let x = 0; x < Object.keys(array).length; x++) {
@@ -73,7 +72,7 @@ class Collections {
         }
 
         return row;
-    }
+    } */
 
     // return the number of rows that match the criteria
     public numElementsWithPropVal(array: any[], properties: string[], values: any[]): number {
@@ -155,13 +154,10 @@ class Collections {
             else {
                 console.warn('no col with name ' + arrs[x]);
             }
-
         }
 
         all = _.uniq(all);
         all = _.compact(all);
-        _
-
         return all;
     }
 

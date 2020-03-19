@@ -5,10 +5,11 @@ class AjaxLoader {
     constructor() {
     }
 
-    loadFile(url: string, onDone?: Function, context?: any) {
-        axios.get(url).then(() => {
+    loadFile(url: string, onDone?: Function) {
+        axios.get(url).then((data) => {
             if(onDone !== undefined){
-                onDone(context);
+                console.log('axios callback for %s', url);
+                onDone(data);
             }
         });
     }
