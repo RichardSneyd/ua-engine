@@ -276,7 +276,7 @@ class Loader {
 
   private _downloadJSON(callback?: Function, context?: any) {
     let urlList = this._getUrls(this._jsnList);
-    this._ajaxLoader.loadFile(urlList[0], callback, context);
+    this._ajaxLoader.loadFile(urlList[0], callback);
   }
 
   public downloadJSON(callback?: Function, context?: any) {
