@@ -3,84 +3,153 @@ import ILevel from '../Engine/ILevel';
 import Loader from '../Engine/Loader';
 import Loop from '../Engine/Loop';
 import Entity from '../Engine/Entity';
-import Utils from '../Engine/Utils/Utils';
-import BaseLevel from './BaseLevel';
 import LevelManager from '../Engine/LevelManager';
 
-abstract class SndTestLevel implements ILevel {
-    protected _manager: LevelManager; _loop: Loop; _player: Entity; _loader: Loader;
+class SndTestLevel implements ILevel {
+  protected _manager: LevelManager; _loop: Loop; _player: Entity; _loader: Loader; _player2: Entity;
 
 
-    constructor(manager: LevelManager, loop: Loop, player: Entity, loader: Loader) {
-        this._manager = manager;
-        this._loop = loop;
-        this._player = player;
-        this._loader = loader;
-        // this._utils = utils;
-    }
+  constructor(manager: LevelManager, loop: Loop, loader: Loader, entity: Entity, entity2: Entity) {
+    this._manager = manager;
+    this._loop = loop;
+    this._loader = loader;
 
-    get manager(): LevelManager {
-        return this._manager;
-    }
+    this._player = entity;
+    this._player2 = entity2;
+    // this._utils = utils;
+  }
 
+  get manager(): LevelManager {
+    return this._manager;
+  }
 
-    init(): void {
-        //test load a json file
+  init(scriptName: string): void {
+    //test load a json file
 
-        /*   this._loader.addJSON('sample_script.json');
-          this._loader.downloadJSON(()=>{
-              console.log('loaded json')
-        }, this); */
+    /*   this._loader.addJSON('sample_script.json');
+      this._loader.downloadJSON(()=>{
+          console.log('loaded json')
+    }, this); */
 
-        //  let actScript: any = this._loader.getActScript('sample_script');
-
-        setTimeout(() => {
-            this._player.init(150, 150, 'virus1_active1.png');
-            this._player.addAnimation('active', 'virus1_', 6, 20, null);
-            this._player.playAnimation('active');
-        }, 5000);
-
-        this._loader.base = 'assets/img/';
-        this._loader.addImage('virus1_active1.png');
-        this._loader.addImage('virus1_active2.png');
-        this._loader.addImage('virus1_active3.png');
-        this._loader.addImage('virus1_active4.png');
-        this._loader.addImage('virus1_active5.png');
-        this._loader.addImage('virus1_active6.png');
-
-        //test load 3 audio files
-
-        this._loader.addSnds(['airplane', 'air', 'adult']);
-        console.log('addSounds completed');
+    //  let actScript: any = this._loader.getActScript('sample_script');
 
 
-        this._loader.download();
+    this.manager.events.once('preload', this.preload, this);
+    this.manager.events.once('start', this.start, this);
+    this.manager.events.on('newRow', this.onNewRow, this);
 
-        this._player.init(100, 100, 'virus1_active1.png');
+    this._loader.loadActScript(scriptName, (script: any, data: any) => {
 
-        this._loop.addFunction(this.update, this);
-        this._loop.start();
+      this.manager.init(scriptName, script, ['images', 'audio_id'], ['settings']);
+      this.manager.events.fire('preload');
 
-        // a hack to test the audio management system -- input events will be handled by an input handler ultimately 
-        let canvas = document.getElementsByTagName('canvas')[0];
-        console.log('click event')
-        canvas.addEventListener('click', () => {
-            console.log('calling audio.play');
-            this.manager.audio.playInstructionArr(['airplane', 'air', 'adult'], () => {
-                console.log('finished playing airplane!');
-            });
+      this.manager.events.timer(2000, ()=>{
+        console.log('timer 1 executed after 2000 milliseconds');
+        let i = 1;
+        this.manager.events.timer(500, ()=>{
+            i++;
+            console.log('timer 2 executing every half a second, 5 times in row, this is time %s', i);
+            if(i == 5){
+                this.manager.events.clearTimers();
+                this.manager.events.timer(3000, this.repeater, this);
+                this.manager.events.timer(3020, ()=>{
+                    console.log('a dummy timer, to see if surgical removal of timers spares the innocent...')
+                }, this);
+                this.manager.events.timer(10000, ()=>{
+                    console.log('attempting to remove repeater listener surgically..');
+                    this.manager.events.removeTimer(this.repeater);
+                    console.log('these timers remain: ', this.manager.events.timers);
+                }, this);
+            }
+        }, this);
+      }, this, 0)
+    });
 
-        });
-    }
+  }
 
-    update(time: number): void {
-        //console.log('updating main');
-        this._player.update(time);
-    }
+  repeater(){
+      console.log('repeater memeber of SndTestLevel is being called every 3 seconds');
+  }
 
-    shutdown(): void {
-        this._loop.removeFunction(this.update);
-    }
+  preload() {
+
+    this._loader.base = 'assets/img/';
+    this._loader.addImage('virus1_active1.png');
+    this._loader.addImage('virus1_active2.png');
+    this._loader.addImage('virus1_active3.png');
+    this._loader.addImage('virus1_active4.png');
+    this._loader.addImage('virus1_active5.png');
+    this._loader.addImage('virus1_active6.png');
+    this._loader.addAtlas('professor.json');
+    this._loader.addAtlas('fly_atlas.json');
+
+    let audio = this.manager.script.fileList(['audio_id']);
+    console.log(audio);
+    this._loader.addSnds(audio);
+    console.log('addSounds completed');
+
+    this._loader.download();
+
+    setTimeout(() => {
+      this.manager.events.fire('start');
+      // this.start();
+    }, 4000);
+  }
+
+  start() {
+
+    //  let actScript: any = this._loader.getActScript('sample_script');
+    //this._player.init(100, 100, 'virus1_active1.png');
+
+    this._player2.init(150, 150, 'fly_atlas', 'idle1');
+    this._player2.addAnimation('idle', '', 5, 10, null);
+    this._player2.playAnimation('idle');
+
+
+    this._player.initSpine(200, 200, 'professor');
+    this._player.addSpineAnimation('prof_dance', 0.1);
+    this._player.playSpineAnimation('prof_dance');
+    this._player.addTween('xyTween', 'Bounce.Out');
+    this._player.playTween('xyTween', { x: 500, y: 500 }, 6000, () => {
+
+    });
+
+    this._loop.addFunction(this.update, this);
+    this._loop.start();
+
+    // a hack to test the audio management system -- input events will be handled by an input handler ultimately 
+    let canvas = document.getElementsByTagName('canvas')[0];
+    canvas.addEventListener('click', () => {
+    //  this.manager.script.goTo(this.manager.script.rows[0]);
+        if(this.manager.events.paused){
+            console.log('Paused!! All timers should stop firing...')
+            this.manager.events.resume();
+        }
+        else {
+            this.manager.events.pause();
+            console.log('Resumed!! All timers should stop firing...')
+        }
+    });
+
+  }
+
+  onNewRow() {
+
+    this.manager.audio.playInstructionArr(this.manager.script.active.audio_id, () => {
+      this.manager.script.goToAutoNext();
+    });
+  }
+
+
+  update(time: number): void {
+    //console.log('updating main');
+    this._player.update(time);
+    this._player2.update(time);
+  }
+
+  shutdown(): void {
+    this._loop.removeFunction(this.update);
+  }
 }
 
 export default SndTestLevel;

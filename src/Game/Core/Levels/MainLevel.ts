@@ -34,9 +34,9 @@ class MainLevel implements ILevel {
     //  let actScript: any = this._loader.getActScript('sample_script');
 
 
-    this.manager.events.once('preload', this.preload.bind(this));
-    this.manager.events.once('start', this.start.bind(this));
-    this.manager.events.on('newRow', this.onNewRow.bind(this));
+    this.manager.events.once('preload', this.preload, this);
+    this.manager.events.once('start', this.start, this);
+    this.manager.events.on('newRow', this.onNewRow, this);
 
     this._loader.loadActScript(scriptName, (script: any, data: any) => {
 
@@ -80,13 +80,11 @@ class MainLevel implements ILevel {
     this._player2.addAnimation('idle', '', 5, 10, null);
     this._player2.playAnimation('idle');
 
-
     this._player.initSpine(200, 200, 'professor');
     this._player.addSpineAnimation('prof_dance', 0.1);
     this._player.playSpineAnimation('prof_dance');
     this._player.addTween('xyTween', 'Bounce.Out');
     this._player.playTween('xyTween', { x: 500, y: 500 }, 6000, () => {
-
     });
 
 

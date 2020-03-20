@@ -22,6 +22,33 @@ class ScriptHandler {
         this._last = [];
     }
 
+    init(name: string, raw: any[], parseCols: string[], objectifyCols: string[]) {
+        this._name = name;
+        this._raw = raw;
+        console.log(this._raw);
+        this.convertRowsFromRaw(parseCols, objectifyCols);
+        this._initialized = true;
+    }
+
+     /**
+     * @description to be used at init, to convert raw json data into a more functional script, with arrays and objects 
+     * instead of stringified lists and cells with 'stringified' key-value pairs into objects. The converted data is stored in the 
+     * rows[] array. rows, rather than raw, should be accessed for almost every subsequent task involving the activity script. 
+     * @param parseCols the columns which contain 'stringified' lists which should be converted into arrays of text vals
+     * @param objectifyCols the columns which contain stringified key-value pairs. These are converted into objects.
+     */
+    convertRowsFromRaw(parseCols: string[], objectifyCols: string[]){
+        this._rows = this._utils.clone(this._raw);
+        for (let x = 0; x < this._rows.length; x++) {
+            for (let y = 0; y < parseCols.length; y++) {
+                this._rows[x][parseCols[y]] = this._parseList(this._raw[x][parseCols[y]]);
+            }
+            for(let z = 0; z < objectifyCols.length; z++){
+                this._rows[x][objectifyCols[z]] = this._getKeyValPairs(this._raw[x][objectifyCols[z]]);
+            } 
+        }
+    }
+
     get name(): string {
         return this._name;
     }
@@ -69,7 +96,6 @@ class ScriptHandler {
         let row = this.getFromAutoNext();
         if(row !== null){
             this.goTo(this.getFromAutoNext());
-            this._events.fire('newRow'); // this event can be listened for anywhere you need to respond to a newRow
         }
     }
 
@@ -80,36 +106,7 @@ class ScriptHandler {
         }
         return row;
     }
-
-    init(name: string, raw: any[], parseCols: string[], objectifyCols: string[]) {
-        this._name = name;
-        this._raw = raw;
-        console.log(this._raw);
-        this.convertRowsFromRaw(parseCols, objectifyCols);
-        this._initialized = true;
-
-    }
-
-    /**
-     * @description to be used at init, to convert raw json data into a more functional script, with arrays and objects 
-     * instead of stringified lists and cells with 'stringified' key-value pairs into objects. The converted data is stored in the 
-     * rows[] array. rows, rather than raw, should be accessed for almost every subsequent task involving the activity script. 
-     * @param parseCols the columns which contain 'stringified' lists which should be converted into arrays of text vals
-     * @param objectifyCols the columns which contain stringified key-value pairs. These are converted into objects.
-     */
-    convertRowsFromRaw(parseCols: string[], objectifyCols: string[]){
-        this._rows = this._utils.clone(this._raw);
-        for (let x = 0; x < this._rows.length; x++) {
-            for (let y = 0; y < parseCols.length; y++) {
-                this._rows[x][parseCols[y]] = this._parseList(this._raw[x][parseCols[y]]);
-            }
-            for(let z = 0; z < objectifyCols.length; z++){
-                this._rows[x][objectifyCols[z]] = this._getKeyValPairs(this._raw[x][objectifyCols[z]]);
-            } 
-        }
-    }
-
-    
+  
     /**
      * @description find the first row whose cells contain the specified vals
      * @param colname the columns (properties) to search for the respective vals in
