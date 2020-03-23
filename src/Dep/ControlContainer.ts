@@ -50,7 +50,6 @@ import HwLoader from '../Game/Services/Howler/HwLoader';
 import HwPlayer from '../Game/Services/Howler/HwPlayer';
 //Levels
 import SndTestLevel from '../Game/Core/Levels/SndTestLevel';
-import BaseLevel from '../Game/Core/Levels/BaseLevel';
 
 
 
@@ -115,7 +114,6 @@ class ControlContainer {
     this._world = this._smartDepend.addModule(World, false);
     this._events = this._smartDepend.addModule(Events, true);
     //Levels
-    this._baseLevel = this._smartDepend.addModule(BaseLevel, false);
     this._mainLevel = this._smartDepend.addModule(MainLevel, false);
     this._sndTestLevel = this._smartDepend.addModule(SndTestLevel, false);
 
@@ -188,8 +186,9 @@ class ControlContainer {
     //Levels
     this._smartDepend.addDependency(this._sndTestLevel, this._levelManager);
     this._smartDepend.addDependency(this._sndTestLevel, this._loop);
-    this._smartDepend.addDependency(this._sndTestLevel, this._entity);
     this._smartDepend.addDependency(this._sndTestLevel, this._loader);
+    this._smartDepend.addDependency(this._sndTestLevel, this._entity);
+    this._smartDepend.addDependency(this._sndTestLevel, this._entity);
 
     this._smartDepend.addDependency(this._mainLevel, this._levelManager);
     this._smartDepend.addDependency(this._mainLevel, this._loop);

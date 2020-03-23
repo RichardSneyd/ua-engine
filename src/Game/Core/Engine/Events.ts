@@ -1,8 +1,8 @@
 class Events {
     private _events: any;
     private _timers: any;
-    private _time: any;
-    private _lastTime: any;
+    private _time: number;
+    private _lastTime: number;
     private _delta: number;
     private _paused: boolean;
     private _timer: any; // ID of the timer (integer), passed to clearInterval for deletion
@@ -12,15 +12,21 @@ class Events {
         this._events = {};
         this._timers = [];
         this._paused = false;
-        this._time = new Date().getMilliseconds;
-        this._lastTime = this._time;
-        this._delta = this._lastTime - 1;
-        this._step = 1;
+        this._step = 50; // cannot execute every millisecond, browser isn't fast enough. 10 ticks per second should be adequate.
+        this._time = new Date().getTime();
+        this._lastTime = this._time - this._step;
+        this._delta = this._time - this._lastTime;
         this._startTimer();
+        
     }
 
     private _startTimer() {
-        this._timer = setInterval(this._ticker, this._step);
+       // let _this = this;
+       this._time = new Date().getTime();
+        this._timer = setInterval(()=>{
+            this._ticker();
+        }, this._step);
+        console.log('_startTimer called, to call _ticker every %s, _timer set to setInterval ID', this._step);
     }
 
     get events() {
@@ -121,13 +127,18 @@ class Events {
         if (this.eventNames().indexOf(event) !== -1) {
             let total = this._events[event].length - 1;
             if (total >= 0) {
+                let objs = this.events[event];
+                console.log('callbacks for %s: ', event, objs);
                 for (let x = total; x >= 0; x--) {
-                    let callback =  this._events[event][x][0], context = this._events[event][x][1];
-                    let once = this._events[event][x][2];
-                    callback(context);
+                    let obj = objs[x];
+                    let callback =  obj[0], context = obj[1];
+                    let once = obj[2];
+                    console.log('about to attempt callback with context: ', context);
+
+                    callback.bind(context)();
                     if (once == true) { // if 'once' is set to true, remove callback
                         let i = this._events[event].indexOf(this.events[event][x]);
-                        this._events[event].splice(i);
+                        this._events[event].splice(i, 1);
                     }
                 }
             }
@@ -165,8 +176,15 @@ class Events {
      */
     removeTimer(callback: Function) {
         let timer = this.getTimer(callback);
+        this._removeTimer(timer);
+    }
+
+    _removeTimer(timer: any){
         if (timer !== null) {
-            this._timers.splice(timer);
+            this._timers.splice(timer, 1);
+        }
+        else {
+            console.warn('timer to remove is null: ', timer);
         }
     }
 
@@ -186,14 +204,16 @@ class Events {
             }
         }
 
-        console.log('no such timer found');
+        console.warn('no timer found for: ', callback);
         return null;
     }
 
     private _ticker() {
+      //  console.log('made it to _ticker, this is: ', this);
         this._lastTime = this._time;
-        this._time = new Date().getMilliseconds;
+        this._time = new Date().getTime();
         this._delta = this._time - this._lastTime;
+      //  console.warn('time is %s, lastTime is %s, delta is: ', this._time, this._lastTime, this._delta);
         this._updateTimers();
     }
 
@@ -210,25 +230,30 @@ class Events {
      */
     resume() {
         this._paused = false;
-        this._time = new Date().getMilliseconds() - 1;
         this._startTimer();
     }
 
     private _updateTimers() {
-        for (let x = this._timers.length - 1; x >= 0; x--) {
+    //    console.log('made it to _updateTimers, timers: ', this._timers);
+    //    console.log('length: ', this._timers.length);
+        
+        for (let x = this._timers.length-1; x >= 0; x--) {
             let timer = this._timers[x];
+        //    console.log('handling timer at index %s: ', x, timer);
             timer.remaining -= this._delta;
             if (timer.remaining <= 0) {
-                timer.callback(timer.context);
-                if (timer.repeat > 0 || timer.repeat == -1) {
+                if (timer.repeat > 0 || timer.repeat === -1) {
+                //    console.log('repeat is %s for timer: ', timer.repeat, timer);
                     timer.remaining = timer.delay;
                     if (timer.repeat > 0) {
                         timer.repeat--;
                     }
                 }
                 else {
-                    this._timers.splice(this._timers.indexOf(timer));
+                    console.warn('removing timer from list: ', timer);
+                    this._removeTimer(this._timers.indexOf(timer));
                 }
+                timer.callback.bind(timer.context)();
             }
 
         }
