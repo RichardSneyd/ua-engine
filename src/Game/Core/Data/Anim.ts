@@ -1,4 +1,8 @@
+import Events from '../Engine/Events';
+
 class Anim {
+  private _events: Events;
+
   private _name: string;
   private _base: string;
   private _max: number;
@@ -7,8 +11,11 @@ class Anim {
   private _index: number;
   private _paused: boolean;
   private _isSpine: boolean;
+  private _globalPaused: boolean;
 
-  constructor() {
+  constructor(events: Events) {
+    this._events = events;
+
     this._name = '';
     this._base = '';
     this._fps = 0;
@@ -17,6 +24,9 @@ class Anim {
     this._index = 0;
     this._isSpine = false;
     this._paused = false;
+
+    this._globalPaused = false;
+    this._addListeners();
   }
 
   get name(): string {
@@ -57,7 +67,7 @@ class Anim {
   }
 
   public createNew(): Anim {
-    return new Anim();
+    return new Anim(this._events);
   }
 
   public startSpineAnimation() {
@@ -76,9 +86,22 @@ class Anim {
   public resume() {
     this._paused = false;
 
-    if (this._isSpine) this._data.state.timeScale = this._fps;
+    if (this._isSpine) {
+      if (!this._globalPaused) this._data.state.timeScale = this._fps;
+    }
   }
 
+  private _globalPause() {
+    this._globalPaused = true;
+
+    if (this._isSpine) this._data.state.timeScale = 0;
+  }
+
+  private _globalResume() {
+    this._globalPaused = false;
+
+    this.resume();
+  }
 
   private _getFrames(): string[] {
     let arr: string[] = [];
@@ -88,6 +111,16 @@ class Anim {
     }
 
     return arr;
+  }
+
+  private _addListeners() {
+    this._events.addListener('pauseAll', () => {
+      if (this._isSpine) this._globalPause();
+    });
+
+    this._events.addListener('resumeAll', () => {
+      if (this._isSpine) this._globalResume();
+    });
   }
 }
 
