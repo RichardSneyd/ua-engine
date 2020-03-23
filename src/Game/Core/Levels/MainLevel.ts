@@ -46,9 +46,20 @@ class MainLevel implements ILevel {
       this._player.playTween('xyTween', {x: 500, y: 500}, 6000, ()=> {
         
       });
+
+      setTimeout(() => {
+        console.log("GLOBAL PAUSE!!");
+        this._manager.events.fire('pauseAll');
+      }, 1000);
+
+
+      setTimeout(() => {
+        console.log("GLOBAL RESUME!!");
+        this._manager.events.fire('resumeAll');
+      }, 4000);
       
 
-      
+      /*
       setTimeout(() => {
         console.log("PAUSING TWEEN!");
         this._player.pauseTween('xyTween');
@@ -82,7 +93,7 @@ class MainLevel implements ILevel {
         console.log("RESUMING ATLAS ANIMATION!");
         this._player2.resumeAnimation('idle');
       }, 16000);
-
+      */
 
     }, 2000);
     this.manager.events.once('preload', this.preload.bind(this));
@@ -152,7 +163,8 @@ class MainLevel implements ILevel {
 
 
   update(time: number): void {
-    //console.log('updating main');
+    //console.log('time %s', time);
+    
     this._player.update(time);
     this._player2.update(time);
   }

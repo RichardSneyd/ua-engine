@@ -152,6 +152,8 @@ class ControlContainer {
     //Game
     //Core
     this._smartDepend.addDependency(this._game, this._world);
+    //Data
+    this._smartDepend.addDependency(this._anim, this._events);
     //Levels
     this._smartDepend.addDependency(this._game, this._mainLevel);
     this._smartDepend.addDependency(this._game, this._sndTestLevel);
@@ -172,6 +174,7 @@ class ControlContainer {
     this._smartDepend.addDependency(this._loader, this._sndLoader);
     this._smartDepend.addDependency(this._loader, this._ajaxLoader);
 
+    this._smartDepend.addDependency(this._loop, this._events);
     this._smartDepend.addDependency(this._loop, this._funObj);
 
     //Utils
