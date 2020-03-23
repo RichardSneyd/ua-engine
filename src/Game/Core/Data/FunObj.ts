@@ -19,8 +19,8 @@ class FunObj {
     this._function = f.bind(context);
   }
 
-  execute(): any {
-    return this._function();
+  execute(data: any): any {
+    return this._function(data);
   }
 
   createNew(): FunObj {

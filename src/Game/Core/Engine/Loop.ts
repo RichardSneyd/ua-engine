@@ -1,19 +1,32 @@
+import Events from '../Engine/Events';
 import FunObj from '../Data/FunObj';
 
 class Loop {
   private _funObj: FunObj;
   private _fList: FunObj[];
   private _boundExecuteAll: any;
+  private _events: Events;
+  private _paused: number; //0: false, 1: true, 2: just turned true
+  private _lastTime: number;
+  private _delay: number;
+  private _oldDelay: number;
   
-  constructor(funObj: FunObj) {
+  constructor(events: Events, funObj: FunObj) {
+    this._events = events;
     this._funObj = funObj;
 
     this._fList = [];
+    this._paused = 0;
+    this._lastTime = 0;
+    this._delay = 0;
+    this._oldDelay = 0;
 
     this._boundExecuteAll = this._executeAll.bind(this);
+
+    this._addListeners();
   }
 
-  addFunction(f: any, context: any) {
+  public addFunction(f: any, context: any) {
     let i = this._findFunction(f);
 
     if (i == null) {
@@ -24,7 +37,7 @@ class Loop {
     }
   }
 
-  removeFunction(f: any) {
+  public removeFunction(f: any) {
     let i = this._findFunction(f);
 
     if (i != null) {
@@ -34,13 +47,24 @@ class Loop {
     }
   }
 
-  start(): void {
+  public start(): void {
     window.requestAnimationFrame(this._boundExecuteAll);
   }
 
-  private _executeAll() {
-    for (let c = 0; c < this._fList.length; c++) {
-      this._fList[c].execute();
+  private _executeAll(time: number) {
+    if (this._paused == 1) {
+      this._delay = this._oldDelay + (time - this._lastTime);
+      //console.log("delay %s", this._delay);
+    } else if (this._paused == 2) {
+      this._paused = 1;
+      this._oldDelay = this._delay;
+      this._lastTime = time;
+    } else if (this._paused == 0) {
+
+      for (let c = 0; c < this._fList.length; c++) {
+        this._fList[c].execute(time - this._delay);
+      }
+
     }
 
     window.requestAnimationFrame(this._boundExecuteAll);
@@ -59,6 +83,24 @@ class Loop {
     obj.init(f, context);
 
     return obj;
+  }
+
+  private _pauseAll() {
+    this._paused = 2;
+  }
+
+  private _resumeAll() {
+    this._paused = 0;
+  }
+
+  private _addListeners() {
+    this._events.addListener('pauseAll', () => {
+      this._pauseAll();
+    }, this);
+
+    this._events.addListener('resumeAll', () => {
+      this._resumeAll();
+    }, this);
   }
 }
 

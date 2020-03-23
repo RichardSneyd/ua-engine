@@ -2,13 +2,24 @@ import {Howler, Howl} from 'howler';
 
 class HwFactory {
   constructor() {
-    this.createHowl(['arse.ogg', 'arse.mp3'], 'assets/')
+   // this.createHowl(['test.ogg', 'test.mp3'], 'assets/')
   }
 
-  createHowl(src: string[], baseURL: string = ''): Howl {
+  createHowl(url: string, extensions: string[], onLoad: Function): Howl {
+    console.log('in HwFactory.createHowl....')
+    let _src = [];
+    console.log(extensions);
+    for(let x = 0; x < extensions.length; x++){
+      _src.push(url + '.' + extensions[x]);
+    }
+    console.log(_src);
     return new Howl({
-        src: src
-    })
+      src: _src,
+      autoplay: false,
+      onload: ()=>{
+        onLoad();
+      }
+    });
   }
   
 }

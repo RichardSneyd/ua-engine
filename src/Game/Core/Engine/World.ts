@@ -1,6 +1,8 @@
 import Entity from '../Engine/Entity';
 import IScreen from '../../Services/IScreen';
 import ILevel from '../Engine/ILevel';
+import LevelManager from './LevelManager';
+
 
 class World {
   private _width: number;
@@ -33,14 +35,14 @@ class World {
   }
 
   public startLevel(level: ILevel) {
-    if(this._currentLevel != null) {
+    if (this._currentLevel != null) {
       this._currentLevel.shutdown();
     }
 
     this._screen.clearScreen();
 
     this._currentLevel = level;
-    this._currentLevel.init();
+    this._currentLevel.init('sample_script');
   }
 
   private _getElementName(): string {

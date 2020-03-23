@@ -20,13 +20,18 @@ class Text {
         return result;
     }
 
+    public getUniq(vals: string[]): string[]{
+        let uVals = _.uniq(vals);
+        return uVals;
+    }
+
     /**
      * @description break a string into a string array, based on the provided seperator substring, and remove falsy values
      * @param text the string to break into a string array
      * @param seperator the seperator substring
      */
-    public unstringifyArray(text: string, seperator: string): string[] {
-        return _.compact(text.replace(' ', '').split(seperator));
+    public unstringifyArray(txt: string, seperator: string): string[] {
+        return _.compact(txt.replace(' ', '').split(seperator));
     }
 
     public propertiesFromString(rawText: string, lineSeperator: string, valueAssigner: string, valueSeperator: string): object {
