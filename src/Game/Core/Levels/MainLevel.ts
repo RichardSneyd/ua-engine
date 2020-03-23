@@ -106,6 +106,21 @@ class MainLevel implements ILevel {
       this.manager.events.fire('preload');
     });
 
+    // demo code showcasing events and timers....
+    let i = 0;
+    let tail ='.';
+    this.manager.events.timer(1000, function(this: any){
+      console.warn('executing callback %s repeat at: ', i, this);
+      i++;
+      if(i == 3){
+          this.manager.events.timer(2000, function(this: any){
+              tail = tail + '.';
+              console.warn('repeat forever %s', tail);
+          }, this, -1); // a repeat value of -2 means forever, until the timer is removed (events.removeTimer(callback))
+      }
+  }, this, 3); 
+
+
   }
 
   preload() {

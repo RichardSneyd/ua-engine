@@ -116,11 +116,11 @@ class Anim {
   private _addListeners() {
     this._events.addListener('pauseAll', () => {
       if (this._isSpine) this._globalPause();
-    });
+    }, this);
 
     this._events.addListener('resumeAll', () => {
       if (this._isSpine) this._globalResume();
-    });
+    }, this);
   }
 }
 

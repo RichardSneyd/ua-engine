@@ -96,11 +96,11 @@ class Loop {
   private _addListeners() {
     this._events.addListener('pauseAll', () => {
       this._pauseAll();
-    });
+    }, this);
 
     this._events.addListener('resumeAll', () => {
       this._resumeAll();
-    });
+    }, this);
   }
 }
 

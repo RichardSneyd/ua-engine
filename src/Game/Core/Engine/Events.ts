@@ -26,7 +26,7 @@ class Events {
         this._timer = setInterval(()=>{
             this._ticker();
         }, this._step);
-        console.log('_startTimer called, to call _ticker every %s, _timer set to setInterval ID', this._step);
+     //   console.log('_startTimer called, to call _ticker every %s, _timer set to setInterval ID', this._step);
     }
 
     get events() {
@@ -133,7 +133,7 @@ class Events {
                     let obj = objs[x];
                     let callback =  obj[0], context = obj[1];
                     let once = obj[2];
-                    console.log('about to attempt callback with context: ', context);
+               //     console.log('about to attempt callback with context: ', context);
 
                     callback.bind(context)();
                     if (once == true) { // if 'once' is set to true, remove callback
