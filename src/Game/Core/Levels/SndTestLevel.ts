@@ -74,7 +74,7 @@ class SndTestLevel implements ILevel {
         let i = 0;
         let tail ='.';
       
-        this.manager.events.timer(1000, function(this: any){
+        this.manager.events.timer(function(this: any){
             console.warn('executing callback %s repeat at: ', i, this);
             i++;
             if(i == 3){
@@ -83,7 +83,7 @@ class SndTestLevel implements ILevel {
                     console.warn('repeat forever %s', tail);
                 }, this, -1);
             }
-        }, this, 3); 
+        }, 1000, this, 3); 
 
         /* this.manager.events.timer(2000, () => {
             console.log('timer 1 executed after 2 secs, with this: ', this);

@@ -115,15 +115,15 @@ class Events {
         this._removeListener(event, callback);
     }
 
-    public fire(event: string) {
-        this._trigger(event);
+    public fire(event: string, data?: any) {
+        this._trigger(event, data);
     }
 
-    public trigger(event: string) {
-        this._trigger(event);
+    public trigger(event: string, data?: any) {
+        this._trigger(event, data);
     }
 
-    private _trigger(event: string) {
+    private _trigger(event: string, data: any = null) {
         if (this.eventNames().indexOf(event) !== -1) {
             let total = this._events[event].length - 1;
             if (total >= 0) {
@@ -135,7 +135,7 @@ class Events {
                     let once = obj[2];
                //     console.log('about to attempt callback with context: ', context);
 
-                    callback.bind(context)();
+                    callback.bind(context)(data);
                     if (once == true) { // if 'once' is set to true, remove callback
                         let i = this._events[event].indexOf(this.events[event][x]);
                         this._events[event].splice(i, 1);
@@ -159,11 +159,11 @@ class Events {
      * @param context the context to call it in
      * @param repeat should repeat? 0 for no. -1 for infinity, 3 for 3 repeats, 4 for 4 etc...
      */
-    timer(delay: number, callback: Function, context: any, repeat: number = 0): any {
-        this._addTimer(delay, callback, context, repeat);
+    timer(callback: Function, delay: number, context: any, repeat: number = 0): any {
+        this._addTimer(callback, delay, context, repeat);
     }
 
-    private _addTimer(delay: number, callback: Function, context: any, repeat: number = 0): any {
+    private _addTimer(callback: Function, delay: number, context: any, repeat: number = 0): any {
         let timer = { delay: delay, remaining: delay, callback: callback, context: context, repeat: repeat }
         this._timers.push(timer);
 

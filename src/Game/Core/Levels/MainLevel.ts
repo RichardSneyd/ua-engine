@@ -33,7 +33,7 @@ class MainLevel implements ILevel {
 
     //  let actScript: any = this._loader.getActScript('sample_script');
 
-    setTimeout(() => {
+    this.manager.events.timer(() => {
       this._player2.init(150, 150, 'fly_atlas', 'idle1');
       this._player2.addAnimation('idle', '', 5, 10, null);
       this._player2.playAnimation('idle');
@@ -47,59 +47,63 @@ class MainLevel implements ILevel {
         
       });
 
-      setTimeout(() => {
+      this.manager.events.timer(() => {
         console.log("GLOBAL PAUSE!!");
         this._manager.events.fire('pauseAll');
-      }, 1000);
+      }, 1000, this);
 
 
-      setTimeout(() => {
+      this.manager.events.timer(() => {
         console.log("GLOBAL RESUME!!");
         this._manager.events.fire('resumeAll');
-      }, 4000);
+      }, 4000, this);
       
 
       /*
-      setTimeout(() => {
+      this.manager.events.timer(() => {
         console.log("PAUSING TWEEN!");
         this._player.pauseTween('xyTween');
       }, 1000);
 
 
-      setTimeout(() => {
+      this.manager.events.timer(() => {
         console.log("RESUMING TWEEN!");
         this._player.resumeTween('xyTween');
       }, 3000);
 
 
-      setTimeout(() => {
+      this.manager.events.timer(() => {
         console.log("PAUSING SPINE!");
         this._player.pauseAnimation('prof_dance');
       }, 8000);
 
 
-      setTimeout(() => {
+      this.manager.events.timer(() => {
         console.log("RESUMING SPINE!");
         this._player.resumeAnimation('prof_dance');
       }, 12000);
 
 
-      setTimeout(() => {
+      this.manager.events.timer(() => {
         console.log("PAUSING ATLAS ANIMATION!");
         this._player2.pauseAnimation('idle');
       }, 14000);
 
-      setTimeout(() => {
+      this.manager.events.timer(() => {
         console.log("RESUMING ATLAS ANIMATION!");
         this._player2.resumeAnimation('idle');
       }, 16000);
       */
 
-    }, 2000);
+    }, 2000, this);
     this.manager.events.once('preload', this.preload, this);
     this.manager.events.once('start', this.start, this);
     this.manager.events.on('newRow', this.onNewRow, this);
-
+    this.manager.events.once('testevent', (data: any)=>{
+      console.log(data);
+      debugger;
+    }, this);
+    this.manager.events.fire('testevent', {name: 'testdata', caller: this})
     this._loader.loadActScript(scriptName, (script: any, data: any) => {
 
       this.manager.init(scriptName, script, ['images', 'audio_id'], ['settings']);
@@ -109,7 +113,7 @@ class MainLevel implements ILevel {
     // demo code showcasing events and timers....
     let i = 0;
     let tail ='.';
-    this.manager.events.timer(1000, function(this: any){
+    this.manager.events.timer(function(this: any){
       console.warn('executing callback %s repeat at: ', i, this);
       i++;
       if(i == 3){
@@ -118,7 +122,7 @@ class MainLevel implements ILevel {
               console.warn('repeat forever %s', tail);
           }, this, -1); // a repeat value of -2 means forever, until the timer is removed (events.removeTimer(callback))
       }
-  }, this, 3); 
+  }, 1000,  this, 3); 
 
 
   }
@@ -142,10 +146,10 @@ class MainLevel implements ILevel {
 
     this._loader.download();
 
-    setTimeout(() => {
+    this.manager.events.timer(() => {
       this.manager.events.fire('start');
       // this.start();
-    }, 4000);
+    }, 4000, this);
   }
 
   start() {
@@ -164,41 +168,47 @@ class MainLevel implements ILevel {
     this._player.playTween('xyTween', { x: 500, y: 500 }, 6000, () => {
     });
 
+    console.log(this.manager.events.events['inputdown']);
+    debugger;
+    this.manager.events.on('inputdown', (data: any)=>{
+      console.warn('tapped Sprite: ', data);
+      debugger;
+    }, this);
 
 
-    setTimeout(() => {
+    this.manager.events.timer(() => {
       console.log("PAUSING TWEEN!");
       this._player.pauseTween('xyTween');
-    }, 1000);
+    }, 1000, this);
 
 
-    setTimeout(() => {
+    this.manager.events.timer(() => {
       console.log("RESUMING TWEEN!");
       this._player.resumeTween('xyTween');
-    }, 3000);
+    }, 3000, this);
 
 
-    setTimeout(() => {
+    this.manager.events.timer(() => {
       console.log("PAUSING SPINE!");
       this._player.pauseAnimation('prof_dance');
-    }, 8000);
+    }, 8000, this);
 
 
-    setTimeout(() => {
+    this.manager.events.timer(() => {
       console.log("RESUMING SPINE!");
       this._player.resumeAnimation('prof_dance');
-    }, 12000);
+    }, 12000, this);
 
 
-    setTimeout(() => {
+    this.manager.events.timer(() => {
       console.log("PAUSING ATLAS ANIMATION!");
       this._player2.pauseAnimation('idle');
-    }, 14000);
+    }, 14000, this);
 
-    setTimeout(() => {
+    this.manager.events.timer(() => {
       console.log("RESUMING ATLAS ANIMATION!");
       this._player2.resumeAnimation('idle');
-    }, 16000);
+    }, 16000, this);
 
 
 
@@ -212,7 +222,6 @@ class MainLevel implements ILevel {
     canvas.addEventListener('click', () => {
       this.manager.script.goTo(this.manager.script.rows[0]);
     });
-
   }
 
   onNewRow() {

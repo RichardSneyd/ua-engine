@@ -214,6 +214,7 @@ class ControlContainer {
     //Pixi
     this._smartDepend.addDependency(this._pxGame, this._pxFactory);
     this._smartDepend.addDependency(this._pxGame, this._loader);
+    this._smartDepend.addDependency(this._pxGame, this._events);
     this._smartDepend.addDependency(this._pxLoader, this._pxFactory);
     //Howler
     this._smartDepend.addDependency(this._hwLoader, this._hwFactory);
