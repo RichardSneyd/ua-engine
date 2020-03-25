@@ -1,6 +1,4 @@
-
-
-class Vector2D {
+class Point {
     _x: number;
     _y: number;
 
@@ -24,9 +22,9 @@ class Vector2D {
         this._y = y;
     }
 
-    public createNew(x: number, y: number): Vector2D {
-        return new Vector2D(x, y);
+    public createNew(x: number, y: number): Point {
+        return new Point(x, y);
     }
 }
 
-export default Vector2D;
+export default Point;

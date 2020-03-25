@@ -14,6 +14,7 @@ import Loader from '../Game/Core/Engine/Loader';
 import Loop from '../Game/Core/Engine/Loop';
 import World from '../Game/Core/Engine/World';
 import Events from '../Game/Core/Engine/Events';
+import InputHandler from '../Game/Core/Engine/InputHandler';
 //Levels
 
 
@@ -60,7 +61,7 @@ class ControlContainer {
 
   private _game: any;
   private _funObj: any; _resource: any; _anim: any;
-  private _entity: any; _world: any; _loop: any; _loader: any; _animationManager: any; private _events: any;
+  private _entity: any; _world: any; _loop: any; _loader: any; _animationManager: any; private _events: any; _inputHandler: any;
   private _mainLevel: any; _tween: any;
   private _script: any;
 
@@ -113,6 +114,7 @@ class ControlContainer {
     this._loop = this._smartDepend.addModule(Loop, false);
     this._world = this._smartDepend.addModule(World, false);
     this._events = this._smartDepend.addModule(Events, true);
+    this._inputHandler = this._smartDepend.addModule(InputHandler, true);
     //Levels
     this._mainLevel = this._smartDepend.addModule(MainLevel, false);
     this._sndTestLevel = this._smartDepend.addModule(SndTestLevel, false);
@@ -163,6 +165,7 @@ class ControlContainer {
     this._smartDepend.addDependency(this._entity, this._screen);
     this._smartDepend.addDependency(this._entity, this._animationManager);
     this._smartDepend.addDependency(this._entity, this._objectHandler);
+    this._smartDepend.addDependency(this._entity, this._inputHandler);
 
     this._smartDepend.addDependency(this._world, this._entity);
     this._smartDepend.addDependency(this._world, this._screen);
@@ -204,6 +207,8 @@ class ControlContainer {
     this._smartDepend.addDependency(this._levelManager, this._events);
     this._smartDepend.addDependency(this._levelManager, this._script);
     this._smartDepend.addDependency(this._levelManager, this._utils);
+    this._smartDepend.addDependency(this._levelManager, this._inputHandler);
+
     this._smartDepend.addDependency(this._audioManager, this._loader);
     this._smartDepend.addDependency(this._audioManager, this._hwPlayer);
     this._smartDepend.addDependency(this._imgLoader, this._pxLoader);
@@ -211,6 +216,10 @@ class ControlContainer {
     this._smartDepend.addDependency(this._script, this._actScripts);
     this._smartDepend.addDependency(this._script, this._events);
     this._smartDepend.addDependency(this._screen, this._pxGame);
+    this._smartDepend.addDependency(this._inputHandler, this._events);
+    this._smartDepend.addDependency(this._inputHandler, this._loader);
+    this._smartDepend.addDependency(this._inputHandler, this._screen);
+
     //Pixi
     this._smartDepend.addDependency(this._pxGame, this._pxFactory);
     this._smartDepend.addDependency(this._pxGame, this._loader);

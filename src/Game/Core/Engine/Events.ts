@@ -128,7 +128,7 @@ class Events {
             let total = this._events[event].length - 1;
             if (total >= 0) {
                 let objs = this.events[event];
-                console.log('callbacks for %s: ', event, objs);
+             //   console.log('callbacks for %s: ', event, objs);
                 for (let x = total; x >= 0; x--) {
                     let obj = objs[x];
                     let callback =  obj[0], context = obj[1];
@@ -154,8 +154,8 @@ class Events {
     /**
      * @description creates a timed callback, which is pausable via events.pause and events.resume. Optional repeat is 0 by default, 
      * meaning method executes once. Setting this to -1 will repeat continuosly.
-     * @param delay the amound of (unpaused) milliseconds to wait before execution. 
      * @param callback the function to call
+     * @param delay the amound of (unpaused) milliseconds to wait before execution. 
      * @param context the context to call it in
      * @param repeat should repeat? 0 for no. -1 for infinity, 3 for 3 repeats, 4 for 4 etc...
      */

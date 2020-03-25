@@ -24,6 +24,30 @@ class Screen implements IScreen {
     return this._pxGame.addSpine(name);
   }
 
+  public enableInput(sprite: any) {
+    this._pxGame.enableInput(sprite);
+  }
+
+  public disableInput(sprite: any) {
+    this._pxGame.disableInput(sprite);
+  }
+  
+  public addListener(event: string, sprite: any, callback: Function, context: any) {
+    this._pxGame.addListener(event, sprite, callback, context);
+  }
+
+  public removeListener(event: string, sprite: any, callback: Function) {
+    this._pxGame.removeListener(event, sprite, callback);
+  }
+
+  /* public removeDownListener(sprite: any) {
+    this._pxGame.removeDownListeners(sprite);
+  }
+
+  public removeUpListener(sprite: any){
+    this._pxGame.removeUpListeners;
+  } */
+
   public changeTexture(sprite: Sprite, name: string, frame: string | null = null): void {
     this._pxGame.updateTexture(sprite, name, frame);
   }

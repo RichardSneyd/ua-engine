@@ -99,11 +99,13 @@ class MainLevel implements ILevel {
     this.manager.events.once('preload', this.preload, this);
     this.manager.events.once('start', this.start, this);
     this.manager.events.on('newRow', this.onNewRow, this);
-    this.manager.events.once('testevent', (data: any)=>{
-      console.log(data);
+
+    /* this.manager.events.once('testevent', (data: any)=>{
+      console.log('testevent data: ', data);
       debugger;
     }, this);
-    this.manager.events.fire('testevent', {name: 'testdata', caller: this})
+    this.manager.events.fire('testevent', {name: 'testdata', caller: this}); */
+
     this._loader.loadActScript(scriptName, (script: any, data: any) => {
 
       this.manager.init(scriptName, script, ['images', 'audio_id'], ['settings']);
@@ -168,12 +170,18 @@ class MainLevel implements ILevel {
     this._player.playTween('xyTween', { x: 500, y: 500 }, 6000, () => {
     });
 
-    console.log(this.manager.events.events['inputdown']);
-    debugger;
-    this.manager.events.on('inputdown', (data: any)=>{
-      console.warn('tapped Sprite: ', data);
-      debugger;
-    }, this);
+    this._player.enableInput();
+    this._player.addInputListener('pointerdown', (evt: any)=>{
+      console.warn('pointerdown on professor: ', evt);
+    }, this, true);
+
+    this._player2.enableInput();
+    this._player2.addInputListener('pointerup', (evt: any)=> {
+      console.warn('pointerdown on fly: ', evt)
+    }, this, true)
+
+   // console.log(this.manager.events.events['inputdown']);
+   // this.manager.input.inputdown(obj, callback, context);
 
 
     this.manager.events.timer(() => {

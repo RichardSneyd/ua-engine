@@ -1,4 +1,4 @@
-import { Application, Sprite } from 'pixi.js';
+import { Application, Sprite, DisplayObject } from 'pixi.js';
 import PxFactory from './PxFactory';
 import Loader from '../../Core/Engine/Loader';
 import 'pixi-spine';
@@ -22,10 +22,24 @@ class PxGame {
 
     if (elm != null) {
       elm.appendChild(this._game.view);
+    //  this._game.view.addEventListener('mousemove', this._onMouseMove.bind(this));
+      this._game.view.addEventListener('pointermove', this._onMouseMove.bind(this));
     } else {
       console.warn("No element by id: '%s', appending to the body.", container);
       document.body.appendChild(this._game.view);
     }
+  }
+
+  _onMouseMove(evt: any) {
+    let canvas = document.getElementsByTagName('canvas')[0];
+    let rect = canvas.getBoundingClientRect();
+    let args: any = {}
+    args.mouseX = evt.clientX - rect.left;
+    args.mouseY = evt.clientY - rect.top;
+    args.moveX = evt.movementX;
+    args.moveY = evt.movementY;
+    //console.warn(evt);
+    this._events.fire('pointermove', args);
   }
 
   public addSprite(x: number, y: number, sprName: string, frame: string | null): Sprite {
@@ -43,32 +57,50 @@ class PxGame {
       console.error("Can not add sprite before initializing the game!");
     }
 
-    this._enableInputEvents(sprite);
+    // this._enableInputEvents(sprite);
 
     return sprite;
   }
 
-  public _enableInputEvents(sprite: Sprite) {
-    console.log('adding input events to sprite: ', sprite);
-    debugger;
+  public enableInput(sprite: DisplayObject) {
     sprite.interactive = true;
-    sprite.on('mousedown', () => { this._fireDown(sprite) });
-    sprite.on('touchstart', () => { this._fireDown(sprite) });
-    sprite.on('mouseup', () => { this._fireUp(sprite)});
-    sprite.on('touchend', () => { this._fireUp(sprite)});
-}
+  }
 
-  _fireDown(sprite: Sprite) {
+  public disableInput(sprite: DisplayObject) {
+    sprite.interactive = false;
+  }
+
+/*   public addDownListener(sprite: DisplayObject, callback: Function, context: any) {
+    //sprite.on('mousedown', (evt) => { this._fireDown(sprite, evt) });
+    sprite.on('mousedown', callback, context);
+    sprite.on('touchstart', callback, context);
+  }
+
+  public removeDownListeners(sprite: DisplayObject) {
+    sprite.removeAllListeners('mousedown');
+    sprite.removeAllListeners('touchstart');
+  }
+ */
+  public removeListener(event: string, sprite: DisplayObject, callback: Function) {
+   // sprite.removeAllListeners('mouseup');
+    sprite.removeListener(event, callback);
+  }
+
+  public addListener(event: string, sprite: DisplayObject, callback: Function, context: any) {
+    sprite.on(event, callback, context);
+  //  sprite.on('touchend', callback, context);
+  }
+
+  /* _fireDown(sprite: DisplayObject, evt: any) {
     console.log('firing inputdown event for sprite: ', sprite);
-    this._events.fire('inputdown', sprite);
-    debugger;
+    this._events.fire('inputdown', { sprite: sprite, evt: evt });
   }
 
-  _fireUp(sprite: Sprite) {
+  _fireUp(sprite: DisplayObject, evt: any) {
     console.log('firing inputup event for sprite: ', sprite);
-    this._events.fire('inputup', sprite);
-    debugger;
-  }
+    this._events.fire('inputup', { sprite: sprite, evt: evt });
+  } */
+
   public addSpine(name: string): PIXI.spine.Spine | null {
     let spineResource = this._loader.getResource(name);
     let sprite = null;
@@ -76,6 +108,7 @@ class PxGame {
     if (spineResource != null) {
       sprite = new PIXI.spine.Spine(spineResource.data.spineData);
       if (this._game != null) {
+        //  this.enableInputEvents(sprite);
         this._game.stage.addChild(sprite);
       } else {
         console.error("Can not add sprite before initializing the game!");
@@ -83,6 +116,7 @@ class PxGame {
     } else {
       console.log('spine resource named "%s" not found', name);
     }
+
 
     return sprite;
   }

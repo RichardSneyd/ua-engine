@@ -1,6 +1,7 @@
 import AnimationManger from './AnimationManager';
 import IScreen from '../../Services/IScreen';
 import IObjectHandler from '../../Services/IObjectHandler';
+import InputHandler from './InputHandler';
 
 class Entity {
   private _x: number;
@@ -9,13 +10,14 @@ class Entity {
   private _initialized: boolean;
   private _atlas: string | null;
 
-  private _screen: IScreen; _animationManager: AnimationManger; _objectHandler: IObjectHandler;
+  private _screen: IScreen; _animationManager: AnimationManger; _objectHandler: IObjectHandler; _input: InputHandler;
   private _data: any;
 
-  constructor(screen: IScreen, animationManager: AnimationManger, objectHandler: IObjectHandler) {
+  constructor(screen: IScreen, animationManager: AnimationManger, objectHandler: IObjectHandler, input: InputHandler) {
     this._screen = screen;
     this._animationManager = animationManager;
     this._objectHandler = objectHandler;
+    this._input = input;
 
     this._x = 0;
     this._y = 0;
@@ -45,6 +47,10 @@ class Entity {
     return this._y;
   }
 
+  get input(): InputHandler {
+    return this._input;
+  }
+
   public initSpine(x: number, y: number, spine: string): void {
     this._x = x;
     this._y = y;
@@ -71,8 +77,8 @@ class Entity {
     this._animationManager.addTween(name, easing, this);
   }
 
-  public playTween(name: string, toObject: any, time: number, updateFunction: Function = ()=>{}) {
-    this._animationManager.playTween(name, toObject, time, () =>{
+  public playTween(name: string, toObject: any, time: number, updateFunction: Function = () => { }) {
+    this._animationManager.playTween(name, toObject, time, () => {
 
       updateFunction();
     });
@@ -110,10 +116,27 @@ class Entity {
     this._animationManager.playSpine(name);
   }
 
+  public enableInput() {
+    this._input.enable(this._data);
+  }
+
+  public disableInput() {
+    this._input.disable(this._data);
+  }
+
+  public addInputListener(event: string, callback: Function, context: any, once: boolean = false) {
+    this._input.addListener(event, callback, this._data, context);
+  }
+
+  public removeInputListener(event: string, callback: Function){
+    this._input.removeListener(event, callback, this._data);
+  }
+
+
   public createNew(): Entity {
     let am = this._animationManager.createNew();
 
-    return new Entity(this._screen, am, this._objectHandler);
+    return new Entity(this._screen, am, this._objectHandler, this._input);
   }
 
   public update(time: number) {

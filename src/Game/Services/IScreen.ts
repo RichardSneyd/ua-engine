@@ -10,6 +10,13 @@ interface IScreen {
   changeTexture(sprite: Sprite, name: string, frame?: string | null): void;
 
   createSpine(name: string): any;
+
+  enableInput(sprite: any): void;
+  disableInput(sprite: any): void;
+
+  addListener(event: string, sprite: any, callback: Function, context: any): void;
+
+  removeListener(event: string, sprite: any, callback: Function): void;
 }
 
 export default IScreen;
