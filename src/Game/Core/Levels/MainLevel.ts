@@ -33,69 +33,6 @@ class MainLevel implements ILevel {
 
     //  let actScript: any = this._loader.getActScript('sample_script');
 
-    setTimeout(() => {
-      this._player2.init(150, 150, 'fly_atlas', 'idle1');
-      this._player2.addAnimation('idle', '', 5, 10, null);
-      this._player2.playAnimation('idle');
-
-      
-      this._player.initSpine(200, 200, 'professor');
-      this._player.addSpineAnimation('prof_dance', 0.1);
-      this._player.playSpineAnimation('prof_dance');
-      this._player.addTween('xyTween', 'Bounce.Out');
-      this._player.playTween('xyTween', {x: 500, y: 500}, 6000, ()=> {
-        
-      });
-
-      setTimeout(() => {
-        console.log("GLOBAL PAUSE!!");
-        this._manager.events.fire('pauseAll');
-      }, 1000);
-
-
-      setTimeout(() => {
-        console.log("GLOBAL RESUME!!");
-        this._manager.events.fire('resumeAll');
-      }, 4000);
-      
-
-      /*
-      setTimeout(() => {
-        console.log("PAUSING TWEEN!");
-        this._player.pauseTween('xyTween');
-      }, 1000);
-
-
-      setTimeout(() => {
-        console.log("RESUMING TWEEN!");
-        this._player.resumeTween('xyTween');
-      }, 3000);
-
-
-      setTimeout(() => {
-        console.log("PAUSING SPINE!");
-        this._player.pauseAnimation('prof_dance');
-      }, 8000);
-
-
-      setTimeout(() => {
-        console.log("RESUMING SPINE!");
-        this._player.resumeAnimation('prof_dance');
-      }, 12000);
-
-
-      setTimeout(() => {
-        console.log("PAUSING ATLAS ANIMATION!");
-        this._player2.pauseAnimation('idle');
-      }, 14000);
-
-      setTimeout(() => {
-        console.log("RESUMING ATLAS ANIMATION!");
-        this._player2.resumeAnimation('idle');
-      }, 16000);
-      */
-
-    }, 2000);
     this.manager.events.once('preload', this.preload, this);
     this.manager.events.once('start', this.start, this);
     this.manager.events.on('newRow', this.onNewRow, this);
@@ -150,58 +87,29 @@ class MainLevel implements ILevel {
 
   start() {
 
-    //  let actScript: any = this._loader.getActScript('sample_script');
-    //this._player.init(100, 100, 'virus1_active1.png');
-
     this._player2.init(150, 150, 'fly_atlas', 'idle1');
-    this._player2.addAnimation('idle', '', 5, 10, null);
-    this._player2.playAnimation('idle');
+      this._player2.addAnimation('idle', '', 5, 10, null);
+      this._player2.playAnimation('idle');
 
-    this._player.initSpine(200, 200, 'professor');
-    this._player.addSpineAnimation('prof_dance', 0.1);
-    this._player.playSpineAnimation('prof_dance');
-    this._player.addTween('xyTween', 'Bounce.Out');
-    this._player.playTween('xyTween', { x: 500, y: 500 }, 6000, () => {
-    });
+      
+      this._player.initSpine(200, 200, 'professor');
+      this._player.addSpineAnimation('prof_dance', 0.1);
+      this._player.playSpineAnimation('prof_dance');
+      this._player.addTween('xyTween', 'Bounce.Out');
+      this._player.playTween('xyTween', {x: 500, y: 500}, 6000, ()=> {
+        
+      });
 
-
-
-    setTimeout(() => {
-      console.log("PAUSING TWEEN!");
-      this._player.pauseTween('xyTween');
-    }, 1000);
-
-
-    setTimeout(() => {
-      console.log("RESUMING TWEEN!");
-      this._player.resumeTween('xyTween');
-    }, 3000);
+      setTimeout(() => {
+        console.log("GLOBAL PAUSE!!");
+        this._manager.events.fire('pauseAll');
+      }, 1000);
 
 
-    setTimeout(() => {
-      console.log("PAUSING SPINE!");
-      this._player.pauseAnimation('prof_dance');
-    }, 8000);
-
-
-    setTimeout(() => {
-      console.log("RESUMING SPINE!");
-      this._player.resumeAnimation('prof_dance');
-    }, 12000);
-
-
-    setTimeout(() => {
-      console.log("PAUSING ATLAS ANIMATION!");
-      this._player2.pauseAnimation('idle');
-    }, 14000);
-
-    setTimeout(() => {
-      console.log("RESUMING ATLAS ANIMATION!");
-      this._player2.resumeAnimation('idle');
-    }, 16000);
-
-
-
+      setTimeout(() => {
+        console.log("GLOBAL RESUME!!");
+        this._manager.events.fire('resumeAll');
+      }, 4000);
 
 
     this._loop.addFunction(this.update, this);
