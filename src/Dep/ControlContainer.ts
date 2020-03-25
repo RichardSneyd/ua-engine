@@ -14,6 +14,7 @@ import Loader from '../Game/Core/Engine/Loader';
 import Loop from '../Game/Core/Engine/Loop';
 import World from '../Game/Core/Engine/World';
 import Events from '../Game/Core/Engine/Events';
+import ScaleManager from '../Game/Core/Engine/ScaleManager';
 //Levels
 
 
@@ -61,6 +62,7 @@ class ControlContainer {
   private _game: any;
   private _funObj: any; _resource: any; _anim: any;
   private _entity: any; _world: any; _loop: any; _loader: any; _animationManager: any; private _events: any;
+  private _scaleManager: any;
   private _mainLevel: any; _tween: any;
   private _script: any;
 
@@ -109,6 +111,7 @@ class ControlContainer {
     this._animationManager = this._smartDepend.addModule(AnimationManager, false);
     this._script = this._smartDepend.addModule(ScriptHandler, false);
     this._entity = this._smartDepend.addModule(Entity, false);
+    this._scaleManager = this._smartDepend.addModule(ScaleManager, false);
     this._loader = this._smartDepend.addModule(Loader, true);
     this._loop = this._smartDepend.addModule(Loop, false);
     this._world = this._smartDepend.addModule(World, false);
@@ -150,12 +153,12 @@ class ControlContainer {
     //Game
     //Core
     this._smartDepend.addDependency(this._game, this._world);
-    //Data
-    this._smartDepend.addDependency(this._anim, this._events);
-    //Levels
     this._smartDepend.addDependency(this._game, this._mainLevel);
     this._smartDepend.addDependency(this._game, this._sndTestLevel);
-    this._smartDepend.addDependency(this._game, this._utils);
+    this._smartDepend.addDependency(this._game, this._events);
+    this._smartDepend.addDependency(this._game, this._scaleManager);
+    //Data
+    this._smartDepend.addDependency(this._anim, this._events);
     //Engine
     this._smartDepend.addDependency(this._animationManager, this._anim);
     this._smartDepend.addDependency(this._animationManager, this._tween);
@@ -163,6 +166,8 @@ class ControlContainer {
     this._smartDepend.addDependency(this._entity, this._screen);
     this._smartDepend.addDependency(this._entity, this._animationManager);
     this._smartDepend.addDependency(this._entity, this._objectHandler);
+    this._smartDepend.addDependency(this._entity, this._events);
+    this._smartDepend.addDependency(this._entity, this._scaleManager);
 
     this._smartDepend.addDependency(this._world, this._entity);
     this._smartDepend.addDependency(this._world, this._screen);

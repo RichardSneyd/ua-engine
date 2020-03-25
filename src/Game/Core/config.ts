@@ -7,6 +7,10 @@ const config = {
     },
     SND: {
         EXT: ['ogg', 'mp3']
+    },
+    DISPLAY: {
+        WIDTH: 800,
+        HEIGHT: 800
     }
 }
 

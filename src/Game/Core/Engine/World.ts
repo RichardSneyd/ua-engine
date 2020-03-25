@@ -45,6 +45,10 @@ class World {
     this._currentLevel.init('sample_script');
   }
 
+  public resize(x: number, y: number) {
+    this._screen.resize(x, y);
+  }
+
   private _getElementName(): string {
     return 'gameBox';
   }

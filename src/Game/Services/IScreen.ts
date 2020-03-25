@@ -10,6 +10,8 @@ interface IScreen {
   changeTexture(sprite: Sprite, name: string, frame?: string | null): void;
 
   createSpine(name: string): any;
+
+  resize(x: number, y: number): void;
 }
 
 export default IScreen;

@@ -1,4 +1,4 @@
-import {Application, Sprite} from 'pixi.js';
+import {Application, Sprite, Renderer} from 'pixi.js';
 import PxFactory from './PxFactory';
 import Loader from '../../Core/Engine/Loader';
 import 'pixi-spine';
@@ -17,6 +17,7 @@ class PxGame {
     let elm = document.getElementById(container);
 
     this._game = this._createGame(w, h, container);
+    this._game.renderer.backgroundColor = 0xfafad2;
 
     if (elm != null) {
       elm.appendChild(this._game.view);
@@ -24,6 +25,10 @@ class PxGame {
       console.warn("No element by id: '%s', appending to the body.", container);
       document.body.appendChild(this._game.view);
     }
+  }
+
+  public resize(x: number, y: number) {
+    if (this._game != null) this._game.renderer.resize(x, y);
   }
 
   public addSprite(x: number, y: number, sprName: string, frame: string | null): Sprite {
