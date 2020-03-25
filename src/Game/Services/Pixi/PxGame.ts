@@ -70,17 +70,6 @@ class PxGame {
     sprite.interactive = false;
   }
 
-/*   public addDownListener(sprite: DisplayObject, callback: Function, context: any) {
-    //sprite.on('mousedown', (evt) => { this._fireDown(sprite, evt) });
-    sprite.on('mousedown', callback, context);
-    sprite.on('touchstart', callback, context);
-  }
-
-  public removeDownListeners(sprite: DisplayObject) {
-    sprite.removeAllListeners('mousedown');
-    sprite.removeAllListeners('touchstart');
-  }
- */
   public removeListener(event: string, sprite: DisplayObject, callback: Function) {
    // sprite.removeAllListeners('mouseup');
     sprite.removeListener(event, callback);
@@ -90,16 +79,6 @@ class PxGame {
     sprite.on(event, callback, context);
   //  sprite.on('touchend', callback, context);
   }
-
-  /* _fireDown(sprite: DisplayObject, evt: any) {
-    console.log('firing inputdown event for sprite: ', sprite);
-    this._events.fire('inputdown', { sprite: sprite, evt: evt });
-  }
-
-  _fireUp(sprite: DisplayObject, evt: any) {
-    console.log('firing inputup event for sprite: ', sprite);
-    this._events.fire('inputup', { sprite: sprite, evt: evt });
-  } */
 
   public addSpine(name: string): PIXI.spine.Spine | null {
     let spineResource = this._loader.getResource(name);

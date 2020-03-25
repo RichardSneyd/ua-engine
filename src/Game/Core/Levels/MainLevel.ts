@@ -57,43 +57,6 @@ class MainLevel implements ILevel {
         console.log("GLOBAL RESUME!!");
         this._manager.events.fire('resumeAll');
       }, 4000, this);
-      
-
-      /*
-      this.manager.events.timer(() => {
-        console.log("PAUSING TWEEN!");
-        this._player.pauseTween('xyTween');
-      }, 1000);
-
-
-      this.manager.events.timer(() => {
-        console.log("RESUMING TWEEN!");
-        this._player.resumeTween('xyTween');
-      }, 3000);
-
-
-      this.manager.events.timer(() => {
-        console.log("PAUSING SPINE!");
-        this._player.pauseAnimation('prof_dance');
-      }, 8000);
-
-
-      this.manager.events.timer(() => {
-        console.log("RESUMING SPINE!");
-        this._player.resumeAnimation('prof_dance');
-      }, 12000);
-
-
-      this.manager.events.timer(() => {
-        console.log("PAUSING ATLAS ANIMATION!");
-        this._player2.pauseAnimation('idle');
-      }, 14000);
-
-      this.manager.events.timer(() => {
-        console.log("RESUMING ATLAS ANIMATION!");
-        this._player2.resumeAnimation('idle');
-      }, 16000);
-      */
 
     }, 2000, this);
     this.manager.events.once('preload', this.preload, this);
@@ -125,8 +88,6 @@ class MainLevel implements ILevel {
           }, this, -1); // a repeat value of -2 means forever, until the timer is removed (events.removeTimer(callback))
       }
   }, 1000,  this, 3); 
-
-
   }
 
   preload() {
@@ -180,8 +141,7 @@ class MainLevel implements ILevel {
       console.warn('pointerdown on fly: ', evt)
     }, this, true)
 
-   // console.log(this.manager.events.events['inputdown']);
-   // this.manager.input.inputdown(obj, callback, context);
+  // this.manager.input.addListener
 
 
     this.manager.events.timer(() => {

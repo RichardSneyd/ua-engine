@@ -2,7 +2,7 @@ import AudioManager from "./AudioManager";
 import Events from "./Events";
 import Utils from "./Utils/Utils";
 import ScriptHandler from "./ScriptHandler";
-import InputHandler from "./InputHandler";
+import InputHandler from './InputHandler';
 
 
 class LevelManager {
@@ -38,6 +38,10 @@ class LevelManager {
 
     get utils(): Utils {
         return this._utils;
+    }
+
+    get input(): InputHandler {
+        return this._input;
     }
 
 
