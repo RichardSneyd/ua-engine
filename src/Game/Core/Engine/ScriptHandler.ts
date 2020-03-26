@@ -1,8 +1,8 @@
-import ScriptUtils from './Utils/ActScripts';
+import ActScripts from './Utils/ActScripts';
 import Events from './Events';
 
 class ScriptHandler {
-    private _utils: ScriptUtils;
+    private _utils: ActScripts;
     private _events: Events;
     private _name: string;
     private _initialized: boolean;
@@ -11,7 +11,7 @@ class ScriptHandler {
     private _active: any;
     private _last: any;
 
-    constructor(utils: ScriptUtils, events: Events) {
+    constructor(utils: ActScripts, events: Events) {
         this._utils = utils;
         this._events = events;
         this._name = '';

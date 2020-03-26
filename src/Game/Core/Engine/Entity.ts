@@ -1,4 +1,4 @@
-import AnimationManger from './AnimationManager';
+import AnimationManager from './AnimationManager';
 import Events from './Events';
 import ScaleManager from './ScaleManager';
 import IScreen from '../../Services/IScreen';
@@ -13,11 +13,11 @@ class Entity {
   private _initialized: boolean;
   private _atlas: string | null;
 
-  private _screen: IScreen; _animationManager: AnimationManger; _objectHandler: IObjectHandler;
+  private _screen: IScreen; _animationManager: AnimationManager; _objectHandler: IObjectHandler;
   private _events: Events; _scaleManager: ScaleManager;
   private _data: any;
 
-  constructor(screen: IScreen, animationManager: AnimationManger, objectHandler: IObjectHandler,
+  constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler,
               events: Events, scaleManager: ScaleManager) {
     this._screen = screen;
     this._animationManager = animationManager;

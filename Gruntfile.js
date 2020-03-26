@@ -58,6 +58,32 @@ module.exports = (grunt) => {
         tasks: ['browserify', 'exorcise'],
       }
     },
+    calculateDeps: {
+      src: ['src/Game/'],
+      dest: 'src/Dep/ControlContainer.ts',
+      //Maintain no space between commas!
+      single: ['Loader',
+            'Events',
+            'AudioManager',
+            'ImgLoader',
+            'SndLoader',
+            'AjaxLoader',
+            'Screen',
+            'PxGame',
+            'PxLoader',
+            'HwFactory',
+            'HwLoader',
+            'HwPlayer',
+            'Utils',
+            'ActScripts',
+            'Collections',
+            'Colors',
+            'Mixins',
+            'Numbers',
+            'Text',
+            'Vectors'],
+      ignore: ['Vector2D']
+    }
     /*
     notify: {
       js:{
@@ -81,9 +107,19 @@ module.exports = (grunt) => {
   //grunt.loadNpmTasks('grunt-notify');
 
 
+  grunt.registerTask('calculateDeps', 'Calculating dependencies', function() {
+    const CalculateDeps = require('./CalculateDeps.js');
+    let calculateDeps = new CalculateDeps();
+
+    let src = grunt.config.data.calculateDeps.src;
+    let dest = grunt.config.data.calculateDeps.dest;
+    let single = grunt.config.data.calculateDeps.single;
+    let ignore = grunt.config.data.calculateDeps.ignore;
+
+    calculateDeps.refreshDeps(src, dest, single, ignore);
+  });
 
   //grunt.registerTask('default', ['connect', 'browserify', 'exorcise', 'uglify', 'watch']);
-  grunt.registerTask('default', ['connect', 'browserify', 'exorcise', 'watch']);
-  grunt.register
+  grunt.registerTask('default', ['calculateDeps', 'connect', 'browserify', 'exorcise', 'watch']);
 }
 
