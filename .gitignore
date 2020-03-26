@@ -5,3 +5,4 @@ uglifycache.db
 js/*
 dist/
 src/Dep/ControlContainer.ts
+ControlContainer.ts
