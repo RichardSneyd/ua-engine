@@ -32,7 +32,7 @@ class HwPlayer {
             howl.off('end');
             howl.on('end', () => {
                 //   this._playing.splice(this._playing.indexOf(url, 1));
-                console.log('%s finished playing', res.basename);
+            //    console.log('%s finished playing', res.basename);
               //  debugger;
                 onStop();
             });

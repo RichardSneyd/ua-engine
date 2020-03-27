@@ -5,6 +5,8 @@ interface IScreen {
 
   createSprite(x: number, y: number, name: string, frame: string | null): any;
 
+  createNineSlice(x: number, y: number, name: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): any;
+
   clearScreen(): void;
 
   changeTexture(sprite: Sprite, name: string, frame?: string | null): void;

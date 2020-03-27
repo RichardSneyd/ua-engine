@@ -36,7 +36,7 @@ class ActScripts {
      * @param text the string value from the 'cell', to be parsed.
      */
     public getValsFromCell(text: string): string[] {
-        console.log(text);
+      //  console.log(text);
         return this._text.unstringifyArray(text, ',');
     }
 

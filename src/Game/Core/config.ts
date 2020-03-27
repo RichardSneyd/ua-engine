@@ -3,10 +3,16 @@ const config = {
         IMG: 'assets/img/',
         JSN: 'assets/json/',
         SND: 'assets/snd/',
-        SPN: 'assets/spine/'
+        SPINE: 'assets/spine/',
+        SLICE: 'assets/slice/',
+        ATLAS: 'assets/atlas/'
     },
     SND: {
         EXT: ['ogg', 'mp3']
+    },
+    CANVAS: {
+        WIDTH: 1920,
+        HEIGHT: 1080
     }
 }
 

@@ -4,6 +4,7 @@ import Loader from '../Engine/Loader';
 import Loop from '../Engine/Loop';
 import Entity from '../Engine/Entity';
 import LevelManager from '../Engine/LevelManager';
+import config from '../config';
 
 class MainLevel implements ILevel {
   protected _manager: LevelManager; _loop: Loop; _player: Entity; _loader: Loader; _player2: Entity;
@@ -92,20 +93,18 @@ class MainLevel implements ILevel {
 
   preload() {
 
-    this._loader.base = 'assets/img/';
-    this._loader.addImage('virus1_active1.png');
-    this._loader.addImage('virus1_active2.png');
-    this._loader.addImage('virus1_active3.png');
-    this._loader.addImage('virus1_active4.png');
-    this._loader.addImage('virus1_active5.png');
-    this._loader.addImage('virus1_active6.png');
+    this._loader.base = config.PATHS.SLICE;
+    this._loader.addImage('button_over_slice.png');
+    
+    this._loader.base = config.PATHS.SPINE;
     this._loader.addAtlas('professor.json');
+    this._loader.base = config.PATHS.ATLAS;
     this._loader.addAtlas('fly_atlas.json');
 
     let audio = this.manager.script.fileList(['audio_id']);
-    console.log(audio);
+  //  console.log(audio);
     this._loader.addSnds(audio);
-    console.log('addSounds completed');
+   // console.log('addSounds completed');
 
     this._loader.download();
 
@@ -120,11 +119,45 @@ class MainLevel implements ILevel {
     //  let actScript: any = this._loader.getActScript('sample_script');
     //this._player.init(100, 100, 'virus1_active1.png');
 
+    let slice = this._player2.createNew();
+    console.log('new entity: ', slice);
+    slice.initNineSlice(600, 600, 'button_over_slice', 20, 20, 20, 20);
+   // slice.width = 800;
+    slice.enableInput();
+    slice.width = 800;
+  //  slice.setOrigin(0.5);
+
+  //  slice.setSize(1, 1);
+    let drag = false;
+
+    slice.addInputListener('pointerdown', ()=>{
+      drag = true;
+      console.log('tapped the slice!');
+    //  debugger;
+    }, this);
+
+    slice.addInputListener('pointermove', (evt: any)=>{
+      let origEvent: PointerEvent = evt.data.originalEvent;
+      console.log('move event triggered for slice: ', evt);
+      if(drag == true){
+        console.log('event: ', evt);
+        slice.moveTo(evt.data.global.x, evt.data.global.y);
+        console.log(slice.x);
+        console.log(slice.y);
+      }
+    }, this);
+
+    slice.addInputListener('pointerup', (evt: PointerEvent)=>{
+      drag = false;
+    }, this);
+
     this._player2.init(150, 150, 'fly_atlas', 'idle1');
+    console.log('just initialized player2 object');
     this._player2.addAnimation('idle', '', 5, 10, null);
     this._player2.playAnimation('idle');
-
+    
     this._player.initSpine(200, 200, 'professor');
+    console.log('just initialized player object');
     this._player.addSpineAnimation('prof_dance', 0.1);
     this._player.playSpineAnimation('prof_dance');
     this._player.addTween('xyTween', 'Bounce.Out');

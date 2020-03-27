@@ -24,7 +24,7 @@ import ActScripts from '../Game/Core/Engine/Utils/ActScripts';
 import Collections from '../Game/Core/Engine/Utils/Collections';
 import Colors from '../Game/Core/Engine/Utils/Colors';
 import Mixins from '../Game/Core/Engine/Utils/Mixins';
-import Numbers from '../Game/Core/Engine/Utils/Numbers';
+import MathUtils from '../Game/Core/Engine/Utils/MathUtils';
 import Text from '../Game/Core/Engine/Utils/Text';
 import Vectors from '../Game/Core/Engine/Utils/Vectors'
 //Levels
@@ -76,7 +76,7 @@ class ControlContainer {
 
   // utils
   private _utils: any; _actScripts: any; _collections: any; _colors: any;
-  private _mixins: any; private _numbers: any; _text: any; _vectors: any;
+  private _mixins: any; private _math: any; _text: any; _vectors: any;
 
   constructor() {
     this._smartDepend = new SmartDepend();
@@ -141,7 +141,7 @@ class ControlContainer {
     this._collections = this._smartDepend.addModule(Collections, true);
     this._colors = this._smartDepend.addModule(Colors, true);
     this._mixins = this._smartDepend.addModule(Mixins, true);
-    this._numbers = this._smartDepend.addModule(Numbers, true);
+    this._math = this._smartDepend.addModule(MathUtils, true);
     this._text = this._smartDepend.addModule(Text, true);
     this._vectors = this._smartDepend.addModule(Vectors, true);
 
@@ -166,6 +166,7 @@ class ControlContainer {
     this._smartDepend.addDependency(this._entity, this._animationManager);
     this._smartDepend.addDependency(this._entity, this._objectHandler);
     this._smartDepend.addDependency(this._entity, this._inputHandler);
+    this._smartDepend.addDependency(this._entity, this._math);
 
     this._smartDepend.addDependency(this._world, this._entity);
     this._smartDepend.addDependency(this._world, this._screen);
@@ -183,7 +184,7 @@ class ControlContainer {
     this._smartDepend.addDependency(this._utils, this._collections);
     this._smartDepend.addDependency(this._utils, this._colors);
     this._smartDepend.addDependency(this._utils, this._mixins);
-    this._smartDepend.addDependency(this._utils, this._numbers);
+    this._smartDepend.addDependency(this._utils, this._math);
     this._smartDepend.addDependency(this._utils, this._text);
     this._smartDepend.addDependency(this._utils, this._vectors);
     this._smartDepend.addDependency(this._actScripts, this._text);

@@ -1,4 +1,4 @@
-import {Application, Loader, Sprite} from 'pixi.js';
+import {Application, Loader, Sprite, NineSlicePlane} from 'pixi.js';
 
 class PxFactory {
 
@@ -16,6 +16,10 @@ class PxFactory {
   public createSprite(texture: any): Sprite {
 
     return new Sprite(texture);
+  }
+
+  public createNineSlice(texture: PIXI.Texture, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): NineSlicePlane {
+    return new NineSlicePlane(texture, leftWidth, topHeight, rightWidth, bottomHeight);
   }
 
   public createLoader(): Loader {

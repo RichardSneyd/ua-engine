@@ -1,4 +1,4 @@
-import { Application, Sprite, DisplayObject } from 'pixi.js';
+import { Application, Sprite, DisplayObject, NineSlicePlane } from 'pixi.js';
 import PxFactory from './PxFactory';
 import Loader from '../../Core/Engine/Loader';
 import 'pixi-spine';
@@ -22,7 +22,7 @@ class PxGame {
 
     if (elm != null) {
       elm.appendChild(this._game.view);
-    //  this._game.view.addEventListener('mousemove', this._onMouseMove.bind(this));
+      //  this._game.view.addEventListener('mousemove', this._onMouseMove.bind(this));
       this._game.view.addEventListener('pointermove', this._onMouseMove.bind(this));
     } else {
       console.warn("No element by id: '%s', appending to the body.", container);
@@ -43,7 +43,7 @@ class PxGame {
   }
 
   public addSprite(x: number, y: number, sprName: string, frame: string | null): Sprite {
-    let texture = this._loader.getTexture(sprName);
+    //  let texture = this._loader.getTexture(sprName);
     let sprite;
 
     sprite = this._createSprite(x, y, sprName, frame);
@@ -51,15 +51,32 @@ class PxGame {
     sprite.x = x;
     sprite.y = y;
 
-    if (this._game != null) {
-      this._game.stage.addChild(sprite);
-    } else {
-      console.error("Can not add sprite before initializing the game!");
-    }
+    this._addChild(sprite);
 
     // this._enableInputEvents(sprite);
 
     return sprite;
+  }
+
+  public addNineSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): NineSlicePlane {
+
+    let slice = this._createNineSlice(textureName, leftWidth, topHeight, rightWidth, bottomHeight);
+    slice.x = x;
+    slice.y = y;
+    console.warn('slice object: ', slice);
+
+    this._addChild(slice);
+    console.log(this._game?.stage.children);
+   // debugger;
+    return slice;
+  }
+
+  private _addChild(child: DisplayObject) {
+    if (this._game != null) {
+      this._game.stage.addChild(child);
+    } else {
+      console.error("Can not add sprite before initializing the game!");
+    }
   }
 
   public enableInput(sprite: DisplayObject) {
@@ -71,13 +88,13 @@ class PxGame {
   }
 
   public removeListener(event: string, sprite: DisplayObject, callback: Function) {
-   // sprite.removeAllListeners('mouseup');
+    // sprite.removeAllListeners('mouseup');
     sprite.removeListener(event, callback);
   }
 
   public addListener(event: string, sprite: DisplayObject, callback: Function, context: any) {
     sprite.on(event, callback, context);
-  //  sprite.on('touchend', callback, context);
+    //  sprite.on('touchend', callback, context);
   }
 
   public addSpine(name: string): PIXI.spine.Spine | null {
@@ -86,12 +103,7 @@ class PxGame {
 
     if (spineResource != null) {
       sprite = new PIXI.spine.Spine(spineResource.data.spineData);
-      if (this._game != null) {
-        //  this.enableInputEvents(sprite);
-        this._game.stage.addChild(sprite);
-      } else {
-        console.error("Can not add sprite before initializing the game!");
-      }
+      this._addChild(sprite);
     } else {
       console.log('spine resource named "%s" not found', name);
     }
@@ -116,6 +128,15 @@ class PxGame {
     sprite.y = y;
 
     return sprite;
+  }
+
+  private _createNineSlice(textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): NineSlicePlane {
+    let texture = this._loader.getTexture(textureName);
+    let slice = this._pxFactory.createNineSlice(texture, leftWidth, topHeight, rightWidth, bottomHeight);
+    slice.width = texture.width;
+    slice.height = texture.height;
+
+    return slice;
   }
 
   //Foreign Elements

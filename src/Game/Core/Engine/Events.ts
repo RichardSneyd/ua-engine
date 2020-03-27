@@ -250,7 +250,7 @@ class Events {
                     }
                 }
                 else {
-                    console.warn('removing timer from list: ', timer);
+                ///<reference path= '' />    console.warn('removing timer from list: ', timer);
                     this._removeTimer(this._timers.indexOf(timer));
                 }
                 timer.callback.bind(timer.context)();

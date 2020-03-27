@@ -20,20 +20,20 @@ class AudioManager {
 
     play(name: string, onStop: Function, loop: boolean = false) {
         let _name = name;
-        console.log('in HwPlayer.play.');
+      //  console.log('in HwPlayer.play.');
         let res = this._loader.getSndResByBasename(name);
-        console.log('asked for resource:');
-        console.log(res);
+      //  console.log('asked for resource:');
+      //  console.log(res);
         if (res !== null) {
 
             this._hwPlayer.play(name, res, () => {
-                console.log('callback received for %s in AudioManager', _name)
+             //   console.log('callback received for %s in AudioManager', _name)
                 this._playing.splice(this._playing.indexOf(name), 1);
                 onStop();
             }, loop);
         } else console.log('resource %s returned null', name);
 
-        console.log('end of play func');
+     //   console.log('end of play func');
     }
 
     playMusic(name: string, onStop: Function, loop: boolean = false){
@@ -81,7 +81,7 @@ class AudioManager {
     }
 
     private _playInstruction(i: number, onDone: Function){
-        console.log('playInst')
+     //   console.log('playInst');
         let _i = i,_name = this._instArr[i];
 
        // console.log('_playInstruction started for sound %s at position %s, time: %s', _name, _i, new Date().getMilliseconds());
@@ -106,7 +106,7 @@ class AudioManager {
     playInstructionArr(arr: string[], onDone: Function){
         this._stopInstPlaying(); // clean the palette
         this._instArr = arr; // new instructional array
-        console.log('playInstructionalArr called..');
+     //   console.log('playInstructionalArr called..');
      //   debugger;
         this._playInstruction(0, onDone);
     }
