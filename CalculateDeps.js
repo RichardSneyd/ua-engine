@@ -45,8 +45,11 @@ class CalculateDeps {
 
       if (mod.name != null) {
         let path2 = mod.path.replace('.ts', '');
+        let path3 = "../../" + path2.substr(path2.indexOf('src'), path2.length);
 
-        importstatement += "import " + mod.name + " from '" + path2 + "';\n";
+        //console.log(path3);
+
+        importstatement += "import " + mod.name + " from '" + path3 + "';\n";
       }
     }
 
