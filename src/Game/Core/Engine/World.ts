@@ -42,7 +42,7 @@ class World {
     this._screen.clearScreen();
 
     this._currentLevel = level;
-    this._currentLevel.init('sample_script');
+    this._currentLevel.init('s1r_u1_a1_i1');
   }
 
   private _getElementName(): string {

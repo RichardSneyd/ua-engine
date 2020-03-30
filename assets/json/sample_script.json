@@ -5,8 +5,8 @@
         "audio_id": "adult,air,airplane",
         "images": "virus1, virus2",
         "correct_image": "virus1",
-        "trigger": "act_start",
-        "settings": "bgd: standard_bgd\noverlay: overlay_1"
+        "label": "act_start",
+        "config": "bgd: standard_bgd\noverlay: overlay_1"
     },
     {   
         "id": 1,
@@ -14,17 +14,17 @@
         "audio_id": "air,ample,anchor",
         "images": "virus1, virus2",
         "correct_image": "",
-        "trigger": "",
+        "label": "",
         "music": "jp_congratulatory_music1",
-        "settings": "bgd: different_bgd\noverlay: overlay_2"
+        "config": "bgd: different_bgd\noverlay: overlay_2"
     },
     {
         "id": 2,
         "audio_id": "annoy,adult,another",
         "images": "virus1, virus2",
         "correct_image": "virus2",
-        "trigger": "act_end",
+        "label": "act_end",
         "music": "jp_congratulatory_music1",
-        "settings": "bgd: standard_bgd"
+        "config": "bgd: standard_bgd"
     }
 ]

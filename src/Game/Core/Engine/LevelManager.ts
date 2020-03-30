@@ -20,8 +20,8 @@ class LevelManager {
         this._input = input;
     }
 
-    init(scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[]){
-        this._script.init(scriptName, scriptRaw, parseCols, objectifyCols);
+    init(scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[], parseLinesCols?: string[]){
+        this._script.init(scriptName, scriptRaw, parseCols, objectifyCols, parseLinesCols);
     }
 
     get events(): Events{

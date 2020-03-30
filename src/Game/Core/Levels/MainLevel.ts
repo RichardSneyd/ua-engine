@@ -72,7 +72,9 @@ class MainLevel implements ILevel {
 
     this._loader.loadActScript(scriptName, (script: any, data: any) => {
 
-      this.manager.init(scriptName, script, ['images', 'audio_id'], ['settings']);
+      this.manager.script.init(scriptName, script, ['audio_id', 'time'], ['config'], ['text']);
+      console.log(this.manager.script.rows);
+      debugger;
       this.manager.events.fire('preload');
     });
 

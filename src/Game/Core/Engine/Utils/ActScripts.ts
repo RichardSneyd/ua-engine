@@ -115,6 +115,27 @@ class ActScripts {
         return JSON.parse(JSON.stringify(script)); // create a pure clone of an object, array, or array of objects. 
     }
 
+    public toLines(text: string): string[]{
+        let result = text.split('\n');
+        console.log(result);
+        debugger;
+        return result;
+    }
+
+ /*    public toChunks(text: string): any{
+        let chuncks = this._text.split(text, ' ');
+        let words = chuncks.map((val: string, index: number, arr: string[])=>{
+            val = val.replace(/\W/g, '').trim();
+        }, this);
+        let result = [chuncks, words];
+        return result;
+        console.log(result);
+    } */
+
+    public words(text: string): string[] {
+        return _.words(text);
+    }
+
 
 }
 
