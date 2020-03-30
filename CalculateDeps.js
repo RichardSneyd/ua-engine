@@ -46,6 +46,7 @@ class CalculateDeps {
       if (mod.name != null) {
         let path2 = mod.path.replace('.ts', '');
         let path3 = "../../" + path2.substr(path2.indexOf('src'), path2.length);
+        path3 = path3.replace(/\\/g, "/");
 
         //console.log(path3);
 
