@@ -80,8 +80,13 @@ class MainLevel implements ILevel {
 
     this._player.initText(150, 150, "Highwood Education", {"fill": "red","fontWeight": "bold" });
 
+    
+    
+    this._player.addTween('xyTween', 'Bounce.Out');
+    this._player.playTween('xyTween', {x: 500, y: 500}, 6000, ()=> {
       
- 
+    });
+
 
     this._loop.addFunction(this.update, this);
     this._loop.start();
