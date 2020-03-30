@@ -24,15 +24,6 @@ class MainLevel implements ILevel {
   }
 
   init(scriptName: string): void {
-    //test load a json file
-
-    /*   this._loader.addJSON('sample_script.json');
-      this._loader.downloadJSON(()=>{
-          console.log('loaded json')
-    }, this); */
-
-    //  let actScript: any = this._loader.getActScript('sample_script');
-
     this.manager.events.once('preload', this.preload, this);
     this.manager.events.once('start', this.start, this);
     this.manager.events.on('newRow', this.onNewRow, this);
@@ -87,30 +78,10 @@ class MainLevel implements ILevel {
 
   start() {
 
-    this._player2.init(150, 150, 'fly_atlas', 'idle1');
-      this._player2.addAnimation('idle', '', 5, 10, null);
-      this._player2.playAnimation('idle');
+    this._player.initText(150, 150, "Highwood Education", {"fill": "red","fontWeight": "bold" });
 
       
-      this._player.initSpine(200, 200, 'professor');
-      this._player.addSpineAnimation('prof_dance', 0.1);
-      this._player.playSpineAnimation('prof_dance');
-      this._player.addTween('xyTween', 'Bounce.Out');
-      this._player.playTween('xyTween', {x: 500, y: 500}, 6000, ()=> {
-        
-      });
-
-      setTimeout(() => {
-        console.log("GLOBAL PAUSE!!");
-        this._manager.events.fire('pauseAll');
-      }, 1000);
-
-
-      setTimeout(() => {
-        console.log("GLOBAL RESUME!!");
-        this._manager.events.fire('resumeAll');
-      }, 4000);
-
+ 
 
     this._loop.addFunction(this.update, this);
     this._loop.start();
@@ -135,7 +106,6 @@ class MainLevel implements ILevel {
     //console.log('time %s', time);
     
     this._player.update(time);
-    this._player2.update(time);
   }
 
   shutdown(): void {

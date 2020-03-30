@@ -24,6 +24,10 @@ class Screen implements IScreen {
     return this._pxGame.addSpine(name);
   }
 
+  public createText(x: number, y: number, text: string, style: any = undefined): any {
+    return this._pxGame.addText(x, y, text, style);
+  }
+
   public changeTexture(sprite: Sprite, name: string, frame: string | null = null): void {
     this._pxGame.updateTexture(sprite, name, frame);
   }

@@ -17,6 +17,8 @@ class Entity {
   private _events: Events; _scaleManager: ScaleManager;
   private _data: any;
 
+  private _letters: string;
+
   constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler,
               events: Events, scaleManager: ScaleManager) {
     this._screen = screen;
@@ -33,6 +35,15 @@ class Entity {
     this._atlas = null;
 
     this._initialized = false;
+    this._letters = '$$$$____$$$$'; //default uninitialized string
+  }
+
+  set text(lett: string) {
+    if (this._letters == '$$$$____$$$$') {
+      console.error("this is not a text entity, can't change letters!");
+    } else {
+      this._letters = lett;
+    }
   }
 
   set x(xVal: number) {
@@ -75,6 +86,15 @@ class Entity {
     return this._scaleY;
   }
 
+  get text(): string {
+    if (this._letters == '$$$$____$$$$') {
+      console.error("this is not a text entity, can't change letters!");
+      return '';
+    } else {
+      return this._letters;
+    }
+  }
+
   public initSpine(x: number, y: number, spine: string): void {
     this._x = x;
     this._y = y;
@@ -96,6 +116,20 @@ class Entity {
     this._data = this._screen.createSprite(x, y, sprite, frame);
 
     if (frame != null) this._atlas = sprite;
+    this._onResize();
+
+    this._initialized = true;
+
+    this._addListeners();
+  }
+
+  public initText(x: number, y: number, text: string, style: any = undefined) {
+    this._x = x;
+    this._y = y;
+
+    this._letters = text;
+
+    this._data = this._screen.createText(x, y, text, style);
     this._onResize();
 
     this._initialized = true;

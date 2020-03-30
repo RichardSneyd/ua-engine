@@ -1,4 +1,5 @@
 import {Application, Sprite, Renderer} from 'pixi.js';
+import PxText from './PxText';
 import PxFactory from './PxFactory';
 import Loader from '../../Core/Engine/Loader';
 import 'pixi-spine';
@@ -29,6 +30,25 @@ class PxGame {
 
   public resize(x: number, y: number) {
     if (this._game != null) this._game.renderer.resize(x, y);
+  }
+
+  public addText(x: number, y: number, text: string, style: any = undefined) : PxText {
+    if (this._game != null) {
+      let txt = this._pxFactory.createText(text, this._game.renderer, style);
+
+      txt.x = x;
+      txt.y = y;
+
+      this._game.stage.addChild(txt.data);
+
+      return txt;
+    } else {
+      console.error("Can't add text before starting game!");
+
+      let t: any;
+
+      return <PxText> t;
+    }
   }
 
   public addSprite(x: number, y: number, sprName: string, frame: string | null): Sprite {
