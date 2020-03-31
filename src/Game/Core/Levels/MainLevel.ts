@@ -48,7 +48,6 @@ class MainLevel implements ILevel {
       }
   }, this, 3); 
 
-
   }
 
   preload() {
@@ -86,6 +85,7 @@ class MainLevel implements ILevel {
     this._player.playTween('xyTween', {x: 500, y: 500}, 6000, ()=> {
       
     });
+    
 
 
     this._loop.addFunction(this.update, this);

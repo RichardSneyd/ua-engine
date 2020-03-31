@@ -9,8 +9,8 @@ const config = {
         EXT: ['ogg', 'mp3']
     },
     DISPLAY: {
-        WIDTH: 800,
-        HEIGHT: 800
+        WIDTH: 1920,
+        HEIGHT: 1080
     }
 }
 
