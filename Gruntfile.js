@@ -55,7 +55,7 @@ module.exports = (grunt) => {
       js: {
         files: ['src/**/*.ts'],
         //tasks: ['browserify', 'exorcise', 'uglify'],
-        tasks: ['browserify', 'exorcise'],
+        tasks: ['calculateDeps', 'browserify', 'exorcise'],
       }
     },
     calculateDeps: {
