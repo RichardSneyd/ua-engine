@@ -1,12 +1,12 @@
-import TextUtils from './Text';
+import Text from './Text';
 import * as _ from 'lodash';
 import Collections from './Collections';
 
 class ActScripts {
-    private _text: TextUtils;
+    private _text: Text;
     private _collections: Collections;
 
-    private constructor(text: TextUtils, collections: Collections) {
+    private constructor(text: Text, collections: Collections) {
         this._text = text;
         this._collections = collections;
     }

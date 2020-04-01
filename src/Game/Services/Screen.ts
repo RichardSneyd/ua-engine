@@ -52,12 +52,20 @@ class Screen implements IScreen {
     this._pxGame.removeUpListeners;
   } */
 
+  public createText(x: number, y: number, text: string, style: any = undefined): any {
+    return this._pxGame.addText(x, y, text, style);
+  }
+
   public changeTexture(sprite: Sprite, name: string, frame: string | null = null): void {
     this._pxGame.updateTexture(sprite, name, frame);
   }
 
   public clearScreen(): void {
     this._pxGame.clearScreen();
+  }
+
+  public resize(x: number, y: number): void {
+    this._pxGame.resize(x, y);
   }
 }
 

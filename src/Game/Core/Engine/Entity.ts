@@ -1,4 +1,6 @@
-import AnimationManger from './AnimationManager';
+import AnimationManager from './AnimationManager';
+import Events from './Events';
+import ScaleManager from './ScaleManager';
 import IScreen from '../../Services/IScreen';
 import IObjectHandler from '../../Services/IObjectHandler';
 import InputHandler from './InputHandler';
@@ -12,35 +14,56 @@ class Entity {
   private _origin: Point; // should always be between 0 and 1.
   private _width: number;
   private _height: number;
+  private _scaleX: number;
+  private _scaleY: number;
   private _sprite: string;
   private _initialized: boolean;
   private _atlas: string | null;
 
-  private _screen: IScreen; _animationManager: AnimationManger; _objectHandler: IObjectHandler;
+  private _screen: IScreen; _animationManager: AnimationManager; _objectHandler: IObjectHandler;
   private _input: InputHandler; _math: MathUtils;
   private _data: any;
+  private _events: Events; _scaleManager: ScaleManager;
+  private _letters: string;
 
-  constructor(screen: IScreen, animationManager: AnimationManger, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils) {
+  constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, scaleManager: ScaleManager) {
     this._screen = screen;
     this._animationManager = animationManager;
     this._objectHandler = objectHandler;
     this._input = input;
     this._math = math;
+    this._events = events;
+    this._scaleManager = scaleManager;
+
 
     this._x = 0;
     this._y = 0;
     this._origin = new Point(0.5, 0.5);
     this._width = 0;
     this._height = 0;
+    this._scaleX = 1;
+    this._scaleY = 1;
     this._sprite = '';
     this._atlas = null;
 
     this._initialized = false;
+    this._letters = '$$$$____$$$$'; //default uninitialized string
+  }
+ 
+
+  set text(lett: string) {
+    if (this._letters == '$$$$____$$$$') {
+      console.error("this is not a text entity, can't change letters!");
+    } else {
+      this._letters = lett;
+    }
   }
 
   set x(xVal: number) {
     this._x = xVal;
-    this._objectHandler.setXy(this._data, xVal, this._y);
+   // this._objectHandler.setXy(this._data, xVal, this._y);
+
+    this._updateXY();
   }
 
   set y(yVal: number) {
@@ -83,6 +106,19 @@ class Entity {
     this._width = width;
     this._height = height;
     this._objectHandler.setSize(this._data, this._width, this._height);
+    this._updateXY();
+  }
+
+  set scaleX(xVal: number) {
+    this._scaleX = xVal;
+
+    this._updateScale();
+  }
+
+  set scaleY(yVal: number) {
+    this._scaleY = yVal;
+
+    this._updateScale();
   }
 
   get x(): number {
@@ -96,6 +132,23 @@ class Entity {
   get input(): InputHandler {
     return this._input;
   }
+  
+  get scaleX(): number {
+    return this._scaleX;
+  }
+
+  get scaleY(): number {
+    return this._scaleY;
+  }
+
+  get text(): string {
+    if (this._letters == '$$$$____$$$$') {
+      console.error("this is not a text entity, can't change letters!");
+      return '';
+    } else {
+      return this._letters;
+    }
+  }
 
   public initSpine(x: number, y: number, spine: string): void {
     this._x = x;
@@ -103,8 +156,11 @@ class Entity {
     this._data = this._screen.createSpine(spine);
     this._data.x = x;
     this._data.y = y;
+    this._onResize();
 
     this._initialized = true;
+
+    this._addListeners();
   }
 
   public moveBy(x: number, y: number) {
@@ -159,8 +215,25 @@ class Entity {
     this._data = this._screen.createSprite(x, y, sprite, frame);
 
     if (frame != null) this._atlas = sprite;
+    this._onResize();
 
     this._initialized = true;
+
+    this._addListeners();
+  }
+
+  public initText(x: number, y: number, text: string, style: any = undefined) {
+    this._x = x;
+    this._y = y;
+
+    this._letters = text;
+
+    this._data = this._screen.createText(x, y, text, style);
+    this._onResize();
+
+    this._initialized = true;
+
+    this._addListeners();
   }
 
   public addTween(name: string, easing: string) {
@@ -226,7 +299,7 @@ class Entity {
   public createNew(): Entity {
     let am = this._animationManager.createNew();
     console.log('new am: ', am);
-    return new Entity(this._screen, am, this._objectHandler, this._input, this._math);
+    return new Entity(this._screen, am, this._objectHandler, this._input, this._math, this._events, this._scaleManager.createNew());
   }
 
   public update(time: number) {
@@ -243,6 +316,28 @@ class Entity {
     }
 
     this._animationManager.update(time);
+  }
+
+  private _updateScale() {
+    let scaleX = this._scaleManager.getScale(this._scaleX);
+    let scaleY = this._scaleManager.getScale(this._scaleY);
+
+    this._objectHandler.setScaleXY(this._data, scaleX, scaleX);
+  }
+
+  private _updateXY() {
+    let target = this._scaleManager.getXY(this._x, this._y);
+
+    this._objectHandler.setXy(this._data, target.x, target.y);
+  }
+
+  private _addListeners() {
+    this._events.addListener('resize', this._onResize, this);
+  }
+
+  private _onResize() {
+    this._updateScale();
+    this._updateXY();
   }
 
 

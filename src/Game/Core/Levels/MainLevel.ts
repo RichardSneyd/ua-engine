@@ -39,13 +39,13 @@ class MainLevel implements ILevel {
       this._player2.addAnimation('idle', '', 5, 10, null);
       this._player2.playAnimation('idle');
 
-      
+
       this._player.initSpine(200, 200, 'professor');
       this._player.addSpineAnimation('prof_dance', 0.1);
       this._player.playSpineAnimation('prof_dance');
       this._player.addTween('xyTween', 'Bounce.Out');
-      this._player.playTween('xyTween', {x: 500, y: 500}, 6000, ()=> {
-        
+      this._player.playTween('xyTween', { x: 500, y: 500 }, 6000, () => {
+
       });
 
       this.manager.events.timer(() => {
@@ -80,33 +80,33 @@ class MainLevel implements ILevel {
 
     // demo code showcasing events and timers....
     let i = 0;
-    let tail ='.';
-    this.manager.events.timer(function(this: any){
+    let tail = '.';
+    this.manager.events.timer(function (this: any) {
       console.warn('executing callback %s repeat at: ', i, this);
       i++;
-      if(i == 3){
-          this.manager.events.timer(2000, function(this: any){
-              tail = tail + '.';
-              console.warn('repeat forever %s', tail);
-          }, this, -1); // a repeat value of -2 means forever, until the timer is removed (events.removeTimer(callback))
+      if (i == 3) {
+        this.manager.events.timer(2000, function (this: any) {
+          tail = tail + '.';
+          console.warn('repeat forever %s', tail);
+        }, this, -1); // a repeat value of -2 means forever, until the timer is removed (events.removeTimer(callback))
       }
-  }, 1000,  this, 3); 
+    }, 1000, this, 3);
   }
 
   preload() {
 
     this._loader.base = config.PATHS.SLICE;
     this._loader.addImage('button_over_slice.png');
-    
+
     this._loader.base = config.PATHS.SPINE;
     this._loader.addAtlas('professor.json');
     this._loader.base = config.PATHS.ATLAS;
     this._loader.addAtlas('fly_atlas.json');
 
     let audio = this.manager.script.fileList(['audio_id']);
-  //  console.log(audio);
+    //  console.log(audio);
     this._loader.addSnds(audio);
-   // console.log('addSounds completed');
+    // console.log('addSounds completed');
 
     this._loader.download();
 
@@ -124,24 +124,24 @@ class MainLevel implements ILevel {
     let slice = this._player2.createNew();
     console.log('new entity: ', slice);
     slice.initNineSlice(600, 600, 'button_over_slice', 20, 20, 20, 20);
-   // slice.width = 800;
+    // slice.width = 800;
     slice.enableInput();
     slice.width = 800;
-  //  slice.setOrigin(0.5);
+    //  slice.setOrigin(0.5);
 
-  //  slice.setSize(1, 1);
+    //  slice.setSize(1, 1);
     let drag = false;
 
-    slice.addInputListener('pointerdown', ()=>{
+    slice.addInputListener('pointerdown', () => {
       drag = true;
       console.log('tapped the slice!');
-    //  debugger;
+      //  debugger;
     }, this);
 
-    slice.addInputListener('pointermove', (evt: any)=>{
+    slice.addInputListener('pointermove', (evt: any) => {
       let origEvent: PointerEvent = evt.data.originalEvent;
       console.log('move event triggered for slice: ', evt);
-      if(drag == true){
+      if (drag == true) {
         console.log('event: ', evt);
         slice.moveTo(evt.data.global.x, evt.data.global.y);
         console.log(slice.x);
@@ -149,7 +149,7 @@ class MainLevel implements ILevel {
       }
     }, this);
 
-    slice.addInputListener('pointerup', (evt: PointerEvent)=>{
+    slice.addInputListener('pointerup', (evt: PointerEvent) => {
       drag = false;
     }, this);
 
@@ -157,26 +157,33 @@ class MainLevel implements ILevel {
     console.log('just initialized player2 object');
     this._player2.addAnimation('idle', '', 5, 10, null);
     this._player2.playAnimation('idle');
-    
+
     this._player.initSpine(200, 200, 'professor');
     console.log('just initialized player object');
     this._player.addSpineAnimation('prof_dance', 0.1);
     this._player.playSpineAnimation('prof_dance');
-    this._player.addTween('xyTween', 'Bounce.Out');
-    this._player.playTween('xyTween', { x: 500, y: 500 }, 6000, () => {
+   
+    let text = this._player.createNew(); 
+    text.initText(150, 150, "Highwood Education", {"fill": "red","fontWeight": "bold" });
+
+
+
+    text.addTween('xyTween', 'Bounce.Out');
+    text.playTween('xyTween', { x: 500, y: 500 }, 6000, () => {
+
     });
 
     this._player.enableInput();
-    this._player.addInputListener('pointerdown', (evt: any)=>{
+    this._player.addInputListener('pointerdown', (evt: any) => {
       console.warn('pointerdown on professor: ', evt);
     }, this, true);
 
     this._player2.enableInput();
-    this._player2.addInputListener('pointerup', (evt: any)=> {
+    this._player2.addInputListener('pointerup', (evt: any) => {
       console.warn('pointerdown on fly: ', evt)
     }, this, true)
 
-  // this.manager.input.addListener
+    // this.manager.input.addListener
 
 
     this.manager.events.timer(() => {
@@ -237,9 +244,8 @@ class MainLevel implements ILevel {
 
   update(time: number): void {
     //console.log('time %s', time);
-    
+
     this._player.update(time);
-    this._player2.update(time);
   }
 
   shutdown(): void {

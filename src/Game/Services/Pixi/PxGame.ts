@@ -1,4 +1,5 @@
-import { Application, Sprite, DisplayObject, NineSlicePlane } from 'pixi.js';
+import { Application, Sprite, Renderer, DisplayObject, NineSlicePlane } from 'pixi.js';
+import PxText from './PxText';
 import PxFactory from './PxFactory';
 import Loader from '../../Core/Engine/Loader';
 import 'pixi-spine';
@@ -19,6 +20,7 @@ class PxGame {
     let elm = document.getElementById(container);
 
     this._game = this._createGame(w, h, container);
+    this._game.renderer.backgroundColor = 0xfafad2;
 
     if (elm != null) {
       elm.appendChild(this._game.view);
@@ -40,6 +42,30 @@ class PxGame {
     args.moveY = evt.movementY;
     //console.warn(evt);
     this._events.fire('pointermove', args);
+  
+  }
+  
+  public resize(x: number, y: number) {
+    if (this._game != null) this._game.renderer.resize(x, y);
+  }
+
+  public addText(x: number, y: number, text: string, style: any = undefined) : PxText {
+    if (this._game != null) {
+      let txt = this._pxFactory.createText(text, this._game.renderer, style);
+
+      txt.x = x;
+      txt.y = y;
+
+      this._game.stage.addChild(txt.data);
+
+      return txt;
+    } else {
+      console.error("Can't add text before starting game!");
+
+      let t: any;
+
+      return <PxText> t;
+    }
   }
 
   public addSprite(x: number, y: number, sprName: string, frame: string | null): Sprite {

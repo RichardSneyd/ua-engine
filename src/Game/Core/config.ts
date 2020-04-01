@@ -10,7 +10,7 @@ const config = {
     SND: {
         EXT: ['ogg', 'mp3']
     },
-    CANVAS: {
+    DISPLAY: {
         WIDTH: 1920,
         HEIGHT: 1080
     }
