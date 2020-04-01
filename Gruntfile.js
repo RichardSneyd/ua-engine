@@ -82,7 +82,7 @@ module.exports = (grunt) => {
             'Numbers',
             'Text',
             'Vectors'],
-      ignore: ['Vector2D']
+      ignore: ['LineSegment', 'Polygon', 'Rect', 'Point', 'Circle']
     }
     /*
     notify: {

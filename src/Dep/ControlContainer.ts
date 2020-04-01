@@ -1,82 +1,91 @@
 import SmartDepend from '../Dep/SmartDepend';
 
-//Core
-import Game from '../Game/Core/Game';
-//Data
-import Anim from '../Game/Core/Data/Anim';
-import FunObj from '../Game/Core/Data/FunObj';
-import Resource from '../Game/Core/Data/Resource';
-import Tween from '../Game/Core/Data/Tween';
-//Engine
-import Entity from '../Game/Core/Engine/Entity';
-import AnimationManager from '../Game/Core/Engine/AnimationManager';
-import Loader from '../Game/Core/Engine/Loader';
-import Loop from '../Game/Core/Engine/Loop';
-import World from '../Game/Core/Engine/World';
-import Events from '../Game/Core/Engine/Events';
-import InputHandler from '../Game/Core/Engine/InputHandler';
-//Levels
+import Anim from '../../src/Game/Core/Data/Anim';
+import FunObj from '../../src/Game/Core/Data/FunObj';
+import Resource from '../../src/Game/Core/Data/Resource';
+import Tween from '../../src/Game/Core/Data/Tween';
+import AnimationManager from '../../src/Game/Core/Engine/AnimationManager';
+import AudioManager from '../../src/Game/Core/Engine/AudioManager';
+import Entity from '../../src/Game/Core/Engine/Entity';
+import Events from '../../src/Game/Core/Engine/Events';
+import InputHandler from '../../src/Game/Core/Engine/InputHandler';
+import LevelManager from '../../src/Game/Core/Engine/LevelManager';
+import Loader from '../../src/Game/Core/Engine/Loader';
+import Loop from '../../src/Game/Core/Engine/Loop';
+import ScaleManager from '../../src/Game/Core/Engine/ScaleManager';
+import ScriptHandler from '../../src/Game/Core/Engine/ScriptHandler';
+import ActScripts from '../../src/Game/Core/Engine/Utils/ActScripts';
+import Collections from '../../src/Game/Core/Engine/Utils/Collections';
+import Colors from '../../src/Game/Core/Engine/Utils/Colors';
+import MathUtils from '../../src/Game/Core/Engine/Utils/MathUtils';
+import Mixins from '../../src/Game/Core/Engine/Utils/Mixins';
+import Text from '../../src/Game/Core/Engine/Utils/Text';
+import Utils from '../../src/Game/Core/Engine/Utils/Utils';
+import Vectors from '../../src/Game/Core/Engine/Utils/Vectors';
+import World from '../../src/Game/Core/Engine/World';
+import Game from '../../src/Game/Core/Game';
+import MainLevel from '../../src/Game/Core/Levels/MainLevel';
+import SndTestLevel from '../../src/Game/Core/Levels/SndTestLevel';
+import AjaxLoader from '../../src/Game/Services/AjaxLoader';
+import HwFactory from '../../src/Game/Services/Howler/HwFactory';
+import HwLoader from '../../src/Game/Services/Howler/HwLoader';
+import HwPlayer from '../../src/Game/Services/Howler/HwPlayer';
+import ImgLoader from '../../src/Game/Services/ImgLoader';
+import ObjectHandler from '../../src/Game/Services/ObjectHandler';
+import PxFactory from '../../src/Game/Services/Pixi/PxFactory';
+import PxGame from '../../src/Game/Services/Pixi/PxGame';
+import PxLoader from '../../src/Game/Services/Pixi/PxLoader';
+import PxPoint from '../../src/Game/Services/Pixi/PxPoint';
+import PxText from '../../src/Game/Services/Pixi/PxText';
+import Screen from '../../src/Game/Services/Screen';
+import SndLoader from '../../src/Game/Services/SndLoader';
 
-
-//Utils
-import Utils from '../Game/Core/Engine/Utils/Utils';
-import ActScripts from '../Game/Core/Engine/Utils/ActScripts';
-import Collections from '../Game/Core/Engine/Utils/Collections';
-import Colors from '../Game/Core/Engine/Utils/Colors';
-import Mixins from '../Game/Core/Engine/Utils/Mixins';
-import MathUtils from '../Game/Core/Engine/Utils/MathUtils';
-import Text from '../Game/Core/Engine/Utils/Text';
-import Vectors from '../Game/Core/Engine/Utils/Vectors'
-//Levels
-import MainLevel from '../Game/Core/Levels/MainLevel';
-
-
-import LevelManager from '../Game/Core/Engine/LevelManager';
-import AudioManager from '../Game/Core/Engine/AudioManager';
-import ScriptHandler from '../Game/Core/Engine/ScriptHandler';
-
-//Services
-import ImgLoader from '../Game/Services/ImgLoader';
-import SndLoader from '../Game/Services/SndLoader';
-import AjaxLoader from '../Game/Services/AjaxLoader';
-import ObjectHandler from '../Game/Services/ObjectHandler';
-import Screen from '../Game/Services/Screen';
-//Pixi
-import PxFactory from '../Game/Services/Pixi/PxFactory';
-import PxGame from '../Game/Services/Pixi/PxGame';
-import PxLoader from '../Game/Services/Pixi/PxLoader';
-//Howler
-import HwFactory from '../Game/Services/Howler/HwFactory';
-import HwLoader from '../Game/Services/Howler/HwLoader';
-import HwPlayer from '../Game/Services/Howler/HwPlayer';
-//Levels
-import SndTestLevel from '../Game/Core/Levels/SndTestLevel';
 
 
 
 class ControlContainer {
   private _smartDepend: SmartDepend;
 
-  // property declarations for all modules 
+  private _Anim: any;
+private _FunObj: any;
+private _Resource: any;
+private _Tween: any;
+private _AnimationManager: any;
+private _AudioManager: any;
+private _Entity: any;
+private _Events: any;
+private _InputHandler: any;
+private _LevelManager: any;
+private _Loader: any;
+private _Loop: any;
+private _ScaleManager: any;
+private _ScriptHandler: any;
+private _ActScripts: any;
+private _Collections: any;
+private _Colors: any;
+private _MathUtils: any;
+private _Mixins: any;
+private _Text: any;
+private _Utils: any;
+private _Vectors: any;
+private _World: any;
+private _Game: any;
+private _MainLevel: any;
+private _SndTestLevel: any;
+private _AjaxLoader: any;
+private _HwFactory: any;
+private _HwLoader: any;
+private _HwPlayer: any;
+private _ImgLoader: any;
+private _ObjectHandler: any;
+private _PxFactory: any;
+private _PxGame: any;
+private _PxLoader: any;
+private _PxPoint: any;
+private _PxText: any;
+private _Screen: any;
+private _SndLoader: any;
 
-  private _game: any;
-  private _funObj: any; _resource: any; _anim: any;
-  private _entity: any; _world: any; _loop: any; _loader: any; _animationManager: any; private _events: any; _inputHandler: any;
-  private _mainLevel: any; _tween: any;
-  private _script: any;
-
-  private _sndTestLevel: any; _baseLevel: any;
-
-  private _screen: any;
-  private _levelManager: any; _audioManager: any;
-  private _imgLoader: any; _sndLoader: any; _ajaxLoader: any;
-  _objectHandler: any;
-  private _pxFactory: any; _pxGame: any; _pxLoader: any;
-  private _hwFactory: any; _hwLoader: any; _hwPlayer: any;
-
-  // utils
-  private _utils: any; _actScripts: any; _collections: any; _colors: any;
-  private _mixins: any; private _math: any; _text: any; _vectors: any;
 
   constructor() {
     this._smartDepend = new SmartDepend();
@@ -86,149 +95,169 @@ class ControlContainer {
   }
 
   public getMain(): Game {
-    let spEntity = <Game>this._smartDepend.resolve(this._game);
+    let spEntity = <Game>this._smartDepend.resolve(this._Game);
 
     return spEntity;
   }
 
- /*  public getAudioManager(): AudioManager {
-    let audio = <AudioManager>this._smartDepend.resolve(this._audioManager);
-
-    return audio;
-  } */
-
   private _addModules() {
-    //Game
-    //Core
-    this._game = this._smartDepend.addModule(Game, false);
-    //Data
-    this._anim = this._smartDepend.addModule(Anim, false);
-    this._funObj = this._smartDepend.addModule(FunObj, false);
-    this._resource = this._smartDepend.addModule(Resource, false);
-    this._tween = this._smartDepend.addModule(Tween, false);
-    //Engine
-    this._animationManager = this._smartDepend.addModule(AnimationManager, false);
-    this._script = this._smartDepend.addModule(ScriptHandler, false);
-    this._entity = this._smartDepend.addModule(Entity, false);
-    this._loader = this._smartDepend.addModule(Loader, true);
-    this._loop = this._smartDepend.addModule(Loop, false);
-    this._world = this._smartDepend.addModule(World, false);
-    this._events = this._smartDepend.addModule(Events, true);
-    this._inputHandler = this._smartDepend.addModule(InputHandler, true);
-    //Levels
-    this._mainLevel = this._smartDepend.addModule(MainLevel, false);
-    this._sndTestLevel = this._smartDepend.addModule(SndTestLevel, false);
-
-    //Services
-    this._levelManager = this._smartDepend.addModule(LevelManager, false);
-    this._audioManager = this._smartDepend.addModule(AudioManager, true);
-    this._imgLoader = this._smartDepend.addModule(ImgLoader, true);
-    this._sndLoader = this._smartDepend.addModule(SndLoader, true);
-    this._ajaxLoader = this._smartDepend.addModule(AjaxLoader, true);
-    this._objectHandler = this._smartDepend.addModule(ObjectHandler, false);
-    this._screen = this._smartDepend.addModule(Screen, true);
-    //Pixi
-    this._pxFactory = this._smartDepend.addModule(PxFactory, false);
-    this._pxGame = this._smartDepend.addModule(PxGame, true);
-    this._pxLoader = this._smartDepend.addModule(PxLoader, true);
-    //Howler
-    this._hwFactory = this._smartDepend.addModule(HwFactory, true);
-    this._hwLoader = this._smartDepend.addModule(HwLoader, true);
-    this._hwPlayer = this._smartDepend.addModule(HwPlayer, true);
-    //Utils
-    this._utils = this._smartDepend.addModule(Utils, true);
-    this._actScripts = this._smartDepend.addModule(ActScripts, true);
-    this._collections = this._smartDepend.addModule(Collections, true);
-    this._colors = this._smartDepend.addModule(Colors, true);
-    this._mixins = this._smartDepend.addModule(Mixins, true);
-    this._math = this._smartDepend.addModule(MathUtils, true);
-    this._text = this._smartDepend.addModule(Text, true);
-    this._vectors = this._smartDepend.addModule(Vectors, true);
-
+    this._Anim = this._smartDepend.addModule(Anim, false);
+this._FunObj = this._smartDepend.addModule(FunObj, false);
+this._Resource = this._smartDepend.addModule(Resource, false);
+this._Tween = this._smartDepend.addModule(Tween, false);
+this._AnimationManager = this._smartDepend.addModule(AnimationManager, false);
+this._AudioManager = this._smartDepend.addModule(AudioManager, true);
+this._Entity = this._smartDepend.addModule(Entity, false);
+this._Events = this._smartDepend.addModule(Events, true);
+this._InputHandler = this._smartDepend.addModule(InputHandler, false);
+this._LevelManager = this._smartDepend.addModule(LevelManager, false);
+this._Loader = this._smartDepend.addModule(Loader, true);
+this._Loop = this._smartDepend.addModule(Loop, false);
+this._ScaleManager = this._smartDepend.addModule(ScaleManager, false);
+this._ScriptHandler = this._smartDepend.addModule(ScriptHandler, false);
+this._ActScripts = this._smartDepend.addModule(ActScripts, true);
+this._Collections = this._smartDepend.addModule(Collections, true);
+this._Colors = this._smartDepend.addModule(Colors, true);
+this._MathUtils = this._smartDepend.addModule(MathUtils, false);
+this._Mixins = this._smartDepend.addModule(Mixins, true);
+this._Text = this._smartDepend.addModule(Text, true);
+this._Utils = this._smartDepend.addModule(Utils, true);
+this._Vectors = this._smartDepend.addModule(Vectors, true);
+this._World = this._smartDepend.addModule(World, false);
+this._Game = this._smartDepend.addModule(Game, false);
+this._MainLevel = this._smartDepend.addModule(MainLevel, false);
+this._SndTestLevel = this._smartDepend.addModule(SndTestLevel, false);
+this._AjaxLoader = this._smartDepend.addModule(AjaxLoader, true);
+this._HwFactory = this._smartDepend.addModule(HwFactory, true);
+this._HwLoader = this._smartDepend.addModule(HwLoader, true);
+this._HwPlayer = this._smartDepend.addModule(HwPlayer, true);
+this._ImgLoader = this._smartDepend.addModule(ImgLoader, true);
+this._ObjectHandler = this._smartDepend.addModule(ObjectHandler, false);
+this._PxFactory = this._smartDepend.addModule(PxFactory, false);
+this._PxGame = this._smartDepend.addModule(PxGame, true);
+this._PxLoader = this._smartDepend.addModule(PxLoader, true);
+this._PxPoint = this._smartDepend.addModule(PxPoint, false);
+this._PxText = this._smartDepend.addModule(PxText, false);
+this._Screen = this._smartDepend.addModule(Screen, true);
+this._SndLoader = this._smartDepend.addModule(SndLoader, true);
 
   }
 
   private _addDepends() {
-    //Game
-    //Core
-    this._smartDepend.addDependency(this._game, this._world);
-    //Data
-    this._smartDepend.addDependency(this._anim, this._events);
-    //Levels
-    this._smartDepend.addDependency(this._game, this._mainLevel);
-    this._smartDepend.addDependency(this._game, this._sndTestLevel);
-    this._smartDepend.addDependency(this._game, this._utils);
-    //Engine
-    this._smartDepend.addDependency(this._animationManager, this._anim);
-    this._smartDepend.addDependency(this._animationManager, this._tween);
+    this._smartDepend.addDependency(this._Anim, this._Events);
 
-    this._smartDepend.addDependency(this._entity, this._screen);
-    this._smartDepend.addDependency(this._entity, this._animationManager);
-    this._smartDepend.addDependency(this._entity, this._objectHandler);
-    this._smartDepend.addDependency(this._entity, this._inputHandler);
-    this._smartDepend.addDependency(this._entity, this._math);
 
-    this._smartDepend.addDependency(this._world, this._entity);
-    this._smartDepend.addDependency(this._world, this._screen);
+this._smartDepend.addDependency(this._AnimationManager, this._Anim);
+this._smartDepend.addDependency(this._AnimationManager, this._Tween);
 
-    this._smartDepend.addDependency(this._loader, this._resource);
-    this._smartDepend.addDependency(this._loader, this._imgLoader);
-    this._smartDepend.addDependency(this._loader, this._sndLoader);
-    this._smartDepend.addDependency(this._loader, this._ajaxLoader);
 
-    this._smartDepend.addDependency(this._loop, this._events);
-    this._smartDepend.addDependency(this._loop, this._funObj);
+this._smartDepend.addDependency(this._AudioManager, this._Loader);
+this._smartDepend.addDependency(this._AudioManager, this._HwPlayer);
 
-    //Utils
-    this._smartDepend.addDependency(this._utils, this._actScripts);
-    this._smartDepend.addDependency(this._utils, this._collections);
-    this._smartDepend.addDependency(this._utils, this._colors);
-    this._smartDepend.addDependency(this._utils, this._mixins);
-    this._smartDepend.addDependency(this._utils, this._math);
-    this._smartDepend.addDependency(this._utils, this._text);
-    this._smartDepend.addDependency(this._utils, this._vectors);
-    this._smartDepend.addDependency(this._actScripts, this._text);
-    this._smartDepend.addDependency(this._actScripts, this._collections);
 
-    //Levels
-    this._smartDepend.addDependency(this._sndTestLevel, this._levelManager);
-    this._smartDepend.addDependency(this._sndTestLevel, this._loop);
-    this._smartDepend.addDependency(this._sndTestLevel, this._loader);
-    this._smartDepend.addDependency(this._sndTestLevel, this._entity);
-    this._smartDepend.addDependency(this._sndTestLevel, this._entity);
+this._smartDepend.addDependency(this._Entity, this._Screen);
+this._smartDepend.addDependency(this._Entity, this._AnimationManager);
+this._smartDepend.addDependency(this._Entity, this._ObjectHandler);
+this._smartDepend.addDependency(this._Entity, this._InputHandler);
+this._smartDepend.addDependency(this._Entity, this._MathUtils);
+this._smartDepend.addDependency(this._Entity, this._Events);
+this._smartDepend.addDependency(this._Entity, this._ScaleManager);
 
-    this._smartDepend.addDependency(this._mainLevel, this._levelManager);
-    this._smartDepend.addDependency(this._mainLevel, this._loop);
-    this._smartDepend.addDependency(this._mainLevel, this._loader);
-    this._smartDepend.addDependency(this._mainLevel, this._entity);
-    this._smartDepend.addDependency(this._mainLevel, this._entity);
 
-    //Services
-    this._smartDepend.addDependency(this._levelManager, this._audioManager);
-    this._smartDepend.addDependency(this._levelManager, this._events);
-    this._smartDepend.addDependency(this._levelManager, this._script);
-    this._smartDepend.addDependency(this._levelManager, this._utils);
-    this._smartDepend.addDependency(this._levelManager, this._inputHandler);
+this._smartDepend.addDependency(this._InputHandler, this._Events);
+this._smartDepend.addDependency(this._InputHandler, this._Loader);
+this._smartDepend.addDependency(this._InputHandler, this._Screen);
 
-    this._smartDepend.addDependency(this._audioManager, this._loader);
-    this._smartDepend.addDependency(this._audioManager, this._hwPlayer);
-    this._smartDepend.addDependency(this._imgLoader, this._pxLoader);
-    this._smartDepend.addDependency(this._sndLoader, this._hwLoader);
-    this._smartDepend.addDependency(this._script, this._actScripts);
-    this._smartDepend.addDependency(this._script, this._events);
-    this._smartDepend.addDependency(this._screen, this._pxGame);
-    this._smartDepend.addDependency(this._inputHandler, this._events);
-    this._smartDepend.addDependency(this._inputHandler, this._loader);
-    this._smartDepend.addDependency(this._inputHandler, this._screen);
 
-    //Pixi
-    this._smartDepend.addDependency(this._pxGame, this._pxFactory);
-    this._smartDepend.addDependency(this._pxGame, this._loader);
-    this._smartDepend.addDependency(this._pxGame, this._events);
-    this._smartDepend.addDependency(this._pxLoader, this._pxFactory);
-    //Howler
-    this._smartDepend.addDependency(this._hwLoader, this._hwFactory);
-    this._smartDepend.addDependency(this._hwPlayer, this._loader);
+this._smartDepend.addDependency(this._LevelManager, this._AudioManager);
+this._smartDepend.addDependency(this._LevelManager, this._Events);
+this._smartDepend.addDependency(this._LevelManager, this._ScriptHandler);
+this._smartDepend.addDependency(this._LevelManager, this._Utils);
+this._smartDepend.addDependency(this._LevelManager, this._InputHandler);
+
+
+this._smartDepend.addDependency(this._Loader, this._Resource);
+this._smartDepend.addDependency(this._Loader, this._ImgLoader);
+this._smartDepend.addDependency(this._Loader, this._SndLoader);
+this._smartDepend.addDependency(this._Loader, this._AjaxLoader);
+
+
+this._smartDepend.addDependency(this._Loop, this._Events);
+this._smartDepend.addDependency(this._Loop, this._FunObj);
+
+
+this._smartDepend.addDependency(this._ScriptHandler, this._ActScripts);
+this._smartDepend.addDependency(this._ScriptHandler, this._Events);
+
+
+this._smartDepend.addDependency(this._ActScripts, this._Text);
+this._smartDepend.addDependency(this._ActScripts, this._Collections);
+
+
+this._smartDepend.addDependency(this._Utils, this._ActScripts);
+this._smartDepend.addDependency(this._Utils, this._Collections);
+this._smartDepend.addDependency(this._Utils, this._Colors);
+this._smartDepend.addDependency(this._Utils, this._Mixins);
+this._smartDepend.addDependency(this._Utils, this._MathUtils);
+this._smartDepend.addDependency(this._Utils, this._Text);
+this._smartDepend.addDependency(this._Utils, this._Vectors);
+
+
+this._smartDepend.addDependency(this._World, this._Entity);
+this._smartDepend.addDependency(this._World, this._Screen);
+
+
+this._smartDepend.addDependency(this._Game, this._World);
+this._smartDepend.addDependency(this._Game, this._MainLevel);
+this._smartDepend.addDependency(this._Game, this._SndTestLevel);
+this._smartDepend.addDependency(this._Game, this._Events);
+this._smartDepend.addDependency(this._Game, this._ScaleManager);
+
+
+this._smartDepend.addDependency(this._MainLevel, this._LevelManager);
+this._smartDepend.addDependency(this._MainLevel, this._Loop);
+this._smartDepend.addDependency(this._MainLevel, this._Loader);
+this._smartDepend.addDependency(this._MainLevel, this._Entity);
+this._smartDepend.addDependency(this._MainLevel, this._Entity);
+
+
+this._smartDepend.addDependency(this._SndTestLevel, this._LevelManager);
+this._smartDepend.addDependency(this._SndTestLevel, this._Loop);
+this._smartDepend.addDependency(this._SndTestLevel, this._Loader);
+this._smartDepend.addDependency(this._SndTestLevel, this._Entity);
+this._smartDepend.addDependency(this._SndTestLevel, this._Entity);
+
+
+this._smartDepend.addDependency(this._HwLoader, this._HwFactory);
+
+
+this._smartDepend.addDependency(this._HwPlayer, this._Loader);
+
+
+this._smartDepend.addDependency(this._ImgLoader, this._PxLoader);
+
+
+this._smartDepend.addDependency(this._PxFactory, this._PxText);
+
+
+this._smartDepend.addDependency(this._PxGame, this._PxFactory);
+this._smartDepend.addDependency(this._PxGame, this._Loader);
+this._smartDepend.addDependency(this._PxGame, this._Events);
+
+
+this._smartDepend.addDependency(this._PxLoader, this._PxFactory);
+
+
+this._smartDepend.addDependency(this._PxText, this._PxPoint);
+
+
+this._smartDepend.addDependency(this._Screen, this._PxGame);
+
+
+this._smartDepend.addDependency(this._SndLoader, this._HwLoader);
+
+
+
   }
 
 }

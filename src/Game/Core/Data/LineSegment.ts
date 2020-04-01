@@ -9,3 +9,5 @@ class LineSegment {
         this._pnt2 = pnt2;
     }
 }
+
+export default LineSegment;

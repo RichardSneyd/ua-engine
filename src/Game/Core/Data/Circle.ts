@@ -1,6 +1,6 @@
 import { Point } from "pixi.js";
 
-class Cirlce {
+class Circle {
     private _center: Point;
     private _radius: number;
 
@@ -26,4 +26,4 @@ class Cirlce {
     }
 }
 
-export default Cirlce;
+export default Circle;

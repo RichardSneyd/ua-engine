@@ -30,3 +30,5 @@ class Polygon {
         this._points = points;
     }
 }
+
+export default Polygon;
