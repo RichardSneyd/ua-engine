@@ -42,7 +42,7 @@ class World {
     this._screen.clearScreen();
 
     this._currentLevel = level;
-    this._currentLevel.init('sample_script');
+    this._currentLevel.init();
   }
 
   public resize(x: number, y: number) {

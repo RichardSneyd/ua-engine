@@ -9,13 +9,13 @@ class MainLevel implements ILevel {
   protected _manager: LevelManager; _loop: Loop; _player: Entity; _loader: Loader; _player2: Entity;
 
 
-  constructor(manager: LevelManager, loop: Loop, loader: Loader, entity: Entity, entity2: Entity) {
-    this._manager = manager;
-    this._loop = loop;
-    this._loader = loader;
+  constructor() {
+    this._manager = (<any>window).UAENGINE.levelManager;
+    this._loop = (<any>window).UAENGINE.loop;
+    this._loader = (<any>window).UAENGINE.loader;
 
-    this._player = entity;
-    this._player2 = entity2;
+    this._player = (<any>window).UAENGINE.entity.createNew();
+    this._player2 = (<any>window).UAENGINE.entity.createNew();
     // this._utils = utils;
   }
 
@@ -23,7 +23,9 @@ class MainLevel implements ILevel {
     return this._manager;
   }
 
-  init(scriptName: string): void {
+  init(): void {
+    let scriptName = 'sample_script';
+
     this.manager.events.once('preload', this.preload, this);
     this.manager.events.once('start', this.start, this);
     this.manager.events.on('newRow', this.onNewRow, this);

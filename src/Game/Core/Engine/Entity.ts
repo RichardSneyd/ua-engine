@@ -96,6 +96,8 @@ class Entity {
   }
 
   public initSpine(x: number, y: number, spine: string): void {
+    this._initScaleManager();
+
     this._x = x;
     this._y = y;
     this._data = this._screen.createSpine(spine);
@@ -109,6 +111,8 @@ class Entity {
   }
 
   public init(x: number, y: number, sprite: string, frame: string | null = null): void {
+    this._initScaleManager();
+
     this._x = x;
     this._y = y;
     this._sprite = sprite;
@@ -124,6 +128,8 @@ class Entity {
   }
 
   public initText(x: number, y: number, text: string, style: any = undefined) {
+    this._initScaleManager();
+
     this._x = x;
     this._y = y;
 
@@ -222,6 +228,10 @@ class Entity {
   private _onResize() {
     this._updateScale();
     this._updateXY();
+  }
+
+  private _initScaleManager(): void {
+    this._scaleManager.init();
   }
 
 

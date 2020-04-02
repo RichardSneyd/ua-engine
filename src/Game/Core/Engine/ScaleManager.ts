@@ -1,12 +1,23 @@
-import config from '../config';
+import GameConfig from './GameConfig';
 
 class ScaleManager {
+  private _gameConfig: GameConfig;
+
   private _width: number;
   private _height: number;
 
-  constructor() {
-    this._width = config.DISPLAY.WIDTH;
-    this._height = config.DISPLAY.HEIGHT;
+  constructor(gameConfig: GameConfig) {
+    this._gameConfig = gameConfig;
+
+    this._width = 0;
+    this._height = 0;
+  }
+
+  public init() {
+    this._width = this._gameWidth();
+    this._height = this._gameHeight();
+
+    console.log("smanager w(%s) h(%s)", this._width, this._height);
   }
 
   public getXY(x: number, y: number): {x: number, y: number} {
@@ -22,7 +33,7 @@ class ScaleManager {
   }
 
   public createNew(): ScaleManager {
-    return new ScaleManager();
+    return new ScaleManager(this._gameConfig);
   }
 
   private _scaleFactor(): number {
@@ -30,6 +41,14 @@ class ScaleManager {
     let height = window.innerHeight;
 
     return height / this._height;
+  }
+
+  private _gameWidth(): number {
+    return this._gameConfig.data.DISPLAY.WIDTH;
+  }
+
+  private _gameHeight(): number {
+    return this._gameConfig.data.DISPLAY.HEIGHT;
   }
 }
 
