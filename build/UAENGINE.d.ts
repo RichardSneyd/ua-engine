@@ -10,13 +10,13 @@ declare module 'UAENGINE' {
     import Loader from 'UAENGINE/Core/Engine/Loader';
     import Events from 'UAENGINE/Core/Engine/Events';
     import LevelManager from 'UAENGINE/Core/Engine/LevelManager';
-    namespace UAENGINE {
-        let world: World;
-        let entity: Entity;
-        let loop: Loop;
-        let loader: Loader;
-        let events: Events;
-        let levelManager: LevelManager;
+    class UAENGINE {
+        static world: World;
+        static entity: Entity;
+        static loop: Loop;
+        static loader: Loader;
+        static events: Events;
+        static levelManager: LevelManager;
     }
     export default UAENGINE;
 }
@@ -624,5 +624,4 @@ declare module 'UAENGINE/Core/Data/Vector2D' {
     }
     export default Vector2D;
 }
-
 
