@@ -1,6 +1,8 @@
 import {Sprite} from 'pixi.js';
 
 interface IScreen {
+  addHitMap(object: Sprite, threshold: number): void;
+  
   createScreen(width: number, height: number, elementId: string): void;
 
   createText(x: number, y: number, text: string, style?: any): any;

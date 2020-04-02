@@ -34,7 +34,7 @@ class MainLevel implements ILevel {
 
     //  let actScript: any = this._loader.getActScript('sample_script');
 
-    this.manager.events.timer(() => {
+ /*    this.manager.events.timer(() => {
       this._player2.init(150, 150, 'fly_atlas', 'idle1');
       this._player2.addAnimation('idle', '', 5, 10, null);
       this._player2.playAnimation('idle');
@@ -59,7 +59,7 @@ class MainLevel implements ILevel {
         this._manager.events.fire('resumeAll');
       }, 4000, this);
 
-    }, 2000, this);
+    }, 2000, this); */
     this.manager.events.once('preload', this.preload, this);
     this.manager.events.once('start', this.start, this);
     this.manager.events.on('newRow', this.onNewRow, this);
@@ -73,8 +73,8 @@ class MainLevel implements ILevel {
     this._loader.loadActScript(scriptName, (script: any, data: any) => {
 
       this.manager.script.init(scriptName, script, ['audio_id', 'time'], ['config'], ['text']);
-      console.log(this.manager.script.rows);
-      debugger;
+      // console.log(this.manager.script.rows);
+      //   debugger;
       this.manager.events.fire('preload');
     });
 
@@ -94,6 +94,8 @@ class MainLevel implements ILevel {
   }
 
   preload() {
+    this._loader.base = config.PATHS.IMG;
+    this._loader.addImage('star.png');
 
     this._loader.base = config.PATHS.SLICE;
     this._loader.addImage('button_over_slice.png');
@@ -120,8 +122,19 @@ class MainLevel implements ILevel {
 
     //  let actScript: any = this._loader.getActScript('sample_script');
     //this._player.init(100, 100, 'virus1_active1.png');
+    let star = this._player.createNew();
+    star.init(700, 800, 'star');
+    star.moveTo(600, 600);
+    // debugger;
+    star.enableInput();
+    star.makePixelPerfect(200);
+    console.log('bug: ', star);
 
-    let slice = this._player2.createNew();
+    star.addInputListener('pointerdown', (evt: any) => {
+      console.warn('over the pixels yo! at.. ', new Date().getTime());
+    }, this);
+
+   /*  let slice = this._player2.createNew();
     console.log('new entity: ', slice);
     slice.initNineSlice(600, 600, 'button_over_slice', 20, 20, 20, 20);
     // slice.width = 800;
@@ -140,12 +153,12 @@ class MainLevel implements ILevel {
 
     slice.addInputListener('pointermove', (evt: any) => {
       let origEvent: PointerEvent = evt.data.originalEvent;
-      console.log('move event triggered for slice: ', evt);
+      //   console.log('move event triggered for slice: ', evt);
       if (drag == true) {
-        console.log('event: ', evt);
+        //   console.log('event: ', evt);
         slice.moveTo(evt.data.global.x, evt.data.global.y);
-        console.log(slice.x);
-        console.log(slice.y);
+        //   console.log(slice.x);
+        //   console.log(slice.y);
       }
     }, this);
 
@@ -162,9 +175,9 @@ class MainLevel implements ILevel {
     console.log('just initialized player object');
     this._player.addSpineAnimation('prof_dance', 0.1);
     this._player.playSpineAnimation('prof_dance');
-   
-    let text = this._player.createNew(); 
-    text.initText(150, 150, "Highwood Education", {"fill": "red","fontWeight": "bold" });
+
+    let text = this._player.createNew();
+    text.initText(150, 150, "Highwood Education", { "fill": "red", "fontWeight": "bold" });
 
 
 
@@ -221,17 +234,17 @@ class MainLevel implements ILevel {
     }, 16000, this);
 
 
-
+ */
 
 
     this._loop.addFunction(this.update, this);
     this._loop.start();
 
     // a hack to test the audio management system -- input events will be handled by an input handler ultimately 
-    let canvas = document.getElementsByTagName('canvas')[0];
+   /*  let canvas = document.getElementsByTagName('canvas')[0];
     canvas.addEventListener('click', () => {
       this.manager.script.goTo(this.manager.script.rows[0]);
-    });
+    }); */
   }
 
   onNewRow() {

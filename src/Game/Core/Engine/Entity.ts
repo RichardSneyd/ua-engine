@@ -7,6 +7,7 @@ import InputHandler from './InputHandler';
 import Utils from './Utils/Utils';
 import MathUtils from './Utils/MathUtils';
 import Point from '../Data/Point';
+import ResType from '../Data/ResType';
 
 class Entity {
   private _x: number;
@@ -25,6 +26,7 @@ class Entity {
   private _data: any;
   private _events: Events; _scaleManager: ScaleManager;
   private _letters: string;
+  private _pixelPerfect: boolean = false;
 
   constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, scaleManager: ScaleManager) {
     this._screen = screen;
@@ -48,6 +50,7 @@ class Entity {
 
     this._initialized = false;
     this._letters = '$$$$____$$$$'; //default uninitialized string
+    this._pixelPerfect = false;
   }
  
 
@@ -148,6 +151,20 @@ class Entity {
     } else {
       return this._letters;
     }
+  }
+  
+  get pixelPerfect(): boolean {
+    return this._pixelPerfect;
+  }
+
+  public makePixelPerfect(threshold: number = 127) : boolean{
+ 
+   /*  if(this._data.type !== ResType.IMG){
+      return false;
+    } */
+    this._screen.addHitMap(this._data, threshold);
+    this._pixelPerfect = true;
+    return true;
   }
 
   public initSpine(x: number, y: number, spine: string): void {

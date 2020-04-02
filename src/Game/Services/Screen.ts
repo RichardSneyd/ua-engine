@@ -44,6 +44,10 @@ class Screen implements IScreen {
     this._pxGame.removeListener(event, sprite, callback);
   }
 
+  public addHitMap(obj: Sprite, threshold: number = 127){
+    this._pxGame.genHitmap(obj.texture.baseTexture, threshold);
+  }
+
   /* public removeDownListener(sprite: any) {
     this._pxGame.removeDownListeners(sprite);
   }

@@ -1,4 +1,4 @@
-import { Application, Sprite, Renderer, DisplayObject, NineSlicePlane } from 'pixi.js';
+import { Application, Sprite, Renderer, DisplayObject, NineSlicePlane, BaseTexture } from 'pixi.js';
 import PxText from './PxText';
 import PxFactory from './PxFactory';
 import Loader from '../../Core/Engine/Loader';
@@ -14,6 +14,7 @@ class PxGame {
     this._loader = loader;
     this._events = events;
     this._game = null;
+    //  Object.defineProperty(Resource, 'source', any);
   }
 
   public init(w: number, h: number, container: string) {
@@ -42,14 +43,14 @@ class PxGame {
     args.moveY = evt.movementY;
     //console.warn(evt);
     this._events.fire('pointermove', args);
-  
+
   }
-  
+
   public resize(x: number, y: number) {
     if (this._game != null) this._game.renderer.resize(x, y);
   }
 
-  public addText(x: number, y: number, text: string, style: any = undefined) : PxText {
+  public addText(x: number, y: number, text: string, style: any = undefined): PxText {
     if (this._game != null) {
       let txt = this._pxFactory.createText(text, this._game.renderer, style);
 
@@ -64,7 +65,7 @@ class PxGame {
 
       let t: any;
 
-      return <PxText> t;
+      return <PxText>t;
     }
   }
 
@@ -93,7 +94,7 @@ class PxGame {
 
     this._addChild(slice);
     console.log(this._game?.stage.children);
-   // debugger;
+    // debugger;
     return slice;
   }
 
@@ -103,6 +104,58 @@ class PxGame {
     } else {
       console.error("Can not add sprite before initializing the game!");
     }
+  }
+
+  public genHitmap(baseTex: any, threshold: number) {
+    if (!baseTex.resource) {
+      //renderTexture
+      return false;
+    }
+    // resource = <ImageResource>baseTex.resource;
+
+    const imgSource = baseTex.resource.source;
+    console.log(imgSource);
+    let canvas = null;
+    if (!imgSource) {
+      console.warn('no imgSource for resource: ', baseTex.resource)
+      return false;
+    }
+    let context = null;
+    if (imgSource.getContext) {
+      canvas = imgSource;
+      context = canvas.getContext('2d');
+      console.log(context);
+    }
+    else if (imgSource instanceof Image) {
+      canvas = document.createElement('canvas');
+      canvas.width = imgSource.width;
+      canvas.height = imgSource.height;
+      context = canvas.getContext('2d');
+      if (context) {
+        context.drawImage(imgSource, 0, 0);
+      }
+    }
+    else {
+      //unknown source;
+      return false;
+    }
+
+    const w = canvas.width, h = canvas.height;
+    let imageData = context.getImageData(0, 0, w, h);
+
+    console.warn('building hitmap from context.getImageData, which yields: ', imageData);
+    let hitmap = baseTex.hitmap = new Uint32Array(Math.ceil(w * h / 32));
+    for (let i = 0; i < w * h; i++) {
+      let ind1 = i % 32;
+      let ind2 = i / 32 | 0;
+      if (imageData.data[i * 4 + 3] >= threshold) {
+        hitmap[ind2] = hitmap[ind2] | (1 << ind1);
+      }
+    }
+    console.log('hitmap is: ', hitmap);
+    console.log('baseTex.hitmap is: ', baseTex.hitmap);
+   // debugger;
+    return true;
   }
 
   public enableInput(sprite: DisplayObject) {
