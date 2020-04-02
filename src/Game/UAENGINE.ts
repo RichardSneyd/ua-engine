@@ -12,5 +12,14 @@ namespace UAENGINE {
   let loader: Loader;
   let events: Events;
   let levelManager: LevelManager;
+
+  function foo() {
+      world;
+      entity;
+      loop;
+      loader;
+      events;
+      levelManager;
+  }
 }
 export default UAENGINE;
