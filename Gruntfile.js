@@ -83,7 +83,7 @@ module.exports = (grunt) => {
             'Text',
             'Vectors',
             'GameConfig'],
-      ignore: ['Vector2D']
+      ignore: ['Vector2D', 'UAENGINE']
     }
     /*
     notify: {

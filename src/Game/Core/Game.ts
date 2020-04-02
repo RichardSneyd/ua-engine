@@ -63,6 +63,7 @@ class Game {
   private _exposeGlobal() {
     this._expose.init();
 
+    this._expose.add('game', this);
     this._expose.add('world', this._world);
     this._expose.add('entity', this._entity);
     this._expose.add('loop', this._loop);
