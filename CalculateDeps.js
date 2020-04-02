@@ -177,7 +177,11 @@ class CalculateDeps {
         let token = elm.split(':');
         elm = token[1].trim();
 
-        if (elm.indexOf("I") == 0) elm = elm.substring(1, elm.length);
+        if (elm.indexOf("I") == 0) {
+          if (elm[1].toUpperCase() == elm[1]) {
+            elm = elm.substring(1, elm.length);
+          }
+        }
 
         arr[c] = elm;
       }
