@@ -55,7 +55,7 @@ module.exports = (grunt) => {
       js: {
         files: ['src/**/*.ts'],
         //tasks: ['browserify', 'exorcise', 'uglify'],
-        tasks: ['browserify', 'exorcise'],
+        tasks: ['calculateDeps', 'browserify', 'exorcise'],
       }
     },
     calculateDeps: {
@@ -82,7 +82,8 @@ module.exports = (grunt) => {
             'Numbers',
             'Text',
             'Vectors'],
-      ignore: ['LineSegment', 'Polygon', 'Rect', 'Point', 'Circle']
+      ignore: ['LineSegment', 'Polygon', 'Rect', 'Point', 'Circle',
+            'Vectors', 'UAENGINE','GameConfig'],
     }
     /*
     notify: {

@@ -42,7 +42,8 @@ class World {
     this._screen.clearScreen();
 
     this._currentLevel = level;
-    this._currentLevel.init('s1r_u1_a1_i1');
+    this._currentLevel.init();
+   // this._currentLevel.init();
   }
 
   public resize(x: number, y: number) {
