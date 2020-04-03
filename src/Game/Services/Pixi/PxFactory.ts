@@ -1,5 +1,5 @@
 import PxText from './PxText';
-import {Application, Renderer, Loader, Sprite} from 'pixi.js';
+import {Application, Renderer, Loader, Sprite, Container} from 'pixi.js';
 
 class PxFactory {
   private _pxText: PxText;
@@ -29,6 +29,10 @@ class PxFactory {
 
   public createLoader(): Loader {
     return new Loader();
+  }
+
+  public createContainer(): Container {
+    return new Container();
   }
 }
 

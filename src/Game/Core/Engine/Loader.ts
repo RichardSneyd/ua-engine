@@ -2,11 +2,12 @@ import Resource from '../Data/Resource';
 import IImgLoader from '../../Services/IImgLoader';
 import SndLoader from '../../Services/SndLoader';
 import ISndLoader from '../../Services/ISndLoader';
-import conf from '../config';
 import AjaxLoader from '../../Services/AjaxLoader';
+import GameConfig from './GameConfig';
 
 class Loader {
   private _resource: Resource;
+  private _gameConfig: GameConfig;
   private _imgLoader: IImgLoader; _sndLoader: ISndLoader; _ajaxLoader: AjaxLoader;
   private _imgList: Resource[];
   private _sndList: Resource[];
@@ -27,12 +28,14 @@ class Loader {
     return this._scripts;
   }
 
-  constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader, ajaxLoader: AjaxLoader) {
+  constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader,
+              ajaxLoader: AjaxLoader, gameConfig: GameConfig) {
     this._resource = resource;
     this._imgLoader = imgLoader;
     this._sndLoader = sndLoader;
     this._spineList = [];
     this._ajaxLoader = ajaxLoader;
+    this._gameConfig = gameConfig;
 
     this._base = "";
 
@@ -59,7 +62,7 @@ class Loader {
 
 
   public addJSON(basename: string) {
-    this.base = conf.PATHS.JSN;
+    this.base = this._getPath().json;
     let res = this._createResource();
     res.initJSON(this._base + basename + '.json', false);
 
@@ -238,7 +241,7 @@ class Loader {
    */
   addSnd(name: string) {
     // all sounds will be housed in the same directory, so..
-    this.base = conf.PATHS.SND;
+    this.base = this._getPath().sound;
     let res = this._createResource();
     res.initSnd(this._base + name, false);
 
@@ -260,7 +263,7 @@ class Loader {
     // WIP
     let urlList = this._getUrls(this._sndList);
 
-    this._sndLoader.loadSounds(urlList, conf.SND.EXT, this._sndLoaded, (data: any) => {
+    this._sndLoader.loadSounds(urlList, this._getSndExt(), this._sndLoaded, (data: any) => {
       this._injectDataToSnds(data);
       onDone();
     }, this);
@@ -275,8 +278,12 @@ class Loader {
     console.log(this._sndList);
   }
 
-  public loadActScript(file: string, callback?: Function): any{
-    this._ajaxLoader.loadFile(conf.PATHS.JSN + file + '.json', (data: any)=>{
+  public loadActScript(file: string, callback?: Function, staticPath: boolean = false): any{
+    let basePath = this._getPath().json;
+
+    if (staticPath) basePath = '';
+    
+    this._ajaxLoader.loadFile(basePath + file + '.json', (data: any)=>{
       if(callback !== undefined){
         this._scripts[file] = data.data;
         callback(data.data, data);
@@ -312,6 +319,14 @@ class Loader {
 
   private _extractTexture(data: any, frame: any = null) {
     return this._imgLoader.getTexture(data, frame);
+  }
+
+  private _getPath(): {json: string, sound: string} {
+    return {json: this._gameConfig.data.PATHS.JSN, sound: this._gameConfig.data.PATHS.SND};
+  }
+
+  private _getSndExt(): string[] {
+    return this._gameConfig.data.SND.EXT;
   }
 }
 
