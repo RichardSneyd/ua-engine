@@ -10,6 +10,7 @@ declare module 'UAENGINE' {
     import Loader from 'UAENGINE/Core/Engine/Loader';
     import Events from 'UAENGINE/Core/Engine/Events';
     import LevelManager from 'UAENGINE/Core/Engine/LevelManager';
+    import Game from 'UAENGINE/Core/Game';
     class UAENGINE {
         static world: World;
         static entity: Entity;
@@ -17,6 +18,7 @@ declare module 'UAENGINE' {
         static loader: Loader;
         static events: Events;
         static levelManager: LevelManager;
+        static game: Game;
     }
     export default UAENGINE;
 }
@@ -195,6 +197,32 @@ declare module 'UAENGINE/Core/Engine/LevelManager' {
         get utils(): Utils;
     }
     export default LevelManager;
+}
+
+declare module 'UAENGINE/Core/Game' {
+    import World from 'UAENGINE/Core/Engine/World';
+    import Events from 'UAENGINE/Core/Engine/Events';
+    import ScaleManager from 'UAENGINE/Core/Engine/ScaleManager';
+    import Expose from 'UAENGINE/Core/Engine/Expose';
+    import Entity from 'UAENGINE/Core/Engine/Entity';
+    import Loop from 'UAENGINE/Core/Engine/Loop';
+    import Loader from 'UAENGINE/Core/Engine/Loader';
+    import GameConfig from 'UAENGINE/Core/Engine/GameConfig';
+    import LevelManager from 'UAENGINE/Core/Engine/LevelManager';
+    import ILevel from 'UAENGINE/Core/Engine/ILevel';
+    class Game {
+        _events: Events;
+        _expose: Expose;
+        _loop: Loop;
+        _loader: Loader;
+        _gameConfig: GameConfig;
+        _levelManager: LevelManager;
+        constructor(world: World, entity: Entity, loop: Loop, loader: Loader, events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig, levelManager: LevelManager);
+        sayHi(): void;
+        startGame(configPath: string): Promise<unknown>;
+        loadLevel(level: ILevel): void;
+    }
+    export default Game;
 }
 
 declare module 'UAENGINE/Services/IScreen' {
@@ -423,6 +451,15 @@ declare module 'UAENGINE/Core/Engine/ScriptHandler' {
             fileList(cols: string[]): string[];
     }
     export default ScriptHandler;
+}
+
+declare module 'UAENGINE/Core/Engine/Expose' {
+    class Expose {
+        constructor();
+        init(): void;
+        add(key: string, object: any): void;
+    }
+    export default Expose;
 }
 
 declare module 'UAENGINE/Core/Data/Anim' {

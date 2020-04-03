@@ -4,6 +4,7 @@ import Loop from './Core/Engine/Loop';
 import Loader from './Core/Engine/Loader';
 import Events from './Core/Engine/Events';
 import LevelManager from './Core/Engine/LevelManager';
+import Game from './Core/Game';
 
 class UAENGINE {
   public static world: World;
@@ -12,5 +13,6 @@ class UAENGINE {
   public static loader: Loader;
   public static events: Events;
   public static levelManager: LevelManager;
+  public static game: Game;
 }
 export default UAENGINE;

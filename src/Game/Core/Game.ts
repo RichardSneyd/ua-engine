@@ -28,6 +28,12 @@ class Game {
     this._loader = loader;
     this._gameConfig = gameConfig;
     this._levelManager = levelManager;
+
+    this._exposeGlobal();
+  }
+
+  public sayHi() {
+    console.log("Hi from UA-Engine");
   }
 
   public startGame(configPath: string) {
@@ -41,8 +47,6 @@ class Game {
 
         this._addListeners();
         this._onResize();
-
-        this._exposeGlobal();
 
         resolve({status: 'sucess'});
         

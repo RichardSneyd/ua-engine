@@ -5,7 +5,11 @@ import MainLevel from './Game/Core/Levels/MainLevel';
 let control = new ControlContainer();
 let game: Game = control.getMain();
 
+/*
 game.startGame('./config.json').then((status: any) => {
   let ml = new MainLevel();
   game.loadLevel(ml);
 });
+
+*/
+game.sayHi();
