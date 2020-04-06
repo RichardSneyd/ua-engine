@@ -27,7 +27,6 @@ import Utils from '../../src/Game/Core/Engine/Utils/Utils';
 import Vectors from '../../src/Game/Core/Engine/Utils/Vectors';
 import World from '../../src/Game/Core/Engine/World';
 import Game from '../../src/Game/Core/Game';
-import MainLevel from '../../src/Game/Core/Levels/MainLevel';
 import AjaxLoader from '../../src/Game/Services/AjaxLoader';
 import HwFactory from '../../src/Game/Services/Howler/HwFactory';
 import HwLoader from '../../src/Game/Services/Howler/HwLoader';
@@ -41,7 +40,6 @@ import PxPoint from '../../src/Game/Services/Pixi/PxPoint';
 import PxText from '../../src/Game/Services/Pixi/PxText';
 import Screen from '../../src/Game/Services/Screen';
 import SndLoader from '../../src/Game/Services/SndLoader';
-import UAENGINE from '../../src/Game/UAENGINE';
 
 
 
@@ -76,7 +74,6 @@ private _Utils: any;
 private _Vectors: any;
 private _World: any;
 private _Game: any;
-private _MainLevel: any;
 private _AjaxLoader: any;
 private _HwFactory: any;
 private _HwLoader: any;
@@ -90,7 +87,6 @@ private _PxPoint: any;
 private _PxText: any;
 private _Screen: any;
 private _SndLoader: any;
-private _UAENGINE: any;
 
 
   constructor() {
@@ -134,7 +130,6 @@ this._Utils = this._smartDepend.addModule(Utils, true);
 this._Vectors = this._smartDepend.addModule(Vectors, true);
 this._World = this._smartDepend.addModule(World, false);
 this._Game = this._smartDepend.addModule(Game, false);
-this._MainLevel = this._smartDepend.addModule(MainLevel, false);
 this._AjaxLoader = this._smartDepend.addModule(AjaxLoader, true);
 this._HwFactory = this._smartDepend.addModule(HwFactory, true);
 this._HwLoader = this._smartDepend.addModule(HwLoader, true);
@@ -148,7 +143,6 @@ this._PxPoint = this._smartDepend.addModule(PxPoint, false);
 this._PxText = this._smartDepend.addModule(PxText, false);
 this._Screen = this._smartDepend.addModule(Screen, true);
 this._SndLoader = this._smartDepend.addModule(SndLoader, true);
-this._UAENGINE = this._smartDepend.addModule(UAENGINE, false);
 
   }
 

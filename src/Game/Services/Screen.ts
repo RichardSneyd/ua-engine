@@ -16,6 +16,10 @@ class Screen implements IScreen {
     this._pxGame.init(width, height, elementId);
   }
 
+  public createContainer(x: number, y: number): any {
+    return this._pxGame.addContainer(x, y);
+  }
+
   public createSprite(x: number, y: number, name: string, frame: string | null): any {
     return this._pxGame.addSprite(x, y, name, frame);
   }

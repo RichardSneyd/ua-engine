@@ -1,4 +1,4 @@
-import { Application, Sprite, Renderer, DisplayObject, NineSlicePlane, BaseTexture } from 'pixi.js';
+import { Application, Sprite, Renderer, Container, DisplayObject, NineSlicePlane, BaseTexture } from 'pixi.js';
 import PxText from './PxText';
 import PxFactory from './PxFactory';
 import Loader from '../../Core/Engine/Loader';
@@ -67,6 +67,13 @@ class PxGame {
 
       return <PxText>t;
     }
+  }
+
+  public addContainer(x: number, y: number): Container {
+    let cont = this._createContainer();
+    cont.x = x;
+    cont.y = y;
+    return cont;
   }
 
   public addSprite(x: number, y: number, sprName: string, frame: string | null): Sprite {
@@ -221,6 +228,10 @@ class PxGame {
   //Foreign Elements
   private _createGame(w: number, h: number, container: string): Application {
     return this._pxFactory.createGame(w, h, container);
+  }
+
+  private _createContainer(): Container {
+    return this._pxFactory.createContainer();
   }
 }
 

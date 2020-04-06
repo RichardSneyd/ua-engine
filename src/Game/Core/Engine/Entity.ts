@@ -28,6 +28,9 @@ class Entity {
   private _letters: string;
   private _pixelPerfect: boolean = false;
 
+  private _children: Entity[];
+  private _parent: Entity | null;
+
   constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, scaleManager: ScaleManager) {
     this._screen = screen;
     this._animationManager = animationManager;
@@ -51,6 +54,9 @@ class Entity {
     this._initialized = false;
     this._letters = '$$$$____$$$$'; //default uninitialized string
     this._pixelPerfect = false;
+
+    this._children = [];
+    this._parent = null;
   }
  
 
@@ -167,6 +173,51 @@ class Entity {
     return true;
   }
 
+  get children(): Entity[] {
+    return this._children;
+  }
+
+  get parent(): Entity | null {
+    return this._parent;
+  }
+
+  set parent(parent: Entity | null) {
+    this._parent?.removeChild(this);
+    this._parent = parent;
+  }
+
+  get data(): any {
+    return this._data;
+  }
+
+  addChild(entity: Entity): boolean {
+    if(!this.hasChild){
+      this._children.push(entity);
+      entity.parent = this;
+      this._data.addChild(entity.data);
+      return true;
+    }
+    console.warn('that is already a child of this object, and cannot be added again');
+    return false;
+  }
+
+  removeChild(entity: Entity): boolean {
+    if(this.hasChild(entity)){
+      this._children.splice(this._children.indexOf(entity), 1);
+      this._data.removeChild(entity.data);
+      return true;
+    }
+    console.warn('could not remove, no such entity found in children array');
+    return false;
+  }
+
+  hasChild(entity: Entity): boolean {
+    if(this._children.indexOf(entity) !== -1){
+      return true;
+    }
+    return false;
+  }
+
   public initSpine(x: number, y: number, spine: string): void {
     this._initScaleManager();
 
@@ -241,6 +292,15 @@ class Entity {
     this._initialized = true;
 
     this._addListeners();
+  }
+
+  public initContainer(x: number, y: number): void{
+    this._initScaleManager();
+
+    this._x = x;
+    this._y = y;
+    this._data = this._screen.createContainer(x, x);
+    this._initialized = true;
   }
 
   public initText(x: number, y: number, text: string, style: any = undefined) {
