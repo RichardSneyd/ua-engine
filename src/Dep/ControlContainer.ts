@@ -8,6 +8,8 @@ import AnimationManager from '../../src/Game/Core/Engine/AnimationManager';
 import AudioManager from '../../src/Game/Core/Engine/AudioManager';
 import Entity from '../../src/Game/Core/Engine/Entity';
 import Events from '../../src/Game/Core/Engine/Events';
+import Expose from '../../src/Game/Core/Engine/Expose';
+import GameConfig from '../../src/Game/Core/Engine/GameConfig';
 import InputHandler from '../../src/Game/Core/Engine/InputHandler';
 import LevelManager from '../../src/Game/Core/Engine/LevelManager';
 import Loader from '../../src/Game/Core/Engine/Loader';
@@ -15,6 +17,7 @@ import Loop from '../../src/Game/Core/Engine/Loop';
 import ScaleManager from '../../src/Game/Core/Engine/ScaleManager';
 import ScriptHandler from '../../src/Game/Core/Engine/ScriptHandler';
 import ActScripts from '../../src/Game/Core/Engine/Utils/ActScripts';
+import ArrayHandler from '../../src/Game/Core/Engine/Utils/ArrayHandler';
 import Collections from '../../src/Game/Core/Engine/Utils/Collections';
 import Colors from '../../src/Game/Core/Engine/Utils/Colors';
 import MathUtils from '../../src/Game/Core/Engine/Utils/MathUtils';
@@ -24,8 +27,6 @@ import Utils from '../../src/Game/Core/Engine/Utils/Utils';
 import Vectors from '../../src/Game/Core/Engine/Utils/Vectors';
 import World from '../../src/Game/Core/Engine/World';
 import Game from '../../src/Game/Core/Game';
-import MainLevel from '../../src/Game/Core/Levels/MainLevel';
-import SndTestLevel from '../../src/Game/Core/Levels/SndTestLevel';
 import AjaxLoader from '../../src/Game/Services/AjaxLoader';
 import HwFactory from '../../src/Game/Services/Howler/HwFactory';
 import HwLoader from '../../src/Game/Services/Howler/HwLoader';
@@ -54,6 +55,8 @@ private _AnimationManager: any;
 private _AudioManager: any;
 private _Entity: any;
 private _Events: any;
+private _Expose: any;
+private _GameConfig: any;
 private _InputHandler: any;
 private _LevelManager: any;
 private _Loader: any;
@@ -61,6 +64,7 @@ private _Loop: any;
 private _ScaleManager: any;
 private _ScriptHandler: any;
 private _ActScripts: any;
+private _ArrayHandler: any;
 private _Collections: any;
 private _Colors: any;
 private _MathUtils: any;
@@ -70,8 +74,6 @@ private _Utils: any;
 private _Vectors: any;
 private _World: any;
 private _Game: any;
-private _MainLevel: any;
-private _SndTestLevel: any;
 private _AjaxLoader: any;
 private _HwFactory: any;
 private _HwLoader: any;
@@ -109,6 +111,8 @@ this._AnimationManager = this._smartDepend.addModule(AnimationManager, false);
 this._AudioManager = this._smartDepend.addModule(AudioManager, true);
 this._Entity = this._smartDepend.addModule(Entity, false);
 this._Events = this._smartDepend.addModule(Events, true);
+this._Expose = this._smartDepend.addModule(Expose, false);
+this._GameConfig = this._smartDepend.addModule(GameConfig, false);
 this._InputHandler = this._smartDepend.addModule(InputHandler, false);
 this._LevelManager = this._smartDepend.addModule(LevelManager, false);
 this._Loader = this._smartDepend.addModule(Loader, true);
@@ -116,6 +120,7 @@ this._Loop = this._smartDepend.addModule(Loop, false);
 this._ScaleManager = this._smartDepend.addModule(ScaleManager, false);
 this._ScriptHandler = this._smartDepend.addModule(ScriptHandler, false);
 this._ActScripts = this._smartDepend.addModule(ActScripts, true);
+this._ArrayHandler = this._smartDepend.addModule(ArrayHandler, false);
 this._Collections = this._smartDepend.addModule(Collections, true);
 this._Colors = this._smartDepend.addModule(Colors, true);
 this._MathUtils = this._smartDepend.addModule(MathUtils, false);
@@ -125,8 +130,6 @@ this._Utils = this._smartDepend.addModule(Utils, true);
 this._Vectors = this._smartDepend.addModule(Vectors, true);
 this._World = this._smartDepend.addModule(World, false);
 this._Game = this._smartDepend.addModule(Game, false);
-this._MainLevel = this._smartDepend.addModule(MainLevel, false);
-this._SndTestLevel = this._smartDepend.addModule(SndTestLevel, false);
 this._AjaxLoader = this._smartDepend.addModule(AjaxLoader, true);
 this._HwFactory = this._smartDepend.addModule(HwFactory, true);
 this._HwLoader = this._smartDepend.addModule(HwLoader, true);
@@ -180,10 +183,14 @@ this._smartDepend.addDependency(this._Loader, this._Resource);
 this._smartDepend.addDependency(this._Loader, this._ImgLoader);
 this._smartDepend.addDependency(this._Loader, this._SndLoader);
 this._smartDepend.addDependency(this._Loader, this._AjaxLoader);
+this._smartDepend.addDependency(this._Loader, this._GameConfig);
 
 
 this._smartDepend.addDependency(this._Loop, this._Events);
 this._smartDepend.addDependency(this._Loop, this._FunObj);
+
+
+this._smartDepend.addDependency(this._ScaleManager, this._GameConfig);
 
 
 this._smartDepend.addDependency(this._ScriptHandler, this._ActScripts);
@@ -208,24 +215,14 @@ this._smartDepend.addDependency(this._World, this._Screen);
 
 
 this._smartDepend.addDependency(this._Game, this._World);
-this._smartDepend.addDependency(this._Game, this._MainLevel);
-this._smartDepend.addDependency(this._Game, this._SndTestLevel);
+this._smartDepend.addDependency(this._Game, this._Entity);
+this._smartDepend.addDependency(this._Game, this._Loop);
+this._smartDepend.addDependency(this._Game, this._Loader);
 this._smartDepend.addDependency(this._Game, this._Events);
 this._smartDepend.addDependency(this._Game, this._ScaleManager);
-
-
-this._smartDepend.addDependency(this._MainLevel, this._LevelManager);
-this._smartDepend.addDependency(this._MainLevel, this._Loop);
-this._smartDepend.addDependency(this._MainLevel, this._Loader);
-this._smartDepend.addDependency(this._MainLevel, this._Entity);
-this._smartDepend.addDependency(this._MainLevel, this._Entity);
-
-
-this._smartDepend.addDependency(this._SndTestLevel, this._LevelManager);
-this._smartDepend.addDependency(this._SndTestLevel, this._Loop);
-this._smartDepend.addDependency(this._SndTestLevel, this._Loader);
-this._smartDepend.addDependency(this._SndTestLevel, this._Entity);
-this._smartDepend.addDependency(this._SndTestLevel, this._Entity);
+this._smartDepend.addDependency(this._Game, this._Expose);
+this._smartDepend.addDependency(this._Game, this._GameConfig);
+this._smartDepend.addDependency(this._Game, this._LevelManager);
 
 
 this._smartDepend.addDependency(this._HwLoader, this._HwFactory);

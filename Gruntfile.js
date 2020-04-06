@@ -23,7 +23,7 @@ module.exports = (grunt) => {
         browserifyOptions: {
           debug: true
         },
-        configure:  (bundler) => {
+        configure: (bundler) => {
           bundler.plugin(require('tsify'));
           bundler.transform(require('babelify'), {
             presets: ['@babel/preset-env'],
@@ -47,7 +47,7 @@ module.exports = (grunt) => {
       app: {
         options: {},
         files: {
-          'js/game/game.js.map':['js/game/game.js'],
+          'js/game/game.js.map': ['js/game/game.js'],
         }
       }
     },
@@ -63,27 +63,27 @@ module.exports = (grunt) => {
       dest: 'src/Dep/ControlContainer.ts',
       //Maintain no space between commas!
       single: ['Loader',
-            'Events',
-            'AudioManager',
-            'ImgLoader',
-            'SndLoader',
-            'AjaxLoader',
-            'Screen',
-            'PxGame',
-            'PxLoader',
-            'HwFactory',
-            'HwLoader',
-            'HwPlayer',
-            'Utils',
-            'ActScripts',
-            'Collections',
-            'Colors',
-            'Mixins',
-            'Numbers',
-            'Text',
-            'Vectors'],
+        'Events',
+        'AudioManager',
+        'ImgLoader',
+        'SndLoader',
+        'AjaxLoader',
+        'Screen',
+        'PxGame',
+        'PxLoader',
+        'HwFactory',
+        'HwLoader',
+        'HwPlayer',
+        'Utils',
+        'ActScripts',
+        'Collections',
+        'Colors',
+        'Mixins',
+        'Numbers',
+        'Text',
+        'Vectors'],
       ignore: ['LineSegment', 'Polygon', 'Rect', 'Point', 'Circle',
-            'Vectors', 'UAENGINE','GameConfig'],
+        'UAENGINE'],
     }
     /*
     notify: {
@@ -108,7 +108,7 @@ module.exports = (grunt) => {
   //grunt.loadNpmTasks('grunt-notify');
 
 
-  grunt.registerTask('calculateDeps', 'Calculating dependencies', function() {
+  grunt.registerTask('calculateDeps', 'Calculating dependencies', function () {
     const CalculateDeps = require('./CalculateDeps.js');
     let calculateDeps = new CalculateDeps();
 

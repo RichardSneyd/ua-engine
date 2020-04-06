@@ -10,6 +10,7 @@ class CalculateDeps {
 
     this._singles = [];
     this._ignores = [];
+    
   }
 
 
