@@ -43,7 +43,6 @@ class World {
 
     this._currentLevel = level;
     this._currentLevel.init();
-   // this._currentLevel.init();
   }
 
   public resize(x: number, y: number) {

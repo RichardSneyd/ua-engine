@@ -179,13 +179,12 @@ class CalculateDeps {
         let token = elm.split(':');
         elm = token[1].trim();
 
-        if (elm.indexOf("I") == 0){
-          let str = elm.substr(1, 1);
-          if(str === str.toUpperCase()){
+        if (elm.indexOf("I") == 0) {
+          if (elm[1].toUpperCase() == elm[1]) {
             elm = elm.substring(1, elm.length);
           }
+        }
 
-        } 
         arr[c] = elm;
       }
     }

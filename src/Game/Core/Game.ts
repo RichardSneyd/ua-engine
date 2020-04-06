@@ -74,6 +74,7 @@ class Game {
     this._expose.add('loader', this._loader);
     this._expose.add('events', this._events);
     this._expose.add('levelManager', this._levelManager);
+    this._expose.add('gameConfig', this._gameConfig);
   }
 
   private _addListeners(): void {
