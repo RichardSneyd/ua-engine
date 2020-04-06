@@ -1,5 +1,6 @@
 const path = require("path")
 const fs = require("fs")
+const _ = require("lodash");
 
 
 class CalculateDeps {
@@ -176,6 +177,7 @@ class CalculateDeps {
       if (elm != '') {
         let token = elm.split(':');
         elm = token[1].trim();
+
 
         if (elm.indexOf("I") == 0) {
           if (elm[1].toUpperCase() == elm[1]) {

@@ -20,9 +20,41 @@ class Screen implements IScreen {
     return this._pxGame.addSprite(x, y, name, frame);
   }
 
+  public createNineSlice(x: number, y: number, name: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): any {
+    return this._pxGame.addNineSlice(x, y, name, leftWidth, topHeight, rightWidth, bottomHeight);
+  }
+
   public createSpine(name: string): any {
     return this._pxGame.addSpine(name);
   }
+
+  public enableInput(sprite: any) {
+    this._pxGame.enableInput(sprite);
+  }
+
+  public disableInput(sprite: any) {
+    this._pxGame.disableInput(sprite);
+  }
+  
+  public addListener(event: string, sprite: any, callback: Function, context: any) {
+    this._pxGame.addListener(event, sprite, callback, context);
+  }
+
+  public removeListener(event: string, sprite: any, callback: Function) {
+    this._pxGame.removeListener(event, sprite, callback);
+  }
+
+  public addHitMap(obj: Sprite, threshold: number = 127){
+    this._pxGame.genHitmap(obj.texture.baseTexture, threshold);
+  }
+
+  /* public removeDownListener(sprite: any) {
+    this._pxGame.removeDownListeners(sprite);
+  }
+
+  public removeUpListener(sprite: any){
+    this._pxGame.removeUpListeners;
+  } */
 
   public createText(x: number, y: number, text: string, style: any = undefined): any {
     return this._pxGame.addText(x, y, text, style);

@@ -115,27 +115,27 @@ class Events {
         this._removeListener(event, callback);
     }
 
-    public fire(event: string) {
-        this._trigger(event);
+    public fire(event: string, data?: any) {
+        this._trigger(event, data);
     }
 
-    public trigger(event: string) {
-        this._trigger(event);
+    public trigger(event: string, data?: any) {
+        this._trigger(event, data);
     }
 
-    private _trigger(event: string) {
+    private _trigger(event: string, data: any = null) {
         if (this.eventNames().indexOf(event) !== -1) {
             let total = this._events[event].length - 1;
             if (total >= 0) {
                 let objs = this.events[event];
-                console.log('callbacks for %s: ', event, objs);
+             //   console.log('callbacks for %s: ', event, objs);
                 for (let x = total; x >= 0; x--) {
                     let obj = objs[x];
                     let callback =  obj[0], context = obj[1];
                     let once = obj[2];
                //     console.log('about to attempt callback with context: ', context);
 
-                    callback.bind(context)();
+                    callback.bind(context)(data);
                     if (once == true) { // if 'once' is set to true, remove callback
                         let i = this._events[event].indexOf(this.events[event][x]);
                         this._events[event].splice(i, 1);
@@ -154,16 +154,16 @@ class Events {
     /**
      * @description creates a timed callback, which is pausable via events.pause and events.resume. Optional repeat is 0 by default, 
      * meaning method executes once. Setting this to -1 will repeat continuosly.
-     * @param delay the amound of (unpaused) milliseconds to wait before execution. 
      * @param callback the function to call
+     * @param delay the amound of (unpaused) milliseconds to wait before execution. 
      * @param context the context to call it in
      * @param repeat should repeat? 0 for no. -1 for infinity, 3 for 3 repeats, 4 for 4 etc...
      */
-    timer(delay: number, callback: Function, context: any, repeat: number = 0): any {
-        this._addTimer(delay, callback, context, repeat);
+    timer(callback: Function, delay: number, context: any, repeat: number = 0): any {
+        this._addTimer(callback, delay, context, repeat);
     }
 
-    private _addTimer(delay: number, callback: Function, context: any, repeat: number = 0): any {
+    private _addTimer(callback: Function, delay: number, context: any, repeat: number = 0): any {
         let timer = { delay: delay, remaining: delay, callback: callback, context: context, repeat: repeat }
         this._timers.push(timer);
 
@@ -250,7 +250,7 @@ class Events {
                     }
                 }
                 else {
-                    console.warn('removing timer from list: ', timer);
+                ///<reference path= '' />    console.warn('removing timer from list: ', timer);
                     this._removeTimer(this._timers.indexOf(timer));
                 }
                 timer.callback.bind(timer.context)();

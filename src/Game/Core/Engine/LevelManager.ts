@@ -2,6 +2,7 @@ import AudioManager from "./AudioManager";
 import Events from "./Events";
 import Utils from "./Utils/Utils";
 import ScriptHandler from "./ScriptHandler";
+import InputHandler from './InputHandler';
 
 
 class LevelManager {
@@ -9,16 +10,18 @@ class LevelManager {
     private _events: Events;
     private _script: ScriptHandler;
     private _utils: Utils;
+    private _input: InputHandler;
 
-    constructor(audioManager: AudioManager, events: Events, script: ScriptHandler, utils: Utils){
+    constructor(audioManager: AudioManager, events: Events, script: ScriptHandler, utils: Utils, input: InputHandler){
         this._audio = audioManager;
         this._events = events;
         this._script = script;
         this._utils = utils;
+        this._input = input;
     }
 
-    init(scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[]){
-        this._script.init(scriptName, scriptRaw, parseCols, objectifyCols);
+    init(scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[], parseLinesCols?: string[]){
+        this._script.init(scriptName, scriptRaw, parseCols, objectifyCols, parseLinesCols);
     }
 
     get events(): Events{
@@ -35,6 +38,10 @@ class LevelManager {
 
     get utils(): Utils {
         return this._utils;
+    }
+
+    get input(): InputHandler {
+        return this._input;
     }
 
 

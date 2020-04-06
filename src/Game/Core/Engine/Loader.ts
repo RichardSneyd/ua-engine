@@ -44,9 +44,9 @@ class Loader {
     this._scripts = {}
   }
 
-  public addImage(url: string) {
+  public addImage(name: string) {
     let res = this._createResource();
-    res.initImage(this._base + url, false);
+    res.initImage(this._base + name, false);
 
     this._imgList.push(res);
   }
