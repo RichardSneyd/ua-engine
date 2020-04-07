@@ -100,7 +100,9 @@ class PxGame {
     console.warn('slice object: ', slice);
 
     this._addChild(slice);
-    console.log(this._game?.stage.children);
+    if(this._game){
+      console.log(this._game.stage.children);
+    }
     // debugger;
     return slice;
   }

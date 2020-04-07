@@ -182,7 +182,9 @@ class Entity {
   }
 
   set parent(parent: Entity | null) {
-    this._parent?.removeChild(this);
+    if(this._parent !== null){
+      this._parent.removeChild(this);
+    }
     this._parent = parent;
   }
 

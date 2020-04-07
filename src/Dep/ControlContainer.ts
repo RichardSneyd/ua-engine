@@ -10,6 +10,7 @@ import Entity from '../../src/Game/Core/Engine/Entity';
 import Events from '../../src/Game/Core/Engine/Events';
 import Expose from '../../src/Game/Core/Engine/Expose';
 import GameConfig from '../../src/Game/Core/Engine/GameConfig';
+import GameObjectFactory from '../../src/Game/Core/Engine/GameObjectFactory';
 import InputHandler from '../../src/Game/Core/Engine/InputHandler';
 import LevelManager from '../../src/Game/Core/Engine/LevelManager';
 import Loader from '../../src/Game/Core/Engine/Loader';
@@ -57,6 +58,7 @@ private _Entity: any;
 private _Events: any;
 private _Expose: any;
 private _GameConfig: any;
+private _GameObjectFactory: any;
 private _InputHandler: any;
 private _LevelManager: any;
 private _Loader: any;
@@ -113,6 +115,7 @@ this._Entity = this._smartDepend.addModule(Entity, false);
 this._Events = this._smartDepend.addModule(Events, true);
 this._Expose = this._smartDepend.addModule(Expose, false);
 this._GameConfig = this._smartDepend.addModule(GameConfig, true);
+this._GameObjectFactory = this._smartDepend.addModule(GameObjectFactory, false);
 this._InputHandler = this._smartDepend.addModule(InputHandler, false);
 this._LevelManager = this._smartDepend.addModule(LevelManager, false);
 this._Loader = this._smartDepend.addModule(Loader, true);
@@ -165,6 +168,9 @@ this._smartDepend.addDependency(this._Entity, this._InputHandler);
 this._smartDepend.addDependency(this._Entity, this._MathUtils);
 this._smartDepend.addDependency(this._Entity, this._Events);
 this._smartDepend.addDependency(this._Entity, this._ScaleManager);
+
+
+this._smartDepend.addDependency(this._GameObjectFactory, this._Entity);
 
 
 this._smartDepend.addDependency(this._InputHandler, this._Events);

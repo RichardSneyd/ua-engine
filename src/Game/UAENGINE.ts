@@ -6,6 +6,7 @@ import Events from './Core/Engine/Events';
 import LevelManager from './Core/Engine/LevelManager';
 import Game from './Core/Game';
 import GameConfig from './Core/Engine/GameConfig';
+import GameObjectFactory from './Core/Engine/GameObjectFactory';
 
 class UAENGINE {
   public static world: World;
@@ -16,5 +17,6 @@ class UAENGINE {
   public static levelManager: LevelManager;
   public static game: Game;
   public static gameConfig: GameConfig;
+  public static goFactory: GameObjectFactory;
 }
 export default UAENGINE;

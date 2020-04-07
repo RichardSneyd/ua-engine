@@ -1,5 +1,6 @@
 module.exports = (grunt) => {
   grunt.initConfig({
+   
     uglify: {
       options: {
         mangle: true,
@@ -125,6 +126,7 @@ module.exports = (grunt) => {
 
     calculateDeps.refreshDeps(src, dest, single, ignore);
   });
+
 
   //grunt.registerTask('default', ['connect', 'browserify', 'exorcise', 'uglify', 'watch']);
   grunt.registerTask('default', ['calculateDeps', 'connect', 'browserify', 'exorcise', 'watch']);
