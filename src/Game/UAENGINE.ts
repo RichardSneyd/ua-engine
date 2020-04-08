@@ -8,6 +8,9 @@ import Game from './Core/Game';
 import GameConfig from './Core/Engine/GameConfig';
 import GameObjectFactory from './Core/Engine/GameObjectFactory';
 
+/**
+ * @class the UAEngine API. 
+ */
 class UAENGINE {
   public static world: World;
   public static entity: Entity;
