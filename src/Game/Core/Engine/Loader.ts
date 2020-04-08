@@ -16,6 +16,9 @@ class Loader {
 
   private _base: string;
 
+  /**
+   * @description the base path to load assets from.
+   */
   get base(): string {
     return this._base;
   }
@@ -24,12 +27,12 @@ class Loader {
     this._base = base;
   }
 
-  get scripts(){
+  get scripts() {
     return this._scripts;
   }
 
   constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader,
-              ajaxLoader: AjaxLoader, gameConfig: GameConfig) {
+    ajaxLoader: AjaxLoader, gameConfig: GameConfig) {
     this._resource = resource;
     this._imgLoader = imgLoader;
     this._sndLoader = sndLoader;
@@ -44,6 +47,11 @@ class Loader {
     this._scripts = {}
   }
 
+  /**
+   * @description Creates an image resource and adds the image to the load queue. The data property of the resource will be
+   * populated with the image once loaded; Everything in the queue is processed when the download() method is called
+   * @param name the filename of the image to load. This is added to the base path value to find the image file.
+   */
   public addImage(name: string) {
     let res = this._createResource();
     res.initImage(this._base + name, false);
@@ -51,10 +59,14 @@ class Loader {
     this._imgList.push(res);
   }
 
-
-  public addAtlas(url: string) {
+  /**
+   * @description Creates an atlas resource and adds adds the atlas to the load queue. The data property of the resource will be
+   * populated with the image once loaded; Everything in the queue is processed when the download() method is called
+   * @param filename the filename of the atlas you wish to load
+   */
+  public addAtlas(filename: string) {
     let res = this._createResource();
-    res.initImage(this._base + url, false);
+    res.initImage(this._base + filename, false);
     //console.log("atlas location '%s'", this._base + url);
 
     this._imgList.push(res);
@@ -69,9 +81,6 @@ class Loader {
     this._sndList.push(res);
   }
 
-  /**
-   * @description download all resources
-   */
 
   public addSpine(name: string, jsonUrl: string) {
     let res = this._createResource();
@@ -80,6 +89,10 @@ class Loader {
     this._spineList.push(res);
   }
 
+  /**
+   * @description download everything in the load queue. This must be done before the activity can start.
+   * @param onDone (optional) called when loading is complete
+   */
   public download(onDone?: Function): void {
     let _imgsDone: boolean = false, _sndsDone: boolean = false;
 
@@ -139,7 +152,7 @@ class Loader {
       //console.log(blob.url, blob.data);
 
       this._downloadedResource(blob.url, blob.data);
-     })
+    })
   }
 
   private _imgLoaded(data: any, data2: any) {
@@ -189,9 +202,9 @@ class Loader {
     return null;
   }
 
-/*   private _getJSONByName(basename: string): Resource | null {
-    return this._getResourceByBasename(basename, this._jsnList);
-  } */
+  /*   private _getJSONByName(basename: string): Resource | null {
+      return this._getResourceByBasename(basename, this._jsnList);
+    } */
 
   private _getResourceByBasename(basename: string, resList: Resource[]): Resource | null {
     for (let c = 0; c < resList.length; c++) {
@@ -278,36 +291,36 @@ class Loader {
     console.log(this._sndList);
   }
 
-  public loadActScript(file: string, callback?: Function, staticPath: boolean = false): any{
+  public loadActScript(file: string, callback?: Function, staticPath: boolean = false): any {
     let basePath = this._getPath().json;
 
     if (staticPath) basePath = '';
-    
-    this._ajaxLoader.loadFile(basePath + file + '.json', (data: any)=>{
-      if(callback !== undefined){
+
+    this._ajaxLoader.loadFile(basePath + file + '.json', (data: any) => {
+      if (callback !== undefined) {
         this._scripts[file] = data.data;
         callback(data.data, data);
       }
     });
   }
 
-/*   private _downloadJSON(callback?: Function, context?: any) {
-    let urlList = this._getUrls(this._jsnList);
-    this._ajaxLoader.loadFile(urlList[0], callback);
-    return this._scripts[file];
-  } */
+  /*   private _downloadJSON(callback?: Function, context?: any) {
+      let urlList = this._getUrls(this._jsnList);
+      this._ajaxLoader.loadFile(urlList[0], callback);
+      return this._scripts[file];
+    } */
 
- /*  public downloadJSON(callback?: Function) {
-    this._downloadJSON(callback);
-  } */
+  /*  public downloadJSON(callback?: Function) {
+     this._downloadJSON(callback);
+   } */
 
- /*  public getActScript(basename: string): any | null {
-    let scriptRes = this._getJSONByBasename(basename);
-    if (scriptRes !== null) {
-      return JSON.parse(scriptRes.data);
-    }
-    return null;
-  } */
+  /*  public getActScript(basename: string): any | null {
+     let scriptRes = this._getJSONByBasename(basename);
+     if (scriptRes !== null) {
+       return JSON.parse(scriptRes.data);
+     }
+     return null;
+   } */
 
   private _downloadSpines() {
     for (let c = 0; c < this._spineList.length; c++) {
@@ -321,8 +334,8 @@ class Loader {
     return this._imgLoader.getTexture(data, frame);
   }
 
-  private _getPath(): {json: string, sound: string} {
-    return {json: this._gameConfig.data.PATHS.JSN, sound: this._gameConfig.data.PATHS.SND};
+  private _getPath(): { json: string, sound: string } {
+    return { json: this._gameConfig.data.PATHS.JSN, sound: this._gameConfig.data.PATHS.SND };
   }
 
   private _getSndExt(): string[] {

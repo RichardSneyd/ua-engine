@@ -9,6 +9,7 @@ import MathUtils from './Utils/MathUtils';
 import Point from '../Data/Point';
 import ResType from '../Data/ResType';
 
+
 class Entity {
   private _x: number;
   private _y: number;

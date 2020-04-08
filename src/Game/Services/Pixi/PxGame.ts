@@ -46,8 +46,8 @@ class PxGame {
 
   }
 
-  public resize(x: number, y: number) {
-    if (this._game != null) this._game.renderer.resize(x, y);
+  public resize(width: number, height: number) {
+    if (this._game != null) this._game.renderer.resize(width, height);
   }
 
   public addText(x: number, y: number, text: string, style: any = undefined): PxText {

@@ -5,14 +5,17 @@ import ITappable from './ITappable';
 import Point from "../Data/Point";
 import Entity from "./Entity";
 import IScreen from "../../Services/IScreen";
+import EventNames from "./EventNames";
+
 
 class InputHandler {
+    private _eventNames: EventNames;
     private _events: Events; private _loader: Loader; private _screen: IScreen;
     private _pointer: Point; // the mouse/pointer x, y
     private _pointerMovement: Point; // the number of pixels the mouse x and y have moved since the last mousemove/pointermove event
 
-    constructor(events: Events, loader: Loader, screen: IScreen) {
-        this._events = events; this._loader = loader; this._screen = screen;
+    constructor(events: Events, loader: Loader, screen: IScreen, eventNames: EventNames) {
+        this._events = events; this._loader = loader; this._screen = screen;this._eventNames = eventNames;
         // this._onDown = [];
         //  this._onUp = [];
         this._pointer = new Point(0, 0);
@@ -24,43 +27,61 @@ class InputHandler {
         this._events.on('pointermove', this._onPointerMove, this);
     }
 
+    /**
+     * @description get the pointer position as a Point object (x, y)
+     */
     get pointer() {
         return this._pointer;
     }
 
-    private _onPointerMove(data: any) { // data should contain x nd y vals for mouse or pointer position on stage
-        //  console.warn('pointermove in inputHandler: ', data.mouseX, data.mouseY);
+    /**
+     * @description enable input for the specified object
+     * @param displayObject the object to enable input for
+     */
+    public enable(displayObject: any) {
+        this._screen.enableInput(displayObject);
+    }
+
+    /**
+     * @description disable input for the specified object
+     * @param displayObject the object to disable input for
+     */
+    public disable(displayObject: any) {
+        this._screen.disableInput(displayObject);
+    }
+
+    /**
+     * @description add listener for specified input event to specific sprite
+     * @param event the event to add the listener to; must be a valid input event
+     * @param callback the callback method to register
+     * @param sprite the sprite this event lisener is being associated with
+     * @param context the context of the callback
+     */
+    public addListener(event: string, callback: Function, sprite: any, context: any) {
+        this._screen.addListener(event, sprite, (evt: any) => {
+          /*   if (once == true) {
+                
+            } */
+            callback.bind(context)(evt);
+        }, context);
+    }
+
+    /**
+     * @description remove listener from input event
+     * @param event 
+     * 
+     * @param callback 
+     * @param sprite 
+     */
+    public removeListener(event: string, callback: Function, sprite: any) {
+        this._screen.removeListener(event, sprite, callback);
+    }
+
+    private _onPointerMove(data: any) { 
         this._pointer = data.mouseX;
         this._pointer = data.mouseY;
         this._pointerMovement.x = data.moveX;
         this._pointerMovement.y = data.moveY;
-    }
-
-    enable(displayObject: any) {
-        this._screen.enableInput(displayObject);
-    }
-
-    disable(displayObject: any) {
-        this._screen.disableInput(displayObject);
-    }
-
-    /* addDownListener(callback: Function, sprite: any, context: any, once: boolean = false) {
-        this._screen.addDownListener(sprite, callback, context);
-       // this._onDown.push({ callback: callback, sprite: sprite, context: context, once: once })
-    }
- */
-    addListener(event: string, callback: Function, sprite: any, context: any, once: boolean = false) {
-        this._screen.addListener(event, sprite, (evt: any) => {
-            if (once == true) {
-
-            }
-            callback.bind(context)(evt);
-        }, context);
-        //   this._onUp.push({ callback: callback, sprite: sprite, context: context, once: once })
-    }
-
-    removeListener(event: string, callback: Function, sprite: any) {
-        this._screen.removeListener(event, sprite, callback);
     }
 
     private _call(data: any, arr: any[]) {

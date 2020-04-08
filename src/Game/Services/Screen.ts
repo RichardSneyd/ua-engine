@@ -72,8 +72,8 @@ class Screen implements IScreen {
     this._pxGame.clearScreen();
   }
 
-  public resize(x: number, y: number): void {
-    this._pxGame.resize(x, y);
+  public resize(width: number, height: number): void {
+    this._pxGame.resize(width, height);
   }
 }
 

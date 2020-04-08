@@ -33,14 +33,25 @@ class Game {
     this._exposeGlobal();
   }
 
+  /**
+   * @description adds an activity to the engine, as a plugin (todo)
+   * @param act the act object to add.
+   */
   public addActivity(act: IActivity) {
     
   }
 
+  /**
+   * @description say hi!
+   */
   public sayHi() {
     console.log("Hi from UA-Engine");
   }
 
+  /**
+   * @description start the game. Calls game.init internally, to create the game screen.
+   * @param configPath the path to the config.json file, which specified Display widht, height, file paths etc
+   */
   public startGame(configPath: string) {
     return new Promise((resolve, reject) => {
 
@@ -59,6 +70,10 @@ class Game {
     })
   }
 
+  /**
+   * @description load a level (via world.loadLevel). 
+   * @param level the level to load
+   */
   public loadLevel(level: ILevel) {
     this._world.startLevel(level);
   }

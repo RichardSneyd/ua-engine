@@ -7,6 +7,7 @@ import Tween from '../../src/Game/Core/Data/Tween';
 import AnimationManager from '../../src/Game/Core/Engine/AnimationManager';
 import AudioManager from '../../src/Game/Core/Engine/AudioManager';
 import Entity from '../../src/Game/Core/Engine/Entity';
+import EventNames from '../../src/Game/Core/Engine/EventNames';
 import Events from '../../src/Game/Core/Engine/Events';
 import Expose from '../../src/Game/Core/Engine/Expose';
 import GameConfig from '../../src/Game/Core/Engine/GameConfig';
@@ -41,6 +42,7 @@ import PxPoint from '../../src/Game/Services/Pixi/PxPoint';
 import PxText from '../../src/Game/Services/Pixi/PxText';
 import Screen from '../../src/Game/Services/Screen';
 import SndLoader from '../../src/Game/Services/SndLoader';
+import the from '../../src/Game/UAENGINE';
 
 
 
@@ -55,6 +57,7 @@ private _Tween: any;
 private _AnimationManager: any;
 private _AudioManager: any;
 private _Entity: any;
+private _EventNames: any;
 private _Events: any;
 private _Expose: any;
 private _GameConfig: any;
@@ -89,6 +92,7 @@ private _PxPoint: any;
 private _PxText: any;
 private _Screen: any;
 private _SndLoader: any;
+private _the: any;
 
 
   constructor() {
@@ -112,6 +116,7 @@ this._Tween = this._smartDepend.addModule(Tween, false);
 this._AnimationManager = this._smartDepend.addModule(AnimationManager, false);
 this._AudioManager = this._smartDepend.addModule(AudioManager, true);
 this._Entity = this._smartDepend.addModule(Entity, false);
+this._EventNames = this._smartDepend.addModule(EventNames, false);
 this._Events = this._smartDepend.addModule(Events, true);
 this._Expose = this._smartDepend.addModule(Expose, false);
 this._GameConfig = this._smartDepend.addModule(GameConfig, true);
@@ -146,6 +151,7 @@ this._PxPoint = this._smartDepend.addModule(PxPoint, false);
 this._PxText = this._smartDepend.addModule(PxText, false);
 this._Screen = this._smartDepend.addModule(Screen, true);
 this._SndLoader = this._smartDepend.addModule(SndLoader, true);
+this._the = this._smartDepend.addModule(the, false);
 
   }
 
@@ -176,6 +182,7 @@ this._smartDepend.addDependency(this._GameObjectFactory, this._Entity);
 this._smartDepend.addDependency(this._InputHandler, this._Events);
 this._smartDepend.addDependency(this._InputHandler, this._Loader);
 this._smartDepend.addDependency(this._InputHandler, this._Screen);
+this._smartDepend.addDependency(this._InputHandler, this._EventNames);
 
 
 this._smartDepend.addDependency(this._LevelManager, this._AudioManager);

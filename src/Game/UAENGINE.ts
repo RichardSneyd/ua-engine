@@ -22,4 +22,6 @@ class UAENGINE {
   public static gameConfig: GameConfig;
   public static goFactory: GameObjectFactory;
 }
+
 export default UAENGINE;
+

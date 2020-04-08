@@ -25,7 +25,7 @@ interface IScreen {
   addListener(event: string, sprite: any, callback: Function, context: any): void;
 
   removeListener(event: string, sprite: any, callback: Function): void;
-  resize(x: number, y: number): void;
+  resize(width: number, height: number): void;
 }
 
 export default IScreen;

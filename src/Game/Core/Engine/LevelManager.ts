@@ -20,8 +20,18 @@ class LevelManager {
         this._input = input;
     }
 
-    init(scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[], parseLinesCols?: string[]){
-        this._script.init(scriptName, scriptRaw, parseCols, objectifyCols, parseLinesCols);
+    /**
+     * @description initialize the level manager.
+     * @param scriptName the name of the script to initialize the script handler with
+     * @param scriptRaw the raw script data for the script handler
+     * @param parseCols the names of the columns to be parsed into arrays of names (i.e 'horse,dog,cat' => [horse, dog, cat])
+     * @param objectifyCols the names of the columns to be converted into objects with key-value pairs. For example:
+     * 'bgd: bgd_1\noverlay: overlay_1'
+     * => {bgd: 'bgd_1', overlay: 'overlay_1'}
+     * @param processText (optional) the column names to convert into lines and words of text. Mainly useful in passage (reading) types.
+     */
+    init(scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]){
+        this._script.init(scriptName, scriptRaw, parseCols, objectifyCols, processText);
     }
 
     get events(): Events{
