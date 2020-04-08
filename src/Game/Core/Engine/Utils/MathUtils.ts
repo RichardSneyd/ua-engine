@@ -1,4 +1,4 @@
-class Numbers {
+class MathUtils {
     private constructor() { }
 
     /**
@@ -27,6 +27,22 @@ class Numbers {
         }
         return lowest;
     }
+
+    clamp(val: number, min: number, max: number){
+        let result = val;
+        if(result > max){
+            result = max;
+        }
+        else if(result < min){
+            result = min;
+        }
+
+        return result;
+    }
+
+    round(val: number){
+        return Math.round(val);
+    }
 }
 
-export default Numbers;
+export default MathUtils;

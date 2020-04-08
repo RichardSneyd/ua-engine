@@ -319,7 +319,7 @@
     "meta": {
         "app": "https://www.leshylabs.com/apps/sstool/",
         "version": "Leshy SpriteSheet Tool v0.8.4",
-        "image": "fly.png",
+        "image": "fly_atlas.png",
         "size": {
             "w": 795,
             "h": 857

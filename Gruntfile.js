@@ -1,5 +1,6 @@
 module.exports = (grunt) => {
   grunt.initConfig({
+   
     uglify: {
       options: {
         mangle: true,
@@ -23,7 +24,7 @@ module.exports = (grunt) => {
         browserifyOptions: {
           debug: true
         },
-        configure:  (bundler) => {
+        configure: (bundler) => {
           bundler.plugin(require('tsify'));
           bundler.transform(require('babelify'), {
             presets: ['@babel/preset-env'],
@@ -47,7 +48,7 @@ module.exports = (grunt) => {
       app: {
         options: {},
         files: {
-          'js/game/game.js.map':['js/game/game.js'],
+          'js/game/game.js.map': ['js/game/game.js'],
         }
       }
     },
@@ -55,9 +56,42 @@ module.exports = (grunt) => {
       js: {
         files: ['src/**/*.ts'],
         //tasks: ['browserify', 'exorcise', 'uglify'],
-        tasks: ['browserify', 'exorcise'],
+        tasks: ['calculateDeps', 'browserify', 'exorcise'],
       }
     },
+    calculateDeps: {
+      src: ['src/Game/'],
+      dest: 'src/Dep/ControlContainer.ts',
+      //Maintain no space between commas!
+      single: ['Loader',
+            'Events',
+            'AudioManager',
+            'ImgLoader',
+            'SndLoader',
+            'AjaxLoader',
+            'Screen',
+            'PxGame',
+            'PxLoader',
+            'HwFactory',
+            'HwLoader',
+            'HwPlayer',
+            'Utils',
+            'ActScripts',
+            'Collections',
+            'Colors',
+            'Mixins',
+            'Numbers',
+            'Text',
+            'Vectors',
+            'GameConfig'],
+      ignore: ['LineSegment',
+                'Polygon',
+                'Rect',
+                'Point',
+                'Circle',
+                'UAENGINE'
+                ],
+    }
     /*
     notify: {
       js:{
@@ -81,9 +115,20 @@ module.exports = (grunt) => {
   //grunt.loadNpmTasks('grunt-notify');
 
 
+  grunt.registerTask('calculateDeps', 'Calculating dependencies', function () {
+    const CalculateDeps = require('./CalculateDeps.js');
+    let calculateDeps = new CalculateDeps();
+
+    let src = grunt.config.data.calculateDeps.src;
+    let dest = grunt.config.data.calculateDeps.dest;
+    let single = grunt.config.data.calculateDeps.single;
+    let ignore = grunt.config.data.calculateDeps.ignore;
+
+    calculateDeps.refreshDeps(src, dest, single, ignore);
+  });
+
 
   //grunt.registerTask('default', ['connect', 'browserify', 'exorcise', 'uglify', 'watch']);
-  grunt.registerTask('default', ['connect', 'browserify', 'exorcise', 'watch']);
-  grunt.register
+  grunt.registerTask('default', ['calculateDeps', 'connect', 'browserify', 'exorcise', 'watch']);
 }
 

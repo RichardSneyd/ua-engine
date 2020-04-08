@@ -1,12 +1,12 @@
-import TextUtils from './Text';
+import Text from './Text';
 import * as _ from 'lodash';
 import Collections from './Collections';
 
 class ActScripts {
-    private _text: TextUtils;
+    private _text: Text;
     private _collections: Collections;
 
-    private constructor(text: TextUtils, collections: Collections) {
+    private constructor(text: Text, collections: Collections) {
         this._text = text;
         this._collections = collections;
     }
@@ -36,7 +36,7 @@ class ActScripts {
      * @param text the string value from the 'cell', to be parsed.
      */
     public getValsFromCell(text: string): string[] {
-        console.log(text);
+        //  console.log(text);
         return this._text.unstringifyArray(text, ',');
     }
 
@@ -113,6 +113,27 @@ class ActScripts {
      */
     public clone(script: any): any {
         return JSON.parse(JSON.stringify(script)); // create a pure clone of an object, array, or array of objects. 
+    }
+
+    public toLines(text: string): string[] {
+        let result = text.split('\n');
+        //    console.log(result);
+        //  debugger;
+        return result;
+    }
+
+    /*    public toChunks(text: string): any{
+           let chuncks = this._text.split(text, ' ');
+           let words = chuncks.map((val: string, index: number, arr: string[])=>{
+               val = val.replace(/\W/g, '').trim();
+           }, this);
+           let result = [chuncks, words];
+           return result;
+           console.log(result);
+       } */
+
+    public words(text: string): string[] {
+        return _.words(text);
     }
 
 

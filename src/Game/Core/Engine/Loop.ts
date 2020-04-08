@@ -26,6 +26,11 @@ class Loop {
     this._addListeners();
   }
 
+  /**
+   * @description add a function to the list of callbacks for this loop
+   * @param f the function to add to the list of callbacks
+   * @param context the context
+   */
   public addFunction(f: any, context: any) {
     let i = this._findFunction(f);
 
@@ -37,6 +42,10 @@ class Loop {
     }
   }
 
+  /**
+   * @description remove a callback from this loop
+   * @param f the function to remove from callbacks array
+   */
   public removeFunction(f: any) {
     let i = this._findFunction(f);
 
@@ -47,6 +56,9 @@ class Loop {
     }
   }
 
+  /**
+   * @description start the loop -- interally, this binds the loop to requestAnimatonFrame on window obj.
+   */
   public start(): void {
     window.requestAnimationFrame(this._boundExecuteAll);
   }

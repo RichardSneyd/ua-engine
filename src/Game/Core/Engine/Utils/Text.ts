@@ -51,6 +51,10 @@ class Text {
         return obj;
     }
 
+    public split(text: string, seperator: string) : string[] {
+        return _.split(text, seperator);
+    }
+
 }
 
 export default Text;

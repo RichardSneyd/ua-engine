@@ -3,7 +3,6 @@ import IScreen from '../../Services/IScreen';
 import ILevel from '../Engine/ILevel';
 import LevelManager from './LevelManager';
 
-
 class World {
   private _width: number;
   private _height: number;
@@ -13,6 +12,7 @@ class World {
   private _currentLevel: ILevel | null;
 
   private _entity: Entity; _screen: IScreen;
+
   constructor(entity: Entity, screen: IScreen) {
     this._width = 0;
     this._height = 0;
@@ -25,6 +25,11 @@ class World {
     this._currentLevel = null;
   }
 
+  /**
+   * @description initialize the game world. This generates an empty screen
+   * @param w The width value to initialize the world with. Defines the width of the game screen.
+   * @param h The height value to initialze the world with. Defintes the height of the game screen.
+   */
   public init(w: number, h: number): void {
     let elmId: string = this._getElementName();
 
@@ -34,6 +39,10 @@ class World {
     this._createScreen(w, h, elmId);
   }
 
+  /**
+   * @description launches the specified level. Will automatically shutdown the currentLevel, if there is one.
+   * @param level the level object to launch. 
+   */
   public startLevel(level: ILevel) {
     if (this._currentLevel != null) {
       this._currentLevel.shutdown();
@@ -42,7 +51,16 @@ class World {
     this._screen.clearScreen();
 
     this._currentLevel = level;
-    this._currentLevel.init('sample_script');
+    this._currentLevel.init();
+  }
+
+  /**
+   * @description resize the game screen
+   * @param width the new width of the game screen
+   * @param height the new height of the game screen
+   */
+  public resize(width: number, height: number) {
+    this._screen.resize(width, height);
   }
 
   private _getElementName(): string {

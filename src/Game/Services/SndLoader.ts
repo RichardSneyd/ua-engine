@@ -5,9 +5,9 @@ class SndLoader implements ISndLoader {
     private _loader: HwLoader;
     private _baseURL: string;
 
-    constructor(loader: HwLoader, baseURL: string) {
+    constructor(loader: HwLoader) {
         this._loader = loader;
-        this._baseURL = baseURL;
+        this._baseURL = '';
     }
 
     loadSounds(urls: string[], extensions: string[], onProgress: Function, onDone: Function, context: any): void {

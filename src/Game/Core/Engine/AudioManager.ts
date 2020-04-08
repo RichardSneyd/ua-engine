@@ -18,114 +18,135 @@ class AudioManager {
         this._music = '';
     }
 
-    play(name: string, onStop: Function, loop: boolean = false) {
+    get filesPlaying() {
+        return this._playing;
+    }
+
+    /**
+     * @description play the specified audio file
+     * @param name the name of the file to play
+     * @param onStop called when the file has stopped playing
+     * @param loop should the file loop?
+     */
+    public play(name: string, onStop: Function, loop: boolean = false) {
         let _name = name;
-        console.log('in HwPlayer.play.');
+        //  console.log('in HwPlayer.play.');
         let res = this._loader.getSndResByBasename(name);
-        console.log('asked for resource:');
-        console.log(res);
+        //  console.log('asked for resource:');
+        //  console.log(res);
         if (res !== null) {
 
             this._hwPlayer.play(name, res, () => {
-                console.log('callback received for %s in AudioManager', _name)
+                //   console.log('callback received for %s in AudioManager', _name)
                 this._playing.splice(this._playing.indexOf(name), 1);
                 onStop();
             }, loop);
         } else console.log('resource %s returned null', name);
 
-        console.log('end of play func');
+        //   console.log('end of play func');
     }
 
-    playMusic(name: string, onStop: Function, loop: boolean = false){
+    /**
+     * @description for playing instructional audio arrays, one after the other. Mostly used for playing contents of audio_id in scripts
+     * @param arr the array of audio ids to play
+     * @param onDone Called when the entire array has been played.
+     */
+    public playInstructionArr(arr: string[], onDone: Function) {
+        this._stopInstPlaying(); // clean the palette
+        this._instArr = arr; // new instructional array
+        //   console.log('playInstructionalArr called..');
+        //   debugger;
+        this._playInstruction(0, onDone);
+    }
+
+    /**
+     * @description Specifically for playing music, since there can only be one music file playing at a time.
+     * @param name the name of the music file to play
+     * @param onStop called when the file has stopped playing
+     * @param loop should the file loop?
+     */
+    public playMusic(name: string, onStop: Function, loop: boolean = false) {
         // todo
         this._music = name;
         this.play(name, onStop, loop);
     }
 
-    stopMusic(){
+    /**
+     * @description stop music playback
+     */
+    public stopMusic() {
         this._stop(this._music);
     }
 
-    stop(name: string){
+    /**
+     * @description stop playback for specified file
+     * @param name the name of the file to stop playback for
+     */
+    public stop(name: string) {
         this._stop(name);
     }
 
-    private _stop(name: string){
+    private _stop(name: string) {
         let res = this._loader.getSndResByBasename(name);
-        if(res !== null) {
+        if (res !== null) {
             this._playing.splice(this._playing.indexOf(name), 1);
             this._hwPlayer.stop(res);
         }
     }
 
-    private _pause(){
-        for(let x = 0; x < this._playing.length; x++){
+    private _pause() {
+        for (let x = 0; x < this._playing.length; x++) {
             this._pauseFile(this._playing[x]);
         }
     }
 
-    private _resume(){
-        for(let x = 0; x < this._playing.length; x++){
+    private _resume() {
+        for (let x = 0; x < this._playing.length; x++) {
             this._resumeFile(this._playing[x]);
         }
     }
 
-    private _pauseFile(name: string){
+    private _pauseFile(name: string) {
         let res = this._loader.getSndResByBasename(name);
-        if(res !== null) this._hwPlayer.pause(res);
+        if (res !== null) this._hwPlayer.pause(res);
     }
 
-    private _resumeFile(name: string){
+    private _resumeFile(name: string) {
         let res = this._loader.getSndResByBasename(name);
-        if(res !== null) this._hwPlayer.resume(res);
+        if (res !== null) this._hwPlayer.resume(res);
     }
 
-    private _playInstruction(i: number, onDone: Function){
-        console.log('playInst')
-        let _i = i,_name = this._instArr[i];
+    private _playInstruction(i: number, onDone: Function) {
+        //   console.log('playInst');
+        let _i = i, _name = this._instArr[i];
 
-       // console.log('_playInstruction started for sound %s at position %s, time: %s', _name, _i, new Date().getMilliseconds());
-      //  console.log('instArr length: ' + this._instArr.length);
+        // console.log('_playInstruction started for sound %s at position %s, time: %s', _name, _i, new Date().getMilliseconds());
+        //  console.log('instArr length: ' + this._instArr.length);
         this._instPlaying = _name;
-        this.play(_name, ()=>{
+        this.play(_name, () => {
             _i++;
-          //  console.log('playing %s, at position %s, time: %s', _name, _i, new Date().getMilliseconds());
-            if(_i < this._instArr.length){
-              //  setTimeout(()=>{
-                    this._playInstruction(_i, onDone);
-              //  }, 100)
-                
+            //  console.log('playing %s, at position %s, time: %s', _name, _i, new Date().getMilliseconds());
+            if (_i < this._instArr.length) {
+                //  setTimeout(()=>{
+                this._playInstruction(_i, onDone);
+                //  }, 100)
+
             } else {
-         //       console.log('play loop finished on %s at position %s, time: %s', _name, _i, new Date().getMilliseconds  ());
-        //        debugger;
+                //       console.log('play loop finished on %s at position %s, time: %s', _name, _i, new Date().getMilliseconds  ());
+                //        debugger;
                 onDone();
             }
         });
     }
 
-    playInstructionArr(arr: string[], onDone: Function){
-        this._stopInstPlaying(); // clean the palette
-        this._instArr = arr; // new instructional array
-        console.log('playInstructionalArr called..');
-     //   debugger;
-        this._playInstruction(0, onDone);
-    }
-
-    _stopInstPlaying(){
+    private _stopInstPlaying() {
         this._instArr = [];
         let res = this._loader.getSndResByBasename(this._instPlaying);
-        if(res !== null){
+        if (res !== null) {
             this._hwPlayer.stop(res);
             this._instPlaying = '';
         }
     }
-
-    get filesPlaying() {
-        return this._playing;
-    }
-
-
-
 }
 
 export default AudioManager;
