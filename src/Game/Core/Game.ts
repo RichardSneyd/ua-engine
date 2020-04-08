@@ -8,6 +8,7 @@ import Loader from './Engine/Loader';
 import GameConfig from './Engine/GameConfig';
 import LevelManager from './Engine/LevelManager';
 import ILevel from './Engine/ILevel';
+import IActivity from './Engine/IActivity';
 
 class Game {
   private _world: World; _events: Events;
@@ -30,6 +31,10 @@ class Game {
     this._levelManager = levelManager;
 
     this._exposeGlobal();
+  }
+
+  public addActivity(act: IActivity) {
+    
   }
 
   public sayHi() {

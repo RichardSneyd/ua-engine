@@ -11,6 +11,7 @@ declare module 'UAENGINE' {
     import Events from 'UAENGINE/Core/Engine/Events';
     import LevelManager from 'UAENGINE/Core/Engine/LevelManager';
     import Game from 'UAENGINE/Core/Game';
+    import GameConfig from 'UAENGINE/Core/Engine/GameConfig';
     class UAENGINE {
         static world: World;
         static entity: Entity;
@@ -19,6 +20,7 @@ declare module 'UAENGINE' {
         static events: Events;
         static levelManager: LevelManager;
         static game: Game;
+        static gameConfig: GameConfig;
     }
     export default UAENGINE;
 }
@@ -43,23 +45,49 @@ declare module 'UAENGINE/Core/Engine/Entity' {
     import ScaleManager from 'UAENGINE/Core/Engine/ScaleManager';
     import IScreen from 'UAENGINE/Services/IScreen';
     import IObjectHandler from 'UAENGINE/Services/IObjectHandler';
+    import InputHandler from 'UAENGINE/Core/Engine/InputHandler';
+    import MathUtils from 'UAENGINE/Core/Engine/Utils/MathUtils';
+    import Point from 'UAENGINE/Core/Data/Point';
     class Entity {
         _animationManager: AnimationManager;
         _objectHandler: IObjectHandler;
+        _math: MathUtils;
         _scaleManager: ScaleManager;
-        constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, events: Events, scaleManager: ScaleManager);
+        constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, scaleManager: ScaleManager);
         set text(lett: string);
         set x(xVal: number);
         set y(yVal: number);
+        set width(width: number);
+        get width(): number;
+        get height(): number;
+        set origin(origin: Point);
+        get origin(): Point;
+        set height(height: number);
+        setSize(width: number, height: number): void;
         set scaleX(xVal: number);
         set scaleY(yVal: number);
         get x(): number;
         get y(): number;
+        get input(): InputHandler;
         get scaleX(): number;
         get scaleY(): number;
         get text(): string;
+        get pixelPerfect(): boolean;
+        makePixelPerfect(threshold?: number): boolean;
+        get children(): Entity[];
+        get parent(): Entity | null;
+        set parent(parent: Entity | null);
+        get data(): any;
+        addChild(entity: Entity): boolean;
+        removeChild(entity: Entity): boolean;
+        hasChild(entity: Entity): boolean;
         initSpine(x: number, y: number, spine: string): void;
+        moveBy(x: number, y: number): void;
+        moveTo(x: number, y: number): void;
+        setOrigin(x: number, y?: number): void;
+        initNineSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): void;
         init(x: number, y: number, sprite: string, frame?: string | null): void;
+        initContainer(x: number, y: number): void;
         initText(x: number, y: number, text: string, style?: any): void;
         addTween(name: string, easing: string): void;
         playTween(name: string, toObject: any, time: number, updateFunction?: Function): void;
@@ -71,6 +99,10 @@ declare module 'UAENGINE/Core/Engine/Entity' {
         addSpineAnimation(name: string, fps: number): void;
         playAnimation(name: string): void;
         playSpineAnimation(name: string): void;
+        enableInput(): void;
+        disableInput(): void;
+        addInputListener(event: string, callback: Function, context: any, once?: boolean): void;
+        removeInputListener(event: string, callback: Function): void;
         createNew(): Entity;
         update(time: number): void;
     }
@@ -102,7 +134,7 @@ declare module 'UAENGINE/Core/Engine/Loader' {
             set base(base: string);
             get scripts(): any;
             constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader, ajaxLoader: AjaxLoader, gameConfig: GameConfig);
-            addImage(url: string): void;
+            addImage(name: string): void;
             addAtlas(url: string): void;
             addJSON(basename: string): void;
             /**
@@ -148,17 +180,17 @@ declare module 'UAENGINE/Core/Engine/Events' {
             on(event: string, callback: Function, context: any): void;
             once(event: string, callback: Function, context: any): void;
             off(event: string, callback: Function): void;
-            fire(event: string): void;
-            trigger(event: string): void;
+            fire(event: string, data?: any): void;
+            trigger(event: string, data?: any): void;
             /**
                 * @description creates a timed callback, which is pausable via events.pause and events.resume. Optional repeat is 0 by default,
                 * meaning method executes once. Setting this to -1 will repeat continuosly.
-                * @param delay the amound of (unpaused) milliseconds to wait before execution.
                 * @param callback the function to call
+                * @param delay the amound of (unpaused) milliseconds to wait before execution.
                 * @param context the context to call it in
                 * @param repeat should repeat? 0 for no. -1 for infinity, 3 for 3 repeats, 4 for 4 etc...
                 */
-            timer(delay: number, callback: Function, context: any, repeat?: number): any;
+            timer(callback: Function, delay: number, context: any, repeat?: number): any;
             /**
                 * @description find and remove a timer object based via the callback it contains
                 * @param callback the callback of the timer object to be removed
@@ -188,13 +220,15 @@ declare module 'UAENGINE/Core/Engine/LevelManager' {
     import Events from "UAENGINE/Core/Engine/Events";
     import Utils from "UAENGINE/Core/Engine/Utils/Utils";
     import ScriptHandler from "UAENGINE/Core/Engine/ScriptHandler";
+    import InputHandler from 'UAENGINE/Core/Engine/InputHandler';
     class LevelManager {
-        constructor(audioManager: AudioManager, events: Events, script: ScriptHandler, utils: Utils);
-        init(scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[]): void;
+        constructor(audioManager: AudioManager, events: Events, script: ScriptHandler, utils: Utils, input: InputHandler);
+        init(scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[], parseLinesCols?: string[]): void;
         get events(): Events;
         get audio(): AudioManager;
         get script(): ScriptHandler;
         get utils(): Utils;
+        get input(): InputHandler;
     }
     export default LevelManager;
 }
@@ -210,6 +244,7 @@ declare module 'UAENGINE/Core/Game' {
     import GameConfig from 'UAENGINE/Core/Engine/GameConfig';
     import LevelManager from 'UAENGINE/Core/Engine/LevelManager';
     import ILevel from 'UAENGINE/Core/Engine/ILevel';
+    import IActivity from 'UAENGINE/Core/Engine/IActivity';
     class Game {
         _events: Events;
         _expose: Expose;
@@ -218,6 +253,7 @@ declare module 'UAENGINE/Core/Game' {
         _gameConfig: GameConfig;
         _levelManager: LevelManager;
         constructor(world: World, entity: Entity, loop: Loop, loader: Loader, events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig, levelManager: LevelManager);
+        addActivity(act: IActivity): void;
         sayHi(): void;
         startGame(configPath: string): Promise<unknown>;
         loadLevel(level: ILevel): void;
@@ -225,15 +261,31 @@ declare module 'UAENGINE/Core/Game' {
     export default Game;
 }
 
+declare module 'UAENGINE/Core/Engine/GameConfig' {
+    class GameConfig {
+        constructor();
+        get data(): any;
+        loadConfig(path: string): Promise<unknown>;
+    }
+    export default GameConfig;
+}
+
 declare module 'UAENGINE/Services/IScreen' {
     import { Sprite } from 'pixi.js';
     interface IScreen {
+        addHitMap(object: Sprite, threshold: number): void;
         createScreen(width: number, height: number, elementId: string): void;
+        createContainer(x: number, y: number): any;
         createText(x: number, y: number, text: string, style?: any): any;
         createSprite(x: number, y: number, name: string, frame: string | null): any;
+        createNineSlice(x: number, y: number, name: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): any;
         clearScreen(): void;
         changeTexture(sprite: Sprite, name: string, frame?: string | null): void;
         createSpine(name: string): any;
+        enableInput(sprite: any): void;
+        disableInput(sprite: any): void;
+        addListener(event: string, sprite: any, callback: Function, context: any): void;
+        removeListener(event: string, sprite: any, callback: Function): void;
         resize(x: number, y: number): void;
     }
     export default IScreen;
@@ -242,6 +294,7 @@ declare module 'UAENGINE/Services/IScreen' {
 declare module 'UAENGINE/Core/Engine/ILevel' {
     interface ILevel {
         init(): void;
+        start(): void;
         shutdown(): void;
     }
     export default ILevel;
@@ -287,13 +340,65 @@ declare module 'UAENGINE/Core/Engine/ScaleManager' {
 }
 
 declare module 'UAENGINE/Services/IObjectHandler' {
+    import Point from 'UAENGINE/Core/Data/Point';
     interface IObjectHandler {
         setXy(object: any, x: number, y: number): void;
+        setSize(object: any, width: number, height: number): void;
+        setPivot(object: any, anchor: Point): void;
         setX(object: any, x: number): void;
         setY(object: any, y: number): void;
         setScaleXY(object: any, x: number, y: number): void;
     }
     export default IObjectHandler;
+}
+
+declare module 'UAENGINE/Core/Engine/InputHandler' {
+    import Events from "UAENGINE/Core/Engine/Events";
+    import Loader from "UAENGINE/Core/Engine/Loader";
+    import Point from "UAENGINE/Core/Data/Point";
+    import IScreen from "UAENGINE/Services/IScreen";
+    class InputHandler {
+        constructor(events: Events, loader: Loader, screen: IScreen);
+        get pointer(): Point;
+        enable(displayObject: any): void;
+        disable(displayObject: any): void;
+        addListener(event: string, callback: Function, sprite: any, context: any, once?: boolean): void;
+        removeListener(event: string, callback: Function, sprite: any): void;
+    }
+    export default InputHandler;
+}
+
+declare module 'UAENGINE/Core/Engine/Utils/MathUtils' {
+    class MathUtils {
+            /**
+                * @description get a range of numbers in an array, from lowest to highest
+                * @param lowest the number to start the range on
+                * @param finish the number to finish the range on
+                */
+            static getRangeArray(lowest: number, highest: number): number[];
+            /**
+                * @description get the smallest number in an array
+                * @param a the array of numbers to be assessed
+                */
+            static getSmallestNumber(a: Number[]): number;
+            clamp(val: number, min: number, max: number): number;
+            round(val: number): number;
+    }
+    export default MathUtils;
+}
+
+declare module 'UAENGINE/Core/Data/Point' {
+    class Point {
+        _x: number;
+        _y: number;
+        constructor(x: number, y: number);
+        get x(): number;
+        set x(x: number);
+        get y(): number;
+        set y(y: number);
+        createNew(x: number, y: number): Point;
+    }
+    export default Point;
 }
 
 declare module 'UAENGINE/Core/Data/FunObj' {
@@ -357,15 +462,6 @@ declare module 'UAENGINE/Services/AjaxLoader' {
     export default AjaxLoader;
 }
 
-declare module 'UAENGINE/Core/Engine/GameConfig' {
-    class GameConfig {
-        constructor();
-        get data(): any;
-        loadConfig(path: string): Promise<unknown>;
-    }
-    export default GameConfig;
-}
-
 declare module 'UAENGINE/Core/Engine/AudioManager' {
     import Loader from 'UAENGINE/Core/Engine/Loader';
     import HwPlayer from 'UAENGINE/Services/Howler/HwPlayer';
@@ -388,16 +484,16 @@ declare module 'UAENGINE/Core/Engine/Utils/Utils' {
     import Collections from 'UAENGINE/Core/Engine/Utils/Collections';
     import Mixins from 'UAENGINE/Core/Engine/Utils/Mixins';
     import Colors from 'UAENGINE/Core/Engine/Utils/Colors';
-    import Numbers from 'UAENGINE/Core/Engine/Utils/Numbers';
+    import MathUtils from 'UAENGINE/Core/Engine/Utils/MathUtils';
     import Text from 'UAENGINE/Core/Engine/Utils/Text';
     import Vectors from 'UAENGINE/Core/Engine/Utils/Vectors';
     class Utils {
-        constructor(actScripts: ActScripts, collections: Collections, colors: Colors, mixins: Mixins, numbers: Numbers, text: Text, vectors: Vectors);
+        constructor(actScripts: ActScripts, collections: Collections, colors: Colors, mixins: Mixins, math: MathUtils, text: Text, vectors: Vectors);
         get script(): ActScripts;
         get coll(): Collections;
         get color(): ActScripts;
         get mixin(): Mixins;
-        get number(): Numbers;
+        get math(): MathUtils;
         get text(): Text;
         get vector(): Vectors;
     }
@@ -409,7 +505,7 @@ declare module 'UAENGINE/Core/Engine/ScriptHandler' {
     import Events from 'UAENGINE/Core/Engine/Events';
     class ScriptHandler {
             constructor(utils: ActScripts, events: Events);
-            init(name: string, raw: any[], parseCols: string[], objectifyCols: string[]): void;
+            init(name: string, raw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]): void;
             /**
              * @description to be used at init, to convert raw json data into a more functional script, with arrays and objects
              * instead of stringified lists and cells with 'stringified' key-value pairs into objects. The converted data is stored in the
@@ -417,7 +513,9 @@ declare module 'UAENGINE/Core/Engine/ScriptHandler' {
              * @param parseCols the columns which contain 'stringified' lists which should be converted into arrays of text vals
              * @param objectifyCols the columns which contain stringified key-value pairs. These are converted into objects.
              */
-            convertRowsFromRaw(parseCols: string[], objectifyCols: string[]): void;
+            convertRowsFromRaw(parseCols: string[], objectifyCols: string[], processText?: string[]): void;
+            chunks(text: string): string[];
+            words(text: string): string[];
             get name(): string;
             get initialized(): boolean;
             get raw(): any[];
@@ -460,6 +558,13 @@ declare module 'UAENGINE/Core/Engine/Expose' {
         add(key: string, object: any): void;
     }
     export default Expose;
+}
+
+declare module 'UAENGINE/Core/Engine/IActivity' {
+    interface IActivity {
+        startActivity(): void;
+    }
+    export default IActivity;
 }
 
 declare module 'UAENGINE/Core/Data/Anim' {
@@ -571,6 +676,8 @@ declare module 'UAENGINE/Core/Engine/Utils/ActScripts' {
                 * @param script
                 */
             clone(script: any): any;
+            toLines(text: string): string[];
+            words(text: string): string[];
     }
     export default ActScripts;
 }
@@ -603,23 +710,6 @@ declare module 'UAENGINE/Core/Engine/Utils/Colors' {
     export default Colors;
 }
 
-declare module 'UAENGINE/Core/Engine/Utils/Numbers' {
-    class Numbers {
-            /**
-                * @description get a range of numbers in an array, from lowest to highest
-                * @param lowest the number to start the range on
-                * @param finish the number to finish the range on
-                */
-            static getRangeArray(lowest: number, highest: number): number[];
-            /**
-                * @description get the smallest number in an array
-                * @param a the array of numbers to be assessed
-                */
-            static getSmallestNumber(a: Number[]): number;
-    }
-    export default Numbers;
-}
-
 declare module 'UAENGINE/Core/Engine/Utils/Text' {
     class Text {
             /**
@@ -636,29 +726,16 @@ declare module 'UAENGINE/Core/Engine/Utils/Text' {
                 */
             unstringifyArray(txt: string, seperator: string): string[];
             propertiesFromString(rawText: string, lineSeperator: string, valueAssigner: string, valueSeperator: string): object;
+            split(text: string, seperator: string): string[];
     }
     export default Text;
 }
 
 declare module 'UAENGINE/Core/Engine/Utils/Vectors' {
-    import Vector2D from "UAENGINE/Core/Data/Vector2D";
+    import Vector2D from "UAENGINE/Core/Data/Point";
     class Vectors {
         static getPointGrid(hor: number[], vert: number[]): Array<Vector2D>;
     }
     export default Vectors;
-}
-
-declare module 'UAENGINE/Core/Data/Vector2D' {
-    class Vector2D {
-        _x: number;
-        _y: number;
-        constructor(x: number, y: number);
-        get x(): number;
-        set x(x: number);
-        get y(): number;
-        set y(y: number);
-        createNew(x: number, y: number): Vector2D;
-    }
-    export default Vector2D;
 }
 
