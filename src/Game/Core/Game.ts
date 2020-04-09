@@ -74,8 +74,8 @@ class Game {
    * @description load a level (via world.loadLevel). 
    * @param level the level to load
    */
-  public loadLevel(level: ILevel) {
-    this._world.startLevel(level);
+  public loadLevel(level: ILevel, scriptName: string) {
+    this._world.startLevel(level, scriptName);
   }
 
   private _onResize() {
