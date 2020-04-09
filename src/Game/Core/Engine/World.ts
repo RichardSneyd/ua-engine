@@ -43,7 +43,7 @@ class World {
    * @description launches the specified level. Will automatically shutdown the currentLevel, if there is one.
    * @param level the level object to launch. 
    */
-  public startLevel(level: ILevel) {
+  public startLevel(level: ILevel, scriptName: string) {
     if (this._currentLevel != null) {
       this._currentLevel.shutdown();
     }
@@ -51,7 +51,7 @@ class World {
     this._screen.clearScreen();
 
     this._currentLevel = level;
-    this._currentLevel.init();
+    this._currentLevel.init(scriptName);
   }
 
   /**

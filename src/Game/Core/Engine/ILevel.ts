@@ -1,7 +1,7 @@
 import Loop from './Loop';
 
 interface ILevel {
-  init(): void;
+  init(scriptName: string): void;
 
   start(): void;
 
