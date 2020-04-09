@@ -764,6 +764,7 @@ declare module 'UAENGINE/Core/Engine/ScriptHandler' {
                 * @param val the vals to search for. The order of this array must match colname.
                 */
             rowByCellVals(colname: string[], val: string[]): any[] | null;
+            isFalsy(val: any): boolean;
     }
     export default ScriptHandler;
 }
@@ -779,7 +780,7 @@ declare module 'UAENGINE/Core/Engine/Expose' {
 
 declare module 'UAENGINE/Core/Engine/IActivity' {
     interface IActivity {
-        startActivity(): void;
+        startActivity(scriptName: string): void;
     }
     export default IActivity;
 }
