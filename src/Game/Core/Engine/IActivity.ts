@@ -1,5 +1,5 @@
 interface IActivity {
-  startActivity(): void;
+  startActivity(scriptName: string): void;
 }
 
 export default IActivity;

@@ -47,7 +47,7 @@ declare module 'UAENGINE/Core/Engine/World' {
                 * @description launches the specified level. Will automatically shutdown the currentLevel, if there is one.
                 * @param level the level object to launch.
                 */
-            startLevel(level: ILevel): void;
+            startLevel(level: ILevel, scriptName: string): void;
             /**
                 * @description resize the game screen
                 * @param width the new width of the game screen
@@ -370,7 +370,7 @@ declare module 'UAENGINE/Core/Game' {
                 * @description load a level (via world.loadLevel).
                 * @param level the level to load
                 */
-            loadLevel(level: ILevel): void;
+            loadLevel(level: ILevel, scriptName: string): void;
     }
     export default Game;
 }
@@ -459,7 +459,7 @@ declare module 'UAENGINE/Services/IScreen' {
 
 declare module 'UAENGINE/Core/Engine/ILevel' {
     interface ILevel {
-        init(): void;
+        init(scriptName: string): void;
         start(): void;
         shutdown(): void;
     }
