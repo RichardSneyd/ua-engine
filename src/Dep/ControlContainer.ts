@@ -42,7 +42,6 @@ import PxPoint from '../../src/Game/Services/Pixi/PxPoint';
 import PxText from '../../src/Game/Services/Pixi/PxText';
 import Screen from '../../src/Game/Services/Screen';
 import SndLoader from '../../src/Game/Services/SndLoader';
-import the from '../../src/Game/UAENGINE';
 
 
 
@@ -92,7 +91,6 @@ private _PxPoint: any;
 private _PxText: any;
 private _Screen: any;
 private _SndLoader: any;
-private _the: any;
 
 
   constructor() {
@@ -151,7 +149,6 @@ this._PxPoint = this._smartDepend.addModule(PxPoint, false);
 this._PxText = this._smartDepend.addModule(PxText, false);
 this._Screen = this._smartDepend.addModule(Screen, true);
 this._SndLoader = this._smartDepend.addModule(SndLoader, true);
-this._the = this._smartDepend.addModule(the, false);
 
   }
 

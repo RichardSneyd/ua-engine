@@ -1,6 +1,8 @@
 const path = require("path")
 const fs = require("fs")
 const _ = require("lodash");
+const strip_comments = require('strip-comments');
+
 
 
 class CalculateDeps {
@@ -125,7 +127,7 @@ class CalculateDeps {
 
   _readModule(mod) {
     let path2 = mod.path;
-    let textToPrint = String(fs.readFileSync(path2));
+    let textToPrint = strip_comments(String(fs.readFileSync(path2)));
 
     let isClass = textToPrint.indexOf('class') > -1;
 
