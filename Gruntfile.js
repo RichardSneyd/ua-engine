@@ -129,6 +129,6 @@ module.exports = (grunt) => {
 
 
   //grunt.registerTask('default', ['connect', 'browserify', 'exorcise', 'uglify', 'watch']);
-  grunt.registerTask('default', ['calculateDeps', 'connect', 'browserify', 'exorcise', 'watch']);
+  grunt.registerTask('default', ['calculateDeps', 'browserify', 'exorcise', 'watch']);
 }
 
