@@ -186,9 +186,18 @@ class ScriptHandler {
     private _fileList(cols: string[]): string[] {
         let files: any[] = [];
         for (let x = 0; x < this.rows.length; x++) {
+            let row = this.rows[x];
+
             for (let y = 0; y < cols.length; y++) {
                 //    console.log('files in %s of row %s: ', cols[y], x, Array(this.rows[x][cols[y]]));
-                files = files.concat(this.rows[x][cols[y]]);
+                let col = cols[y];
+                let split = col.split('.');
+                if(split.length > 1){
+                    files = files.concat(row[split[0]][split[1]]);
+                }
+                else {
+                    files = files.concat(row[col]);
+                }
             }
         }
         //  console.log('files found: ', files);

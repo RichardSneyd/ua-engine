@@ -779,7 +779,7 @@ declare module 'UAENGINE/Core/Engine/Expose' {
 
 declare module 'UAENGINE/Core/Engine/IActivity' {
     interface IActivity {
-        startActivity(): void;
+        startActivity(scriptName: string): void;
     }
     export default IActivity;
 }
