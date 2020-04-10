@@ -26,7 +26,10 @@ interface IScreen {
 
   removeListener(event: string, sprite: any, callback: Function): void;
   resize(width: number, height: number): void;
+
   debugScreen(): void;
+  width(): number | null;
+  height(): number | null;
 }
 
 export default IScreen;

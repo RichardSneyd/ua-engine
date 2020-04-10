@@ -103,7 +103,7 @@ class ScriptHandler {
     public getFromAutoNext(): any {
         let row = this.rowByCellVals(['id'], [this.active.auto_next]);
         if (row == null) {
-            console.warn('auto_next has no value for row %s', this.active.id);
+            console.warn('auto_next has no value for active row %s', this.active.id);
         }
         return row;
     }

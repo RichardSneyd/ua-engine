@@ -213,7 +213,15 @@ class PxGame {
   }
 
   public clearScreen() {
-    console.log('clearning screen');
+    console.log('clearing screen (todo)');
+  }
+
+  public width(): number | null{
+    if(this._game) return this._game.stage.width; return null;
+  }
+
+  public height(): number | null{
+    if(this._game) return this._game.stage.height; return null;
   }
 
   private _createSprite(x: number, y: number, sprName: string, frame: string | null = null) {

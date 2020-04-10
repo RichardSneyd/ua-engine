@@ -72,6 +72,14 @@ class World {
     this._screen.debugScreen();
   }
 
+  public width(): number{
+    return <number>this._screen.width();
+  }
+
+  public height(): number {
+    return <number>this._screen.height();
+  }
+
   private _getElementName(): string {
     return 'gameBox';
   }
