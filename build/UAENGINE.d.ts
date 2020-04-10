@@ -58,6 +58,8 @@ declare module 'UAENGINE/Core/Engine/World' {
                 */
             resize(width: number, height: number): void;
             debugScreen(): void;
+            width(): number;
+            height(): number;
     }
     export default World;
 }
@@ -460,6 +462,8 @@ declare module 'UAENGINE/Services/IScreen' {
         removeListener(event: string, sprite: any, callback: Function): void;
         resize(width: number, height: number): void;
         debugScreen(): void;
+        width(): number | null;
+        height(): number | null;
     }
     export default IScreen;
 }

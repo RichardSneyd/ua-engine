@@ -79,6 +79,14 @@ class Screen implements IScreen {
   public debugScreen(){
     this._pxGame.debugScreen();
   }
+
+  public width(): number | null {
+    return this._pxGame.width();
+  }
+
+  public height(): number | null {
+    return this._pxGame.height();
+  }
 }
 
 export default Screen;
