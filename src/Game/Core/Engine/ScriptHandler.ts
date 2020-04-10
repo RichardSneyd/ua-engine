@@ -111,7 +111,9 @@ class ScriptHandler {
     /**
      * @description searches through all arrays in the specified columns, and returns every unique value. Duplicates
      * are removed.
-     * @param cols the columns to search for files in
+     * @param cols the columns to search for files in i.e ['images', 'correct_image']; you may also specify a property within an 'object' 
+     * cell with dot syntax; i.e ['config.bgd'] will find all values of the bgd field for all pre-converted config cells.
+      * 
      */
     public fileList(cols: string[]): string[] {
         return this._fileList(cols);
@@ -203,7 +205,10 @@ class ScriptHandler {
                     }
                 }
                 else {
-                    files = files.concat(row[col]);
+                    let val = row[col];
+                    if(!this.isFalsy(val)){
+                        files = files.concat(val);
+                    }
                 }
             }
         }

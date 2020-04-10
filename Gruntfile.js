@@ -71,6 +71,7 @@ module.exports = (grunt) => {
             'AjaxLoader',
             'Screen',
             'PxGame',
+            'PxFactory',
             'PxLoader',
             'HwFactory',
             'HwLoader',
