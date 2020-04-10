@@ -73,6 +73,7 @@ class PxGame {
     let cont = this._createContainer();
     cont.x = x;
     cont.y = y;
+    this._addChild(cont);
     return cont;
   }
 
