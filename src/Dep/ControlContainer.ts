@@ -223,6 +223,7 @@ this._smartDepend.addDependency(this._Utils, this._Vectors);
 
 this._smartDepend.addDependency(this._World, this._Entity);
 this._smartDepend.addDependency(this._World, this._Screen);
+this._smartDepend.addDependency(this._World, this._Events);
 
 
 this._smartDepend.addDependency(this._Game, this._World);

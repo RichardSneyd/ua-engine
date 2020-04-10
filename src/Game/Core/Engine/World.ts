@@ -2,6 +2,7 @@ import Entity from '../Engine/Entity';
 import IScreen from '../../Services/IScreen';
 import ILevel from '../Engine/ILevel';
 import LevelManager from './LevelManager';
+import Events from 'UAENGINE/Core/Engine/Events';
 
 class World {
   private _width: number;
@@ -12,8 +13,9 @@ class World {
   private _currentLevel: ILevel | null;
 
   private _entity: Entity; _screen: IScreen;
+  private _events: Events;
 
-  constructor(entity: Entity, screen: IScreen) {
+  constructor(entity: Entity, screen: IScreen, events: Events) {
     this._width = 0;
     this._height = 0;
 
@@ -21,6 +23,9 @@ class World {
 
     this._entity = entity;
     this._screen = screen;
+
+    this._events = events;
+    this._events.on('debugscreen', this.debugScreen, this);
 
     this._currentLevel = null;
   }
@@ -61,6 +66,10 @@ class World {
    */
   public resize(width: number, height: number) {
     this._screen.resize(width, height);
+  }
+
+  public debugScreen(){
+    this._screen.debugScreen();
   }
 
   private _getElementName(): string {
