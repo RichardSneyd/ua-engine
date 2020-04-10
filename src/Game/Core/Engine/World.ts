@@ -25,11 +25,10 @@ class World {
     this._screen = screen;
 
     this._events = events;
-    this._events.on('debugscreen', this.debugScreen, this);
-
+    
     this._currentLevel = null;
   }
-
+  
   /**
    * @description initialize the game world. This generates an empty screen
    * @param w The width value to initialize the world with. Defines the width of the game screen.
@@ -37,11 +36,12 @@ class World {
    */
   public init(w: number, h: number): void {
     let elmId: string = this._getElementName();
-
+    
     this._width = w;
     this._height = h;
-
+    
     this._createScreen(w, h, elmId);
+    this._events.on('debugscreen', this.debugScreen, this);
   }
 
   /**
