@@ -107,6 +107,12 @@ class PxGame {
     return slice;
   }
 
+  public debugScreen(){
+    if(this._game){
+      console.log(this._game.stage.children);
+    }
+  }
+
   private _addChild(child: DisplayObject) {
     if (this._game != null) {
       this._game.stage.addChild(child);
