@@ -30,13 +30,13 @@ class ScriptHandler {
       * @param objectifyCols the names of the columns to be converted into objects with key-value pairs. For example:
       * 'bgd: bgd_1\noverlay: overlay_1'
       * => {bgd: 'bgd_1', overlay: 'overlay_1'}
-      * @param processText (optional) the column names to convert into lines and words of text. Mainly useful in passage (reading) types.
+      * @param processText (optional) the column names to convert into lines and _words of text. Mainly useful in passage (reading) types.
       */
     init(name: string, raw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]) {
         this._name = name;
         this._raw = raw;
         console.log(this._raw);
-        this.convertRowsFromRaw(parseCols, objectifyCols, processText);
+        this._convertRowsFromRaw(parseCols, objectifyCols, processText);
         this._initialized = true;
     }
 
@@ -88,7 +88,7 @@ class ScriptHandler {
     }
 
     /**
-     * @description switches the active row to the one with the id auto_next points to
+     * @description switches the active row to the one with the id the auto_next field points to
      */
     public goToAutoNext() {
         let row = this.getFromAutoNext();
@@ -111,7 +111,9 @@ class ScriptHandler {
     /**
      * @description searches through all arrays in the specified columns, and returns every unique value. Duplicates
      * are removed.
-     * @param cols the columns to search for files in
+     * @param cols the columns to search for files in i.e ['images', 'correct_image']; you may also specify a property within an 'object' 
+     * cell with dot syntax; i.e ['config.bgd'] will find all values of the bgd field for all pre-converted config cells.
+      * 
      */
     public fileList(cols: string[]): string[] {
         return this._fileList(cols);
@@ -126,6 +128,10 @@ class ScriptHandler {
         return this._rowByCellVals(colname, val);
     }
 
+    public isFalsy(val: any): boolean {
+        if(val !== null && val !== undefined && val !== '') return false; return true;
+    }
+
      /**
     * @description to be used at init, to convert raw json data into a more functional script, with arrays and objects 
     * instead of stringified lists and cells with 'stringified' key-value pairs into objects. The converted data is stored in the 
@@ -133,7 +139,7 @@ class ScriptHandler {
     * @param parseCols the columns which contain 'stringified' lists which should be converted into arrays of text vals
     * @param objectifyCols the columns which contain stringified key-value pairs. These are converted into objects.
     */
-   private convertRowsFromRaw(parseCols: string[], objectifyCols: string[], processText?: string[]) {
+   private _convertRowsFromRaw(parseCols: string[], objectifyCols: string[], processText?: string[]) {
     this._rows = this._utils.clone(this._raw);
     for (let x = 0; x < this._rows.length; x++) {
         for (let y = 0; y < parseCols.length; y++) {
@@ -157,10 +163,10 @@ class ScriptHandler {
                     for (let u = 0; u < lines.length; u++) {
                         let arr = [];
                         let line = lines[u];
-                        let chunks = this.chunks(line);
-                        let words = this.words(line);
-                        // let words
-                        arr = [line, chunks, words];
+                        let _chunks = this._chunks(line);
+                        let _words = this._words(line);
+                        // let _words
+                        arr = [line, _chunks, _words];
                         this._rows[x][processText[s]][u] = arr;
                     }
                 }
@@ -186,20 +192,35 @@ class ScriptHandler {
     private _fileList(cols: string[]): string[] {
         let files: any[] = [];
         for (let x = 0; x < this.rows.length; x++) {
+            let row = this.rows[x];
+
             for (let y = 0; y < cols.length; y++) {
                 //    console.log('files in %s of row %s: ', cols[y], x, Array(this.rows[x][cols[y]]));
-                files = files.concat(this.rows[x][cols[y]]);
+                let col = cols[y];
+                let split = col.split('.');
+                if(split.length > 1){
+                    let val = row[split[0]][split[1]];
+                    if(!this.isFalsy(val)){
+                        files = files.concat(row[split[0]][split[1]]);
+                    }
+                }
+                else {
+                    let val = row[col];
+                    if(!this.isFalsy(val)){
+                        files = files.concat(val);
+                    }
+                }
             }
         }
         //  console.log('files found: ', files);
         return this._utils.getUniq(files);
     }
 
-    private chunks(text: string) {
+    private _chunks(text: string) {
         return text.split(' ');
     }
 
-    private words(text: string) {
+    private _words(text: string) {
         return this._utils.words(text);
     }
 

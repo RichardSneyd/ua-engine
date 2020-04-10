@@ -73,6 +73,7 @@ class PxGame {
     let cont = this._createContainer();
     cont.x = x;
     cont.y = y;
+    this._addChild(cont);
     return cont;
   }
 
@@ -105,6 +106,12 @@ class PxGame {
     }
     // debugger;
     return slice;
+  }
+
+  public debugScreen(){
+    if(this._game){
+      console.log(this._game.stage.children);
+    }
   }
 
   private _addChild(child: DisplayObject) {

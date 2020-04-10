@@ -194,7 +194,7 @@ class Entity {
   }
 
   addChild(entity: Entity): boolean {
-    if(!this.hasChild){
+    if(!this.hasChild(entity)){
       this._children.push(entity);
       entity.parent = this;
       this._data.addChild(entity.data);

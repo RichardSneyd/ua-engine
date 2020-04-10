@@ -75,6 +75,10 @@ class Screen implements IScreen {
   public resize(width: number, height: number): void {
     this._pxGame.resize(width, height);
   }
+
+  public debugScreen(){
+    this._pxGame.debugScreen();
+  }
 }
 
 export default Screen;

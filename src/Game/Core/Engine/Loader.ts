@@ -324,8 +324,8 @@ class Loader {
       this._sndList[x].data = data[x];
     }
 
-    console.log(data);
-    console.log(this._sndList);
+   // console.log(data);
+   // console.log(this._sndList);
   }
 
   public loadActScript(file: string, callback?: Function, staticPath: boolean = false): any {

@@ -142,7 +142,7 @@ this._HwLoader = this._smartDepend.addModule(HwLoader, true);
 this._HwPlayer = this._smartDepend.addModule(HwPlayer, true);
 this._ImgLoader = this._smartDepend.addModule(ImgLoader, true);
 this._ObjectHandler = this._smartDepend.addModule(ObjectHandler, false);
-this._PxFactory = this._smartDepend.addModule(PxFactory, false);
+this._PxFactory = this._smartDepend.addModule(PxFactory, true);
 this._PxGame = this._smartDepend.addModule(PxGame, true);
 this._PxLoader = this._smartDepend.addModule(PxLoader, true);
 this._PxPoint = this._smartDepend.addModule(PxPoint, false);
@@ -187,6 +187,7 @@ this._smartDepend.addDependency(this._LevelManager, this._Events);
 this._smartDepend.addDependency(this._LevelManager, this._ScriptHandler);
 this._smartDepend.addDependency(this._LevelManager, this._Utils);
 this._smartDepend.addDependency(this._LevelManager, this._InputHandler);
+this._smartDepend.addDependency(this._LevelManager, this._GameObjectFactory);
 
 
 this._smartDepend.addDependency(this._Loader, this._Resource);
@@ -222,6 +223,7 @@ this._smartDepend.addDependency(this._Utils, this._Vectors);
 
 this._smartDepend.addDependency(this._World, this._Entity);
 this._smartDepend.addDependency(this._World, this._Screen);
+this._smartDepend.addDependency(this._World, this._Events);
 
 
 this._smartDepend.addDependency(this._Game, this._World);
