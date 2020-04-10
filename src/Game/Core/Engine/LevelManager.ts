@@ -3,6 +3,8 @@ import Events from "./Events";
 import Utils from "./Utils/Utils";
 import ScriptHandler from "./ScriptHandler";
 import InputHandler from './InputHandler';
+import GameObjectFactory from 'UAENGINE/Core/Engine/GameObjectFactory';
+import Game from 'UAENGINE/Core/Game';
 
 
 class LevelManager {
@@ -11,13 +13,15 @@ class LevelManager {
     private _script: ScriptHandler;
     private _utils: Utils;
     private _input: InputHandler;
+    private _goFactory: GameObjectFactory;
 
-    constructor(audioManager: AudioManager, events: Events, script: ScriptHandler, utils: Utils, input: InputHandler){
+    constructor(audioManager: AudioManager, events: Events, script: ScriptHandler, utils: Utils, input: InputHandler, goFactory: GameObjectFactory){
         this._audio = audioManager;
         this._events = events;
         this._script = script;
         this._utils = utils;
         this._input = input;
+        this._goFactory = goFactory;
     }
 
     /**
@@ -52,6 +56,10 @@ class LevelManager {
 
     get input(): InputHandler {
         return this._input;
+    }
+
+    get goFactory(): GameObjectFactory {
+        return this._goFactory;
     }
 
 
