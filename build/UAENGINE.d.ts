@@ -73,21 +73,30 @@ declare module 'UAENGINE/Core/Engine/Entity' {
         _math: MathUtils;
         _scaleManager: ScaleManager;
         constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, scaleManager: ScaleManager);
-        text: string;
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-        origin: Point;
+        set text(lett: string);
+        set x(xVal: number);
+        set y(yVal: number);
+        set width(width: number);
+        get width(): number;
+        get height(): number;
+        set origin(origin: Point);
+        get origin(): Point;
+        set height(height: number);
         setSize(width: number, height: number): void;
-        scaleX: number;
-        scaleY: number;
-        readonly input: InputHandler;
-        readonly pixelPerfect: boolean;
+        set scaleX(xVal: number);
+        set scaleY(yVal: number);
+        get x(): number;
+        get y(): number;
+        get input(): InputHandler;
+        get scaleX(): number;
+        get scaleY(): number;
+        get text(): string;
+        get pixelPerfect(): boolean;
         makePixelPerfect(threshold?: number): boolean;
-        readonly children: Entity[];
-        parent: Entity | null;
-        readonly data: any;
+        get children(): Entity[];
+        get parent(): Entity | null;
+        set parent(parent: Entity | null);
+        get data(): any;
         addChild(entity: Entity): boolean;
         removeChild(entity: Entity): boolean;
         hasChild(entity: Entity): boolean;
@@ -155,9 +164,11 @@ declare module 'UAENGINE/Core/Engine/Loader' {
             /**
                 * @description the base path to load assets from.
                 */
-            base: string;
-            readonly scripts: any;
+            get base(): string;
+            set base(base: string);
+            get scripts(): any;
             constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader, ajaxLoader: AjaxLoader, gameConfig: GameConfig);
+            get downloadComplete(): boolean;
             /**
                 * @description Creates an image resource and adds the image to the load queue. The data property of the resource will be
                 * populated with the image once loaded; Everything in the queue is processed when the download() method is called
@@ -176,9 +187,10 @@ declare module 'UAENGINE/Core/Engine/Loader' {
                 * @description download everything in the load queue. This must be done before the activity can start.
                 * @param onDone (optional) called when loading is complete
                 */
-            download(onDone?: Function): void;
+            download(onDone?: Function): Promise<unknown>;
             getResource(name: string): Resource | null;
             getTexture(sprite: string, frame?: string | null): any;
+            update(): void;
             getSndResByBasename(basename: string): Resource | null;
             /**
                 * @description create a sound resource, to be inject with data later, at download
@@ -198,15 +210,15 @@ declare module 'UAENGINE/Core/Engine/Loader' {
 declare module 'UAENGINE/Core/Engine/Events' {
     class Events {
             constructor();
-            readonly events: any;
+            get events(): any;
             /**
                 * @description returns an array of all timers
                 */
-            readonly timers: any;
+            get timers(): any;
             /**
                 * @description is the timer system paused?
                 */
-            readonly paused: boolean;
+            get paused(): boolean;
             /**
                 * @description returns a string array of the names of all registered events
                 */
@@ -323,11 +335,11 @@ declare module 'UAENGINE/Core/Engine/LevelManager' {
           * @param processText (optional) the column names to convert into lines and words of text. Mainly useful in passage (reading) types.
           */
         init(scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]): void;
-        readonly events: Events;
-        readonly audio: AudioManager;
-        readonly script: ScriptHandler;
-        readonly utils: Utils;
-        readonly input: InputHandler;
+        get events(): Events;
+        get audio(): AudioManager;
+        get script(): ScriptHandler;
+        get utils(): Utils;
+        get input(): InputHandler;
     }
     export default LevelManager;
 }
@@ -365,7 +377,7 @@ declare module 'UAENGINE/Core/Game' {
                 * @description start the game. Calls game.init internally, to create the game screen.
                 * @param configPath the path to the config.json file, which specified Display widht, height, file paths etc
                 */
-            startGame(configPath: string): Promise<{}>;
+            startGame(configPath: string): Promise<unknown>;
             /**
                 * @description load a level (via world.loadLevel).
                 * @param level the level to load
@@ -378,12 +390,12 @@ declare module 'UAENGINE/Core/Game' {
 declare module 'UAENGINE/Core/Engine/GameConfig' {
     class GameConfig {
         constructor();
-        readonly data: any;
+        get data(): any;
         /**
           * @desecription load a config.json file from the specified path
           * @param path the path to load the config json data from
           */
-        loadConfig(path: string): Promise<{}>;
+        loadConfig(path: string): Promise<unknown>;
     }
     export default GameConfig;
 }
@@ -529,7 +541,7 @@ declare module 'UAENGINE/Core/Engine/InputHandler' {
             /**
                 * @description get the pointer position as a Point object (x, y)
                 */
-            readonly pointer: Point;
+            get pointer(): Point;
             /**
                 * @description enable input for the specified object
                 * @param displayObject the object to enable input for
@@ -584,8 +596,10 @@ declare module 'UAENGINE/Core/Data/Point' {
         _x: number;
         _y: number;
         constructor(x: number, y: number);
-        x: number;
-        y: number;
+        get x(): number;
+        set x(x: number);
+        get y(): number;
+        set y(y: number);
         createNew(x: number, y: number): Point;
     }
     export default Point;
@@ -594,7 +608,7 @@ declare module 'UAENGINE/Core/Data/Point' {
 declare module 'UAENGINE/Core/Data/FunObj' {
     class FunObj {
         constructor();
-        readonly function: any;
+        get function(): any;
         init(f: any, context: any): void;
         execute(data: any): any;
         createNew(): FunObj;
@@ -605,14 +619,16 @@ declare module 'UAENGINE/Core/Data/FunObj' {
 declare module 'UAENGINE/Core/Data/Resource' {
     class Resource {
             constructor();
-            data: any;
-            readonly name: string;
+            get data(): any;
+            get name(): string;
             /**
                 * @description returns the basename of the file, without file extension
                 */
-            readonly basename: string;
-            readonly url: string;
-            loaded: boolean;
+            get basename(): string;
+            get url(): string;
+            get loaded(): boolean;
+            set data(dat: any);
+            set loaded(ld: boolean);
             initImage(url: string, loaded: boolean): void;
             initSnd(url: string, loaded: boolean): void;
             initJSON(url: string, loaded: boolean): void;
@@ -656,7 +672,7 @@ declare module 'UAENGINE/Core/Engine/AudioManager' {
     class AudioManager {
             _hwPlayer: HwPlayer;
             constructor(loader: Loader, hwLoader: HwPlayer);
-            readonly filesPlaying: string[];
+            get filesPlaying(): string[];
             /**
                 * @description play the specified audio file
                 * @param name the name of the file to play
@@ -700,13 +716,13 @@ declare module 'UAENGINE/Core/Engine/Utils/Utils' {
     import Vectors from 'UAENGINE/Core/Engine/Utils/Vectors';
     class Utils {
         constructor(actScripts: ActScripts, collections: Collections, colors: Colors, mixins: Mixins, math: MathUtils, text: Text, vectors: Vectors);
-        readonly script: ActScripts;
-        readonly coll: Collections;
-        readonly color: ActScripts;
-        readonly mixin: Mixins;
-        readonly math: MathUtils;
-        readonly text: Text;
-        readonly vector: Vectors;
+        get script(): ActScripts;
+        get coll(): Collections;
+        get color(): ActScripts;
+        get mixin(): Mixins;
+        get math(): MathUtils;
+        get text(): Text;
+        get vector(): Vectors;
     }
     export default Utils;
 }
@@ -727,18 +743,22 @@ declare module 'UAENGINE/Core/Engine/ScriptHandler' {
                  * @param processText (optional) the column names to convert into lines and words of text. Mainly useful in passage (reading) types.
                  */
             init(name: string, raw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]): void;
-            readonly name: string;
-            readonly initialized: boolean;
-            readonly raw: any[];
-            readonly rows: any[];
+            get name(): string;
+            get initialized(): boolean;
+            get raw(): any[];
+            get rows(): any[];
+            /**
+                * @description get the active row.
+                */
+            get active(): any;
             /**
                 * @description set the active row.
                 */
-            active: any;
+            set active(row: any);
             /**
                 * @description get the last row (the previous value of active)
                 */
-            readonly last: any;
+            get last(): any;
             /**
                 * @description switches the active row to the one specified
                 * @param row the row object to switch to
@@ -779,7 +799,7 @@ declare module 'UAENGINE/Core/Engine/Expose' {
 
 declare module 'UAENGINE/Core/Engine/IActivity' {
     interface IActivity {
-        startActivity(): void;
+        startActivity(scriptName: string): void;
     }
     export default IActivity;
 }
@@ -788,10 +808,10 @@ declare module 'UAENGINE/Core/Data/Anim' {
     import Events from 'UAENGINE/Core/Engine/Events';
     class Anim {
         constructor(events: Events);
-        readonly name: string;
-        readonly data: any;
-        readonly frames: string[];
-        readonly fps: number;
+        get name(): string;
+        get data(): any;
+        get frames(): string[];
+        get fps(): number;
         init(name: string, base: string, max: number, fps: number, data: any): void;
         getNextFrame(): string;
         createNew(): Anim;
@@ -812,7 +832,7 @@ declare module 'UAENGINE/Core/Data/Tween' {
         _time: number;
         _pauseDiff: number;
         constructor();
-        readonly name: string;
+        get name(): string;
         init(name: string, easing: string, object: any): void;
         to(toObject: any, time: number, updateFunction?: Function): void;
         createNew(): Tween;

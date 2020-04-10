@@ -13,6 +13,7 @@ class Loader {
   private _sndList: Resource[];
   private _spineList: Resource[];
   private _scripts: any;
+  private _downloadComplete: boolean;
 
   private _base: string;
 
@@ -45,6 +46,12 @@ class Loader {
     this._imgList = [];
     this._sndList = [];
     this._scripts = {}
+
+    this._downloadComplete = false;
+  }
+
+  get downloadComplete(): boolean {
+    return this._downloadComplete
   }
 
   /**
@@ -93,26 +100,44 @@ class Loader {
    * @description download everything in the load queue. This must be done before the activity can start.
    * @param onDone (optional) called when loading is complete
    */
-  public download(onDone?: Function): void {
-    let _imgsDone: boolean = false, _sndsDone: boolean = false;
+  public download(onDone?: Function) {
+    return new Promise((resolve: Function, reject: Function) => {
+      let _imgsDone: boolean = false, _sndsDone: boolean = false;
 
-    this._downloadSounds(() => {
-      _sndsDone = true;
-      if (_imgsDone) {
-        if (onDone !== undefined) {
-          onDone();
+      this._downloadSounds(() => {
+        _sndsDone = true;
+        if (_imgsDone) {
+          if (onDone !== undefined) {
+            onDone();
+          }
         }
-      }
-    });
+      });
 
-    this._downloadImages(() => {
-      _imgsDone = true;
-      if (_sndsDone) {
-        if (onDone !== undefined) {
-          onDone();
+      this._downloadImages(() => {
+        _imgsDone = true;
+        if (_sndsDone) {
+          if (onDone !== undefined) {
+            onDone();
+          }
         }
-      }
-    });
+      });
+
+      setTimeout(() => {
+        this._sendAllDone(resolve, reject);
+      }, 100);
+
+
+    })
+  }
+
+  private _sendAllDone(resolve: Function, reject: Function) {
+    if (this._downloadComplete) {
+      resolve({status: true});
+    } else {
+      setTimeout(() => {
+        this._sendAllDone(resolve, reject);
+      }, 100);
+    }
   }
 
   public getResource(name: string): Resource | null {
@@ -133,6 +158,18 @@ class Loader {
     } else {
       console.warn("Resource named '%s' doesn't exist.", sprite);
     }
+  }
+
+  public update(): void {
+    let isLoaded = true;
+
+    for (let c = 0; c < this._imgList.length; c++) {
+      let res = this._imgList[c];
+
+      if (!res.loaded) isLoaded = false;
+    }
+
+    this._downloadComplete = isLoaded;
   }
 
   private _getUrls(arr: Resource[]): string[] {
