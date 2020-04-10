@@ -388,6 +388,14 @@ class Entity {
     return new Entity(this._screen, am, this._objectHandler, this._input, this._math, this._events, this._scaleManager.createNew());
   }
 
+  public changeTexture(textureName: string){
+    if (this._atlas != null) {
+      this._screen.changeTexture(this._data, this._atlas, textureName);
+    } else {
+      this._screen.changeTexture(this._data, textureName);
+    }
+  }
+
   public update(time: number) {
     if (!this._initialized) return;
 
