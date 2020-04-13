@@ -187,6 +187,7 @@ this._smartDepend.addDependency(this._LevelManager, this._Events);
 this._smartDepend.addDependency(this._LevelManager, this._ScriptHandler);
 this._smartDepend.addDependency(this._LevelManager, this._Utils);
 this._smartDepend.addDependency(this._LevelManager, this._InputHandler);
+this._smartDepend.addDependency(this._LevelManager, this._GOFactory);
 
 
 this._smartDepend.addDependency(this._Loader, this._Resource);
@@ -234,6 +235,7 @@ this._smartDepend.addDependency(this._Game, this._ScaleManager);
 this._smartDepend.addDependency(this._Game, this._Expose);
 this._smartDepend.addDependency(this._Game, this._GameConfig);
 this._smartDepend.addDependency(this._Game, this._LevelManager);
+this._smartDepend.addDependency(this._Game, this._GOFactory);
 
 
 this._smartDepend.addDependency(this._HwLoader, this._HwFactory);

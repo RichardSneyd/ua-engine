@@ -317,8 +317,9 @@ declare module 'UAENGINE/Core/Engine/LevelManager' {
     import Utils from "UAENGINE/Core/Engine/Utils/Utils";
     import ScriptHandler from "UAENGINE/Core/Engine/ScriptHandler";
     import InputHandler from 'UAENGINE/Core/Engine/InputHandler';
+    import GOFactory from "UAENGINE/Core/Engine/GOFactory";
     class LevelManager {
-        constructor(audioManager: AudioManager, events: Events, script: ScriptHandler, utils: Utils, input: InputHandler);
+        constructor(audioManager: AudioManager, events: Events, script: ScriptHandler, utils: Utils, input: InputHandler, goFactory: GOFactory);
         /**
           * @description initialize the level manager.
           * @param scriptName the name of the script to initialize the script handler with
@@ -335,6 +336,7 @@ declare module 'UAENGINE/Core/Engine/LevelManager' {
         readonly script: ScriptHandler;
         readonly utils: Utils;
         readonly input: InputHandler;
+        readonly goFactory: GOFactory;
     }
     export default LevelManager;
 }
@@ -351,6 +353,7 @@ declare module 'UAENGINE/Core/Game' {
     import LevelManager from 'UAENGINE/Core/Engine/LevelManager';
     import ILevel from 'UAENGINE/Core/Engine/ILevel';
     import IActivity from 'UAENGINE/Core/Engine/IActivity';
+    import GOFactory from 'UAENGINE/Core/Engine/GOFactory';
     class Game {
             _events: Events;
             _expose: Expose;
@@ -358,7 +361,8 @@ declare module 'UAENGINE/Core/Game' {
             _loader: Loader;
             _gameConfig: GameConfig;
             _levelManager: LevelManager;
-            constructor(world: World, entity: Entity, loop: Loop, loader: Loader, events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig, levelManager: LevelManager);
+            _goFactory: GOFactory;
+            constructor(world: World, entity: Entity, loop: Loop, loader: Loader, events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig, levelManager: LevelManager, goFactory: GOFactory);
             /**
                 * @description adds an activity to the engine, as a plugin (todo)
                 * @param act the act object to add.
