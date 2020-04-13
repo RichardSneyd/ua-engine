@@ -6,7 +6,9 @@ import Events from './Core/Engine/Events';
 import LevelManager from './Core/Engine/LevelManager';
 import Game from './Core/Game';
 import GameConfig from './Core/Engine/GameConfig';
-import GameObjectFactory from './Core/Engine/GameObjectFactory';
+import GOFactory from './Core/Engine/GOFactory';
+
+
 
 /**
  * @class the UAEngine API. 
@@ -19,8 +21,8 @@ class UAENGINE {
   public static events: Events;
   public static levelManager: LevelManager;
   public static game: Game;
+  public static goFactory: GOFactory;
   public static gameConfig: GameConfig;
-  public static goFactory: GameObjectFactory;
 }
 
 export default UAENGINE;

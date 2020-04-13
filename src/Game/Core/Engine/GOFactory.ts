@@ -1,7 +1,7 @@
 import Entity from "./Entity";
 
 
-class GameObjectFactory {
+class GOFactory {
     private _entity: Entity;
 
     constructor(entity: Entity){
@@ -74,4 +74,4 @@ class GameObjectFactory {
     }
 }
 
-export default GameObjectFactory;
+export default GOFactory;
