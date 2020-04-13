@@ -1,11 +1,18 @@
-import { Point } from "pixi.js";
+import Point from './Point';
 
 class Rect {
+    protected _pointFactory: Point;
+
     _x: number;
     _y: number;
     _width: number;
     _height: number;
-    constructor(x: number, y: number, width: number, height: number) {
+
+    constructor(pointFactory: Point){
+        this._pointFactory = pointFactory;
+    }
+
+    init(x: number, y: number, width: number, height: number) {
         this._x = x; this._y = y; this._width = width; this._height = height;
     }
 
@@ -50,39 +57,45 @@ class Rect {
     }
 
     topLeft(): Point {
-        return new Point(this.x, this.y);
+        return this._pointFactory.createNew(this.x, this.y);
     }
 
     topCenter() {
-        return new Point(this.x + this.halfWidth(), this.y);
+        return this._pointFactory.createNew(this.x + this.halfWidth(), this.y);
     }
 
     center() {
-        return new Point(this.x + this.halfWidth(), this.y + this.halfHeight());
+        return this._pointFactory.createNew(this.x + this.halfWidth(), this.y + this.halfHeight());
     }
 
     topRight(): Point {
-        return new Point(this.x + this.width, this.y);
+        return this._pointFactory.createNew(this.x + this.width, this.y);
     }
 
     rightCenter(): Point {
-        return new Point(this.x + this.width, this.y + this.halfHeight());
+        return this._pointFactory.createNew(this.x + this.width, this.y + this.halfHeight());
     }
 
     bottomRight(): Point {
-        return new Point(this.x + this.width, this.y + this.height);
+        return this._pointFactory.createNew(this.x + this.width, this.y + this.height);
     }
 
     bottomCenter(): Point {
-        return new Point(this.x + this.halfWidth(), this.y + this.height)
+        return this._pointFactory.createNew(this.x + this.halfWidth(), this.y + this.height)
     }
 
     bottomLeft(): Point {
-        return new Point(this.x, this.y + this.height);
+        return this._pointFactory.createNew(this.x, this.y + this.height);
     }
 
     leftCenter(): Point {
-        return new Point(this.x, this.y + this.halfHeight());
+        return this._pointFactory.createNew(this.x, this.y + this.halfHeight());
+    }
+
+    createNew(x: number, y: number, width: number, height: number): Rect{
+        let rect = new Rect(this._pointFactory);
+        rect.init(x, y, width, height);
+        return rect;
     }
 }
 

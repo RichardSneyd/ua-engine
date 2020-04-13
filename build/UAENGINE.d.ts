@@ -78,7 +78,8 @@ declare module 'UAENGINE/Core/Engine/Entity' {
         _objectHandler: IObjectHandler;
         _math: MathUtils;
         _scaleManager: ScaleManager;
-        constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, scaleManager: ScaleManager);
+        protected _pointFactory: Point;
+        constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, scaleManager: ScaleManager, pointFactory: Point);
         text: string;
         x: number;
         y: number;
@@ -90,6 +91,8 @@ declare module 'UAENGINE/Core/Engine/Entity' {
         scaleY: number;
         readonly input: InputHandler;
         readonly pixelPerfect: boolean;
+        setStyle(style: any): void;
+        destroy(): void;
         makePixelPerfect(threshold?: number): boolean;
         readonly children: Entity[];
         parent: Entity | null;
@@ -455,11 +458,19 @@ declare module 'UAENGINE/Core/Geom/Geom' {
     import Point from "UAENGINE/Core/Geom/Point";
     import LineSegment from 'UAENGINE/Core/Geom/LineSegment';
     import Rect from "UAENGINE/Core/Geom/Rect";
+    import Polygon from 'UAENGINE/Core/Geom/Polygon';
     class Geom {
-        static circle: Circle;
-        static Point: Point;
-        static lineSegment: LineSegment;
-        static rect: Rect;
+        protected _circle: Circle;
+        protected _lineSegment: LineSegment;
+        protected _point: Point;
+        protected _rect: Rect;
+        protected _polygon: Polygon;
+        constructor(circle: Circle, lineSegment: LineSegment, point: Point, rect: Rect, polygon: Polygon);
+        circle(x: number, y: number, r: number): Circle;
+        lineSegment(pnt1: Point, pnt2: Point): LineSegment;
+        point(x: number, y: number): Point;
+        rect(x: number, y: number, width: number, height: number): Rect;
+        polygon(center: Point, points: Point[]): Polygon;
     }
     export default Geom;
 }
@@ -545,6 +556,8 @@ declare module 'UAENGINE/Services/IObjectHandler' {
         setX(object: any, x: number): void;
         setY(object: any, y: number): void;
         setScaleXY(object: any, x: number, y: number): void;
+        setStyle(text: any, style: any): void;
+        destroy(object: any): void;
     }
     export default IObjectHandler;
 }
@@ -556,7 +569,8 @@ declare module 'UAENGINE/Core/Engine/InputHandler' {
     import IScreen from "UAENGINE/Services/IScreen";
     import EventNames from "UAENGINE/Core/Engine/EventNames";
     class InputHandler {
-            constructor(events: Events, loader: Loader, screen: IScreen, eventNames: EventNames);
+            protected _pointFactory: Point;
+            constructor(events: Events, loader: Loader, screen: IScreen, eventNames: EventNames, pointFactory: Point);
             /**
                 * @description get the pointer position as a Point object (x, y)
                 */
@@ -612,9 +626,10 @@ declare module 'UAENGINE/Core/Engine/Utils/MathUtils' {
 
 declare module 'UAENGINE/Core/Geom/Point' {
     class Point {
-        _x: number;
-        _y: number;
-        constructor(x: number, y: number);
+        protected _x: number;
+        protected _y: number;
+        constructor();
+        init(x: number, y: number): void;
         x: number;
         y: number;
         createNew(x: number, y: number): Point;
@@ -819,11 +834,16 @@ declare module 'UAENGINE/Core/Engine/IActivity' {
 }
 
 declare module 'UAENGINE/Core/Geom/Circle' {
-    import { Point } from "pixi.js";
+    import Point from "UAENGINE/Core/Geom/Point";
     class Circle {
-        constructor(center: Point, radius: number);
+        protected _pointFactory: Point;
+        protected _center: Point;
+        protected _radius: number;
+        constructor(pointFactory: Point);
+        init(x: number, y: number, r: number): void;
         center: Point;
         radius: number;
+        createNew(x: number, y: number, r: number): Circle;
     }
     export default Circle;
 }
@@ -831,19 +851,24 @@ declare module 'UAENGINE/Core/Geom/Circle' {
 declare module 'UAENGINE/Core/Geom/LineSegment' {
     import Point from "UAENGINE/Core/Geom/Point";
     class LineSegment {
-        constructor(pnt1: Point, pnt2: Point);
+        protected _pointFactory: Point;
+        constructor(pointFactory: Point);
+        init(pnt1: Point, pnt2: Point): void;
+        createNew(pnt1: Point, pnt2: Point): LineSegment;
     }
     export default LineSegment;
 }
 
 declare module 'UAENGINE/Core/Geom/Rect' {
-    import { Point } from "pixi.js";
+    import Point from 'UAENGINE/Core/Geom/Point';
     class Rect {
+        protected _pointFactory: Point;
         _x: number;
         _y: number;
         _width: number;
         _height: number;
-        constructor(x: number, y: number, width: number, height: number);
+        constructor(pointFactory: Point);
+        init(x: number, y: number, width: number, height: number): void;
         x: number;
         y: number;
         width: number;
@@ -859,8 +884,23 @@ declare module 'UAENGINE/Core/Geom/Rect' {
         bottomCenter(): Point;
         bottomLeft(): Point;
         leftCenter(): Point;
+        createNew(x: number, y: number, width: number, height: number): Rect;
     }
     export default Rect;
+}
+
+declare module 'UAENGINE/Core/Geom/Polygon' {
+    import Point from 'UAENGINE/Core/Geom/Point';
+    class Polygon {
+        protected _pointFactory: Point;
+        constructor(pointFactory: Point);
+        init(center: Point, points: Point[]): void;
+        center: Point;
+        setCenter(x: number, y: number): void;
+        points: Point[];
+        createNew(center: Point, points: Point[]): Polygon;
+    }
+    export default Polygon;
 }
 
 declare module 'UAENGINE/Core/Data/Anim' {
@@ -1036,9 +1076,10 @@ declare module 'UAENGINE/Core/Engine/Utils/Text' {
 }
 
 declare module 'UAENGINE/Core/Engine/Utils/Vectors' {
-    import Vector2D from "UAENGINE/Core/Geom/Point";
+    import Point from "UAENGINE/Core/Geom/Point";
     class Vectors {
-        static getPointGrid(hor: number[], vert: number[]): Array<Vector2D>;
+        protected _pointFactory: Point;
+        getPointGrid(hor: number[], vert: number[]): Array<Point>;
     }
     export default Vectors;
 }

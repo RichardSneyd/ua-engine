@@ -1,12 +1,18 @@
-import { Point } from "pixi.js";
+import Point from "./Point";
+
 
 class Circle {
-    private _center: Point;
-    private _radius: number;
+    protected _pointFactory: Point;
+    protected _center: Point;
+    protected _radius: number;
 
-    constructor(center: Point, radius: number){
-        this._center = center;
-        this._radius = radius;
+    constructor(pointFactory: Point){
+        this._pointFactory = pointFactory;
+    }
+
+    init(x: number, y: number, r: number){
+        this._center = this._pointFactory.createNew(x, y);
+        this._radius = r;
     }
 
     set center(center: Point){
@@ -23,6 +29,12 @@ class Circle {
 
     get radius(): number {
         return this._radius;
+    }
+
+    createNew(x: number, y: number, r: number): Circle{
+        let circle = new Circle(this._pointFactory);
+        circle.init(x, y, r);
+        return circle;
     }
 }
 

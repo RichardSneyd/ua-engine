@@ -1,6 +1,6 @@
 import IObjectHandler from './IObjectHandler';
 import Point from '../Core/Geom/Point';
-import {Container} from 'pixi.js';
+import {Container, DisplayObject} from 'pixi.js';
 
 class ObjectHandler implements IObjectHandler {
   constructor() {
@@ -26,6 +26,10 @@ class ObjectHandler implements IObjectHandler {
     object.height = height;
   }
 
+  public setStyle(text: any, style: any){
+    text.style = style; 
+  }
+
   public move(object: Container, x: number, y: number){
     this.setXy(object, x, y);
   }
@@ -41,6 +45,10 @@ class ObjectHandler implements IObjectHandler {
   public setScaleXY(object: any, x: number, y: number) {
     object.scale.x = x;
     object.scale.y = y;
+  }
+
+  public destroy(object: DisplayObject){
+    object.destroy();
   }
 }
 

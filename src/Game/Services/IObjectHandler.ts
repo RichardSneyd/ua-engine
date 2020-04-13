@@ -7,6 +7,8 @@ interface IObjectHandler {
   setX(object: any, x: number): void;
   setY(object: any, y: number): void;
   setScaleXY(object: any, x: number, y: number): void;
+  setStyle(text: any, style: any): void;
+  destroy(object: any): void;
 }
 
 export default IObjectHandler;

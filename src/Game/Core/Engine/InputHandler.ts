@@ -9,17 +9,19 @@ import EventNames from "./EventNames";
 
 
 class InputHandler {
+    protected _pointFactory: Point;
     private _eventNames: EventNames;
     private _events: Events; private _loader: Loader; private _screen: IScreen;
     private _pointer: Point; // the mouse/pointer x, y
     private _pointerMovement: Point; // the number of pixels the mouse x and y have moved since the last mousemove/pointermove event
 
-    constructor(events: Events, loader: Loader, screen: IScreen, eventNames: EventNames) {
+    constructor(events: Events, loader: Loader, screen: IScreen, eventNames: EventNames, pointFactory: Point) {
         this._events = events; this._loader = loader; this._screen = screen;this._eventNames = eventNames;
         // this._onDown = [];
         //  this._onUp = [];
-        this._pointer = new Point(0, 0);
-        this._pointerMovement = new Point(0, 0);
+        this._pointFactory = pointFactory;
+        this._pointer = this._pointFactory.createNew(0, 0);
+        this._pointerMovement = this._pointFactory.createNew(0, 0);
 
         // catch Sprite from inputdown event (mousedown and touchstart)
         //   this._events.on('inputdown', this._onInputDown, this);
