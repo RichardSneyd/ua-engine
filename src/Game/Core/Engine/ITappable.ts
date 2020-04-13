@@ -1,4 +1,4 @@
-import Rect from "../Data/Rect";
+import Rect from "../Geom/Rect";
 
 interface ITappable {
     enabled: boolean;

@@ -13,6 +13,7 @@ declare module 'UAENGINE' {
     import Game from 'UAENGINE/Core/Game';
     import GameConfig from 'UAENGINE/Core/Engine/GameConfig';
     import GOFactory from 'UAENGINE/Core/Engine/GOFactory';
+    import Geom from 'UAENGINE/Core/Geom/Geom';
     /**
       * @class the UAEngine API.
       */
@@ -26,6 +27,7 @@ declare module 'UAENGINE' {
         static game: Game;
         static goFactory: GOFactory;
         static gameConfig: GameConfig;
+        static geom: Geom;
     }
     export default UAENGINE;
 }
@@ -70,13 +72,14 @@ declare module 'UAENGINE/Core/Engine/Entity' {
     import IObjectHandler from 'UAENGINE/Services/IObjectHandler';
     import InputHandler from 'UAENGINE/Core/Engine/InputHandler';
     import MathUtils from 'UAENGINE/Core/Engine/Utils/MathUtils';
-    import Point from 'UAENGINE/Core/Data/Point';
+    import Point from 'UAENGINE/Core/Geom/Point';
     class Entity {
         _animationManager: AnimationManager;
         _objectHandler: IObjectHandler;
         _math: MathUtils;
         _scaleManager: ScaleManager;
-        constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, scaleManager: ScaleManager);
+        protected _pointFactory: Point;
+        constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, scaleManager: ScaleManager, pointFactory: Point);
         text: string;
         x: number;
         y: number;
@@ -88,6 +91,8 @@ declare module 'UAENGINE/Core/Engine/Entity' {
         scaleY: number;
         readonly input: InputHandler;
         readonly pixelPerfect: boolean;
+        setStyle(style: any): void;
+        destroy(): void;
         makePixelPerfect(threshold?: number): boolean;
         readonly children: Entity[];
         parent: Entity | null;
@@ -354,6 +359,7 @@ declare module 'UAENGINE/Core/Game' {
     import ILevel from 'UAENGINE/Core/Engine/ILevel';
     import IActivity from 'UAENGINE/Core/Engine/IActivity';
     import GOFactory from 'UAENGINE/Core/Engine/GOFactory';
+    import Geom from 'UAENGINE/Core/Geom/Geom';
     class Game {
             _events: Events;
             _expose: Expose;
@@ -361,8 +367,8 @@ declare module 'UAENGINE/Core/Game' {
             _loader: Loader;
             _gameConfig: GameConfig;
             _levelManager: LevelManager;
-            _goFactory: GOFactory;
-            constructor(world: World, entity: Entity, loop: Loop, loader: Loader, events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig, levelManager: LevelManager, goFactory: GOFactory);
+            _geom: Geom;
+            constructor(world: World, entity: Entity, loop: Loop, loader: Loader, events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig, levelManager: LevelManager, goFactory: GOFactory, geom: Geom);
             /**
                 * @description adds an activity to the engine, as a plugin (todo)
                 * @param act the act object to add.
@@ -447,6 +453,28 @@ declare module 'UAENGINE/Core/Engine/GOFactory' {
     export default GOFactory;
 }
 
+declare module 'UAENGINE/Core/Geom/Geom' {
+    import Circle from "UAENGINE/Core/Geom/Circle";
+    import Point from "UAENGINE/Core/Geom/Point";
+    import LineSegment from 'UAENGINE/Core/Geom/LineSegment';
+    import Rect from "UAENGINE/Core/Geom/Rect";
+    import Polygon from 'UAENGINE/Core/Geom/Polygon';
+    class Geom {
+        protected _circle: Circle;
+        protected _lineSegment: LineSegment;
+        protected _point: Point;
+        protected _rect: Rect;
+        protected _polygon: Polygon;
+        constructor(circle: Circle, lineSegment: LineSegment, point: Point, rect: Rect, polygon: Polygon);
+        circle(x: number, y: number, r: number): Circle;
+        lineSegment(pnt1: Point, pnt2: Point): LineSegment;
+        point(x: number, y: number): Point;
+        rect(x: number, y: number, width: number, height: number): Rect;
+        polygon(center: Point, points: Point[]): Polygon;
+    }
+    export default Geom;
+}
+
 declare module 'UAENGINE/Services/IScreen' {
     import { Sprite } from 'pixi.js';
     interface IScreen {
@@ -520,7 +548,7 @@ declare module 'UAENGINE/Core/Engine/ScaleManager' {
 }
 
 declare module 'UAENGINE/Services/IObjectHandler' {
-    import Point from 'UAENGINE/Core/Data/Point';
+    import Point from 'UAENGINE/Core/Geom/Point';
     interface IObjectHandler {
         setXy(object: any, x: number, y: number): void;
         setSize(object: any, width: number, height: number): void;
@@ -528,6 +556,8 @@ declare module 'UAENGINE/Services/IObjectHandler' {
         setX(object: any, x: number): void;
         setY(object: any, y: number): void;
         setScaleXY(object: any, x: number, y: number): void;
+        setStyle(text: any, style: any): void;
+        destroy(object: any): void;
     }
     export default IObjectHandler;
 }
@@ -535,11 +565,12 @@ declare module 'UAENGINE/Services/IObjectHandler' {
 declare module 'UAENGINE/Core/Engine/InputHandler' {
     import Events from "UAENGINE/Core/Engine/Events";
     import Loader from "UAENGINE/Core/Engine/Loader";
-    import Point from "UAENGINE/Core/Data/Point";
+    import Point from "UAENGINE/Core/Geom/Point";
     import IScreen from "UAENGINE/Services/IScreen";
     import EventNames from "UAENGINE/Core/Engine/EventNames";
     class InputHandler {
-            constructor(events: Events, loader: Loader, screen: IScreen, eventNames: EventNames);
+            protected _pointFactory: Point;
+            constructor(events: Events, loader: Loader, screen: IScreen, eventNames: EventNames, pointFactory: Point);
             /**
                 * @description get the pointer position as a Point object (x, y)
                 */
@@ -593,11 +624,12 @@ declare module 'UAENGINE/Core/Engine/Utils/MathUtils' {
     export default MathUtils;
 }
 
-declare module 'UAENGINE/Core/Data/Point' {
+declare module 'UAENGINE/Core/Geom/Point' {
     class Point {
-        _x: number;
-        _y: number;
-        constructor(x: number, y: number);
+        protected _x: number;
+        protected _y: number;
+        constructor();
+        init(x: number, y: number): void;
         x: number;
         y: number;
         createNew(x: number, y: number): Point;
@@ -801,6 +833,76 @@ declare module 'UAENGINE/Core/Engine/IActivity' {
     export default IActivity;
 }
 
+declare module 'UAENGINE/Core/Geom/Circle' {
+    import Point from "UAENGINE/Core/Geom/Point";
+    class Circle {
+        protected _pointFactory: Point;
+        protected _center: Point;
+        protected _radius: number;
+        constructor(pointFactory: Point);
+        init(x: number, y: number, r: number): void;
+        center: Point;
+        radius: number;
+        createNew(x: number, y: number, r: number): Circle;
+    }
+    export default Circle;
+}
+
+declare module 'UAENGINE/Core/Geom/LineSegment' {
+    import Point from "UAENGINE/Core/Geom/Point";
+    class LineSegment {
+        protected _pointFactory: Point;
+        constructor(pointFactory: Point);
+        init(pnt1: Point, pnt2: Point): void;
+        createNew(pnt1: Point, pnt2: Point): LineSegment;
+    }
+    export default LineSegment;
+}
+
+declare module 'UAENGINE/Core/Geom/Rect' {
+    import Point from 'UAENGINE/Core/Geom/Point';
+    class Rect {
+        protected _pointFactory: Point;
+        _x: number;
+        _y: number;
+        _width: number;
+        _height: number;
+        constructor(pointFactory: Point);
+        init(x: number, y: number, width: number, height: number): void;
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        halfHeight(): number;
+        halfWidth(): number;
+        topLeft(): Point;
+        topCenter(): Point;
+        center(): Point;
+        topRight(): Point;
+        rightCenter(): Point;
+        bottomRight(): Point;
+        bottomCenter(): Point;
+        bottomLeft(): Point;
+        leftCenter(): Point;
+        createNew(x: number, y: number, width: number, height: number): Rect;
+    }
+    export default Rect;
+}
+
+declare module 'UAENGINE/Core/Geom/Polygon' {
+    import Point from 'UAENGINE/Core/Geom/Point';
+    class Polygon {
+        protected _pointFactory: Point;
+        constructor(pointFactory: Point);
+        init(center: Point, points: Point[]): void;
+        center: Point;
+        setCenter(x: number, y: number): void;
+        points: Point[];
+        createNew(center: Point, points: Point[]): Polygon;
+    }
+    export default Polygon;
+}
+
 declare module 'UAENGINE/Core/Data/Anim' {
     import Events from 'UAENGINE/Core/Engine/Events';
     class Anim {
@@ -974,9 +1076,10 @@ declare module 'UAENGINE/Core/Engine/Utils/Text' {
 }
 
 declare module 'UAENGINE/Core/Engine/Utils/Vectors' {
-    import Vector2D from "UAENGINE/Core/Data/Point";
+    import Point from "UAENGINE/Core/Geom/Point";
     class Vectors {
-        static getPointGrid(hor: number[], vert: number[]): Array<Vector2D>;
+        protected _pointFactory: Point;
+        getPointGrid(hor: number[], vert: number[]): Array<Point>;
     }
     export default Vectors;
 }

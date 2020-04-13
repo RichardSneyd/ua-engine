@@ -85,11 +85,7 @@ module.exports = (grunt) => {
             'Text',
             'Vectors',
             'GameConfig'],
-      ignore: ['LineSegment',
-                'Polygon',
-                'Rect',
-                'Point',
-                'Circle',
+      ignore: [
                 'UAENGINE'
                 ],
     }
