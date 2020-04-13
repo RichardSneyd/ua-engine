@@ -10,8 +10,8 @@ import Entity from '../../src/Game/Core/Engine/Entity';
 import EventNames from '../../src/Game/Core/Engine/EventNames';
 import Events from '../../src/Game/Core/Engine/Events';
 import Expose from '../../src/Game/Core/Engine/Expose';
-import GameConfig from '../../src/Game/Core/Engine/GameConfig';
 import GOFactory from '../../src/Game/Core/Engine/GOFactory';
+import GameConfig from '../../src/Game/Core/Engine/GameConfig';
 import InputHandler from '../../src/Game/Core/Engine/InputHandler';
 import LevelManager from '../../src/Game/Core/Engine/LevelManager';
 import Loader from '../../src/Game/Core/Engine/Loader';
@@ -59,8 +59,8 @@ private _Entity: any;
 private _EventNames: any;
 private _Events: any;
 private _Expose: any;
-private _GameConfig: any;
 private _GOFactory: any;
+private _GameConfig: any;
 private _InputHandler: any;
 private _LevelManager: any;
 private _Loader: any;
@@ -117,8 +117,8 @@ this._Entity = this._smartDepend.addModule(Entity, false);
 this._EventNames = this._smartDepend.addModule(EventNames, false);
 this._Events = this._smartDepend.addModule(Events, true);
 this._Expose = this._smartDepend.addModule(Expose, false);
-this._GameConfig = this._smartDepend.addModule(GameConfig, true);
 this._GOFactory = this._smartDepend.addModule(GOFactory, false);
+this._GameConfig = this._smartDepend.addModule(GameConfig, true);
 this._InputHandler = this._smartDepend.addModule(InputHandler, false);
 this._LevelManager = this._smartDepend.addModule(LevelManager, false);
 this._Loader = this._smartDepend.addModule(Loader, true);
@@ -187,6 +187,7 @@ this._smartDepend.addDependency(this._LevelManager, this._Events);
 this._smartDepend.addDependency(this._LevelManager, this._ScriptHandler);
 this._smartDepend.addDependency(this._LevelManager, this._Utils);
 this._smartDepend.addDependency(this._LevelManager, this._InputHandler);
+this._smartDepend.addDependency(this._LevelManager, this._GOFactory);
 
 
 this._smartDepend.addDependency(this._Loader, this._Resource);
@@ -234,6 +235,7 @@ this._smartDepend.addDependency(this._Game, this._ScaleManager);
 this._smartDepend.addDependency(this._Game, this._Expose);
 this._smartDepend.addDependency(this._Game, this._GameConfig);
 this._smartDepend.addDependency(this._Game, this._LevelManager);
+this._smartDepend.addDependency(this._Game, this._GOFactory);
 
 
 this._smartDepend.addDependency(this._HwLoader, this._HwFactory);
