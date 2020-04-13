@@ -2,7 +2,7 @@ import Entity from '../Engine/Entity';
 import IScreen from '../../Services/IScreen';
 import ILevel from '../Engine/ILevel';
 import LevelManager from './LevelManager';
-import Events from 'UAENGINE/Core/Engine/Events';
+import Events from './Events';
 
 class World {
   private _width: number;
