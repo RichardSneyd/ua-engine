@@ -27,7 +27,11 @@ class ObjectHandler implements IObjectHandler {
   }
 
   public setStyle(text: any, style: any){
-    text.style = style; 
+    text.style = style;
+  }
+
+  public setTextColor(text: any, color: string){
+    text.fill = color;
   }
 
   public move(object: Container, x: number, y: number){
