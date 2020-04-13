@@ -1,4 +1,4 @@
-import Point from '../Core/Data/Point';
+import Point from '../Core/Geom/Point';
 interface IObjectHandler {
   setXy(object: any, x: number, y: number): void;
   setSize(object: any, width: number, height: number): void;

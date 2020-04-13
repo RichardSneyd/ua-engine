@@ -1,5 +1,5 @@
 import IObjectHandler from './IObjectHandler';
-import Point from '../Core/Data/Point';
+import Point from '../Core/Geom/Point';
 import {Container} from 'pixi.js';
 
 class ObjectHandler implements IObjectHandler {

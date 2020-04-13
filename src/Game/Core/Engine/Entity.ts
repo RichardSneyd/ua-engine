@@ -6,7 +6,7 @@ import IObjectHandler from '../../Services/IObjectHandler';
 import InputHandler from './InputHandler';
 import Utils from './Utils/Utils';
 import MathUtils from './Utils/MathUtils';
-import Point from '../Data/Point';
+import Point from '../Geom/Point';
 import ResType from '../Data/ResType';
 
 

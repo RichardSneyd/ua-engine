@@ -2,7 +2,7 @@ import Events from "./Events";
 import Loader from "./Loader";
 //import Screen from "../../Services/Screen";
 import ITappable from './ITappable';
-import Point from "../Data/Point";
+import Point from "../Geom/Point";
 import Entity from "./Entity";
 import IScreen from "../../Services/IScreen";
 import EventNames from "./EventNames";

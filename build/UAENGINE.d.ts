@@ -13,6 +13,7 @@ declare module 'UAENGINE' {
     import Game from 'UAENGINE/Core/Game';
     import GameConfig from 'UAENGINE/Core/Engine/GameConfig';
     import GOFactory from 'UAENGINE/Core/Engine/GOFactory';
+    import Geom from 'UAENGINE/Core/Geom/Geom';
     /**
       * @class the UAEngine API.
       */
@@ -26,6 +27,7 @@ declare module 'UAENGINE' {
         static game: Game;
         static goFactory: GOFactory;
         static gameConfig: GameConfig;
+        static geom: Geom;
     }
     export default UAENGINE;
 }
@@ -70,7 +72,7 @@ declare module 'UAENGINE/Core/Engine/Entity' {
     import IObjectHandler from 'UAENGINE/Services/IObjectHandler';
     import InputHandler from 'UAENGINE/Core/Engine/InputHandler';
     import MathUtils from 'UAENGINE/Core/Engine/Utils/MathUtils';
-    import Point from 'UAENGINE/Core/Data/Point';
+    import Point from 'UAENGINE/Core/Geom/Point';
     class Entity {
         _animationManager: AnimationManager;
         _objectHandler: IObjectHandler;
@@ -354,6 +356,7 @@ declare module 'UAENGINE/Core/Game' {
     import ILevel from 'UAENGINE/Core/Engine/ILevel';
     import IActivity from 'UAENGINE/Core/Engine/IActivity';
     import GOFactory from 'UAENGINE/Core/Engine/GOFactory';
+    import Geom from 'UAENGINE/Core/Geom/Geom';
     class Game {
             _events: Events;
             _expose: Expose;
@@ -361,8 +364,8 @@ declare module 'UAENGINE/Core/Game' {
             _loader: Loader;
             _gameConfig: GameConfig;
             _levelManager: LevelManager;
-            _goFactory: GOFactory;
-            constructor(world: World, entity: Entity, loop: Loop, loader: Loader, events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig, levelManager: LevelManager, goFactory: GOFactory);
+            _geom: Geom;
+            constructor(world: World, entity: Entity, loop: Loop, loader: Loader, events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig, levelManager: LevelManager, goFactory: GOFactory, geom: Geom);
             /**
                 * @description adds an activity to the engine, as a plugin (todo)
                 * @param act the act object to add.
@@ -447,6 +450,20 @@ declare module 'UAENGINE/Core/Engine/GOFactory' {
     export default GOFactory;
 }
 
+declare module 'UAENGINE/Core/Geom/Geom' {
+    import Circle from "UAENGINE/Core/Geom/Circle";
+    import Point from "UAENGINE/Core/Geom/Point";
+    import LineSegment from 'UAENGINE/Core/Geom/LineSegment';
+    import Rect from "UAENGINE/Core/Geom/Rect";
+    class Geom {
+        static circle: Circle;
+        static Point: Point;
+        static lineSegment: LineSegment;
+        static rect: Rect;
+    }
+    export default Geom;
+}
+
 declare module 'UAENGINE/Services/IScreen' {
     import { Sprite } from 'pixi.js';
     interface IScreen {
@@ -520,7 +537,7 @@ declare module 'UAENGINE/Core/Engine/ScaleManager' {
 }
 
 declare module 'UAENGINE/Services/IObjectHandler' {
-    import Point from 'UAENGINE/Core/Data/Point';
+    import Point from 'UAENGINE/Core/Geom/Point';
     interface IObjectHandler {
         setXy(object: any, x: number, y: number): void;
         setSize(object: any, width: number, height: number): void;
@@ -535,7 +552,7 @@ declare module 'UAENGINE/Services/IObjectHandler' {
 declare module 'UAENGINE/Core/Engine/InputHandler' {
     import Events from "UAENGINE/Core/Engine/Events";
     import Loader from "UAENGINE/Core/Engine/Loader";
-    import Point from "UAENGINE/Core/Data/Point";
+    import Point from "UAENGINE/Core/Geom/Point";
     import IScreen from "UAENGINE/Services/IScreen";
     import EventNames from "UAENGINE/Core/Engine/EventNames";
     class InputHandler {
@@ -593,7 +610,7 @@ declare module 'UAENGINE/Core/Engine/Utils/MathUtils' {
     export default MathUtils;
 }
 
-declare module 'UAENGINE/Core/Data/Point' {
+declare module 'UAENGINE/Core/Geom/Point' {
     class Point {
         _x: number;
         _y: number;
@@ -801,6 +818,51 @@ declare module 'UAENGINE/Core/Engine/IActivity' {
     export default IActivity;
 }
 
+declare module 'UAENGINE/Core/Geom/Circle' {
+    import { Point } from "pixi.js";
+    class Circle {
+        constructor(center: Point, radius: number);
+        center: Point;
+        radius: number;
+    }
+    export default Circle;
+}
+
+declare module 'UAENGINE/Core/Geom/LineSegment' {
+    import Point from "UAENGINE/Core/Geom/Point";
+    class LineSegment {
+        constructor(pnt1: Point, pnt2: Point);
+    }
+    export default LineSegment;
+}
+
+declare module 'UAENGINE/Core/Geom/Rect' {
+    import { Point } from "pixi.js";
+    class Rect {
+        _x: number;
+        _y: number;
+        _width: number;
+        _height: number;
+        constructor(x: number, y: number, width: number, height: number);
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        halfHeight(): number;
+        halfWidth(): number;
+        topLeft(): Point;
+        topCenter(): Point;
+        center(): Point;
+        topRight(): Point;
+        rightCenter(): Point;
+        bottomRight(): Point;
+        bottomCenter(): Point;
+        bottomLeft(): Point;
+        leftCenter(): Point;
+    }
+    export default Rect;
+}
+
 declare module 'UAENGINE/Core/Data/Anim' {
     import Events from 'UAENGINE/Core/Engine/Events';
     class Anim {
@@ -974,7 +1036,7 @@ declare module 'UAENGINE/Core/Engine/Utils/Text' {
 }
 
 declare module 'UAENGINE/Core/Engine/Utils/Vectors' {
-    import Vector2D from "UAENGINE/Core/Data/Point";
+    import Vector2D from "UAENGINE/Core/Geom/Point";
     class Vectors {
         static getPointGrid(hor: number[], vert: number[]): Array<Vector2D>;
     }

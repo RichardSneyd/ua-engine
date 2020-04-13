@@ -1,4 +1,4 @@
-import Vector2D from "../../Data/Point";
+import Vector2D from "../../Geom/Point";
 
 
 class Vectors {
