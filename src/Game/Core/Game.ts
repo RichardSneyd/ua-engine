@@ -9,15 +9,16 @@ import GameConfig from './Engine/GameConfig';
 import LevelManager from './Engine/LevelManager';
 import ILevel from './Engine/ILevel';
 import IActivity from './Engine/IActivity';
+import GOFactory from './Engine/GOFactory';
 
 class Game {
   private _world: World; _events: Events;
   private _scaleManager: ScaleManager; _expose: Expose;
-  private _entity: Entity; _loop: Loop; _loader: Loader; _gameConfig: GameConfig; _levelManager: LevelManager;
+  private _entity: Entity; _loop: Loop; _loader: Loader; _gameConfig: GameConfig; _levelManager: LevelManager; _goFactory: GOFactory;
 
   constructor(world: World, entity: Entity, loop: Loop, loader: Loader,
               events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
-              levelManager: LevelManager) {
+              levelManager: LevelManager, goFactory: GOFactory) {
     this._world = world;
     this._events = events;
     console.log("TARGET: ", events);
@@ -29,6 +30,7 @@ class Game {
     this._loader = loader;
     this._gameConfig = gameConfig;
     this._levelManager = levelManager;
+    this._goFactory = goFactory;
 
     this._exposeGlobal();
   }
@@ -95,6 +97,7 @@ class Game {
     this._expose.add('events', this._events);
     this._expose.add('levelManager', this._levelManager);
     this._expose.add('gameConfig', this._gameConfig);
+    this._expose.add('goFactory', this._goFactory);
   }
 
   private _addListeners(): void {
