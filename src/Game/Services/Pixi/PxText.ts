@@ -23,6 +23,18 @@ class PxText {
 
   }
 
+  get width(){
+    if(this._data){
+      return this._data.width;
+    }
+  }
+
+  get height(){
+    if(this._data){
+      return this._data.height; 
+    }
+  }
+
   get style() {
     return this._style;
   }
@@ -137,6 +149,12 @@ class PxText {
       this._data.texture = this._renderer.generateTexture(this._rawText, SCALE_MODES.LINEAR, 1);
     } else {
       console.error("Can not update text texutre before init!");
+    }
+  }
+
+  public destroy(){
+    if(this._data){
+      this._data.destroy();
     }
   }
 }

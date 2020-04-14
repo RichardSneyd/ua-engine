@@ -347,6 +347,7 @@ class Entity {
     this._letters = text;
 
     this._data = this._screen.createText(x, y, text, style);
+    this._width = this._data.width;
     this._onResize();
 
     this._initialized = true;

@@ -161,13 +161,13 @@ class ScriptHandler {
                     this._rows[x][processText[s]] = [];
 
                     for (let u = 0; u < lines.length; u++) {
-                        let arr = [];
+                        let obj = {};
                         let line = lines[u];
                         let _chunks = this._chunks(line);
                         let _words = this._words(line);
                         // let _words
-                        arr = [line, _chunks, _words];
-                        this._rows[x][processText[s]][u] = arr;
+                        obj = {line: line, chunks: _chunks, words: _words};
+                        this._rows[x][processText[s]][u] = obj;
                     }
                 }
             }
