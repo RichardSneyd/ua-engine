@@ -15,9 +15,12 @@ class GOFactory {
      * @param text the text value to initialize with
      * @param style a css style object to apply to the text
      */
-    text(x: number, y: number, text: string, style: any) {
+    text(x: number, y: number, text: string, style: any, parent: any = null) {
         let entity = this._entity.createNew();
         entity.initText(x, y, text, style);
+        if(parent!==null){
+            parent.addChild(entity);
+        }
         return entity;
     }
 
@@ -28,9 +31,13 @@ class GOFactory {
      * @param textureName the name of the texture to initialize the sprite with
      * @param frame the default frame for the Sprite. Optional. Provide this if working with an atlas animation
      */
-    sprite(x: number, y: number, textureName: string, frame: string | null = null){
+    sprite(x: number, y: number, textureName: string, frame: string | null = null, parent: any = null){
         let entity = this._entity.createNew();
         entity.init(x, y, textureName, frame);
+
+        if(parent!==null){
+            parent.addChild(entity);
+        }
         return entity;
     }
     
@@ -44,9 +51,14 @@ class GOFactory {
      * @param rightWidth The number of pixels to come in from the right before you reach the repeating section of the slice. This part will never stretch
      * @param bottomHeight The number of pixels to come in from the bottom before you reach the repeating section of the slice. This part will never stretch
      */
-    nineSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number){
+    nineSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent: any = null){
         let entity = this._entity.createNew();
         entity.initNineSlice(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight);
+
+        if(parent!==null){
+            parent.addChild(entity);
+        }
+
         return entity;
     }
 
@@ -55,9 +67,14 @@ class GOFactory {
      * @param x the x coordinate to initialize with
      * @param y the y coordinate to initialize with
      */
-    container(x: number, y: number){
+    container(x: number, y: number, parent: any = null){
         let entity = this._entity.createNew();
         entity.initContainer(x, y);
+
+        if(parent!==null){
+            parent.addChild(entity);
+        }
+
         return entity;
     }
     
@@ -67,9 +84,14 @@ class GOFactory {
      * @param y the y coordinate to initialize with
      * @param spineName the name of the spine file to initialize with
      */
-    spine(x: number, y: number, spineName: string){
+    spine(x: number, y: number, spineName: string, parent: any = null){
         let entity = this._entity.createNew();
         entity.initSpine(x, y, spineName);
+
+        if(parent!==null){
+            parent.addChild(entity);
+        }
+        
         return entity;
     }
 }
