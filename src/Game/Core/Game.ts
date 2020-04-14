@@ -15,12 +15,14 @@ import Geom from './Geom/Geom';
 class Game {
   private _world: World; _events: Events;
   private _scaleManager: ScaleManager; _expose: Expose;
+
   private _entity: Entity; _loop: Loop; _loader: Loader; _gameConfig: GameConfig; _levelManager: LevelManager; 
   private _goFactory: GOFactory; _geom: Geom;
 
   constructor(world: World, entity: Entity, loop: Loop, loader: Loader,
               events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
               levelManager: LevelManager, goFactory: GOFactory, geom: Geom) {
+
     this._world = world;
     this._events = events;
     console.log("TARGET: ", events);
@@ -33,6 +35,7 @@ class Game {
     this._gameConfig = gameConfig;
     this._levelManager = levelManager;
     this._goFactory = goFactory;
+
     this._geom = geom;
 
     this._exposeGlobal();

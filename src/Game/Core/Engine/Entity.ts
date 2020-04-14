@@ -245,6 +245,14 @@ class Entity {
     return false;
   }
 
+  public relativeMove(xDiff: number, yDiff: number) {
+    let scaleX = this._scaleManager.getScale(this._scaleX);
+    let scaleY = this._scaleManager.getScale(this._scaleY);
+
+    this.x += (xDiff / scaleX);
+    this.y += (yDiff / scaleY);
+  }
+
   public initSpine(x: number, y: number, spine: string): void {
     this._initScaleManager();
 

@@ -96,6 +96,9 @@ class AnimationManager {
     }
   }
 
+  //max has to be dynamic
+  //-1 for nothing, single frame
+
   public addAnimation(name: string, base: string, max: number, fps: number, data: any)  {
     let prevAnim = this._getAnim(name);
     let anim: Anim = this._anim.createNew();
