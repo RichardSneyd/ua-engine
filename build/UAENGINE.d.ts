@@ -100,6 +100,7 @@ declare module 'UAENGINE/Core/Engine/Entity' {
         get text(): string;
         get pixelPerfect(): boolean;
         setStyle(style: any): void;
+        setTextColor(color: string): void;
         destroy(): void;
         makePixelPerfect(threshold?: number): boolean;
         get children(): Entity[];
@@ -568,6 +569,7 @@ declare module 'UAENGINE/Services/IObjectHandler' {
         setY(object: any, y: number): void;
         setScaleXY(object: any, x: number, y: number): void;
         setStyle(text: any, style: any): void;
+        setTextColor(text: any, color: string): void;
         destroy(object: any): void;
     }
     export default IObjectHandler;

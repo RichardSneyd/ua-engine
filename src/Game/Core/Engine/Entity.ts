@@ -171,6 +171,10 @@ class Entity {
     this._objectHandler.setStyle(this._data, style);
   }
 
+  setTextColor(color: string){
+    this._objectHandler.setTextColor(this._data, color);
+  }
+
   public destroy(){
     this._objectHandler.destroy(this._data);
   }

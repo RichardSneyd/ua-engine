@@ -8,6 +8,8 @@ class PxText {
   private _rawText: Text| null;
   private _renderer: Renderer | null;
   private _scale: PxPoint | null; _anchor: PxPoint | null;
+  protected _style: any;
+  protected _fill: any;
 
   constructor(pxPoint: PxPoint) {
     this._pxPoint = pxPoint;
@@ -18,6 +20,30 @@ class PxText {
     this._anchor = null;
 
     this._rawText = null;
+
+  }
+
+  get style() {
+    return this._style;
+  }
+
+  set style(style: any){
+    this._style = style;
+    if(this._rawText){
+      this._rawText.style = style;
+      this._fill = style.fill;
+    }
+    this.updateTexture();
+  }
+
+  set fill(fill: string){
+    this._fill = fill;
+    this._style.fill = fill;
+    this.updateTexture();
+  }
+
+  get fill(){
+    return this._fill;
   }
 
   createNew(): PxText {
@@ -26,7 +52,8 @@ class PxText {
 
   public init(text: string, renderer: Renderer, style: any = undefined) {
     this._renderer = renderer;
-
+    this._style = style;
+    this._fill = style.fill;
     this._rawText = new Text(text, style);
     this._data = new Sprite(this._renderer.generateTexture(this._rawText, SCALE_MODES.LINEAR, 1));
 
@@ -103,6 +130,7 @@ class PxText {
   public updateTexture() {
     this._updateTexture();
   }
+
 
   private _updateTexture() {
     if (this._data != null && this._renderer != null && this._rawText != null) {
