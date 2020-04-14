@@ -1,8 +1,12 @@
 class Point {
-    _x: number;
-    _y: number;
+    protected _x: number;
+    protected _y: number;
 
-    constructor(x: number, y: number) {
+    constructor() {
+       
+    }
+
+    init(x: number, y: number){
         this._x = x; this._y = y;
     }
 
@@ -23,7 +27,9 @@ class Point {
     }
 
     public createNew(x: number, y: number): Point {
-        return new Point(x, y);
+        let point = new Point();
+        point.init(x, y);
+        return point;
     }
 }
 

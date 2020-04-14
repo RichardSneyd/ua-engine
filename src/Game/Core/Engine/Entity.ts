@@ -6,7 +6,7 @@ import IObjectHandler from '../../Services/IObjectHandler';
 import InputHandler from './InputHandler';
 import Utils from './Utils/Utils';
 import MathUtils from './Utils/MathUtils';
-import Point from '../Data/Point';
+import Point from '../Geom/Point';
 import ResType from '../Data/ResType';
 
 
@@ -25,14 +25,14 @@ class Entity {
   private _screen: IScreen; _animationManager: AnimationManager; _objectHandler: IObjectHandler;
   private _input: InputHandler; _math: MathUtils;
   private _data: any;
-  private _events: Events; _scaleManager: ScaleManager;
+  private _events: Events; _scaleManager: ScaleManager; protected _pointFactory: Point;
   private _letters: string;
   private _pixelPerfect: boolean = false;
 
   private _children: Entity[];
   private _parent: Entity | null;
 
-  constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, scaleManager: ScaleManager) {
+  constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, scaleManager: ScaleManager, pointFactory: Point) {
     this._screen = screen;
     this._animationManager = animationManager;
     this._objectHandler = objectHandler;
@@ -40,11 +40,12 @@ class Entity {
     this._math = math;
     this._events = events;
     this._scaleManager = scaleManager;
+    this._pointFactory = pointFactory;
 
 
     this._x = 0;
     this._y = 0;
-    this._origin = new Point(0.5, 0.5);
+    this._origin = this._pointFactory.createNew(0.5, 0.5);
     this._width = 0;
     this._height = 0;
     this._scaleX = 1;
@@ -60,7 +61,7 @@ class Entity {
     this._parent = null;
   }
  
-
+  
   set text(lett: string) {
     if (this._letters == '$$$$____$$$$') {
       console.error("this is not a text entity, can't change letters!");
@@ -119,6 +120,8 @@ class Entity {
     this._updateXY();
   }
 
+ 
+
   set scaleX(xVal: number) {
     this._scaleX = xVal;
 
@@ -164,6 +167,14 @@ class Entity {
     return this._pixelPerfect;
   }
 
+  setStyle(style: any){
+    this._objectHandler.setStyle(this._data, style);
+  }
+
+  public destroy(){
+    this._objectHandler.destroy(this._data);
+  }
+
   public makePixelPerfect(threshold: number = 127) : boolean{
  
    /*  if(this._data.type !== ResType.IMG){
@@ -197,7 +208,16 @@ class Entity {
     if(!this.hasChild(entity)){
       this._children.push(entity);
       entity.parent = this;
-      this._data.addChild(entity.data);
+
+      // added this condition because text objects hold their Px data 1 level deeper, due to custom PxText class
+      if(entity.data.data) {
+        console.log('trying to add data 1 level deeper for text...');
+        this._data.addChild(entity.data.data);
+      }
+      else {
+        this._data.addChild(entity.data);
+      }
+
       return true;
     }
     console.warn('that is already a child of this object, and cannot be added again');
@@ -219,6 +239,14 @@ class Entity {
       return true;
     }
     return false;
+  }
+
+  public relativeMove(xDiff: number, yDiff: number) {
+    let scaleX = this._scaleManager.getScale(this._scaleX);
+    let scaleY = this._scaleManager.getScale(this._scaleY);
+
+    this.x += (xDiff / scaleX);
+    this.y += (yDiff / scaleY);
   }
 
   public initSpine(x: number, y: number, spine: string): void {
@@ -257,7 +285,7 @@ class Entity {
       yVal = y;
     }
 
-    this.origin = new Point(x, yVal);
+    this.origin = this._pointFactory.createNew(x, yVal);
   }
 
   public initNineSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): void {
@@ -385,7 +413,7 @@ class Entity {
   public createNew(): Entity {
     let am = this._animationManager.createNew();
     console.log('new am: ', am);
-    return new Entity(this._screen, am, this._objectHandler, this._input, this._math, this._events, this._scaleManager.createNew());
+    return new Entity(this._screen, am, this._objectHandler, this._input, this._math, this._events, this._scaleManager.createNew(), this._pointFactory);
   }
 
   public changeTexture(textureName: string){

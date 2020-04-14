@@ -85,11 +85,7 @@ module.exports = (grunt) => {
             'Text',
             'Vectors',
             'GameConfig'],
-      ignore: ['LineSegment',
-                'Polygon',
-                'Rect',
-                'Point',
-                'Circle',
+      ignore: [
                 'UAENGINE'
                 ],
     }
@@ -130,6 +126,6 @@ module.exports = (grunt) => {
 
 
   //grunt.registerTask('default', ['connect', 'browserify', 'exorcise', 'uglify', 'watch']);
-  grunt.registerTask('default', ['connect', 'calculateDeps', 'browserify', 'exorcise', 'watch']);
+  grunt.registerTask('default', ['calculateDeps', 'browserify', 'exorcise', 'watch']);
 }
 

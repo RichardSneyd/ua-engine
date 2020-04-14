@@ -29,6 +29,12 @@ import Utils from '../../src/Game/Core/Engine/Utils/Utils';
 import Vectors from '../../src/Game/Core/Engine/Utils/Vectors';
 import World from '../../src/Game/Core/Engine/World';
 import Game from '../../src/Game/Core/Game';
+import Circle from '../../src/Game/Core/Geom/Circle';
+import Geom from '../../src/Game/Core/Geom/Geom';
+import LineSegment from '../../src/Game/Core/Geom/LineSegment';
+import Point from '../../src/Game/Core/Geom/Point';
+import Polygon from '../../src/Game/Core/Geom/Polygon';
+import Rect from '../../src/Game/Core/Geom/Rect';
 import AjaxLoader from '../../src/Game/Services/AjaxLoader';
 import HwFactory from '../../src/Game/Services/Howler/HwFactory';
 import HwLoader from '../../src/Game/Services/Howler/HwLoader';
@@ -78,6 +84,12 @@ private _Utils: any;
 private _Vectors: any;
 private _World: any;
 private _Game: any;
+private _Circle: any;
+private _Geom: any;
+private _LineSegment: any;
+private _Point: any;
+private _Polygon: any;
+private _Rect: any;
 private _AjaxLoader: any;
 private _HwFactory: any;
 private _HwLoader: any;
@@ -136,6 +148,12 @@ this._Utils = this._smartDepend.addModule(Utils, true);
 this._Vectors = this._smartDepend.addModule(Vectors, true);
 this._World = this._smartDepend.addModule(World, false);
 this._Game = this._smartDepend.addModule(Game, false);
+this._Circle = this._smartDepend.addModule(Circle, false);
+this._Geom = this._smartDepend.addModule(Geom, false);
+this._LineSegment = this._smartDepend.addModule(LineSegment, false);
+this._Point = this._smartDepend.addModule(Point, false);
+this._Polygon = this._smartDepend.addModule(Polygon, false);
+this._Rect = this._smartDepend.addModule(Rect, false);
 this._AjaxLoader = this._smartDepend.addModule(AjaxLoader, true);
 this._HwFactory = this._smartDepend.addModule(HwFactory, true);
 this._HwLoader = this._smartDepend.addModule(HwLoader, true);
@@ -171,6 +189,7 @@ this._smartDepend.addDependency(this._Entity, this._InputHandler);
 this._smartDepend.addDependency(this._Entity, this._MathUtils);
 this._smartDepend.addDependency(this._Entity, this._Events);
 this._smartDepend.addDependency(this._Entity, this._ScaleManager);
+this._smartDepend.addDependency(this._Entity, this._Point);
 
 
 this._smartDepend.addDependency(this._GOFactory, this._Entity);
@@ -180,6 +199,7 @@ this._smartDepend.addDependency(this._InputHandler, this._Events);
 this._smartDepend.addDependency(this._InputHandler, this._Loader);
 this._smartDepend.addDependency(this._InputHandler, this._Screen);
 this._smartDepend.addDependency(this._InputHandler, this._EventNames);
+this._smartDepend.addDependency(this._InputHandler, this._Point);
 
 
 this._smartDepend.addDependency(this._LevelManager, this._AudioManager);
@@ -221,6 +241,9 @@ this._smartDepend.addDependency(this._Utils, this._Text);
 this._smartDepend.addDependency(this._Utils, this._Vectors);
 
 
+this._smartDepend.addDependency(this._Vectors, this._Point);
+
+
 this._smartDepend.addDependency(this._World, this._Entity);
 this._smartDepend.addDependency(this._World, this._Screen);
 this._smartDepend.addDependency(this._World, this._Events);
@@ -236,6 +259,26 @@ this._smartDepend.addDependency(this._Game, this._Expose);
 this._smartDepend.addDependency(this._Game, this._GameConfig);
 this._smartDepend.addDependency(this._Game, this._LevelManager);
 this._smartDepend.addDependency(this._Game, this._GOFactory);
+this._smartDepend.addDependency(this._Game, this._Geom);
+
+
+this._smartDepend.addDependency(this._Circle, this._Point);
+
+
+this._smartDepend.addDependency(this._Geom, this._Circle);
+this._smartDepend.addDependency(this._Geom, this._LineSegment);
+this._smartDepend.addDependency(this._Geom, this._Point);
+this._smartDepend.addDependency(this._Geom, this._Rect);
+this._smartDepend.addDependency(this._Geom, this._Polygon);
+
+
+this._smartDepend.addDependency(this._LineSegment, this._Point);
+
+
+this._smartDepend.addDependency(this._Polygon, this._Point);
+
+
+this._smartDepend.addDependency(this._Rect, this._Point);
 
 
 this._smartDepend.addDependency(this._HwLoader, this._HwFactory);
