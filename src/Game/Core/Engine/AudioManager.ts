@@ -86,6 +86,10 @@ class AudioManager {
         this._stop(name);
     }
 
+    public stopInstruction(){
+        this._stopInstPlaying();
+    }
+
     private _stop(name: string) {
         let res = this._loader.getSndResByBasename(name);
         if (res !== null) {
