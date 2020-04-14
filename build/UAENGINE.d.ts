@@ -80,33 +80,24 @@ declare module 'UAENGINE/Core/Engine/Entity' {
         _scaleManager: ScaleManager;
         protected _pointFactory: Point;
         constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, scaleManager: ScaleManager, pointFactory: Point);
-        set text(lett: string);
-        set x(xVal: number);
-        set y(yVal: number);
-        set width(width: number);
-        get width(): number;
-        get height(): number;
-        set origin(origin: Point);
-        get origin(): Point;
-        set height(height: number);
+        text: string;
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        origin: Point;
         setSize(width: number, height: number): void;
-        set scaleX(xVal: number);
-        set scaleY(yVal: number);
-        get x(): number;
-        get y(): number;
-        get input(): InputHandler;
-        get scaleX(): number;
-        get scaleY(): number;
-        get text(): string;
-        get pixelPerfect(): boolean;
+        scaleX: number;
+        scaleY: number;
+        readonly input: InputHandler;
+        readonly pixelPerfect: boolean;
         setStyle(style: any): void;
         setTextColor(color: string): void;
         destroy(): void;
         makePixelPerfect(threshold?: number): boolean;
-        get children(): Entity[];
-        get parent(): Entity | null;
-        set parent(parent: Entity | null);
-        get data(): any;
+        readonly children: Entity[];
+        parent: Entity | null;
+        readonly data: any;
         addChild(entity: Entity): boolean;
         removeChild(entity: Entity): boolean;
         hasChild(entity: Entity): boolean;
@@ -176,11 +167,10 @@ declare module 'UAENGINE/Core/Engine/Loader' {
             /**
                 * @description the base path to load assets from.
                 */
-            get base(): string;
-            set base(base: string);
-            get scripts(): any;
+            base: string;
+            readonly scripts: any;
             constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader, ajaxLoader: AjaxLoader, gameConfig: GameConfig);
-            get downloadComplete(): boolean;
+            readonly downloadComplete: boolean;
             /**
                 * @description Creates an image resource and adds the image to the load queue. The data property of the resource will be
                 * populated with the image once loaded; Everything in the queue is processed when the download() method is called
@@ -199,7 +189,7 @@ declare module 'UAENGINE/Core/Engine/Loader' {
                 * @description download everything in the load queue. This must be done before the activity can start.
                 * @param onDone (optional) called when loading is complete
                 */
-            download(onDone?: Function): Promise<unknown>;
+            download(onDone?: Function): Promise<{}>;
             getResource(name: string): Resource | null;
             getTexture(sprite: string, frame?: string | null): any;
             update(): void;
@@ -222,15 +212,15 @@ declare module 'UAENGINE/Core/Engine/Loader' {
 declare module 'UAENGINE/Core/Engine/Events' {
     class Events {
             constructor();
-            get events(): any;
+            readonly events: any;
             /**
                 * @description returns an array of all timers
                 */
-            get timers(): any;
+            readonly timers: any;
             /**
                 * @description is the timer system paused?
                 */
-            get paused(): boolean;
+            readonly paused: boolean;
             /**
                 * @description returns a string array of the names of all registered events
                 */
@@ -348,12 +338,12 @@ declare module 'UAENGINE/Core/Engine/LevelManager' {
           * @param processText (optional) the column names to convert into lines and words of text. Mainly useful in passage (reading) types.
           */
         init(scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]): void;
-        get events(): Events;
-        get audio(): AudioManager;
-        get script(): ScriptHandler;
-        get utils(): Utils;
-        get input(): InputHandler;
-        get goFactory(): GOFactory;
+        readonly events: Events;
+        readonly audio: AudioManager;
+        readonly script: ScriptHandler;
+        readonly utils: Utils;
+        readonly input: InputHandler;
+        readonly goFactory: GOFactory;
     }
     export default LevelManager;
 }
@@ -394,7 +384,7 @@ declare module 'UAENGINE/Core/Game' {
                 * @description start the game. Calls game.init internally, to create the game screen.
                 * @param configPath the path to the config.json file, which specified Display widht, height, file paths etc
                 */
-            startGame(configPath: string): Promise<unknown>;
+            startGame(configPath: string): Promise<{}>;
             /**
                 * @description load a level (via world.loadLevel).
                 * @param level the level to load
@@ -407,12 +397,12 @@ declare module 'UAENGINE/Core/Game' {
 declare module 'UAENGINE/Core/Engine/GameConfig' {
     class GameConfig {
         constructor();
-        get data(): any;
+        readonly data: any;
         /**
           * @desecription load a config.json file from the specified path
           * @param path the path to load the config json data from
           */
-        loadConfig(path: string): Promise<unknown>;
+        loadConfig(path: string): Promise<{}>;
     }
     export default GameConfig;
 }
@@ -428,7 +418,7 @@ declare module 'UAENGINE/Core/Engine/GOFactory' {
                 * @param text the text value to initialize with
                 * @param style a css style object to apply to the text
                 */
-            text(x: number, y: number, text: string, style: any): Entity;
+            text(x: number, y: number, text: string, style: any, parent?: any): Entity;
             /**
                 * @description returns a Sprite object
                 * @param x the x coordinate to initialize with
@@ -436,7 +426,7 @@ declare module 'UAENGINE/Core/Engine/GOFactory' {
                 * @param textureName the name of the texture to initialize the sprite with
                 * @param frame the default frame for the Sprite. Optional. Provide this if working with an atlas animation
                 */
-            sprite(x: number, y: number, textureName: string, frame?: string | null): Entity;
+            sprite(x: number, y: number, textureName: string, frame?: string | null, parent?: any): Entity;
             /**
                 *
                 * @param x the x coordinate to initialze with
@@ -447,20 +437,20 @@ declare module 'UAENGINE/Core/Engine/GOFactory' {
                 * @param rightWidth The number of pixels to come in from the right before you reach the repeating section of the slice. This part will never stretch
                 * @param bottomHeight The number of pixels to come in from the bottom before you reach the repeating section of the slice. This part will never stretch
                 */
-            nineSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): Entity;
+            nineSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent?: any): Entity;
             /**
                 * @description creates and returns an empty 'container', analogous to PIXI.Container
                 * @param x the x coordinate to initialize with
                 * @param y the y coordinate to initialize with
                 */
-            container(x: number, y: number): Entity;
+            container(x: number, y: number, parent?: any): Entity;
             /**
                 * @description creates and returns a Spine object
                 * @param x the x coordinate to initialize with
                 * @param y the y coordinate to initialize with
                 * @param spineName the name of the spine file to initialize with
                 */
-            spine(x: number, y: number, spineName: string): Entity;
+            spine(x: number, y: number, spineName: string, parent?: any): Entity;
     }
     export default GOFactory;
 }
@@ -536,7 +526,7 @@ declare module 'UAENGINE/Core/Engine/AnimationManager' {
         pauseTween(name: string): void;
         resumeTween(name: string): void;
         addSpineAnimation(name: string, fps: number, data: any): void;
-        addAnimation(name: string, base: string, max: number, fps: number, data: any): void;
+        addAnimation(name: string, base: string, max: number, fps: number, data?: any): void;
         createNew(): AnimationManager;
         getUpdatedFrame(): string | null;
         update(time: number): void;
@@ -587,7 +577,7 @@ declare module 'UAENGINE/Core/Engine/InputHandler' {
             /**
                 * @description get the pointer position as a Point object (x, y)
                 */
-            get pointer(): Point;
+            readonly pointer: Point;
             /**
                 * @description enable input for the specified object
                 * @param displayObject the object to enable input for
@@ -643,10 +633,8 @@ declare module 'UAENGINE/Core/Geom/Point' {
         protected _y: number;
         constructor();
         init(x: number, y: number): void;
-        get x(): number;
-        set x(x: number);
-        get y(): number;
-        set y(y: number);
+        x: number;
+        y: number;
         createNew(x: number, y: number): Point;
     }
     export default Point;
@@ -655,7 +643,7 @@ declare module 'UAENGINE/Core/Geom/Point' {
 declare module 'UAENGINE/Core/Data/FunObj' {
     class FunObj {
         constructor();
-        get function(): any;
+        readonly function: any;
         init(f: any, context: any): void;
         execute(data: any): any;
         createNew(): FunObj;
@@ -666,16 +654,14 @@ declare module 'UAENGINE/Core/Data/FunObj' {
 declare module 'UAENGINE/Core/Data/Resource' {
     class Resource {
             constructor();
-            get data(): any;
-            get name(): string;
+            data: any;
+            readonly name: string;
             /**
                 * @description returns the basename of the file, without file extension
                 */
-            get basename(): string;
-            get url(): string;
-            get loaded(): boolean;
-            set data(dat: any);
-            set loaded(ld: boolean);
+            readonly basename: string;
+            readonly url: string;
+            loaded: boolean;
             initImage(url: string, loaded: boolean): void;
             initSnd(url: string, loaded: boolean): void;
             initJSON(url: string, loaded: boolean): void;
@@ -719,7 +705,7 @@ declare module 'UAENGINE/Core/Engine/AudioManager' {
     class AudioManager {
             _hwPlayer: HwPlayer;
             constructor(loader: Loader, hwLoader: HwPlayer);
-            get filesPlaying(): string[];
+            readonly filesPlaying: string[];
             /**
                 * @description play the specified audio file
                 * @param name the name of the file to play
@@ -749,6 +735,7 @@ declare module 'UAENGINE/Core/Engine/AudioManager' {
                 * @param name the name of the file to stop playback for
                 */
             stop(name: string): void;
+            stopInstruction(): void;
     }
     export default AudioManager;
 }
@@ -763,13 +750,13 @@ declare module 'UAENGINE/Core/Engine/Utils/Utils' {
     import Vectors from 'UAENGINE/Core/Engine/Utils/Vectors';
     class Utils {
         constructor(actScripts: ActScripts, collections: Collections, colors: Colors, mixins: Mixins, math: MathUtils, text: Text, vectors: Vectors);
-        get script(): ActScripts;
-        get coll(): Collections;
-        get color(): ActScripts;
-        get mixin(): Mixins;
-        get math(): MathUtils;
-        get text(): Text;
-        get vector(): Vectors;
+        readonly script: ActScripts;
+        readonly coll: Collections;
+        readonly color: ActScripts;
+        readonly mixin: Mixins;
+        readonly math: MathUtils;
+        readonly text: Text;
+        readonly vector: Vectors;
     }
     export default Utils;
 }
@@ -790,22 +777,18 @@ declare module 'UAENGINE/Core/Engine/ScriptHandler' {
                  * @param processText (optional) the column names to convert into lines and _words of text. Mainly useful in passage (reading) types.
                  */
             init(name: string, raw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]): void;
-            get name(): string;
-            get initialized(): boolean;
-            get raw(): any[];
-            get rows(): any[];
-            /**
-                * @description get the active row.
-                */
-            get active(): any;
+            readonly name: string;
+            readonly initialized: boolean;
+            readonly raw: any[];
+            readonly rows: any[];
             /**
                 * @description set the active row.
                 */
-            set active(row: any);
+            active: any;
             /**
                 * @description get the last row (the previous value of active)
                 */
-            get last(): any;
+            readonly last: any;
             /**
                 * @description switches the active row to the one specified
                 * @param row the row object to switch to
@@ -862,10 +845,8 @@ declare module 'UAENGINE/Core/Geom/Circle' {
         protected _radius: number;
         constructor(pointFactory: Point);
         init(x: number, y: number, r: number): void;
-        set center(center: Point);
-        get center(): Point;
-        set radius(radius: number);
-        get radius(): number;
+        center: Point;
+        radius: number;
         createNew(x: number, y: number, r: number): Circle;
     }
     export default Circle;
@@ -892,14 +873,10 @@ declare module 'UAENGINE/Core/Geom/Rect' {
         _height: number;
         constructor(pointFactory: Point);
         init(x: number, y: number, width: number, height: number): void;
-        get x(): number;
-        get y(): number;
-        set x(x: number);
-        set y(y: number);
-        get width(): number;
-        set width(width: number);
-        get height(): number;
-        set height(height: number);
+        x: number;
+        y: number;
+        width: number;
+        height: number;
         halfHeight(): number;
         halfWidth(): number;
         topLeft(): Point;
@@ -922,11 +899,9 @@ declare module 'UAENGINE/Core/Geom/Polygon' {
         protected _pointFactory: Point;
         constructor(pointFactory: Point);
         init(center: Point, points: Point[]): void;
-        get center(): Point;
-        set center(center: Point);
+        center: Point;
         setCenter(x: number, y: number): void;
-        get points(): Point[];
-        set points(points: Point[]);
+        points: Point[];
         createNew(center: Point, points: Point[]): Polygon;
     }
     export default Polygon;
@@ -936,10 +911,10 @@ declare module 'UAENGINE/Core/Data/Anim' {
     import Events from 'UAENGINE/Core/Engine/Events';
     class Anim {
         constructor(events: Events);
-        get name(): string;
-        get data(): any;
-        get frames(): string[];
-        get fps(): number;
+        readonly name: string;
+        readonly data: any;
+        readonly frames: string[];
+        readonly fps: number;
         init(name: string, base: string, max: number, fps: number, data: any): void;
         getNextFrame(): string;
         createNew(): Anim;
@@ -960,7 +935,7 @@ declare module 'UAENGINE/Core/Data/Tween' {
         _time: number;
         _pauseDiff: number;
         constructor();
-        get name(): string;
+        readonly name: string;
         init(name: string, easing: string, object: any): void;
         to(toObject: any, time: number, updateFunction?: Function): void;
         createNew(): Tween;
