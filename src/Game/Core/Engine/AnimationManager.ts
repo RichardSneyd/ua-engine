@@ -17,7 +17,7 @@ class AnimationManager {
     this._tweens = [];
   }
 
-  public play(name: string) {
+  public play(name: string, loop: boolean = false) {
     let anim = this._getAnim(name);
 
     if (anim != null ) {

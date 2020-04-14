@@ -390,8 +390,8 @@ class Entity {
     this._animationManager.addSpineAnimation(name, fps, this._data);
   }
 
-  public playAnimation(name: string) {
-    this._animationManager.play(name);
+  public playAnimation(name: string, loop: boolean = false) {
+    this._animationManager.play(name, loop);
   }
 
   public playSpineAnimation(name: string) {
