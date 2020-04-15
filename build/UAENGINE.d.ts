@@ -14,6 +14,7 @@ declare module 'UAENGINE' {
     import GameConfig from 'UAENGINE/Core/Engine/GameConfig';
     import GOFactory from 'UAENGINE/Core/Engine/GOFactory';
     import Geom from 'UAENGINE/Core/Geom/Geom';
+    import Utils from 'UAENGINE/Core/Engine/Utils/Utils';
     /**
       * @class the UAEngine API.
       */
@@ -28,6 +29,7 @@ declare module 'UAENGINE' {
         static goFactory: GOFactory;
         static gameConfig: GameConfig;
         static geom: Geom;
+        static utils: Utils;
     }
     export default UAENGINE;
 }
@@ -118,7 +120,7 @@ declare module 'UAENGINE/Core/Engine/Entity' {
         resumeAnimation(name: string): void;
         addAnimation(name: string, base: string, max: number, fps: number, data: any): void;
         addSpineAnimation(name: string, fps: number): void;
-        playAnimation(name: string): void;
+        playAnimation(name: string, loop?: boolean): void;
         playSpineAnimation(name: string): void;
         enableInput(): void;
         disableInput(): void;
@@ -362,6 +364,7 @@ declare module 'UAENGINE/Core/Game' {
     import IActivity from 'UAENGINE/Core/Engine/IActivity';
     import GOFactory from 'UAENGINE/Core/Engine/GOFactory';
     import Geom from 'UAENGINE/Core/Geom/Geom';
+    import Utils from 'UAENGINE/Core/Engine/Utils/Utils';
     class Game {
             _events: Events;
             _expose: Expose;
@@ -370,7 +373,8 @@ declare module 'UAENGINE/Core/Game' {
             _gameConfig: GameConfig;
             _levelManager: LevelManager;
             _geom: Geom;
-            constructor(world: World, entity: Entity, loop: Loop, loader: Loader, events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig, levelManager: LevelManager, goFactory: GOFactory, geom: Geom);
+            _utils: Utils;
+            constructor(world: World, entity: Entity, loop: Loop, loader: Loader, events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig, levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils);
             /**
                 * @description adds an activity to the engine, as a plugin (todo)
                 * @param act the act object to add.
@@ -477,6 +481,27 @@ declare module 'UAENGINE/Core/Geom/Geom' {
     export default Geom;
 }
 
+declare module 'UAENGINE/Core/Engine/Utils/Utils' {
+    import ActScripts from 'UAENGINE/Core/Engine/Utils/ActScripts';
+    import Collections from 'UAENGINE/Core/Engine/Utils/Collections';
+    import Mixins from 'UAENGINE/Core/Engine/Utils/Mixins';
+    import Colors from 'UAENGINE/Core/Engine/Utils/Colors';
+    import MathUtils from 'UAENGINE/Core/Engine/Utils/MathUtils';
+    import Text from 'UAENGINE/Core/Engine/Utils/Text';
+    import Vectors from 'UAENGINE/Core/Engine/Utils/Vectors';
+    class Utils {
+        constructor(actScripts: ActScripts, collections: Collections, colors: Colors, mixins: Mixins, math: MathUtils, text: Text, vectors: Vectors);
+        readonly script: ActScripts;
+        readonly coll: Collections;
+        readonly color: ActScripts;
+        readonly mixin: Mixins;
+        readonly math: MathUtils;
+        readonly text: Text;
+        readonly vector: Vectors;
+    }
+    export default Utils;
+}
+
 declare module 'UAENGINE/Services/IScreen' {
     import { Sprite } from 'pixi.js';
     interface IScreen {
@@ -517,7 +542,7 @@ declare module 'UAENGINE/Core/Engine/AnimationManager' {
         _activeAnimation: Anim | null;
         _tween: Tween;
         constructor(anim: Anim, tween: Tween);
-        play(name: string): void;
+        play(name: string, loop?: boolean): void;
         playSpine(name: string): void;
         pause(name: string): void;
         resume(name: string): void;
@@ -623,6 +648,17 @@ declare module 'UAENGINE/Core/Engine/Utils/MathUtils' {
             static getSmallestNumber(a: Number[]): number;
             clamp(val: number, min: number, max: number): number;
             round(val: number): number;
+            /**
+                * @description returns the highest value in an array of numbers
+                * @param vals the array to evaluate
+                */
+            max(vals: number[]): number;
+            /**
+                * @description return the lowest value in an array of numbers
+                * @param vals the array to evaluate
+                *
+                */
+            min(vals: number[]): number;
     }
     export default MathUtils;
 }
@@ -740,27 +776,6 @@ declare module 'UAENGINE/Core/Engine/AudioManager' {
     export default AudioManager;
 }
 
-declare module 'UAENGINE/Core/Engine/Utils/Utils' {
-    import ActScripts from 'UAENGINE/Core/Engine/Utils/ActScripts';
-    import Collections from 'UAENGINE/Core/Engine/Utils/Collections';
-    import Mixins from 'UAENGINE/Core/Engine/Utils/Mixins';
-    import Colors from 'UAENGINE/Core/Engine/Utils/Colors';
-    import MathUtils from 'UAENGINE/Core/Engine/Utils/MathUtils';
-    import Text from 'UAENGINE/Core/Engine/Utils/Text';
-    import Vectors from 'UAENGINE/Core/Engine/Utils/Vectors';
-    class Utils {
-        constructor(actScripts: ActScripts, collections: Collections, colors: Colors, mixins: Mixins, math: MathUtils, text: Text, vectors: Vectors);
-        readonly script: ActScripts;
-        readonly coll: Collections;
-        readonly color: ActScripts;
-        readonly mixin: Mixins;
-        readonly math: MathUtils;
-        readonly text: Text;
-        readonly vector: Vectors;
-    }
-    export default Utils;
-}
-
 declare module 'UAENGINE/Core/Engine/ScriptHandler' {
     import ActScripts from 'UAENGINE/Core/Engine/Utils/ActScripts';
     import Events from 'UAENGINE/Core/Engine/Events';
@@ -810,12 +825,13 @@ declare module 'UAENGINE/Core/Engine/ScriptHandler' {
                  *
                 */
             fileList(cols: string[]): string[];
+            valueList(cols: string[]): number[];
             /**
                 * @description find the first row whose cells contain the specified vals
                 * @param colname the columns (properties) to search for the respective vals in
                 * @param val the vals to search for. The order of this array must match colname.
                 */
-            rowByCellVals(colname: string[], val: string[]): any[] | null;
+            rowByCellVals(colname: string[], val: any[]): any[] | null;
             isFalsy(val: any): boolean;
     }
     export default ScriptHandler;
@@ -907,6 +923,127 @@ declare module 'UAENGINE/Core/Geom/Polygon' {
     export default Polygon;
 }
 
+declare module 'UAENGINE/Core/Engine/Utils/ActScripts' {
+    class ActScripts {
+            /**
+            * @description a function to generate an array of objects from a column with 'stringified' tabular data. Use this for activity scripts with cells in columns which contain
+            * more than one property, all baked into one string, with a : delineated, one line per property
+            * @param array the array to pull the column from -- intended for object arrays generated from CSV files (tabular)
+            * @param column the name of the column to generate objects from in the array
+            */
+            objectArrayifyColumn(array: any, column: string): any[];
+            /**
+                * @description break a string into seperate filenames, generally for image and sound references
+                * @param text the string value from the 'cell', to be parsed.
+                */
+            getValsFromCell(text: string): string[];
+            /**
+                * @description returns all the unique values found in a column of the activity script, with comma delineated values
+                * such as 'fish,dog,horse'
+                * @param script the activityScript to pull the values from
+                * @param column the name of the 'column' in the script, now a property belonging to all objects in the object array
+                */
+            getUniqValsFromCol(script: any, column: string): string[];
+            /**
+                * @description returns all the unique values found in comma delineated lists in all of the columns specified in
+                * the cols array
+                * @param script the script to pull the vals from
+                * @param cols the 'columns', or properties, to include in the search
+                */
+            getUniqValsFromCols(script: any, cols: string[]): string[];
+            /**
+                * @description a simple helper method that takes an array, and returns it with all duplicate values removed
+                * @param vals the array of values to remove duplicated from
+                */
+            getUniq(vals: string[]): string[];
+            /**
+                * @description generates an object with properties from a string, where each key-value pair is on a new line, colon assigns a value, and
+                * comma seperates multiple values.
+                * @param cellString the string that the cell was converted to from the Activity Script
+                */
+            objectifyCell(cellString: string): object;
+            /**
+                * @description returns the first row to match the specified criteria, or null if none
+                * @param colnames the column names to look for values in. Order must match vals array
+                * @param vals the vals to search for in the colnames array. Order must match colnames array.
+                */
+            rowByColsWithVals(rows: any[], colnames: string[], vals: string | number[]): any;
+            /**
+            * @description returns all rows which match the specified criteria, or null if none
+            * @param colnames the column names to look for values in. Order must match vals array
+            * @param vals the vals to search for in the colnames array. Order must match colnames array.
+            */
+            rowsByColsWithVals(rows: any[], colnames: string[], vals: string[]): any[];
+            /**
+                * @description returns a perfect, deep clone of a JSON serializable object -- suitable for cloning actScripts,
+                * but not for anything with methods.
+                * @param script
+                */
+            clone(script: any): any;
+            toLines(text: string): string[];
+            words(text: string): string[];
+    }
+    export default ActScripts;
+}
+
+declare module 'UAENGINE/Core/Engine/Utils/Collections' {
+    class Collections {
+        findArrElWithPropVal(array: any[], properties: string[], values: string | number[]): any;
+        numElementsWithPropVal(array: any[], properties: string[], values: any[]): number;
+        allElementsWithPropVal(array: any[], properties: string[], values: any[]): any[];
+        getUniqValsFromArrays(rows: any, arrs: string[]): string[];
+        /**
+          * @description shuffle and return an array
+          * @param a array to be shuffled
+          */
+        shuffle(a: any): any[];
+    }
+    export default Collections;
+}
+
+declare module 'UAENGINE/Core/Engine/Utils/Mixins' {
+    class Mixins {
+        static applyMixins(derivedCtor: any, baseCtors: any[]): void;
+    }
+    export default Mixins;
+}
+
+declare module 'UAENGINE/Core/Engine/Utils/Colors' {
+    class Colors {
+    }
+    export default Colors;
+}
+
+declare module 'UAENGINE/Core/Engine/Utils/Text' {
+    class Text {
+            /**
+                 * @description concatenate an array of strings, with a seperator substring. For no seperator, use ""
+                 * @param array the array of strings to combine
+                 * @param seperator the seperator substring to insert between entries, like underscore. For no seperator, use ""
+                 */
+            concat(array: string[], seperator: string): string;
+            getUniq(vals: string[]): string[];
+            /**
+                * @description break a string into a string array, based on the provided seperator substring, and remove falsy values
+                * @param text the string to break into a string array
+                * @param seperator the seperator substring
+                */
+            unstringifyArray(txt: string, seperator: string): string[];
+            propertiesFromString(rawText: string, lineSeperator: string, valueAssigner: string, valueSeperator: string): object;
+            split(text: string, seperator: string): string[];
+    }
+    export default Text;
+}
+
+declare module 'UAENGINE/Core/Engine/Utils/Vectors' {
+    import Point from "UAENGINE/Core/Geom/Point";
+    class Vectors {
+        protected _pointFactory: Point;
+        getPointGrid(hor: number[], vert: number[]): Array<Point>;
+    }
+    export default Vectors;
+}
+
 declare module 'UAENGINE/Core/Data/Anim' {
     import Events from 'UAENGINE/Core/Engine/Events';
     class Anim {
@@ -965,126 +1102,5 @@ declare module 'UAENGINE/Services/Howler/HwPlayer' {
         stop(res: Resource): void;
     }
     export default HwPlayer;
-}
-
-declare module 'UAENGINE/Core/Engine/Utils/ActScripts' {
-    class ActScripts {
-            /**
-            * @description a function to generate an array of objects from a column with 'stringified' tabular data. Use this for activity scripts with cells in columns which contain
-            * more than one property, all baked into one string, with a : delineated, one line per property
-            * @param array the array to pull the column from -- intended for object arrays generated from CSV files (tabular)
-            * @param column the name of the column to generate objects from in the array
-            */
-            objectArrayifyColumn(array: any, column: string): any[];
-            /**
-                * @description break a string into seperate filenames, generally for image and sound references
-                * @param text the string value from the 'cell', to be parsed.
-                */
-            getValsFromCell(text: string): string[];
-            /**
-                * @description returns all the unique values found in a column of the activity script, with comma delineated values
-                * such as 'fish,dog,horse'
-                * @param script the activityScript to pull the values from
-                * @param column the name of the 'column' in the script, now a property belonging to all objects in the object array
-                */
-            getUniqValsFromCol(script: any, column: string): string[];
-            /**
-                * @description returns all the unique values found in comma delineated lists in all of the columns specified in
-                * the cols array
-                * @param script the script to pull the vals from
-                * @param cols the 'columns', or properties, to include in the search
-                */
-            getUniqValsFromCols(script: any, cols: string[]): string[];
-            /**
-                * @description a simple helper method that takes an array, and returns it with all duplicate values removed
-                * @param vals the array of values to remove duplicated from
-                */
-            getUniq(vals: string[]): string[];
-            /**
-                * @description generates an object with properties from a string, where each key-value pair is on a new line, colon assigns a value, and
-                * comma seperates multiple values.
-                * @param cellString the string that the cell was converted to from the Activity Script
-                */
-            objectifyCell(cellString: string): object;
-            /**
-                * @description returns the first row to match the specified criteria, or null if none
-                * @param colnames the column names to look for values in. Order must match vals array
-                * @param vals the vals to search for in the colnames array. Order must match colnames array.
-                */
-            rowByColsWithVals(rows: any[], colnames: string[], vals: string[]): any;
-            /**
-            * @description returns all rows which match the specified criteria, or null if none
-            * @param colnames the column names to look for values in. Order must match vals array
-            * @param vals the vals to search for in the colnames array. Order must match colnames array.
-            */
-            rowsByColsWithVals(rows: any[], colnames: string[], vals: string[]): any[];
-            /**
-                * @description returns a perfect, deep clone of a JSON serializable object -- suitable for cloning actScripts,
-                * but not for anything with methods.
-                * @param script
-                */
-            clone(script: any): any;
-            toLines(text: string): string[];
-            words(text: string): string[];
-    }
-    export default ActScripts;
-}
-
-declare module 'UAENGINE/Core/Engine/Utils/Collections' {
-    class Collections {
-        findArrElWithPropVal(array: any[], properties: string[], values: any[]): any;
-        numElementsWithPropVal(array: any[], properties: string[], values: any[]): number;
-        allElementsWithPropVal(array: any[], properties: string[], values: any[]): any[];
-        getUniqValsFromArrays(rows: any, arrs: string[]): string[];
-        /**
-          * @description shuffle and return an array
-          * @param a array to be shuffled
-          */
-        shuffle(a: any): any[];
-    }
-    export default Collections;
-}
-
-declare module 'UAENGINE/Core/Engine/Utils/Mixins' {
-    class Mixins {
-        static applyMixins(derivedCtor: any, baseCtors: any[]): void;
-    }
-    export default Mixins;
-}
-
-declare module 'UAENGINE/Core/Engine/Utils/Colors' {
-    class Colors {
-    }
-    export default Colors;
-}
-
-declare module 'UAENGINE/Core/Engine/Utils/Text' {
-    class Text {
-            /**
-                 * @description concatenate an array of strings, with a seperator substring. For no seperator, use ""
-                 * @param array the array of strings to combine
-                 * @param seperator the seperator substring to insert between entries, like underscore. For no seperator, use ""
-                 */
-            concat(array: string[], seperator: string): string;
-            getUniq(vals: string[]): string[];
-            /**
-                * @description break a string into a string array, based on the provided seperator substring, and remove falsy values
-                * @param text the string to break into a string array
-                * @param seperator the seperator substring
-                */
-            unstringifyArray(txt: string, seperator: string): string[];
-            propertiesFromString(rawText: string, lineSeperator: string, valueAssigner: string, valueSeperator: string): object;
-            split(text: string, seperator: string): string[];
-    }
-    export default Text;
-}
-
-declare module 'UAENGINE/Core/Engine/Utils/Vectors' {
-    import Point from "UAENGINE/Core/Geom/Point";
-    class Vectors {
-        protected _pointFactory: Point;
-        getPointGrid(hor: number[], vert: number[]): Array<Point>;
-    }
-    export default Vectors;
 }
 

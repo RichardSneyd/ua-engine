@@ -8,6 +8,7 @@ import Game from './Core/Game';
 import GameConfig from './Core/Engine/GameConfig';
 import GOFactory from './Core/Engine/GOFactory';
 import Geom from './Core/Geom/Geom';
+import Utils from './Core/Engine/Utils/Utils';
 
 
 
@@ -25,6 +26,7 @@ class UAENGINE {
   public static goFactory: GOFactory;
   public static gameConfig: GameConfig;
   public static geom: Geom;
+  public static utils: Utils;
 }
 
 export default UAENGINE;

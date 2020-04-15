@@ -11,17 +11,18 @@ import ILevel from './Engine/ILevel';
 import IActivity from './Engine/IActivity';
 import GOFactory from './Engine/GOFactory';
 import Geom from './Geom/Geom';
+import Utils from './Engine/Utils/Utils';
 
 class Game {
   private _world: World; _events: Events;
   private _scaleManager: ScaleManager; _expose: Expose;
 
   private _entity: Entity; _loop: Loop; _loader: Loader; _gameConfig: GameConfig; _levelManager: LevelManager; 
-  private _goFactory: GOFactory; _geom: Geom;
+  private _goFactory: GOFactory; _geom: Geom; _utils: Utils;
 
   constructor(world: World, entity: Entity, loop: Loop, loader: Loader,
               events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
-              levelManager: LevelManager, goFactory: GOFactory, geom: Geom) {
+              levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils) {
 
     this._world = world;
     this._events = events;
@@ -37,6 +38,7 @@ class Game {
     this._goFactory = goFactory;
 
     this._geom = geom;
+    this._utils = utils;
 
     this._exposeGlobal();
   }
@@ -105,6 +107,7 @@ class Game {
     this._expose.add('gameConfig', this._gameConfig);
     this._expose.add('goFactory', this._goFactory);
     this._expose.add('geom', this._geom);
+    this._expose.add('utils', this._utils);
   }
 
   private _addListeners(): void {

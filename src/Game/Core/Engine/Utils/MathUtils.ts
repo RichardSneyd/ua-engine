@@ -43,6 +43,27 @@ class MathUtils {
     round(val: number){
         return Math.round(val);
     }
+
+    /**
+     * @description returns the highest value in an array of numbers
+     * @param vals the array to evaluate
+     */
+    max(vals: number[]): number{
+        return vals.reduce((a, b)=>{
+            return Math.max(a, b);
+        })
+    }
+
+    /**
+     * @description return the lowest value in an array of numbers
+     * @param vals the array to evaluate
+     * 
+     */
+    min(vals: number[]): number{
+        return vals.reduce((a, b)=>{
+            return Math.min(a, b);
+        })
+    }
 }
 
 export default MathUtils;

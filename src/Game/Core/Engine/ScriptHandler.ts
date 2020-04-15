@@ -115,7 +115,11 @@ class ScriptHandler {
      * cell with dot syntax; i.e ['config.bgd'] will find all values of the bgd field for all pre-converted config cells.
       * 
      */
-    public fileList(cols: string[]): string[] {
+    public fileList(cols: string[]): string[]{
+        return this._fileList(cols);
+    }
+
+    public valueList(cols: string[]): number[]{
         return this._fileList(cols);
     }
 
@@ -124,7 +128,7 @@ class ScriptHandler {
      * @param colname the columns (properties) to search for the respective vals in
      * @param val the vals to search for. The order of this array must match colname.
      */
-    public rowByCellVals(colname: string[], val: string[]): any[] | null {
+    public rowByCellVals(colname: string[], val: any[]): any[] | null {
         return this._rowByCellVals(colname, val);
     }
 
@@ -175,7 +179,7 @@ class ScriptHandler {
     }
 }
 
-    private _rowByCellVals(colname: string[], val: string[]): any[] | null {
+    private _rowByCellVals(colname: string[], val: any[]): any[] | null {
 
         let result = this._utils.rowByColsWithVals(this.rows, colname, val);
         return result;
@@ -189,7 +193,7 @@ class ScriptHandler {
         return this._utils.getValsFromCell(text);
     }
 
-    private _fileList(cols: string[]): string[] {
+    private _fileList(cols: string[]): any[] {
         let files: any[] = [];
         for (let x = 0; x < this.rows.length; x++) {
             let row = this.rows[x];

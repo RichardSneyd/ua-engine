@@ -91,7 +91,7 @@ class ActScripts {
      * @param colnames the column names to look for values in. Order must match vals array
      * @param vals the vals to search for in the colnames array. Order must match colnames array.
      */
-    public rowByColsWithVals(rows: any[], colnames: string[], vals: string[]) {
+    public rowByColsWithVals(rows: any[], colnames: string[], vals: string | number[]) {
         let result = this._collections.findArrElWithPropVal(rows, colnames, vals);
         return result;
     }
