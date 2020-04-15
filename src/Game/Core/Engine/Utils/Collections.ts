@@ -5,7 +5,7 @@ class Collections {
     private constructor() { } // make it instantiatable
 
     // return object in array OR array-like object (Object.keys implementation) with properties of specified values
-    public findArrElWithPropVal(array: any[], properties: string[], values: any[]): any {
+    public findArrElWithPropVal(array: any[], properties: string[], values: string | number[]): any {
         let row: any = null;
         if (Array.isArray(array)) {
             //  console.trace('isArray');

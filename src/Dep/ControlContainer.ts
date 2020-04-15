@@ -260,6 +260,7 @@ this._smartDepend.addDependency(this._Game, this._GameConfig);
 this._smartDepend.addDependency(this._Game, this._LevelManager);
 this._smartDepend.addDependency(this._Game, this._GOFactory);
 this._smartDepend.addDependency(this._Game, this._Geom);
+this._smartDepend.addDependency(this._Game, this._Utils);
 
 
 this._smartDepend.addDependency(this._Circle, this._Point);
