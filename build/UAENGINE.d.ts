@@ -60,7 +60,13 @@ declare module 'UAENGINE/Core/Engine/World' {
                 */
             resize(width: number, height: number): void;
             debugScreen(): void;
+            /**
+                * @description returns literal width value from PxGame. NOT suitable for positioning objects on screen; use game.width instead.
+                */
             pixelWidth(): number;
+            /**
+                * @description returns literal height value from PxGame. NOT suitable for positioning objects on screen; use game.height instead.
+                */
             pixelHeight(): number;
     }
     export default World;
@@ -394,7 +400,15 @@ declare module 'UAENGINE/Core/Game' {
                 * @param level the level to load
                 */
             loadLevel(level: ILevel, scriptName: string): void;
+            /**
+                * @description returns the preset width of the game, as specified in config.json. Suitable for positioning objects relative
+                * to the screen.
+                */
             width(): number;
+            /**
+                * @description returns the preset height value of the game, as specified in config.json. Suitable for positioning objects relative
+                * to the screen.
+                */
             height(): number;
     }
     export default Game;

@@ -60,8 +60,8 @@ class Entity {
     this._children = [];
     this._parent = null;
   }
- 
-  
+
+
   set text(lett: string) {
     if (this._letters == '$$$$____$$$$') {
       console.error("this is not a text entity, can't change letters!");
@@ -72,7 +72,7 @@ class Entity {
 
   set x(xVal: number) {
     this._x = xVal;
-   // this._objectHandler.setXy(this._data, xVal, this._y);
+    // this._objectHandler.setXy(this._data, xVal, this._y);
 
     this._updateXY();
   }
@@ -103,7 +103,7 @@ class Entity {
     this._objectHandler.setPivot(this._data, this._origin);
   }
 
-  get origin(){
+  get origin() {
     return this._origin;
   }
 
@@ -120,7 +120,7 @@ class Entity {
     this._updateXY();
   }
 
- 
+
 
   set scaleX(xVal: number) {
     this._scaleX = xVal;
@@ -145,7 +145,7 @@ class Entity {
   get input(): InputHandler {
     return this._input;
   }
-  
+
   get scaleX(): number {
     return this._scaleX;
   }
@@ -162,28 +162,28 @@ class Entity {
       return this._letters;
     }
   }
-  
+
   get pixelPerfect(): boolean {
     return this._pixelPerfect;
   }
 
-  setStyle(style: any){
+  setStyle(style: any) {
     this._objectHandler.setStyle(this._data, style);
   }
 
-  setTextColor(color: string){
+  setTextColor(color: string) {
     this._objectHandler.setTextColor(this._data, color);
   }
 
-  public destroy(){
+  public destroy() {
     this._objectHandler.destroy(this._data);
   }
 
-  public makePixelPerfect(threshold: number = 127) : boolean{
- 
-   /*  if(this._data.type !== ResType.IMG){
-      return false;
-    } */
+  public makePixelPerfect(threshold: number = 127): boolean {
+
+    /*  if(this._data.type !== ResType.IMG){
+       return false;
+     } */
     this._screen.addHitMap(this._data, threshold);
     this._pixelPerfect = true;
     return true;
@@ -198,7 +198,7 @@ class Entity {
   }
 
   set parent(parent: Entity | null) {
-    if(this._parent !== null){
+    if (this._parent !== null) {
       this._parent.removeChild(this);
     }
     this._parent = parent;
@@ -209,12 +209,12 @@ class Entity {
   }
 
   addChild(entity: Entity): boolean {
-    if(!this.hasChild(entity)){
+    if (!this.hasChild(entity)) {
       this._children.push(entity);
       entity.parent = this;
 
       // added this condition because text objects hold their Px data 1 level deeper, due to custom PxText class
-      if(entity.data.data) {
+      if (entity.data.data) {
         console.log('trying to add data 1 level deeper for text...');
         this._data.addChild(entity.data.data);
       }
@@ -229,7 +229,7 @@ class Entity {
   }
 
   removeChild(entity: Entity): boolean {
-    if(this.hasChild(entity)){
+    if (this.hasChild(entity)) {
       this._children.splice(this._children.indexOf(entity), 1);
       this._data.removeChild(entity.data);
       return true;
@@ -239,7 +239,7 @@ class Entity {
   }
 
   hasChild(entity: Entity): boolean {
-    if(this._children.indexOf(entity) !== -1){
+    if (this._children.indexOf(entity) !== -1) {
       return true;
     }
     return false;
@@ -280,9 +280,9 @@ class Entity {
     this.y = y;
   }
 
-  public setOrigin(x: number, y?: number){
+  public setOrigin(x: number, y?: number) {
     let yVal: number;
-    if(y == undefined){
+    if (y == undefined) {
       yVal = x;
     }
     else {
@@ -305,7 +305,7 @@ class Entity {
     this._height = this._data.height;
     console.log('_data: ', this._data);
     this.setOrigin(0.5);
-   // debugger;
+    // debugger;
 
     //  console.log('bounds after calc: ', this._data.getBounds());
     this._initialized = true;
@@ -329,7 +329,7 @@ class Entity {
     this._addListeners();
   }
 
-  public initContainer(x: number, y: number): void{
+  public initContainer(x: number, y: number): void {
     this._initScaleManager();
 
     this._x = x;
@@ -407,21 +407,31 @@ class Entity {
   }
 
   public addInputListener(event: string, callback: Function, context: any, once: boolean = false) {
+    if (this._data.data) {
+      this._input.addListener(event, callback, this._data.data, context);
+    }
+    else {
     this._input.addListener(event, callback, this._data, context);
+    }
   }
 
   public removeInputListener(event: string, callback: Function) {
-    this._input.removeListener(event, callback, this._data);
+    if (this._data.data) {
+      this._input.removeListener(event, callback, this._data.data);
+    }
+    else {
+      this._input.removeListener(event, callback, this._data);
+    }
   }
 
 
   public createNew(): Entity {
     let am = this._animationManager.createNew();
-  //  console.log('new am: ', am);
+    //  console.log('new am: ', am);
     return new Entity(this._screen, am, this._objectHandler, this._input, this._math, this._events, this._scaleManager.createNew(), this._pointFactory);
   }
 
-  public changeTexture(textureName: string){
+  public changeTexture(textureName: string) {
     if (this._atlas != null) {
       this._screen.changeTexture(this._data, this._atlas, textureName);
     } else {
