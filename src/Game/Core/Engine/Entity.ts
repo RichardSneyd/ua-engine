@@ -417,7 +417,7 @@ class Entity {
 
   public createNew(): Entity {
     let am = this._animationManager.createNew();
-    console.log('new am: ', am);
+  //  console.log('new am: ', am);
     return new Entity(this._screen, am, this._objectHandler, this._input, this._math, this._events, this._scaleManager.createNew(), this._pointFactory);
   }
 

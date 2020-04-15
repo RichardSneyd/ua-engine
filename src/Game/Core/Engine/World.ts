@@ -72,11 +72,17 @@ class World {
     this._screen.debugScreen();
   }
 
-  public width(): number{
+  /**
+   * @description returns literal width value from PxGame. NOT suitable for positioning objects on screen; use game.width instead.
+   */
+  public pixelWidth(): number{
     return <number>this._screen.width();
   }
 
-  public height(): number {
+  /**
+   * @description returns literal height value from PxGame. NOT suitable for positioning objects on screen; use game.height instead.
+   */
+  public pixelHeight(): number {
     return <number>this._screen.height();
   }
 
