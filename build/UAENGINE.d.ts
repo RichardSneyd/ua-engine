@@ -60,8 +60,8 @@ declare module 'UAENGINE/Core/Engine/World' {
                 */
             resize(width: number, height: number): void;
             debugScreen(): void;
-            width(): number;
-            height(): number;
+            pixelWidth(): number;
+            pixelHeight(): number;
     }
     export default World;
 }
@@ -394,6 +394,8 @@ declare module 'UAENGINE/Core/Game' {
                 * @param level the level to load
                 */
             loadLevel(level: ILevel, scriptName: string): void;
+            width(): number;
+            height(): number;
     }
     export default Game;
 }

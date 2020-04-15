@@ -88,6 +88,22 @@ class Game {
     this._world.startLevel(level, scriptName);
   }
 
+  /**
+   * @description returns the preset width of the game, as specified in config.json. Suitable for positioning objects relative 
+   * to the screen.
+   */
+  public width(){
+    return this._gameWidth();
+  }
+
+  /**
+   * @description returns the preset height value of the game, as specified in config.json. Suitable for positioning objects relative
+   * to the screen.
+   */
+  public height(){
+    return this._gameHeight();
+  }
+
   private _onResize() {
     let target = this._scaleManager.getXY(this._gameWidth(), this._gameHeight());
 

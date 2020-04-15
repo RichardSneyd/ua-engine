@@ -73,13 +73,12 @@ class PxFactory {
         return false
       }
       // bitmap check
-      console.log('about to do hitmap check...');
+
       const tex = this.texture;
       const baseTex = this.texture.baseTexture;
       const res = baseTex.resolution;
       // @ts-ignore
       if (!baseTex.hitmap) {
-        console.warn('baseTex has no hitmap prop: ', baseTex);
         return true;
       }
 
