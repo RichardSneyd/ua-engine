@@ -21,6 +21,7 @@ class Entity {
   private _sprite: string;
   private _initialized: boolean;
   private _atlas: string | null;
+  private _type: string = '';
 
   private _screen: IScreen; _animationManager: AnimationManager; _objectHandler: IObjectHandler;
   private _input: InputHandler; _math: MathUtils;
@@ -61,6 +62,9 @@ class Entity {
     this._parent = null;
   }
 
+  get type(){
+    return this._type;
+  }
 
   set text(lett: string) {
     if (this._letters == '$$$$____$$$$') {
@@ -255,7 +259,7 @@ class Entity {
 
   public initSpine(x: number, y: number, spine: string): void {
     this._initScaleManager();
-
+    this._type = 'spine';
     this._x = x;
     this._y = y;
     this._data = this._screen.createSpine(spine);
@@ -295,6 +299,7 @@ class Entity {
   public initNineSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): void {
     this._x = x;
     this._y = y;
+    this._type = 'slice';
     this._data = this._screen.createNineSlice(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight);
     this._data.x = x;
     this._data.y = y;
@@ -314,7 +319,7 @@ class Entity {
 
   public init(x: number, y: number, sprite: string, frame: string | null = null): void {
     this._initScaleManager();
-
+    this._type = 'sprite';
     this._x = x;
     this._y = y;
     this._sprite = sprite;
@@ -331,7 +336,7 @@ class Entity {
 
   public initContainer(x: number, y: number): void {
     this._initScaleManager();
-
+    this._type = 'container';
     this._x = x;
     this._y = y;
     this._data = this._screen.createContainer(x, x);
@@ -340,7 +345,7 @@ class Entity {
 
   public initText(x: number, y: number, text: string, style: any = undefined) {
     this._initScaleManager();
-
+    this._type = 'text';
     this._x = x;
     this._y = y;
 
@@ -399,11 +404,21 @@ class Entity {
   }
 
   public enableInput() {
-    this._input.enable(this._data);
+    if (this._data.data) {
+      this._input.enable(this._data.data);
+    }
+    else {
+      this._input.enable(this._data);
+    }
   }
 
   public disableInput() {
-    this._input.disable(this._data);
+    if (this._data.data) {
+      this._input.disable(this._data.data);
+    }
+    else {
+      this._input.disable(this._data);
+    }
   }
 
   public addInputListener(event: string, callback: Function, context: any, once: boolean = false) {
@@ -411,7 +426,7 @@ class Entity {
       this._input.addListener(event, callback, this._data.data, context);
     }
     else {
-    this._input.addListener(event, callback, this._data, context);
+      this._input.addListener(event, callback, this._data, context);
     }
   }
 
@@ -473,8 +488,10 @@ class Entity {
   }
 
   private _onResize() {
-    this._updateScale();
-    this._updateXY();
+    if(this.parent == null || this.parent.type == 'container'){
+      this._updateScale();
+      this._updateXY();
+    }
   }
 
   private _initScaleManager(): void {

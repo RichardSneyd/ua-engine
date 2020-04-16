@@ -306,7 +306,6 @@ class Loader {
     for (let x = 0; x < filenames.length; x++) {
       this.addSnd(filenames[x]);
     }
-    console.log(this._sndList);
   }
 
   private _downloadSounds(onDone: Function) {

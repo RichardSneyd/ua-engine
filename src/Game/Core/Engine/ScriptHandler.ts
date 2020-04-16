@@ -35,7 +35,6 @@ class ScriptHandler {
     init(name: string, raw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]) {
         this._name = name;
         this._raw = raw;
-        console.log(this._raw);
         this._convertRowsFromRaw(parseCols, objectifyCols, processText);
         this._initialized = true;
     }
