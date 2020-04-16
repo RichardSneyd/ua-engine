@@ -215,6 +215,8 @@ class Entity {
       this._parent.removeChild(this);
     }
     this._parent = parent;
+    this._objectHandler.setXy(this.data, this._x, this._y);
+    this._objectHandler.setScaleXY(this.data, 1, 1);
   }
 
   get data(): any {
@@ -236,8 +238,7 @@ class Entity {
         child = entity.data;
       }
       this._data.addChild(child);
-      this._objectHandler.setXy(this.data, this._x, this._y);
-      this._objectHandler.setScaleXY(this.data, 1, 1);
+
       return true;
     }
     console.warn('that is already a child of this object, and cannot be added again');
