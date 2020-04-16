@@ -62,7 +62,7 @@ class Entity {
     this._parent = null;
   }
 
-  get type(){
+  get type() {
     return this._type;
   }
 
@@ -76,14 +76,22 @@ class Entity {
 
   set x(xVal: number) {
     this._x = xVal;
-    // this._objectHandler.setXy(this._data, xVal, this._y);
-
-    this._updateXY();
+    if (this.parent == null || this.parent.type == 'container') {
+      this._updateXY();
+    }
+    else {
+      this._objectHandler.setXy(this._data, xVal, this._y);
+    }
   }
 
   set y(yVal: number) {
     this._y = yVal;
-    this._objectHandler.setXy(this._data, this._x, yVal);
+    if (this.parent == null || this.parent.type == 'container') {
+      this._updateXY();
+    }
+    else {
+      this._objectHandler.setXy(this._data, this._x, yVal);
+    }
   }
 
   set width(width: number) {
@@ -101,9 +109,10 @@ class Entity {
     return this._height;
   }
 
+
   set origin(origin: Point) {
-    this._origin.x = this._math.clamp(origin.x, 0, 1);
-    this._origin.y = this._math.clamp(origin.y, 0, 1);
+    this._origin.x = origin.x;
+    this._origin.y = origin.y;
     this._objectHandler.setPivot(this._data, this._origin);
   }
 
@@ -218,14 +227,17 @@ class Entity {
       entity.parent = this;
 
       // added this condition because text objects hold their Px data 1 level deeper, due to custom PxText class
+      let child;
       if (entity.data.data) {
         console.log('trying to add data 1 level deeper for text...');
-        this._data.addChild(entity.data.data);
+        child = entity.data.data;
       }
       else {
-        this._data.addChild(entity.data);
+        child = entity.data;
       }
-
+      this._data.addChild(child);
+      this._objectHandler.setXy(this.data, this._x, this._y);
+      this._objectHandler.setScaleXY(this.data, 1, 1);
       return true;
     }
     console.warn('that is already a child of this object, and cannot be added again');
@@ -286,11 +298,11 @@ class Entity {
 
   public setOrigin(x: number, y?: number) {
     let yVal: number;
-    if (y == undefined) {
-      yVal = x;
+    if (y) {
+      yVal = y;
     }
     else {
-      yVal = y;
+      yVal = x;
     }
 
     this.origin = this._pointFactory.createNew(x, yVal);
@@ -325,7 +337,8 @@ class Entity {
     this._sprite = sprite;
 
     this._data = this._screen.createSprite(x, y, sprite, frame);
-
+    this._width = this._data.width;
+    this._height = this._data.height;
     if (frame != null) this._atlas = sprite;
     this._onResize();
 
@@ -341,6 +354,8 @@ class Entity {
     this._y = y;
     this._data = this._screen.createContainer(x, x);
     this._initialized = true;
+    this._width = this._data.width;
+    this._height = this._data.height;
   }
 
   public initText(x: number, y: number, text: string, style: any = undefined) {
@@ -353,6 +368,7 @@ class Entity {
 
     this._data = this._screen.createText(x, y, text, style);
     this._width = this._data.width;
+    this._height = this._data.height;
     this._onResize();
 
     this._initialized = true;
@@ -488,7 +504,7 @@ class Entity {
   }
 
   private _onResize() {
-    if(this.parent == null || this.parent.type == 'container'){
+    if (this.parent == null || this.parent.type == 'container') {
       this._updateScale();
       this._updateXY();
     }
