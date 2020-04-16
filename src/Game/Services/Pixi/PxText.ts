@@ -49,8 +49,11 @@ class PxText {
   }
 
   set fill(fill: string){
-    this._fill = fill;
     this._style.fill = fill;
+    this._fill = this._style.fill;
+    if(this._rawText){
+      this._rawText.style = this._style;
+    }
     this.updateTexture();
   }
 
