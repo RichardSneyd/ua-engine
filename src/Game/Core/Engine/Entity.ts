@@ -155,6 +155,14 @@ class Entity {
     return this._y;
   }
 
+  get visible(): boolean {
+    return this.data.visible;
+  }
+
+  set visible(visible: boolean){
+    this.data.visible = visible;
+  }
+
   get input(): InputHandler {
     return this._input;
   }
@@ -189,6 +197,9 @@ class Entity {
   }
 
   public destroy() {
+    // remember to ALWAYS remove event listeners when destroying a GameObject
+    this._events.off('resize', this._onResize);
+    
     this._objectHandler.destroy(this._data);
   }
 
