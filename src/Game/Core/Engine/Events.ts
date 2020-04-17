@@ -220,7 +220,7 @@ class Events {
 
     private _removeTimer(timer: any){
         if (timer !== null) {
-            this._timers.splice(timer, 1);
+            this._timers.splice(this._timers.indexOf(timer), 1);
         }
         else {
             console.warn('timer to remove is null: ', timer);
