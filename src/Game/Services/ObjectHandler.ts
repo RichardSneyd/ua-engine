@@ -51,7 +51,7 @@ class ObjectHandler implements IObjectHandler {
     object.scale.y = y;
   }
 
-  public destroy(object: DisplayObject){
+  public destroy(object: any){
     object.destroy();
   }
 }

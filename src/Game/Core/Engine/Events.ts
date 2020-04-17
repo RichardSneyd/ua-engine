@@ -201,12 +201,16 @@ class Events {
         this._events[event].push([callback, context, once]);
     }
 
-    private _removeListener(event: string, callback: Function) {
-        if (this.eventNames().indexOf(event) !== -1) {
-            this._events[event].splice(callback, 1);
+    private _removeListener(eventName: string, callback: Function) {
+        console.log('remove listener from event %s: ', eventName, callback);
+        if (this.eventNames().indexOf(eventName) !== -1) {
+            let event = this._events[eventName];
+            console.log('event exists: ', event);
+            let index = event.indexOf(callback);
+            event.splice(index, 1);
         }
         else {
-            console.warn('event %s does not exist, cannot remove callback', event);
+            console.warn('event %s does not exist, cannot remove callback', eventName);
         }
     }
 

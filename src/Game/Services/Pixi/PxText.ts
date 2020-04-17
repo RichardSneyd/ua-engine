@@ -23,6 +23,21 @@ class PxText {
 
   }
 
+
+  get visible(): boolean {
+    if(this._data !== null){
+      return this._data.visible;
+    }
+    return false;
+  }
+
+  set visible(visible: boolean){
+    if(this._data !== null){
+      this._data.visible = visible;
+    }
+  }
+
+
   get width(){
     if(this._data){
       return this._data.width;
@@ -141,11 +156,9 @@ class PxText {
     }
   }
 
-
   public updateTexture() {
     this._updateTexture();
   }
-
 
   private _updateTexture() {
     if (this._data != null && this._renderer != null && this._rawText != null) {

@@ -88,6 +88,7 @@ declare module 'UAENGINE/Core/Engine/Entity' {
         _scaleManager: ScaleManager;
         protected _pointFactory: Point;
         constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, scaleManager: ScaleManager, pointFactory: Point);
+        readonly type: string;
         text: string;
         x: number;
         y: number;
@@ -97,6 +98,7 @@ declare module 'UAENGINE/Core/Engine/Entity' {
         setSize(width: number, height: number): void;
         scaleX: number;
         scaleY: number;
+        visible: boolean;
         readonly input: InputHandler;
         readonly pixelPerfect: boolean;
         setStyle(style: any): void;
