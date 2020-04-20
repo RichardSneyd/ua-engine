@@ -59,6 +59,10 @@ class ContainerObject implements IGameObject, IParentChild {
     get x() {
         return this._entity.x;
     }
+    
+    set x(x: number){
+        this._entity.x = x;
+    }
 
     get entity() {
         return this._entity;
@@ -66,6 +70,10 @@ class ContainerObject implements IGameObject, IParentChild {
 
     get y() {
         return this._entity.y;
+    }
+
+    set y(y: number) {
+        this._entity.y = y;
     }
 
     get scaleX() {

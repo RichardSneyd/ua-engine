@@ -5,14 +5,14 @@
 
 declare module 'UAENGINE' {
     import World from 'UAENGINE/Core/Engine/World';
-    import Entity from 'UAENGINE/Core/Engine/Entity';
+    import Entity from 'UAENGINE/Core/Engine/GameObjects/Components/Entity';
     import Loop from 'UAENGINE/Core/Engine/Loop';
     import Loader from 'UAENGINE/Core/Engine/Loader';
     import Events from 'UAENGINE/Core/Engine/Events';
     import LevelManager from 'UAENGINE/Core/Engine/LevelManager';
     import Game from 'UAENGINE/Core/Game';
     import GameConfig from 'UAENGINE/Core/Engine/GameConfig';
-    import GOFactory from 'UAENGINE/Core/Engine/GOFactory';
+    import GOFactory from 'UAENGINE/Core/Engine/GameObjects/GOFactory';
     import Geom from 'UAENGINE/Core/Geom/Geom';
     import Utils from 'UAENGINE/Core/Engine/Utils/Utils';
     /**
@@ -35,7 +35,7 @@ declare module 'UAENGINE' {
 }
 
 declare module 'UAENGINE/Core/Engine/World' {
-    import Entity from 'UAENGINE/Core/Engine/Entity';
+    import Entity from 'UAENGINE/Core/Engine/GameObjects/Components/Entity';
     import IScreen from 'UAENGINE/Services/IScreen';
     import ILevel from 'UAENGINE/Core/Engine/ILevel';
     import Events from 'UAENGINE/Core/Engine/Events';
@@ -72,13 +72,13 @@ declare module 'UAENGINE/Core/Engine/World' {
     export default World;
 }
 
-declare module 'UAENGINE/Core/Engine/Entity' {
+declare module 'UAENGINE/Core/Engine/GameObjects/Components/Entity' {
     import AnimationManager from 'UAENGINE/Core/Engine/AnimationManager';
     import Events from 'UAENGINE/Core/Engine/Events';
     import ScaleManager from 'UAENGINE/Core/Engine/ScaleManager';
     import IScreen from 'UAENGINE/Services/IScreen';
     import IObjectHandler from 'UAENGINE/Services/IObjectHandler';
-    import InputHandler from 'UAENGINE/Core/Engine/InputHandler';
+    import InputManager from 'UAENGINE/Core/Engine/InputManager';
     import MathUtils from 'UAENGINE/Core/Engine/Utils/MathUtils';
     import Point from 'UAENGINE/Core/Geom/Point';
     class Entity {
@@ -87,9 +87,9 @@ declare module 'UAENGINE/Core/Engine/Entity' {
         _math: MathUtils;
         _scaleManager: ScaleManager;
         protected _pointFactory: Point;
-        constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, scaleManager: ScaleManager, pointFactory: Point);
+        constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputManager, math: MathUtils, events: Events, scaleManager: ScaleManager, pointFactory: Point);
         readonly type: string;
-        text: string;
+        textureName: string;
         x: number;
         y: number;
         width: number;
@@ -99,41 +99,24 @@ declare module 'UAENGINE/Core/Engine/Entity' {
         scaleX: number;
         scaleY: number;
         visible: boolean;
-        readonly input: InputHandler;
+        readonly input: InputManager;
+        atlas: any;
         readonly pixelPerfect: boolean;
-        setStyle(style: any): void;
-        setTextColor(color: string): void;
         destroy(): void;
         makePixelPerfect(threshold?: number): boolean;
         readonly children: Entity[];
         parent: Entity | null;
-        readonly data: any;
+        data: any;
         addChild(entity: Entity): boolean;
         removeChild(entity: Entity): boolean;
         hasChild(entity: Entity): boolean;
         relativeMove(xDiff: number, yDiff: number): void;
-        initSpine(x: number, y: number, spine: string): void;
         moveBy(x: number, y: number): void;
         moveTo(x: number, y: number): void;
         setOrigin(x: number, y?: number): void;
-        initNineSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): void;
-        init(x: number, y: number, sprite: string, frame?: string | null): void;
-        initContainer(x: number, y: number): void;
-        initText(x: number, y: number, text: string, style?: any): void;
-        addTween(name: string, easing: string): void;
-        playTween(name: string, toObject: any, time: number, updateFunction?: Function): void;
-        pauseTween(name: string): void;
-        resumeTween(name: string): void;
-        pauseAnimation(name: string): void;
-        resumeAnimation(name: string): void;
-        addAnimation(name: string, base: string, max: number, fps: number, data: any): void;
-        addSpineAnimation(name: string, fps: number): void;
-        playAnimation(name: string, loop?: boolean): void;
-        playSpineAnimation(name: string): void;
+        init(x: number, y: number, textureName?: string): void;
+        anim(): AnimationManager;
         enableInput(): void;
-        disableInput(): void;
-        addInputListener(event: string, callback: Function, context: any, once?: boolean): void;
-        removeInputListener(event: string, callback: Function): void;
         createNew(): Entity;
         changeTexture(textureName: string): void;
         update(time: number): void;
@@ -333,8 +316,8 @@ declare module 'UAENGINE/Core/Engine/LevelManager' {
     import Events from "UAENGINE/Core/Engine/Events";
     import Utils from "UAENGINE/Core/Engine/Utils/Utils";
     import ScriptHandler from "UAENGINE/Core/Engine/ScriptHandler";
-    import InputHandler from 'UAENGINE/Core/Engine/InputHandler';
-    import GOFactory from "UAENGINE/Core/Engine/GOFactory";
+    import InputHandler from 'UAENGINE/Core/Engine/InputManager';
+    import GOFactory from "UAENGINE/Core/Engine/GameObjects/GOFactory";
     class LevelManager {
         constructor(audioManager: AudioManager, events: Events, script: ScriptHandler, utils: Utils, input: InputHandler, goFactory: GOFactory);
         /**
@@ -363,14 +346,14 @@ declare module 'UAENGINE/Core/Game' {
     import Events from 'UAENGINE/Core/Engine/Events';
     import ScaleManager from 'UAENGINE/Core/Engine/ScaleManager';
     import Expose from 'UAENGINE/Core/Engine/Expose';
-    import Entity from 'UAENGINE/Core/Engine/Entity';
+    import Entity from 'UAENGINE/Core/Engine/GameObjects/Components/Entity';
     import Loop from 'UAENGINE/Core/Engine/Loop';
     import Loader from 'UAENGINE/Core/Engine/Loader';
     import GameConfig from 'UAENGINE/Core/Engine/GameConfig';
     import LevelManager from 'UAENGINE/Core/Engine/LevelManager';
     import ILevel from 'UAENGINE/Core/Engine/ILevel';
     import IActivity from 'UAENGINE/Core/Engine/IActivity';
-    import GOFactory from 'UAENGINE/Core/Engine/GOFactory';
+    import GOFactory from 'UAENGINE/Core/Engine/GameObjects/GOFactory';
     import Geom from 'UAENGINE/Core/Geom/Geom';
     import Utils from 'UAENGINE/Core/Engine/Utils/Utils';
     class Game {
@@ -429,10 +412,16 @@ declare module 'UAENGINE/Core/Engine/GameConfig' {
     export default GameConfig;
 }
 
-declare module 'UAENGINE/Core/Engine/GOFactory' {
-    import Entity from "UAENGINE/Core/Engine/Entity";
+declare module 'UAENGINE/Core/Engine/GameObjects/GOFactory' {
+    import Entity from "UAENGINE/Core/Engine/GameObjects/Components/Entity";
+    import SpriteObject from 'UAENGINE/Core/Engine/GameObjects/SpriteObject';
+    import SliceObject from 'UAENGINE/Core/Engine/GameObjects/SliceObject';
+    import SpineObject from 'UAENGINE/Core/Engine/GameObjects/SpineObject';
+    import TextObject from 'UAENGINE/Core/Engine/GameObjects/TextObject';
+    import ContainerObject from 'UAENGINE/Core/Engine/GameObjects/ContainerObject';
+    import IParentChild from "UAENGINE/Core/Engine/GameObjects/IParentChild";
     class GOFactory {
-            constructor(entity: Entity);
+            constructor(entity: Entity, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject, container: ContainerObject);
             /**
                 * @description creates and returns a text object
                 * @param x the x coordinate to initialize with
@@ -440,7 +429,7 @@ declare module 'UAENGINE/Core/Engine/GOFactory' {
                 * @param text the text value to initialize with
                 * @param style a css style object to apply to the text
                 */
-            text(x: number, y: number, text: string, style: any, parent?: any): Entity;
+            text(x: number, y: number, text: string, style: any, parent?: IParentChild | null): TextObject;
             /**
                 * @description returns a Sprite object
                 * @param x the x coordinate to initialize with
@@ -448,9 +437,9 @@ declare module 'UAENGINE/Core/Engine/GOFactory' {
                 * @param textureName the name of the texture to initialize the sprite with
                 * @param frame the default frame for the Sprite. Optional. Provide this if working with an atlas animation
                 */
-            sprite(x: number, y: number, textureName: string, frame?: string | null, parent?: any): Entity;
+            sprite(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): SpriteObject;
             /**
-                *
+                * @description returns a nineSlice object
                 * @param x the x coordinate to initialze with
                 * @param y the y coordinate to initialize with
                 * @param textureName the name of the loaded texture to initiaze the object with
@@ -459,20 +448,20 @@ declare module 'UAENGINE/Core/Engine/GOFactory' {
                 * @param rightWidth The number of pixels to come in from the right before you reach the repeating section of the slice. This part will never stretch
                 * @param bottomHeight The number of pixels to come in from the bottom before you reach the repeating section of the slice. This part will never stretch
                 */
-            nineSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent?: any): Entity;
+            nineSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent?: IParentChild | null): SliceObject;
             /**
                 * @description creates and returns an empty 'container', analogous to PIXI.Container
                 * @param x the x coordinate to initialize with
                 * @param y the y coordinate to initialize with
                 */
-            container(x: number, y: number, parent?: any): Entity;
+            container(x: number, y: number, parent?: IParentChild | null): ContainerObject;
             /**
                 * @description creates and returns a Spine object
                 * @param x the x coordinate to initialize with
                 * @param y the y coordinate to initialize with
                 * @param spineName the name of the spine file to initialize with
                 */
-            spine(x: number, y: number, spineName: string, parent?: any): Entity;
+            spine(x: number, y: number, spineName: string, parent?: IParentChild | null): SpineObject;
     }
     export default GOFactory;
 }
@@ -608,13 +597,13 @@ declare module 'UAENGINE/Services/IObjectHandler' {
     export default IObjectHandler;
 }
 
-declare module 'UAENGINE/Core/Engine/InputHandler' {
+declare module 'UAENGINE/Core/Engine/InputManager' {
     import Events from "UAENGINE/Core/Engine/Events";
     import Loader from "UAENGINE/Core/Engine/Loader";
     import Point from "UAENGINE/Core/Geom/Point";
     import IScreen from "UAENGINE/Services/IScreen";
     import EventNames from "UAENGINE/Core/Engine/EventNames";
-    class InputHandler {
+    class InputManager {
             protected _pointFactory: Point;
             constructor(events: Events, loader: Loader, screen: IScreen, eventNames: EventNames, pointFactory: Point);
             /**
@@ -648,7 +637,7 @@ declare module 'UAENGINE/Core/Engine/InputHandler' {
                 */
             removeListener(event: string, callback: Function, sprite: any): void;
     }
-    export default InputHandler;
+    export default InputManager;
 }
 
 declare module 'UAENGINE/Core/Engine/Utils/MathUtils' {
@@ -869,6 +858,185 @@ declare module 'UAENGINE/Core/Engine/IActivity' {
         startActivity(scriptName: string): void;
     }
     export default IActivity;
+}
+
+declare module 'UAENGINE/Core/Engine/GameObjects/SpriteObject' {
+    import IGameObject from "UAENGINE/Core/Engine/GameObjects/IGameObject";
+    import Entity from "UAENGINE/Core/Engine/GameObjects/Components/Entity";
+    import IParentChild from "UAENGINE/Core/Engine/GameObjects/IParentChild";
+    import ChildHandler from "UAENGINE/Core/Engine/GameObjects/Components/ChildHandler";
+    import IScreen from "UAENGINE/Services/IScreen";
+    import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
+    class SpriteObject implements IGameObject, IParentChild {
+        constructor(entity: Entity, childHandler: ChildHandler, screen: IScreen, input: InputHandler);
+        init(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): void;
+        createNew(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): SpriteObject;
+        changeTexture(textureName: string): void;
+        readonly input: InputHandler;
+        data: any;
+        parent: IParentChild;
+        readonly children: IParentChild[];
+        readonly textureName: string;
+        atlas: any;
+        x: number;
+        readonly entity: Entity;
+        y: number;
+        readonly scaleX: number;
+        readonly scaleY: number;
+        readonly visible: boolean;
+        width: number;
+        height: number;
+        addChild(child: IParentChild): void;
+        removeChild(child: IParentChild): void;
+        destroy(): void;
+    }
+    export default SpriteObject;
+}
+
+declare module 'UAENGINE/Core/Engine/GameObjects/SliceObject' {
+    import IGameObject from "UAENGINE/Core/Engine/GameObjects/IGameObject";
+    import Entity from "UAENGINE/Core/Engine/GameObjects/Components/Entity";
+    import IParentChild from "UAENGINE/Core/Engine/GameObjects/IParentChild";
+    import ChildHandler from "UAENGINE/Core/Engine/GameObjects/Components/ChildHandler";
+    import IScreen from "UAENGINE/Services/IScreen";
+    import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
+    class SliceObject implements IGameObject, IParentChild {
+        constructor(entity: Entity, childHandler: ChildHandler, screen: IScreen, inputHandler: InputHandler);
+        init(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent?: IParentChild | null): void;
+        createNew(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent?: IParentChild | null): SliceObject;
+        changeTexture(textureName: string): void;
+        readonly input: InputHandler;
+        data: any;
+        readonly parent: IParentChild;
+        readonly children: IParentChild[];
+        readonly textureName: string;
+        atlas: any;
+        x: number;
+        readonly entity: Entity;
+        y: number;
+        readonly scaleX: number;
+        readonly scaleY: number;
+        readonly visible: boolean;
+        width: number;
+        height: number;
+        addChild(child: IParentChild): void;
+        removeChild(child: IParentChild): void;
+        destroy(): void;
+    }
+    export default SliceObject;
+}
+
+declare module 'UAENGINE/Core/Engine/GameObjects/SpineObject' {
+    import IGameObject from "UAENGINE/Core/Engine/GameObjects/IGameObject";
+    import Entity from "UAENGINE/Core/Engine/GameObjects/Components/Entity";
+    import IParentChild from "UAENGINE/Core/Engine/GameObjects/IParentChild";
+    import ChildHandler from "UAENGINE/Core/Engine/GameObjects/Components/ChildHandler";
+    import IScreen from "UAENGINE/Services/IScreen";
+    import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
+    class SpineObject implements IGameObject, IParentChild {
+        constructor(entity: Entity, childHandler: ChildHandler, screen: IScreen, input: InputHandler);
+        init(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): void;
+        createNew(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): SpineObject;
+        changeTexture(textureName: string): void;
+        readonly input: InputHandler;
+        data: any;
+        readonly parent: IParentChild;
+        readonly children: IParentChild[];
+        readonly textureName: string;
+        atlas: any;
+        x: number;
+        readonly entity: Entity;
+        y: number;
+        readonly scaleX: number;
+        readonly scaleY: number;
+        readonly visible: boolean;
+        width: number;
+        height: number;
+        addChild(child: IParentChild): void;
+        removeChild(child: IParentChild): void;
+        destroy(): void;
+    }
+    export default SpineObject;
+}
+
+declare module 'UAENGINE/Core/Engine/GameObjects/TextObject' {
+    import IGameObject from "UAENGINE/Core/Engine/GameObjects/IGameObject";
+    import Entity from "UAENGINE/Core/Engine/GameObjects/Components/Entity";
+    import IParentChild from "UAENGINE/Core/Engine/GameObjects/IParentChild";
+    import ChildHandler from "UAENGINE/Core/Engine/GameObjects/Components/ChildHandler";
+    import IScreen from "UAENGINE/Services/IScreen";
+    import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
+    class TextObject implements IGameObject, IParentChild {
+        constructor(entity: Entity, childHandler: ChildHandler, screen: IScreen, input: InputHandler);
+        init(x: number, y: number, text: string, style?: any, parent?: IParentChild | null): void;
+        createNew(x: number, y: number, textureName: string, frame: string | null | undefined, parent: IParentChild | null): TextObject;
+        readonly input: InputHandler;
+        text: string;
+        setStyle(style: any): void;
+        setTextColor(color: string): void;
+        data: any;
+        readonly parent: IParentChild;
+        readonly children: IParentChild[];
+        readonly textureName: string;
+        atlas: any;
+        x: number;
+        readonly entity: Entity;
+        y: number;
+        readonly scaleX: number;
+        readonly scaleY: number;
+        readonly visible: boolean;
+        width: number;
+        height: number;
+        changeTexture(textureName: string): void;
+        addChild(child: IParentChild): void;
+        removeChild(child: IParentChild): void;
+        destroy(): void;
+    }
+    export default TextObject;
+}
+
+declare module 'UAENGINE/Core/Engine/GameObjects/ContainerObject' {
+    import IGameObject from "UAENGINE/Core/Engine/GameObjects/IGameObject";
+    import Entity from "UAENGINE/Core/Engine/GameObjects/Components/Entity";
+    import IParentChild from "UAENGINE/Core/Engine/GameObjects/IParentChild";
+    import ChildHandler from "UAENGINE/Core/Engine/GameObjects/Components/ChildHandler";
+    import IScreen from "UAENGINE/Services/IScreen";
+    import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
+    class ContainerObject implements IGameObject, IParentChild {
+        constructor(entity: Entity, childHandler: ChildHandler, screen: IScreen, input: InputHandler);
+        init(x: number, y: number, parent: IParentChild | null): void;
+        createNew(x: number, y: number, parent: IParentChild | null): ContainerObject;
+        changeTexture(textureName: string): void;
+        readonly input: InputHandler;
+        data: any;
+        parent: IParentChild;
+        readonly children: IParentChild[];
+        x: number;
+        readonly entity: Entity;
+        y: number;
+        readonly scaleX: number;
+        readonly scaleY: number;
+        readonly visible: boolean;
+        readonly width: number;
+        readonly height: number;
+        addChild(child: IParentChild): void;
+        removeChild(child: IParentChild): void;
+        destroy(): void;
+    }
+    export default ContainerObject;
+}
+
+declare module 'UAENGINE/Core/Engine/GameObjects/IParentChild' {
+    import Entity from "UAENGINE/Core/Engine/GameObjects/Components/Entity";
+    interface IParentChild {
+        entity: Entity;
+        parent: IParentChild;
+        init(...args: any[]): void;
+        children: IParentChild[];
+        addChild(child: IParentChild): void;
+        removeChild(child: IParentChild): void;
+    }
+    export default IParentChild;
 }
 
 declare module 'UAENGINE/Core/Geom/Circle' {
@@ -1120,5 +1288,58 @@ declare module 'UAENGINE/Services/Howler/HwPlayer' {
         stop(res: Resource): void;
     }
     export default HwPlayer;
+}
+
+declare module 'UAENGINE/Core/Engine/GameObjects/IGameObject' {
+    import Entity from "UAENGINE/Core/Engine/GameObjects/Components/Entity";
+    import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
+    interface IGameObject {
+        entity: Entity;
+        input: InputHandler;
+        init(...args: any[]): void;
+        createNew(...args: any[]): any;
+        x: number;
+        y: number;
+        scaleX: number;
+        scaleY: number;
+        width: number;
+        height: number;
+        visible: boolean;
+        destroy(): void;
+    }
+    export default IGameObject;
+}
+
+declare module 'UAENGINE/Core/Engine/GameObjects/Components/ChildHandler' {
+    import Entity from "UAENGINE/Core/Engine/GameObjects/Components/Entity";
+    import IParentChild from "UAENGINE/Core/Engine/GameObjects/IParentChild";
+    class ChildHandler implements IParentChild {
+        parent: IParentChild;
+        _children: IParentChild[];
+        constructor();
+        createNew(): ChildHandler;
+        readonly children: IParentChild[];
+        readonly entity: Entity;
+        init(entity: Entity, parent: IParentChild | null): void;
+        addChild(object: IParentChild): boolean;
+        removeChild(object: IParentChild): void;
+        hasChild(object: IParentChild): boolean;
+    }
+    export default ChildHandler;
+}
+
+declare module 'UAENGINE/Core/Engine/GameObjects/Components/InputHandler' {
+    import Entity from "UAENGINE/Core/Engine/GameObjects/Components/Entity";
+    import InputManager from 'UAENGINE/Core/Engine/InputManager';
+    class InputHandler {
+        constructor(inputManager: InputManager);
+        init(entity: Entity): void;
+        readonly data: any;
+        disableInput(): void;
+        addInputListener(event: string, callback: Function, context: any, once?: boolean): void;
+        removeInputListener(event: string, callback: Function): void;
+        createNew(): InputHandler;
+    }
+    export default InputHandler;
 }
 

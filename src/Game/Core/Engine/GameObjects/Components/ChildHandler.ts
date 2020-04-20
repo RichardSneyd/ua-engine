@@ -1,11 +1,8 @@
 import Entity from "./Entity";
 import IParentChild from "../IParentChild";
 import IGameObject from '../IGameObject';
-import GOFactory from "UAENGINE/Core/Engine/GOFactory";
-
 
 class ChildHandler implements IParentChild {
-    entity: Entity;
     parent: IParentChild;
     _children: IParentChild[];
     private _entity: Entity;
@@ -14,12 +11,16 @@ class ChildHandler implements IParentChild {
 
     }
 
-    createNew(){
+    createNew() {
         return new ChildHandler();
     }
 
-    get children(){
+    get children() {
         return this._children;
+    }
+
+    get entity() {
+        return this._entity;
     }
 
     init(entity: Entity, parent: IParentChild | null) {
