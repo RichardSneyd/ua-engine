@@ -2,9 +2,9 @@ import AudioManager from "./AudioManager";
 import Events from "./Events";
 import Utils from "./Utils/Utils";
 import ScriptHandler from "./ScriptHandler";
-import InputHandler from './InputHandler';
+import InputHandler from './InputManager';
 import Game from '../Game';
-import GOFactory from "./GOFactory";
+import GOFactory from "./GameObjects/GOFactory";
 
 
 

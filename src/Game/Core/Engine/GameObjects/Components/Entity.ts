@@ -1,13 +1,13 @@
-import AnimationManager from './AnimationManager';
-import Events from './Events';
-import ScaleManager from './ScaleManager';
-import IScreen from '../../Services/IScreen';
-import IObjectHandler from '../../Services/IObjectHandler';
-import InputHandler from './InputHandler';
-import Utils from './Utils/Utils';
-import MathUtils from './Utils/MathUtils';
-import Point from '../Geom/Point';
-import ResType from '../Data/ResType';
+import AnimationManager from '../../AnimationManager';
+import Events from '../../Events';
+import ScaleManager from '../../ScaleManager';
+import IScreen from '../../../../Services/IScreen';
+import IObjectHandler from '../../../../Services/IObjectHandler';
+import InputManager from '../../InputManager';
+import Utils from '../../Utils/Utils';
+import MathUtils from '../../Utils/MathUtils';
+import Point from '../../../Geom/Point';
+import ResType from '../../../Data/ResType';
 
 
 class Entity {
@@ -18,13 +18,13 @@ class Entity {
   private _height: number;
   private _scaleX: number;
   private _scaleY: number;
-  private _sprite: string;
+  private _textureName: string;
   private _initialized: boolean;
   private _atlas: string | null;
   private _type: string = '';
 
   private _screen: IScreen; _animationManager: AnimationManager; _objectHandler: IObjectHandler;
-  private _input: InputHandler; _math: MathUtils;
+  private _input: InputManager; _math: MathUtils;
   private _data: any;
   private _events: Events; _scaleManager: ScaleManager; protected _pointFactory: Point;
   private _letters: string;
@@ -33,7 +33,7 @@ class Entity {
   private _children: Entity[];
   private _parent: Entity | null;
 
-  constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, scaleManager: ScaleManager, pointFactory: Point) {
+  constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputManager, math: MathUtils, events: Events, scaleManager: ScaleManager, pointFactory: Point) {
     this._screen = screen;
     this._animationManager = animationManager;
     this._objectHandler = objectHandler;
@@ -51,11 +51,10 @@ class Entity {
     this._height = 0;
     this._scaleX = 1;
     this._scaleY = 1;
-    this._sprite = '';
+    this._textureName= '';
     this._atlas = null;
 
     this._initialized = false;
-    this._letters = '$$$$____$$$$'; //default uninitialized string
     this._pixelPerfect = false;
 
     this._children = [];
@@ -66,12 +65,12 @@ class Entity {
     return this._type;
   }
 
-  set text(lett: string) {
-    if (this._letters == '$$$$____$$$$') {
-      console.error("this is not a text entity, can't change letters!");
-    } else {
-      this._letters = lett;
-    }
+  get textureName(){
+    return this._textureName;
+  }
+
+  set textureName(name: string){
+    this._textureName = name;
   }
 
   set x(xVal: number) {
@@ -81,6 +80,7 @@ class Entity {
     }
     else {
       this._objectHandler.setXy(this._data, xVal, this._y);
+      this._objectHandler.setPivot(this._data, this._origin);
     }
   }
 
@@ -90,6 +90,7 @@ class Entity {
       this._updateXY();
     }
     else {
+      this._objectHandler.setPivot(this._data, this._origin);
       this._objectHandler.setXy(this._data, this._x, yVal);
     }
   }
@@ -97,8 +98,8 @@ class Entity {
   set width(width: number) {
     this._width = width;
 
-    this._objectHandler.setSize(this._data, this._width, this._height);
     this._objectHandler.setPivot(this._data, this._origin);
+    this._objectHandler.setSize(this._data, this._width, this._height);
   }
 
   get width() {
@@ -114,6 +115,7 @@ class Entity {
     this._origin.x = origin.x;
     this._origin.y = origin.y;
     this._objectHandler.setPivot(this._data, this._origin);
+    this._objectHandler.setXy(this._data, this._x, this._y);
   }
 
   get origin() {
@@ -163,7 +165,7 @@ class Entity {
     this.data.visible = visible;
   }
 
-  get input(): InputHandler {
+  get input(): InputManager {
     return this._input;
   }
 
@@ -175,31 +177,22 @@ class Entity {
     return this._scaleY;
   }
 
-  get text(): string {
-    if (this._letters == '$$$$____$$$$') {
-      console.error("this is not a text entity, can't change letters!");
-      return '';
-    } else {
-      return this._letters;
-    }
+  get atlas(){
+    return this._atlas;
+  }
+
+  set atlas(atlas: any){
+    this._atlas = atlas;
   }
 
   get pixelPerfect(): boolean {
     return this._pixelPerfect;
   }
 
-  setStyle(style: any) {
-    this._objectHandler.setStyle(this._data, style);
-  }
-
-  setTextColor(color: string) {
-    this._objectHandler.setTextColor(this._data, color);
-  }
-
   public destroy() {
     // remember to ALWAYS remove event listeners when destroying a GameObject
     this._events.off('resize', this._onResize);
-    
+    if(this.parent !== null) this.parent.removeChild(this);
     this._objectHandler.destroy(this._data);
   }
 
@@ -232,6 +225,10 @@ class Entity {
 
   get data(): any {
     return this._data;
+  }
+  
+  set data(data: any){
+    this._data = data;
   }
 
   addChild(entity: Entity): boolean {
@@ -281,21 +278,6 @@ class Entity {
     this.y += (yDiff / scaleY);
   }
 
-  public initSpine(x: number, y: number, spine: string): void {
-    this._initScaleManager();
-    this._type = 'spine';
-    this._x = x;
-    this._y = y;
-    this._data = this._screen.createSpine(spine);
-    this._data.x = x;
-    this._data.y = y;
-    this._onResize();
-
-    this._initialized = true;
-
-    this._addListeners();
-  }
-
   public moveBy(x: number, y: number) {
     let xVal = this.x + x;
     let yVal = this.y + y;
@@ -319,116 +301,21 @@ class Entity {
 
     this.origin = this._pointFactory.createNew(x, yVal);
   }
-
-  public initNineSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): void {
+  // keep this one for GENERIC initializations 
+  public init(x: number, y: number, textureName: string = ''){
+    this._initScaleManager();
     this._x = x;
     this._y = y;
-    this._type = 'slice';
-    this._data = this._screen.createNineSlice(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight);
+    this._textureName = textureName;
     this._data.x = x;
     this._data.y = y;
-    //  console.log('boudns before calc', this._data.getBounds());
-    this._data.calculateBounds();
-    console.log(this._data);
-    this._width = this._data.width;
-    this._height = this._data.height;
-    console.log('_data: ', this._data);
-    this.setOrigin(0.5);
-    // debugger;
-
-    //  console.log('bounds after calc: ', this._data.getBounds());
-    this._initialized = true;
-    //  debugger;
-  }
-
-  public init(x: number, y: number, sprite: string, frame: string | null = null): void {
-    this._initScaleManager();
-    this._type = 'sprite';
-    this._x = x;
-    this._y = y;
-    this._sprite = sprite;
-
-    this._data = this._screen.createSprite(x, y, sprite, frame);
-    this._width = this._data.width;
-    this._height = this._data.height;
-    if (frame != null) this._atlas = sprite;
     this._onResize();
-
-    this._initialized = true;
-
     this._addListeners();
-  }
-
-  public initContainer(x: number, y: number): void {
-    this._initScaleManager();
-    this._type = 'container';
-    this._x = x;
-    this._y = y;
-    this._data = this._screen.createContainer(x, x);
     this._initialized = true;
-    this._width = this._data.width;
-    this._height = this._data.height;
   }
 
-  public initText(x: number, y: number, text: string, style: any = undefined) {
-    this._initScaleManager();
-    this._type = 'text';
-    this._x = x;
-    this._y = y;
-
-    this._letters = text;
-
-    this._data = this._screen.createText(x, y, text, style);
-    this._width = this._data.width;
-    this._height = this._data.height;
-    this._onResize();
-
-    this._initialized = true;
-
-    this._addListeners();
-  }
-
-  public addTween(name: string, easing: string) {
-    this._animationManager.addTween(name, easing, this);
-  }
-
-  public playTween(name: string, toObject: any, time: number, updateFunction: Function = () => { }) {
-    this._animationManager.playTween(name, toObject, time, () => {
-
-      updateFunction();
-    });
-  }
-
-  public pauseTween(name: string) {
-    this._animationManager.pauseTween(name);
-  }
-
-  public resumeTween(name: string) {
-    this._animationManager.resumeTween(name);
-  }
-
-  public pauseAnimation(name: string) {
-    this._animationManager.pause(name);
-  }
-
-  public resumeAnimation(name: string) {
-    this._animationManager.resume(name);
-  }
-
-  public addAnimation(name: string, base: string, max: number, fps: number, data: any): void {
-    this._animationManager.addAnimation(name, base, max, fps, data);
-  }
-
-  public addSpineAnimation(name: string, fps: number) {
-    this._animationManager.addSpineAnimation(name, fps, this._data);
-  }
-
-  public playAnimation(name: string, loop: boolean = false) {
-    this._animationManager.play(name, loop);
-  }
-
-  public playSpineAnimation(name: string) {
-    this._animationManager.playSpine(name);
+  public anim(){
+    return this._animationManager;
   }
 
   public enableInput() {
@@ -439,34 +326,6 @@ class Entity {
       this._input.enable(this._data);
     }
   }
-
-  public disableInput() {
-    if (this._data.data) {
-      this._input.disable(this._data.data);
-    }
-    else {
-      this._input.disable(this._data);
-    }
-  }
-
-  public addInputListener(event: string, callback: Function, context: any, once: boolean = false) {
-    if (this._data.data) {
-      this._input.addListener(event, callback, this._data.data, context);
-    }
-    else {
-      this._input.addListener(event, callback, this._data, context);
-    }
-  }
-
-  public removeInputListener(event: string, callback: Function) {
-    if (this._data.data) {
-      this._input.removeListener(event, callback, this._data.data);
-    }
-    else {
-      this._input.removeListener(event, callback, this._data);
-    }
-  }
-
 
   public createNew(): Entity {
     let am = this._animationManager.createNew();

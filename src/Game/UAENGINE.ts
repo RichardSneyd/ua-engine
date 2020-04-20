@@ -1,12 +1,12 @@
 import World from './Core/Engine/World';
-import Entity from './Core/Engine/Entity';
+import Entity from './Core/Engine/GameObjects/Components/Entity';
 import Loop from './Core/Engine/Loop';
 import Loader from './Core/Engine/Loader';
 import Events from './Core/Engine/Events';
 import LevelManager from './Core/Engine/LevelManager';
 import Game from './Core/Game';
 import GameConfig from './Core/Engine/GameConfig';
-import GOFactory from './Core/Engine/GOFactory';
+import GOFactory from './Core/Engine/GameObjects/GOFactory';
 import Geom from './Core/Geom/Geom';
 import Utils from './Core/Engine/Utils/Utils';
 

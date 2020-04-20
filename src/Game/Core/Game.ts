@@ -2,14 +2,14 @@ import World from './Engine/World';
 import Events from './Engine/Events';
 import ScaleManager from './Engine/ScaleManager';
 import Expose from './Engine/Expose';
-import Entity from './Engine/Entity';
+import Entity from './Engine/GameObjects/Components/Entity';
 import Loop from './Engine/Loop';
 import Loader from './Engine/Loader';
 import GameConfig from './Engine/GameConfig';
 import LevelManager from './Engine/LevelManager';
 import ILevel from './Engine/ILevel';
 import IActivity from './Engine/IActivity';
-import GOFactory from './Engine/GOFactory';
+import GOFactory from './Engine/GameObjects/GOFactory';
 import Geom from './Geom/Geom';
 import Utils from './Engine/Utils/Utils';
 

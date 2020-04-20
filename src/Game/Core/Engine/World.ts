@@ -1,4 +1,4 @@
-import Entity from '../Engine/Entity';
+import Entity from './GameObjects/Components/Entity';
 import IScreen from '../../Services/IScreen';
 import ILevel from '../Engine/ILevel';
 import LevelManager from './LevelManager';

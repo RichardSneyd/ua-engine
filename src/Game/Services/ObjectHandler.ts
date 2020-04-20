@@ -18,7 +18,7 @@ class ObjectHandler implements IObjectHandler {
   }
 
   public setPivot(object: Container, anchor: Point){
-    object.pivot.set(anchor.x * object.width, anchor.y * object.height);
+    object.pivot.set(Math.floor(anchor.x * object.width), Math.floor(anchor.y * object.height));
   }
 
   public setSize(object: Container, width: number, height: number){
