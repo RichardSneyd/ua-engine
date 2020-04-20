@@ -15,7 +15,7 @@ class SliceObject implements IGameObject, IParentChild {
         this._entity = entity; this._childHandler = childHandler; this._screen = screen; this._input = inputHandler;
     }
 
-    public init(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): void {
+    public init(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent: IParentChild | null = null): void {
         this.data = this._screen.createNineSlice(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight);
         this.data.x = x;
         this.data.y = y;
@@ -24,19 +24,17 @@ class SliceObject implements IGameObject, IParentChild {
         
         this.width = this.data.width;
         this.height = this.data.height;
+
+        this._entity.init(x, y);
+        this._childHandler.init(this._entity, parent);
        
       //  this.setOrigin(0.5);
     }
 
-    createNew(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent: any = null): SliceObject{
+    createNew(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent: IParentChild | null = null): SliceObject{
     
         let slice = new SliceObject(this._entity.createNew(), this._childHandler.createNew(), this._screen, this.input.createNew());
-        slice.init(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight);
-
-        if(parent!==null){
-            parent.addChild(slice);
-        }
-
+        slice.init(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight, parent);
         return slice;
     }
 

@@ -22,9 +22,13 @@ class ChildHandler implements IParentChild {
         return this._children;
     }
 
-    init(entity: Entity) {
+    init(entity: Entity, parent: IParentChild | null) {
         this._entity = entity;
         this._children = [];
+
+        if (parent !== null) {
+            parent.addChild(this);
+        }
     }
 
     addChild(object: IParentChild): boolean {

@@ -15,15 +15,16 @@ class ContainerObject implements IGameObject, IParentChild {
         this._entity = entity; this._childHandler = childHandler; this._screen = screen; this._input = input;
     }
 
-    public init(x: number, y: number): void {
+    public init(x: number, y: number, parent: IParentChild | null): void {
         this.data = this._screen.createContainer(x, y);
         this._entity.init(x, y);
         this._input.init(this._entity);
+        this._childHandler.init(this._entity, parent);
     }
 
-    createNew(x: number, y: number): ContainerObject {
+    createNew(x: number, y: number, parent: IParentChild | null): ContainerObject {
         let cont = new ContainerObject(this._entity.createNew(), this._childHandler.createNew(), this._screen, this._input.createNew());
-        cont.init(x, y);
+        cont.init(x, y, parent);
         return cont;
     }
 

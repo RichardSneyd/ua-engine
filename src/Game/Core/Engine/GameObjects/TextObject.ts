@@ -17,7 +17,7 @@ class TextObject implements IGameObject, IParentChild {
         this._letters = '$$$$____$$$$'; //default uninitialized string
     }
 
-    public init(x: number, y: number, text: string, style: any = undefined): void {
+    public init(x: number, y: number, text: string, style: any = undefined, parent: IParentChild | null = null): void {
 
         this._letters = text;
 
@@ -26,11 +26,12 @@ class TextObject implements IGameObject, IParentChild {
         this.height = this.data.height;
         this._entity.init(x, y);
         this._input.init(this._entity);
+        this._childHandler.init(this._entity, parent);
     }
 
-    createNew(x: number, y: number, textureName: string, frame: string | null = null): TextObject {
+    createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null): TextObject {
         let textObj = new TextObject(this._entity.createNew(), this._childHandler.createNew(), this._screen, this._input.createNew());
-        textObj.init(x, y, textureName, frame);
+        textObj.init(x, y, textureName, frame, parent);
         return textObj;
     }
 

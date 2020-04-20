@@ -15,7 +15,7 @@ class SpineObject implements IGameObject, IParentChild {
         this._entity = entity; this._childHandler = childHandler; this._screen = screen; this._input = input;
     }
 
-    public init(x: number, y: number, textureName: string, frame: string | null = null): void {
+    public init(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): void {
         this.data = this._screen.createSprite(x, y, textureName, frame);
         this.width = this.data.width;
         this.height = this.data.height;
@@ -24,11 +24,13 @@ class SpineObject implements IGameObject, IParentChild {
 
         this.entity.init(this.x, this.y, textureName);
         this._input.init(this._entity);
+        this._childHandler.init(this._entity, parent);
+
     }
 
-    createNew(x: number, y: number, textureName: string, frame: string | null = null): SpineObject {
+    createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): SpineObject {
         let sprite = new SpineObject(this._entity.createNew(), this._childHandler.createNew(), this._screen, this._input.createNew());
-        sprite.init(x, y, textureName, frame);
+        sprite.init(x, y, textureName, frame, parent);
         return sprite;
     }
 

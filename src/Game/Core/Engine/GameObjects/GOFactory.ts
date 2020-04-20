@@ -27,11 +27,7 @@ class GOFactory {
      * @param style a css style object to apply to the text
      */
     text(x: number, y: number, text: string, style: any, parent: IParentChild | null = null) {
-        let textObj = this._text.createNew(x, y, text, style);
-
-        if (parent !== null) {
-            parent.addChild(textObj);
-        }
+        let textObj = this._text.createNew(x, y, text, style, parent);
         return text;
     }
 
@@ -43,11 +39,7 @@ class GOFactory {
      * @param frame the default frame for the Sprite. Optional. Provide this if working with an atlas animation
      */
     sprite(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null) {
-        let sprite = this._sprite.createNew(x, y, textureName, frame);
-
-        if (parent !== null) {
-            parent.addChild(sprite);
-        }
+        let sprite = this._sprite.createNew(x, y, textureName, frame, parent);
         return sprite;
     }
 
@@ -62,12 +54,7 @@ class GOFactory {
      * @param bottomHeight The number of pixels to come in from the bottom before you reach the repeating section of the slice. This part will never stretch
      */
     nineSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent: IParentChild | null = null) {
-        let slice = this._slice.createNew(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight);
-
-        if (parent !== null) {
-            parent.addChild(slice);
-        }
-
+        let slice = this._slice.createNew(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight, parent);
         return slice;
     }
 
@@ -77,7 +64,7 @@ class GOFactory {
      * @param y the y coordinate to initialize with
      */
     container(x: number, y: number, parent: IParentChild | null = null) {
-        let container = this._container.createNew(x, y);
+        let container = this._container.createNew(x, y, parent);
 
         if (parent !== null) {
             parent.addChild(container);
@@ -93,12 +80,7 @@ class GOFactory {
      * @param spineName the name of the spine file to initialize with
      */
     spine(x: number, y: number, spineName: string, parent: IParentChild | null = null) {
-        let spine = this._spine.createNew(x, y, spineName);
-
-        if (parent !== null) {
-            parent.addChild(spine);
-        }
-
+        let spine = this._spine.createNew(x, y, spineName, null, parent);
         return spine;
     }
 }
