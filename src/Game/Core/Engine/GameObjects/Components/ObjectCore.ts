@@ -1,4 +1,4 @@
-import AnimationManager from '../../AnimationManager';
+import AnimationManager from './AnimationManager';
 import Events from '../../Events';
 import ScaleManager from './ScaleHandler';
 import IScreen from '../../../../Services/IScreen';
@@ -110,6 +110,10 @@ class ObjectCore {
 
     this._objectHandler.setPivot(this._data, this._origin);
     this._objectHandler.setSize(this._data, this._width, this._height);
+  }
+
+  get animations(){
+    return this._animationManager;
   }
 
   get width() {

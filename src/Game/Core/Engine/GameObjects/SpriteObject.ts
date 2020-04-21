@@ -1,4 +1,5 @@
 import Events from "../Events";
+import AnimationManager from "./Components/AnimationManager";
 import IGameObject from "./IGameObject";
 import ObjectCore from "./Components/ObjectCore";
 import IParentChild from "./IParentChild";
@@ -50,6 +51,10 @@ class SpriteObject implements IGameObject, IParentChild {
 
     get pcHandler(){
         return this._pcHandler;
+    }
+
+    get animations(){
+        return this._core.animations;
     }
 
     get data() {

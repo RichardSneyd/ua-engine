@@ -18,6 +18,7 @@ class GOFactory {
     constructor(core: ObjectCore, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject, 
         container: ContainerObject) {
         this._core = core; this._slice = slice; this._spine = spine; this._text = text; this._container = container;
+        this._sprite = sprite;
     }
 
     /**

@@ -720,7 +720,7 @@ declare module 'UAENGINE/Core/Engine/IActivity' {
 }
 
 declare module 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore' {
-    import AnimationManager from 'UAENGINE/Core/Engine/AnimationManager';
+    import AnimationManager from 'UAENGINE/Core/Engine/GameObjects/Components/AnimationManager';
     import Events from 'UAENGINE/Core/Engine/Events';
     import ScaleManager from 'UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler';
     import IScreen from 'UAENGINE/Services/IScreen';
@@ -743,6 +743,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore' {
         x: number;
         y: number;
         width: number;
+        readonly animations: AnimationManager;
         height: number;
         readonly events: Events;
         origin: Point;
@@ -771,6 +772,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore' {
 }
 
 declare module 'UAENGINE/Core/Engine/GameObjects/SpriteObject' {
+    import AnimationManager from "UAENGINE/Core/Engine/GameObjects/Components/AnimationManager";
     import IGameObject from "UAENGINE/Core/Engine/GameObjects/IGameObject";
     import ObjectCore from "UAENGINE/Core/Engine/GameObjects/Components/ObjectCore";
     import IParentChild from "UAENGINE/Core/Engine/GameObjects/IParentChild";
@@ -786,6 +788,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpriteObject' {
         readonly input: InputHandler;
         readonly scaleManager: ScaleManager;
         readonly pcHandler: ParentChildHandler;
+        readonly animations: AnimationManager;
         data: any;
         parent: IParentChild;
         readonly children: IParentChild[];
@@ -1221,7 +1224,7 @@ declare module 'UAENGINE/Core/Engine/EventNames' {
     export default EventNames;
 }
 
-declare module 'UAENGINE/Core/Engine/AnimationManager' {
+declare module 'UAENGINE/Core/Engine/GameObjects/Components/AnimationManager' {
     import Anim from 'UAENGINE/Core/Data/Anim';
     import Tween from 'UAENGINE/Core/Data/Tween';
     class AnimationManager {
