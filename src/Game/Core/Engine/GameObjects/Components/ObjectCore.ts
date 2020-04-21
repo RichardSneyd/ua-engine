@@ -29,7 +29,6 @@ class ObjectCore {
   private _data: any;
   private _events: Events; _scaleHandler: ScaleManager; protected _pointFactory: Point;
   private _letters: string;
-  private _pixelPerfect: boolean = false;
 
   private _go: IGameObject;
 
@@ -54,7 +53,6 @@ class ObjectCore {
     this._atlas = null;
 
     this._initialized = false;
-    this._pixelPerfect = false;
   }
 
   // keep this one for GENERIC initializations 
@@ -71,6 +69,10 @@ class ObjectCore {
 
   get objectHandler() {
     return this._objectHandler;
+  }
+
+  get screen(){
+    return this._screen;
   }
 
   get textureName() {
@@ -197,23 +199,13 @@ class ObjectCore {
   }
 
   get pixelPerfect(): boolean {
-    return this._pixelPerfect;
+    return this._input.pixelPerfect;
   }
 
   public destroy() {
     // remember to ALWAYS remove event listeners when destroying a GameObject
     this._events.off('resize', this._go.scaleManager.onResize);
     this._objectHandler.destroy(this._data);
-  }
-
-  public makePixelPerfect(threshold: number = 127): boolean {
-
-    /*  if(this._data.type !== ResType.IMG){
-       return false;
-     } */
-    this._screen.addHitMap(this._data, threshold);
-    this._pixelPerfect = true;
-    return true;
   }
 
   get data(): any {
@@ -261,6 +253,10 @@ class ObjectCore {
 
   public enableInput() {
     this._input.enableInput();
+  }
+
+  public makePixelPerfect(threshold?: number) {
+    this._go.input.makePixelPerfect(threshold);
   }
 
   public createNew(): ObjectCore {

@@ -1,6 +1,6 @@
 import GameConfig from './GameConfig';
-import ContainerObject from 'UAENGINE/Core/Engine/GameObjects/ContainerObject';
-import Events from 'UAENGINE/Core/Engine/Events';
+import ContainerObject from './GameObjects/ContainerObject';
+import Events from './Events';
 
 class ScaleManager {
   private _gameConfig: GameConfig;

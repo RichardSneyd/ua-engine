@@ -1,3 +1,4 @@
+import Events from "../Events";
 import IGameObject from "./IGameObject";
 import ObjectCore from "./Components/ObjectCore";
 import IParentChild from "./IParentChild";

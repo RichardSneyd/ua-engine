@@ -23,14 +23,14 @@ class World {
 
     this._initialized = false;
 
-   // this._objectCore;
+    // this._objectCore;
     this._screen = screen;
 
     this._events = events;
-    
+
     this._currentLevel = null;
   }
-  
+
   /**
    * @description initialize the game world. This generates an empty screen
    * @param w The width value to initialize the world with. Defines the width of the game screen.
@@ -38,10 +38,10 @@ class World {
    */
   public init(w: number, h: number): void {
     let elmId: string = this._getElementName();
-    
+
     this._width = w;
     this._height = h;
-    
+
     this._createScreen(w, h, elmId);
     this._events.on('debugscreen', this.debugScreen, this);
   }
@@ -70,14 +70,14 @@ class World {
     this._screen.resize(width, height);
   }
 
-  public debugScreen(){
+  public debugScreen() {
     this._screen.debugScreen();
   }
 
   /**
    * @description returns literal width value from PxGame. NOT suitable for positioning objects on screen; use game.width instead.
    */
-  public pixelWidth(): number{
+  public pixelWidth(): number {
     return <number>this._screen.width();
   }
 

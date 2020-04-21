@@ -1,11 +1,18 @@
 import ObjectCore from "./ObjectCore";
 import InputManager from '../../InputManager';
 import IGameObject from "../IGameObject";
+import IScreen from "../../../../Services/IScreen";
 
 class InputHandler {
   private _inputManager: InputManager;
   private _go: IGameObject;
   private _core: ObjectCore;
+  private _screen: IScreen;
+  private _pixelPerfect: boolean = false;
+
+  get pixelPerfect(): boolean {
+    return this._pixelPerfect;
+  }
 
   constructor(inputManager: InputManager) {
     this._inputManager = inputManager;
@@ -14,6 +21,17 @@ class InputHandler {
   init(go: IGameObject) {
     this._go = go;
     this._core = go.core;
+    this._screen = go.core.screen;
+  }
+
+  public makePixelPerfect(threshold: number = 127): boolean {
+
+    /*  if(this._data.type !== ResType.IMG){
+       return false;
+     } */
+    this._screen.addHitMap(this._core.data, threshold);
+    this._pixelPerfect = true;
+    return true;
   }
 
   get data() {
