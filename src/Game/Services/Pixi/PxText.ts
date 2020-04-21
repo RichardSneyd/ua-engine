@@ -156,6 +156,14 @@ class PxText {
     }
   }
 
+  addChild(object: any){
+    this.data.addChild(object);
+  }
+
+  removeChild(object: any){
+    this.data.removeChild(object);
+  }
+
   public updateTexture() {
     this._updateTexture();
   }

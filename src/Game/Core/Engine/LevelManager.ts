@@ -2,9 +2,9 @@ import AudioManager from "./AudioManager";
 import Events from "./Events";
 import Utils from "./Utils/Utils";
 import ScriptHandler from "./ScriptHandler";
-import InputHandler from './InputHandler';
+import InputHandler from './InputManager';
 import Game from '../Game';
-import GOFactory from "./GOFactory";
+import GOFactory from "./GameObjects/GOFactory";
 
 
 
@@ -16,7 +16,7 @@ class LevelManager {
     private _input: InputHandler;
     private _goFactory: GOFactory;
 
-    constructor(audioManager: AudioManager, events: Events, script: ScriptHandler, utils: Utils, input: InputHandler, goFactory: GOFactory){
+    constructor(audioManager: AudioManager, events: Events, script: ScriptHandler, utils: Utils, input: InputHandler, goFactory: GOFactory) {
         this._audio = audioManager;
         this._events = events;
         this._script = script;
@@ -35,11 +35,11 @@ class LevelManager {
      * => {bgd: 'bgd_1', overlay: 'overlay_1'}
      * @param processText (optional) the column names to convert into lines and words of text. Mainly useful in passage (reading) types.
      */
-    init(scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]){
+    init(scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]) {
         this._script.init(scriptName, scriptRaw, parseCols, objectifyCols, processText);
     }
 
-    get events(): Events{
+    get events(): Events {
         return this._events;
     }
 
@@ -59,9 +59,9 @@ class LevelManager {
         return this._input;
     }
 
-      get goFactory(): GOFactory {
+    get goFactory(): GOFactory {
         return this._goFactory;
-    }  
+    }
 
 
 }

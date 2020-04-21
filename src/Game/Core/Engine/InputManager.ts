@@ -1,14 +1,11 @@
 import Events from "./Events";
 import Loader from "./Loader";
-//import Screen from "../../Services/Screen";
-import ITappable from './ITappable';
 import Point from "../Geom/Point";
-import Entity from "./Entity";
 import IScreen from "../../Services/IScreen";
 import EventNames from "./EventNames";
 
 
-class InputHandler {
+class InputManager {
     protected _pointFactory: Point;
     private _eventNames: EventNames;
     private _events: Events; private _loader: Loader; private _screen: IScreen;
@@ -107,4 +104,4 @@ class InputHandler {
     }
 }
 
-export default InputHandler;
+export default InputManager;

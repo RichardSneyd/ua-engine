@@ -1,8 +1,18 @@
 import Entity from "./Entity";
+import SpriteObject from './SpriteObject';
+import SliceObject from './SliceObject';
+import SpineObjct from './SpineObject';
+import TextObject from './TextObject';
+import ContainerObject from './ContainerObject';
 
 
 class GOFactory {
     private _entity: Entity;
+    private _sprite: SpriteObject;
+    private _slice: SliceObject;
+    private _spine: SpineObjct;
+    private _text: TextObject;
+    private _container: ContainerObject;
 
     constructor(entity: Entity){
         this._entity = entity;
@@ -16,12 +26,12 @@ class GOFactory {
      * @param style a css style object to apply to the text
      */
     text(x: number, y: number, text: string, style: any, parent: any = null) {
-        let entity = this._entity.createNew();
-        entity.initText(x, y, text, style);
+        let textObj = this._text.createNew();
+        textObj.initText(x, y, text, style);
         if(parent!==null){
-            parent.addChild(entity);
+            parent.addChild(text);
         }
-        return entity;
+        return text;
     }
 
     /**

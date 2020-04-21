@@ -1,13 +1,13 @@
-import AnimationManager from './AnimationManager';
-import Events from './Events';
-import ScaleManager from './ScaleManager';
-import IScreen from '../../Services/IScreen';
-import IObjectHandler from '../../Services/IObjectHandler';
-import InputHandler from './InputHandler';
-import Utils from './Utils/Utils';
-import MathUtils from './Utils/MathUtils';
-import Point from '../Geom/Point';
-import ResType from '../Data/ResType';
+import AnimationManager from '../AnimationManager';
+import Events from '../Events';
+import ScaleManager from '../ScaleManager';
+import IScreen from '../../../Services/IScreen';
+import IObjectHandler from '../../../Services/IObjectHandler';
+import InputHandler from '../InputManager';
+import Utils from '../Utils/Utils';
+import MathUtils from '../Utils/MathUtils';
+import Point from '../../Geom/Point';
+import ResType from '../../Data/ResType';
 
 
 class Entity {
@@ -81,6 +81,7 @@ class Entity {
     }
     else {
       this._objectHandler.setXy(this._data, xVal, this._y);
+      this._objectHandler.setPivot(this._data, this._origin);
     }
   }
 
@@ -90,6 +91,7 @@ class Entity {
       this._updateXY();
     }
     else {
+      this._objectHandler.setPivot(this._data, this._origin);
       this._objectHandler.setXy(this._data, this._x, yVal);
     }
   }
@@ -97,8 +99,8 @@ class Entity {
   set width(width: number) {
     this._width = width;
 
-    this._objectHandler.setSize(this._data, this._width, this._height);
     this._objectHandler.setPivot(this._data, this._origin);
+    this._objectHandler.setSize(this._data, this._width, this._height);
   }
 
   get width() {
@@ -114,6 +116,7 @@ class Entity {
     this._origin.x = origin.x;
     this._origin.y = origin.y;
     this._objectHandler.setPivot(this._data, this._origin);
+    this._objectHandler.setXy(this._data, this._x, this._y);
   }
 
   get origin() {
@@ -199,7 +202,7 @@ class Entity {
   public destroy() {
     // remember to ALWAYS remove event listeners when destroying a GameObject
     this._events.off('resize', this._onResize);
-    
+    if(this.parent !== null) this.parent.removeChild(this);
     this._objectHandler.destroy(this._data);
   }
 

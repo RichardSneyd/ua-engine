@@ -2,27 +2,27 @@ import World from './Engine/World';
 import Events from './Engine/Events';
 import ScaleManager from './Engine/ScaleManager';
 import Expose from './Engine/Expose';
-import Entity from './Engine/Entity';
 import Loop from './Engine/Loop';
 import Loader from './Engine/Loader';
 import GameConfig from './Engine/GameConfig';
 import LevelManager from './Engine/LevelManager';
 import ILevel from './Engine/ILevel';
 import IActivity from './Engine/IActivity';
-import GOFactory from './Engine/GOFactory';
+import GOFactory from './Engine/GameObjects/GOFactory';
 import Geom from './Geom/Geom';
 import Utils from './Engine/Utils/Utils';
+//import ObjectCore from './Engine/GameObjects/Components/ObjectCore';
 
 class Game {
   private _world: World; _events: Events;
   private _scaleManager: ScaleManager; _expose: Expose;
 
-  private _entity: Entity; _loop: Loop; _loader: Loader; _gameConfig: GameConfig; _levelManager: LevelManager; 
+  private _loop: Loop; _loader: Loader; _gameConfig: GameConfig; _levelManager: LevelManager;
   private _goFactory: GOFactory; _geom: Geom; _utils: Utils;
 
-  constructor(world: World, entity: Entity, loop: Loop, loader: Loader,
-              events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
-              levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils) {
+  constructor(world: World, loop: Loop, loader: Loader,
+    events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
+    levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils) {
 
     this._world = world;
     this._events = events;
@@ -30,7 +30,6 @@ class Game {
     this._scaleManager = scaleManager;
     this._expose = expose;
 
-    this._entity = entity;
     this._loop = loop;
     this._loader = loader;
     this._gameConfig = gameConfig;
@@ -48,7 +47,7 @@ class Game {
    * @param act the act object to add.
    */
   public addActivity(act: IActivity) {
-    
+
   }
 
   /**
@@ -69,13 +68,13 @@ class Game {
         this._initScaleManager();
 
         this._world.init(this._gameConfig.data.DISPLAY.WIDTH, this._gameConfig.data.DISPLAY.HEIGHT);
-        
+
 
         this._addListeners();
         this._onResize();
 
-        resolve({status: 'sucess'});
-        
+        resolve({ status: 'sucess' });
+
       });
     })
   }
@@ -92,7 +91,7 @@ class Game {
    * @description returns the preset width of the game, as specified in config.json. Suitable for positioning objects relative 
    * to the screen.
    */
-  public width(){
+  public width() {
     return this._gameWidth();
   }
 
@@ -100,7 +99,7 @@ class Game {
    * @description returns the preset height value of the game, as specified in config.json. Suitable for positioning objects relative
    * to the screen.
    */
-  public height(){
+  public height() {
     return this._gameHeight();
   }
 
@@ -115,7 +114,6 @@ class Game {
 
     this._expose.add('game', this);
     this._expose.add('world', this._world);
-    this._expose.add('entity', this._entity);
     this._expose.add('loop', this._loop);
     this._expose.add('loader', this._loader);
     this._expose.add('events', this._events);

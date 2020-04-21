@@ -1,5 +1,5 @@
-import Anim from '../Data/Anim';
-import Tween from '../Data/Tween';
+import Anim from '../../../Data/Anim';
+import Tween from '../../../Data/Tween';
 
 class AnimationManager {
   private _anim: Anim; _activeAnimation: Anim | null; _tween: Tween;
@@ -20,7 +20,7 @@ class AnimationManager {
   public play(name: string, loop: boolean = false) {
     let anim = this._getAnim(name);
 
-    if (anim != null ) {
+    if (anim != null) {
       this._play(anim);
     } else {
       console.error("Could not find aimation named: %s", name);
@@ -59,7 +59,7 @@ class AnimationManager {
     this._tweens.push(tween);
   }
 
-  public playTween(name: string, toObject: any, time: number, updateFunction: Function = ()=>{}) {
+  public playTween(name: string, toObject: any, time: number, updateFunction: Function = () => { }) {
     let tween = this._getTween(name);
     if (tween != null) tween.to(toObject, time, updateFunction);
   }
@@ -99,7 +99,7 @@ class AnimationManager {
   //max has to be dynamic
   //-1 for nothing, single frame
 
-  public addAnimation(name: string, base: string, max: number, fps: number, data: any = null)  {
+  public addAnimation(name: string, base: string, max: number, fps: number, data: any = null) {
     let prevAnim = this._getAnim(name);
     let anim: Anim = this._anim.createNew();
 

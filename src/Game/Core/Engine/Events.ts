@@ -13,7 +13,7 @@ class Events {
         this._events = {};
         this._timers = [];
         this._paused = false;
-        this._step = 50; // cannot execute every millisecond, browser isn't fast enough. 10 ticks per second should be adequate.
+        this._step = 25; // cannot execute every millisecond, browser isn't fast enough. 40 ticks per second should be adequate.
         this._time = new Date().getTime();
         this._lastTime = this._time - this._step;
         this._delta = this._time - this._lastTime;

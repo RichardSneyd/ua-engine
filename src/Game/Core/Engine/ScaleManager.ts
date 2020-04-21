@@ -1,4 +1,6 @@
 import GameConfig from './GameConfig';
+import ContainerObject from './GameObjects/ContainerObject';
+import Events from './Events';
 
 class ScaleManager {
   private _gameConfig: GameConfig;
@@ -14,9 +16,9 @@ class ScaleManager {
   }
 
   public init() {
+
     this._width = this._gameWidth();
     this._height = this._gameHeight();
-
     //console.log("smanager w(%s) h(%s)", this._width, this._height);
   }
 
@@ -36,6 +38,7 @@ class ScaleManager {
     return new ScaleManager(this._gameConfig);
   }
 
+
   private _scaleFactor(): number {
     let width = window.innerWidth;
     let height = window.innerHeight;
@@ -50,6 +53,7 @@ class ScaleManager {
   private _gameHeight(): number {
     return this._gameConfig.data.DISPLAY.HEIGHT;
   }
+
 }
 
 export default ScaleManager;
