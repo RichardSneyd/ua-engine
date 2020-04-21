@@ -6,17 +6,18 @@ import IParentChild from "./IParentChild";
 import ParentChildHandler from "./Components/ParentChildHandler";
 import IScreen from "../../../Services/IScreen";
 import InputHandler from "./Components/InputHandler";
-import ScaleManager from "./Components/ScaleHandler";
+import ScaleHandler from "./Components/ScaleHandler";
 
 class SpriteObject implements IGameObject, IParentChild {
     private _screen: IScreen;
     private _core: ObjectCore;
     private _input: InputHandler;
     private _pcHandler: ParentChildHandler;
-    private _scaleManager: ScaleManager;
+    private _scaleHandler: ScaleHandler;
 
-    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler) {
+    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler) {
         this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input;
+        this._scaleHandler = scaleHandler;
     }
 
     public init(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): void {
@@ -32,7 +33,7 @@ class SpriteObject implements IGameObject, IParentChild {
     }
 
     createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): SpriteObject {
-        let sprite = new SpriteObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew());
+        let sprite = new SpriteObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew());
         sprite.init(x, y, textureName, frame, parent);
         return sprite;
     }
@@ -45,8 +46,8 @@ class SpriteObject implements IGameObject, IParentChild {
         return this._input;
     }
 
-    get scaleManager(){
-        return this._scaleManager;
+    get scaleHandler(){
+        return this._scaleHandler;
     }
 
     get pcHandler(){
@@ -63,18 +64,6 @@ class SpriteObject implements IGameObject, IParentChild {
 
     set data(data: any) {
         this._core.data = data;
-    }
-
-    get parent() {
-        return this._pcHandler.parent;
-    }
-
-    set parent(parent: IParentChild) {
-        this._pcHandler.parent = parent;
-    }
-
-    get children() {
-        return this._pcHandler.children;
     }
 
     get textureName() {
@@ -137,6 +126,18 @@ class SpriteObject implements IGameObject, IParentChild {
         this.data.height = height;
     }
 
+     get parent() {
+        return this._pcHandler.parent;
+    }
+
+    set parent(parent: IParentChild) {
+        this._pcHandler.parent = parent;
+    }
+
+    get children() {
+        return this._pcHandler.children;
+    }
+
     addChild(child: IParentChild): void {
         this._pcHandler.addChild(child);
     }
@@ -144,9 +145,10 @@ class SpriteObject implements IGameObject, IParentChild {
     removeChild(child: IParentChild): void {
         this._pcHandler.removeChild(child);
     }
-
-    destroy() {
-        if(this.parent !== null) this._pcHandler.removeChild(this);
+ 
+   
+ destroy() {
+        if(this.pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
         this._core.destroy();
     }
 }

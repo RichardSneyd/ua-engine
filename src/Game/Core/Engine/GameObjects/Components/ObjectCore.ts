@@ -58,7 +58,7 @@ class ObjectCore {
   // keep this one for GENERIC initializations 
   public init(go: IGameObject, x: number, y: number, textureName: string = '') {
     this._go = go;
-    this._scaleHandler = go.scaleManager;
+    this._scaleHandler = go.scaleHandler;
     this._x = x;
     this._y = y;
     this._textureName = textureName;
@@ -208,7 +208,7 @@ class ObjectCore {
 
   public destroy() {
     // remember to ALWAYS remove event listeners when destroying a GameObject
-    this._events.off('resize', this._go.scaleManager.onResize);
+    this._events.off('resize', this._go.scaleHandler.onResize);
     this._objectHandler.destroy(this._data);
   }
 

@@ -5,18 +5,18 @@ import IParentChild from "./IParentChild";
 import ParentChildHandler from "./Components/ParentChildHandler";
 import IScreen from "../../../Services/IScreen";
 import InputHandler from "./Components/InputHandler";
-import ScaleManager from './Components/ScaleHandler';
+import ScaleHandler from './Components/ScaleHandler';
 
 class ContainerObject implements IGameObject, IParentChild {
     private _screen: IScreen;
     private _core: ObjectCore;
     private _input: InputHandler;
-    private _scaleManager: ScaleManager;
+    private _scaleHandler: ScaleHandler;
     private _pcHandler: ParentChildHandler;
 
-    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleManager: ScaleManager) {
+    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler) {
         this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input;
-        this._scaleManager = scaleManager;
+        this._scaleHandler = scaleHandler;
     }
 
     public init(x: number, y: number, parent: IParentChild | null): void {
@@ -24,11 +24,11 @@ class ContainerObject implements IGameObject, IParentChild {
         this._core.init(this, x, y);
         this._input.init(this);
         this._pcHandler.init(this._core, parent);
-        this._scaleManager.init(this);
+        this._scaleHandler.init(this);
     }
 
     createNew(x: number, y: number, parent: IParentChild | null): ContainerObject {
-        let cont = new ContainerObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this.scaleManager.createNew());
+        let cont = new ContainerObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this.scaleHandler.createNew());
         cont.init(x, y, parent);
         return cont;
     }
@@ -49,8 +49,8 @@ class ContainerObject implements IGameObject, IParentChild {
         return this._input;
     }
 
-    get scaleManager(){
-        return this._scaleManager;
+    get scaleHandler(){
+        return this._scaleHandler;
     }
 
     get data() {
@@ -123,7 +123,7 @@ class ContainerObject implements IGameObject, IParentChild {
     }
 
     destroy(){
-        if(this.parent !== null) this._pcHandler.removeChild(this);
+        if(this.parent !== null) this._pcHandler.parent.removeChild(this);
         this._core.destroy();
     }
 }

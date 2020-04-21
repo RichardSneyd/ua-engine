@@ -779,14 +779,14 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpriteObject' {
     import ParentChildHandler from "UAENGINE/Core/Engine/GameObjects/Components/ParentChildHandler";
     import IScreen from "UAENGINE/Services/IScreen";
     import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
-    import ScaleManager from "UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler";
+    import ScaleHandler from "UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler";
     class SpriteObject implements IGameObject, IParentChild {
-        constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler);
+        constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler);
         init(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): void;
         createNew(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): SpriteObject;
         changeTexture(textureName: string): void;
         readonly input: InputHandler;
-        readonly scaleManager: ScaleManager;
+        readonly scaleHandler: ScaleHandler;
         readonly pcHandler: ParentChildHandler;
         readonly animations: AnimationManager;
         data: any;
@@ -816,14 +816,14 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SliceObject' {
     import ParentChildHandler from "UAENGINE/Core/Engine/GameObjects/Components/ParentChildHandler";
     import IScreen from "UAENGINE/Services/IScreen";
     import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
-    import ScaleManager from "UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler";
+    import ScaleHandler from "UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler";
     class SliceObject implements IGameObject, IParentChild {
-        constructor(objectCore: ObjectCore, parentChildHandler: ParentChildHandler, screen: IScreen, inputHandler: InputHandler);
+        constructor(objectCore: ObjectCore, parentChildHandler: ParentChildHandler, screen: IScreen, inputHandler: InputHandler, scaleHandler: ScaleHandler);
         init(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent?: IParentChild | null): void;
         createNew(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent?: IParentChild | null): SliceObject;
         changeTexture(textureName: string): void;
         readonly input: InputHandler;
-        readonly scaleManager: ScaleManager;
+        readonly scaleHandler: ScaleHandler;
         readonly pcHandler: ParentChildHandler;
         data: any;
         readonly parent: IParentChild;
@@ -852,14 +852,14 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpineObject' {
     import ParentChildHandler from "UAENGINE/Core/Engine/GameObjects/Components/ParentChildHandler";
     import IScreen from "UAENGINE/Services/IScreen";
     import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
-    import ScaleManager from "UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler";
+    import ScaleHandler from "UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler";
     class SpineObject implements IGameObject, IParentChild {
-        constructor(objectCore: ObjectCore, ParentChildHandler: ParentChildHandler, screen: IScreen, input: InputHandler);
+        constructor(objectCore: ObjectCore, ParentChildHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler);
         init(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): void;
         createNew(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): SpineObject;
         changeTexture(textureName: string): void;
         readonly input: InputHandler;
-        readonly scaleManager: ScaleManager;
+        readonly scaleHandler: ScaleHandler;
         readonly pcHandler: ParentChildHandler;
         data: any;
         readonly parent: IParentChild;
@@ -888,13 +888,13 @@ declare module 'UAENGINE/Core/Engine/GameObjects/TextObject' {
     import ParentChildHandler from "UAENGINE/Core/Engine/GameObjects/Components/ParentChildHandler";
     import IScreen from "UAENGINE/Services/IScreen";
     import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
-    import ScaleManager from "UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler";
+    import ScaleHandler from "UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler";
     class TextObject implements IGameObject, IParentChild {
-        constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler);
+        constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler);
         init(x: number, y: number, text: string, style?: any, parent?: IParentChild | null): void;
         createNew(x: number, y: number, textureName: string, frame: string | null | undefined, parent: IParentChild | null): TextObject;
         readonly input: InputHandler;
-        readonly scaleManager: ScaleManager;
+        readonly scaleHandler: ScaleHandler;
         readonly pcHandler: ParentChildHandler;
         text: string;
         setStyle(style: any): void;
@@ -928,16 +928,16 @@ declare module 'UAENGINE/Core/Engine/GameObjects/ContainerObject' {
     import ParentChildHandler from "UAENGINE/Core/Engine/GameObjects/Components/ParentChildHandler";
     import IScreen from "UAENGINE/Services/IScreen";
     import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
-    import ScaleManager from 'UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler';
+    import ScaleHandler from 'UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler';
     class ContainerObject implements IGameObject, IParentChild {
-        constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleManager: ScaleManager);
+        constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler);
         init(x: number, y: number, parent: IParentChild | null): void;
         createNew(x: number, y: number, parent: IParentChild | null): ContainerObject;
         changeTexture(textureName: string): void;
         readonly events: Events;
         readonly pcHandler: ParentChildHandler;
         readonly input: InputHandler;
-        readonly scaleManager: ScaleManager;
+        readonly scaleHandler: ScaleHandler;
         data: any;
         parent: IParentChild;
         readonly children: IParentChild[];
@@ -1303,12 +1303,12 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/InputHandler' {
 declare module 'UAENGINE/Core/Engine/GameObjects/IGameObject' {
     import ObjectCore from "UAENGINE/Core/Engine/GameObjects/Components/ObjectCore";
     import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
-    import ScaleManager from "UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler";
+    import ScaleHandler from "UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler";
     import ParentChildHandler from 'UAENGINE/Core/Engine/GameObjects/Components/ParentChildHandler';
     interface IGameObject {
         core: ObjectCore;
         input: InputHandler;
-        scaleManager: ScaleManager;
+        scaleHandler: ScaleHandler;
         pcHandler: ParentChildHandler;
         init(...args: any[]): void;
         createNew(...args: any[]): any;

@@ -5,18 +5,19 @@ import IParentChild from "./IParentChild";
 import ParentChildHandler from "./Components/ParentChildHandler";
 import IScreen from "../../../Services/IScreen";
 import InputHandler from "./Components/InputHandler";
-import ScaleManager from "./Components/ScaleHandler";
+import ScaleHandler from "./Components/ScaleHandler";
 
 class TextObject implements IGameObject, IParentChild {
     private _screen: IScreen;
     private _core: ObjectCore;
     private _input: InputHandler;
     private _pcHandler: ParentChildHandler;
-    private _scaleManager: ScaleManager;
+    private _scaleHandler: ScaleHandler;
     private _letters: string;
 
-    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler) {
-        this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen;
+    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler) {
+        this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input; 
+        this._scaleHandler = scaleHandler;
         this._letters = '$$$$____$$$$'; //default uninitialized string
     }
 
@@ -25,15 +26,15 @@ class TextObject implements IGameObject, IParentChild {
         this._letters = text;
 
         this.data = this._screen.createText(x, y, text, style);
-        this.width = this.data.width;
-        this.height = this.data.height;
+     //   this.width = this.data.width;
+     //   this.height = this.data.height;
         this._core.init(this, x, y);
         this._input.init(this);
         this._pcHandler.init(this._core, parent);
     }
 
     createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null): TextObject {
-        let textObj = new TextObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew());
+        let textObj = new TextObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew());
         textObj.init(x, y, textureName, frame, parent);
         return textObj;
     }
@@ -42,8 +43,8 @@ class TextObject implements IGameObject, IParentChild {
         return this._input;
     }
 
-    get scaleManager(){
-        return this._scaleManager;
+    get scaleHandler(){
+        return this._scaleHandler;
     }
 
     get pcHandler(){
@@ -164,7 +165,7 @@ class TextObject implements IGameObject, IParentChild {
     }
 
     destroy() {
-        if(this.parent !== null) this._pcHandler.removeChild(this);
+        if(this.parent !== null) this._pcHandler.parent.removeChild(this);
         this._core.destroy();
     }
 }

@@ -23,8 +23,8 @@ class ParentChildHandler implements IParentChild {
         return this._core;
     }
 
-    init(entity: ObjectCore, parent: IParentChild | null) {
-        this._core = entity;
+    init(core: ObjectCore, parent: IParentChild | null) {
+        this._core = core;
         this._children = [];
 
         if (parent !== null) {

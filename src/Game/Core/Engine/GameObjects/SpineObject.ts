@@ -5,17 +5,18 @@ import IParentChild from "./IParentChild";
 import ParentChildHandler from "./Components/ParentChildHandler";
 import IScreen from "../../../Services/IScreen";
 import InputHandler from "./Components/InputHandler";
-import ScaleManager from "./Components/ScaleHandler";
+import ScaleHandler from "./Components/ScaleHandler";
 
 class SpineObject implements IGameObject, IParentChild {
     private _screen: IScreen;
     private _core: ObjectCore;
     private _input: InputHandler;
     private _pcHandler: ParentChildHandler;
-    private _scaleManager: ScaleManager;
+    private _scaleHandler: ScaleHandler;
 
-    constructor(objectCore: ObjectCore, ParentChildHandler: ParentChildHandler, screen: IScreen, input: InputHandler) {
+    constructor(objectCore: ObjectCore, ParentChildHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler) {
         this._core = objectCore; this._pcHandler = ParentChildHandler; this._screen = screen; this._input = input;
+        this._scaleHandler = scaleHandler;
     }
 
     public init(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): void {
@@ -32,7 +33,7 @@ class SpineObject implements IGameObject, IParentChild {
     }
 
     createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): SpineObject {
-        let sprite = new SpineObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew());
+        let sprite = new SpineObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew());
         sprite.init(x, y, textureName, frame, parent);
         return sprite;
     }
@@ -45,8 +46,8 @@ class SpineObject implements IGameObject, IParentChild {
         return this._input;
     }
 
-    get scaleManager(){
-        return this._scaleManager;
+    get scaleHandler(){
+        return this._scaleHandler;
     }
 
     get pcHandler(){
