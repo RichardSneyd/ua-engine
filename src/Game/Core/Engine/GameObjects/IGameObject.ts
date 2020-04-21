@@ -1,9 +1,13 @@
-import Entity from "./Components/Entity";
+import ObjectCore from "./Components/ObjectCore";
 import InputHandler from "./Components/InputHandler";
+import ScaleManager from "./Components/ScaleHandler";
+import ParentChildHandler from './Components/ParentChildHandler';
 
 interface IGameObject {
-    entity: Entity;
+    core: ObjectCore;
     input: InputHandler;
+    scaleManager: ScaleManager;
+    pcHandler: ParentChildHandler;
     init(...args: any[]): void;
     createNew(...args: any[]): any;
     x: number;

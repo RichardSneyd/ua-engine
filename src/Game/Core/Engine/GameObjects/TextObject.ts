@@ -1,19 +1,21 @@
 import IGameObject from "./IGameObject";
-import Entity from "./Components/Entity";
+import ObjectCore from "./Components/ObjectCore";
 import IParentChild from "./IParentChild";
-import ChildHandler from "./Components/ChildHandler";
+import ParentChildHandler from "./Components/ParentChildHandler";
 import IScreen from "../../../Services/IScreen";
 import InputHandler from "./Components/InputHandler";
+import ScaleManager from "./Components/ScaleHandler";
 
 class TextObject implements IGameObject, IParentChild {
     private _screen: IScreen;
-    private _entity: Entity;
+    private _core: ObjectCore;
     private _input: InputHandler;
-    private _childHandler: ChildHandler;
+    private _pcHandler: ParentChildHandler;
+    private _scaleManager: ScaleManager;
     private _letters: string;
 
-    constructor(entity: Entity, childHandler: ChildHandler, screen: IScreen, input: InputHandler) {
-        this._entity = entity; this._childHandler = childHandler; this._screen = screen;
+    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler) {
+        this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen;
         this._letters = '$$$$____$$$$'; //default uninitialized string
     }
 
@@ -24,13 +26,13 @@ class TextObject implements IGameObject, IParentChild {
         this.data = this._screen.createText(x, y, text, style);
         this.width = this.data.width;
         this.height = this.data.height;
-        this._entity.init(x, y);
-        this._input.init(this._entity);
-        this._childHandler.init(this._entity, parent);
+        this._core.init(this, x, y);
+        this._input.init(this);
+        this._pcHandler.init(this._core, parent);
     }
 
     createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null): TextObject {
-        let textObj = new TextObject(this._entity.createNew(), this._childHandler.createNew(), this._screen, this._input.createNew());
+        let textObj = new TextObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew());
         textObj.init(x, y, textureName, frame, parent);
         return textObj;
     }
@@ -39,26 +41,33 @@ class TextObject implements IGameObject, IParentChild {
         return this._input;
     }
 
+    get scaleManager(){
+        return this._scaleManager;
+    }
+
+    get pcHandler(){
+        return this._pcHandler;
+    }
+
     set text(lett: string) {
         if (this._letters == '$$$$____$$$$') {
-            console.error("this is not a text entity, can't change letters!");
+            console.error("this is not a text ObjectCore, can't change letters!");
         } else {
             this._letters = lett;
         }
     }
 
-
     setStyle(style: any) {
-        this.entity._objectHandler.setStyle(this.entity.data, style);
+        this._core._objectHandler.setStyle(this._core.data, style);
     }
 
     setTextColor(color: string) {
-        this.entity._objectHandler.setTextColor(this.entity.data, color);
+        this._core._objectHandler.setTextColor(this._core.data, color);
     }
 
     get text(): string {
         if (this._letters == '$$$$____$$$$') {
-            console.error("this is not a text entity, can't change letters!");
+            console.error("this is not a text ObjectCore, can't change letters!");
             return '';
         } else {
             return this._letters;
@@ -66,67 +75,67 @@ class TextObject implements IGameObject, IParentChild {
     }
 
     get data() {
-        return this._entity.data;
+        return this._core.data;
     }
 
     set data(data: any) {
-        this._entity.data = data;
+        this._core.data = data;
     }
 
     get parent() {
-        return this._childHandler.parent;
+        return this._pcHandler.parent;
     }
 
     get children() {
-        return this._childHandler.children;
+        return this._pcHandler.children;
     }
 
     get textureName() {
-        return this.entity.textureName;
+        return this._core.textureName;
     }
 
     get atlas() {
-        return this._entity.atlas;
+        return this._core.atlas;
     }
 
     set atlas(textureName: any) {
-        this._entity.atlas = textureName;
+        this._core.atlas = textureName;
     }
 
     get x() {
-        return this._entity.x;
+        return this._core.x;
     }
 
     set x(x: number){
-        this._entity.x = x;
+        this._core.x = x;
     }
 
-    get entity() {
-        return this._entity;
+    get core() {
+        return this._core;
     }
 
     get y() {
-        return this._entity.y;
+        return this._core.y;
     }
 
     set y(y: number) {
-        this._entity.y = y;
+        this._core.y = y;
     }
 
     get scaleX() {
-        return this.entity.scaleX;
+        return this._core.scaleX;
     }
 
     get scaleY() {
-        return this.entity.scaleY;
+        return this._core.scaleY;
     }
 
     get visible() {
-        return this.entity.visible;
+        return this._core.visible;
     }
 
     get width() {
-        return this.entity.width;
+        return this._core.width;
     }
 
     set width(width: number) {
@@ -134,7 +143,7 @@ class TextObject implements IGameObject, IParentChild {
     }
 
     get height() {
-        return this.entity.height;
+        return this._core.height;
     }
 
     set height(height: number) {
@@ -142,19 +151,20 @@ class TextObject implements IGameObject, IParentChild {
     }
 
     public changeTexture(textureName: string) {
-        this.entity.changeTexture(textureName);
+        this._core.changeTexture(textureName);
     }
 
     addChild(child: IParentChild): void {
-        this._childHandler.addChild(child);
+        this._pcHandler.addChild(child);
     }
 
     removeChild(child: IParentChild): void {
-        this._childHandler.removeChild(child);
+        this._pcHandler.removeChild(child);
     }
 
     destroy() {
-        this._entity.destroy();
+        if(this.parent !== null) this._pcHandler.removeChild(this);
+        this._core.destroy();
     }
 }
 

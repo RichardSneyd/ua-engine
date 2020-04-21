@@ -1,7 +1,7 @@
-import Entity from "./Components/Entity";
+import ObjectCore from "./Components/ObjectCore";
 
 interface IParentChild {
-    entity: Entity;
+    core: ObjectCore;
     parent: IParentChild;
     init(...args: any[]): void;
     children: IParentChild[];

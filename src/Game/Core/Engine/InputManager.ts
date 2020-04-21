@@ -1,9 +1,6 @@
 import Events from "./Events";
 import Loader from "./Loader";
-//import Screen from "../../Services/Screen";
-import ITappable from './ITappable';
 import Point from "../Geom/Point";
-import Entity from "./GameObjects/Components/Entity";
 import IScreen from "../../Services/IScreen";
 import EventNames from "./EventNames";
 

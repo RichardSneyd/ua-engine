@@ -1,16 +1,18 @@
 import AnimationManager from '../../AnimationManager';
 import Events from '../../Events';
-import ScaleManager from '../../ScaleManager';
+import ScaleManager from './ScaleHandler';
 import IScreen from '../../../../Services/IScreen';
 import IObjectHandler from '../../../../Services/IObjectHandler';
-import InputManager from '../../InputManager';
+import InputHandler from './InputHandler';
 import Utils from '../../Utils/Utils';
 import MathUtils from '../../Utils/MathUtils';
 import Point from '../../../Geom/Point';
 import ResType from '../../../Data/ResType';
+import IGameObject from '../IGameObject';
+import ContainerObject from '../ContainerObject';
 
 
-class Entity {
+class ObjectCore {
   private _x: number;
   private _y: number;
   private _origin: Point; // should always be between 0 and 1.
@@ -21,26 +23,23 @@ class Entity {
   private _textureName: string;
   private _initialized: boolean;
   private _atlas: string | null;
-  private _type: string = '';
 
   private _screen: IScreen; _animationManager: AnimationManager; _objectHandler: IObjectHandler;
-  private _input: InputManager; _math: MathUtils;
+  private _input: InputHandler; _math: MathUtils;
   private _data: any;
-  private _events: Events; _scaleManager: ScaleManager; protected _pointFactory: Point;
+  private _events: Events; _scaleHandler: ScaleManager; protected _pointFactory: Point;
   private _letters: string;
   private _pixelPerfect: boolean = false;
 
-  private _children: Entity[];
-  private _parent: Entity | null;
+  private _go: IGameObject;
 
-  constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputManager, math: MathUtils, events: Events, scaleManager: ScaleManager, pointFactory: Point) {
+  constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, pointFactory: Point) {
     this._screen = screen;
     this._animationManager = animationManager;
     this._objectHandler = objectHandler;
     this._input = input;
     this._math = math;
     this._events = events;
-    this._scaleManager = scaleManager;
     this._pointFactory = pointFactory;
 
 
@@ -51,31 +50,40 @@ class Entity {
     this._height = 0;
     this._scaleX = 1;
     this._scaleY = 1;
-    this._textureName= '';
+    this._textureName = '';
     this._atlas = null;
 
     this._initialized = false;
     this._pixelPerfect = false;
-
-    this._children = [];
-    this._parent = null;
   }
 
-  get type() {
-    return this._type;
+  // keep this one for GENERIC initializations 
+  public init(go: IGameObject, x: number, y: number, textureName: string = '') {
+    this._go = go;
+    this._scaleHandler = go.scaleManager;
+    this._x = x;
+    this._y = y;
+    this._textureName = textureName;
+    this._data.x = x;
+    this._data.y = y;
+    this._initialized = true;
   }
 
-  get textureName(){
+  get objectHandler() {
+    return this._objectHandler;
+  }
+
+  get textureName() {
     return this._textureName;
   }
 
-  set textureName(name: string){
+  set textureName(name: string) {
     this._textureName = name;
   }
 
   set x(xVal: number) {
     this._x = xVal;
-    if (this.parent == null || this.parent.type == 'container') {
+    if (this._go.pcHandler.parent == null || this._go.pcHandler.parent instanceof ContainerObject) {
       this._updateXY();
     }
     else {
@@ -86,7 +94,7 @@ class Entity {
 
   set y(yVal: number) {
     this._y = yVal;
-    if (this.parent == null || this.parent.type == 'container') {
+    if (this._go.pcHandler.parent == null || this._go.pcHandler.parent instanceof ContainerObject) {
       this._updateXY();
     }
     else {
@@ -110,6 +118,9 @@ class Entity {
     return this._height;
   }
 
+  get events() {
+    return this._events;
+  }
 
   set origin(origin: Point) {
     this._origin.x = origin.x;
@@ -140,13 +151,13 @@ class Entity {
   set scaleX(xVal: number) {
     this._scaleX = xVal;
 
-    this._updateScale();
+    this._scaleHandler.updateScale();
   }
 
   set scaleY(yVal: number) {
     this._scaleY = yVal;
 
-    this._updateScale();
+    this._scaleHandler.updateScale();
   }
 
   get x(): number {
@@ -161,11 +172,11 @@ class Entity {
     return this.data.visible;
   }
 
-  set visible(visible: boolean){
+  set visible(visible: boolean) {
     this.data.visible = visible;
   }
 
-  get input(): InputManager {
+  get input(): InputHandler {
     return this._input;
   }
 
@@ -177,11 +188,11 @@ class Entity {
     return this._scaleY;
   }
 
-  get atlas(){
+  get atlas() {
     return this._atlas;
   }
 
-  set atlas(atlas: any){
+  set atlas(atlas: any) {
     this._atlas = atlas;
   }
 
@@ -191,8 +202,7 @@ class Entity {
 
   public destroy() {
     // remember to ALWAYS remove event listeners when destroying a GameObject
-    this._events.off('resize', this._onResize);
-    if(this.parent !== null) this.parent.removeChild(this);
+    this._events.off('resize', this._go.scaleManager.onResize);
     this._objectHandler.destroy(this._data);
   }
 
@@ -206,73 +216,16 @@ class Entity {
     return true;
   }
 
-  get children(): Entity[] {
-    return this._children;
-  }
-
-  get parent(): Entity | null {
-    return this._parent;
-  }
-
-  set parent(parent: Entity | null) {
-    if (this._parent !== null) {
-      this._parent.removeChild(this);
-    }
-    this._parent = parent;
-    this._objectHandler.setXy(this.data, this._x, this._y);
-    this._objectHandler.setScaleXY(this.data, 1, 1);
-  }
-
   get data(): any {
     return this._data;
   }
-  
-  set data(data: any){
+
+  set data(data: any) {
     this._data = data;
   }
-
-  addChild(entity: Entity): boolean {
-    if (!this.hasChild(entity)) {
-      this._children.push(entity);
-      entity.parent = this;
-
-      // added this condition because text objects hold their Px data 1 level deeper, due to custom PxText class
-      let child;
-      if (entity.data.data) {
-        console.log('trying to add data 1 level deeper for text...');
-        child = entity.data.data;
-      }
-      else {
-        child = entity.data;
-      }
-      this._data.addChild(child);
-
-      return true;
-    }
-    console.warn('that is already a child of this object, and cannot be added again');
-    return false;
-  }
-
-  removeChild(entity: Entity): boolean {
-    if (this.hasChild(entity)) {
-      this._children.splice(this._children.indexOf(entity), 1);
-      this._data.removeChild(entity.data);
-      return true;
-    }
-    console.warn('could not remove, no such entity found in children array');
-    return false;
-  }
-
-  hasChild(entity: Entity): boolean {
-    if (this._children.indexOf(entity) !== -1) {
-      return true;
-    }
-    return false;
-  }
-
   public relativeMove(xDiff: number, yDiff: number) {
-    let scaleX = this._scaleManager.getScale(this._scaleX);
-    let scaleY = this._scaleManager.getScale(this._scaleY);
+    let scaleX = this._scaleHandler.getScale(this._scaleX);
+    let scaleY = this._scaleHandler.getScale(this._scaleY);
 
     this.x += (xDiff / scaleX);
     this.y += (yDiff / scaleY);
@@ -301,36 +254,19 @@ class Entity {
 
     this.origin = this._pointFactory.createNew(x, yVal);
   }
-  // keep this one for GENERIC initializations 
-  public init(x: number, y: number, textureName: string = ''){
-    this._initScaleManager();
-    this._x = x;
-    this._y = y;
-    this._textureName = textureName;
-    this._data.x = x;
-    this._data.y = y;
-    this._onResize();
-    this._addListeners();
-    this._initialized = true;
-  }
 
-  public anim(){
+  public anim() {
     return this._animationManager;
   }
 
   public enableInput() {
-    if (this._data.data) {
-      this._input.enable(this._data.data);
-    }
-    else {
-      this._input.enable(this._data);
-    }
+    this._input.enableInput();
   }
 
-  public createNew(): Entity {
+  public createNew(): ObjectCore {
     let am = this._animationManager.createNew();
     //  console.log('new am: ', am);
-    return new Entity(this._screen, am, this._objectHandler, this._input, this._math, this._events, this._scaleManager.createNew(), this._pointFactory);
+    return new ObjectCore(this._screen, am, this._objectHandler, this._input, this._math, this._events, this._pointFactory);
   }
 
   public changeTexture(textureName: string) {
@@ -357,35 +293,17 @@ class Entity {
     this._animationManager.update(time);
   }
 
-  private _updateScale() {
-    let scaleX = this._scaleManager.getScale(this._scaleX);
-    let scaleY = this._scaleManager.getScale(this._scaleY);
-
-    this._objectHandler.setScaleXY(this._data, scaleX, scaleX);
+  updateXY() {
+    this._updateXY();
   }
 
   private _updateXY() {
-    let target = this._scaleManager.getXY(this._x, this._y);
+    let target = this._scaleHandler.getXY(this._x, this._y);
 
     this._objectHandler.setXy(this._data, target.x, target.y);
-  }
-
-  private _addListeners() {
-    this._events.addListener('resize', this._onResize, this);
-  }
-
-  private _onResize() {
-    if (this.parent == null || this.parent.type == 'container') {
-      this._updateScale();
-      this._updateXY();
-    }
-  }
-
-  private _initScaleManager(): void {
-    this._scaleManager.init();
   }
 
 
 }
 
-export default Entity;
+export default ObjectCore;

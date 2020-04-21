@@ -1,30 +1,30 @@
-import Entity from "./Entity";
 import IParentChild from "../IParentChild";
 import IGameObject from '../IGameObject';
+import ObjectCore from './ObjectCore';
 
-class ChildHandler implements IParentChild {
+class ParentChildHandler implements IParentChild {
     parent: IParentChild;
     _children: IParentChild[];
-    private _entity: Entity;
+    private _core: ObjectCore;
 
     constructor() {
 
     }
 
     createNew() {
-        return new ChildHandler();
+        return new ParentChildHandler();
     }
 
     get children() {
         return this._children;
     }
 
-    get entity() {
-        return this._entity;
+    get core() {
+        return this._core;
     }
 
-    init(entity: Entity, parent: IParentChild | null) {
-        this._entity = entity;
+    init(entity: ObjectCore, parent: IParentChild | null) {
+        this._core = entity;
         this._children = [];
 
         if (parent !== null) {
@@ -39,15 +39,15 @@ class ChildHandler implements IParentChild {
 
             // added this condition because text objects hold their Px data 1 level deeper, due to custom PxText class
             let child;
-            if (object.entity.data.data) {
+            if (object.core.data.data) {
                 console.log('trying to add data 1 level deeper for text...');
-                child = object.entity.data.data;
+                child = object.core.data.data;
             }
             else {
-                child = object.entity.data;
+                child = object.core.data;
             }
 
-            this.entity.data.addChild(child);
+            this.core.data.addChild(child);
 
             return true;
         }
@@ -58,7 +58,7 @@ class ChildHandler implements IParentChild {
     removeChild(object: IParentChild): void {
         if (this.hasChild(object)) {
             this._children.splice(this._children.indexOf(object), 1);
-            this.entity.data.removeChild(object.entity.data);
+            this.core.data.removeChild(object.core.data);
         }
         console.warn('could not remove, no such entity found in children array');
     }
@@ -71,4 +71,4 @@ class ChildHandler implements IParentChild {
     }
 }
 
-export default ChildHandler;
+export default ParentChildHandler;

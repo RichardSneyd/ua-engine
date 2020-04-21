@@ -1,4 +1,4 @@
-import Entity from "./Components/Entity";
+import ObjectCore from "./Components/ObjectCore";
 import SpriteObject from './SpriteObject';
 import SliceObject from './SliceObject';
 import SpineObject from './SpineObject';
@@ -8,16 +8,16 @@ import IParentChild from "./IParentChild";
 
 
 class GOFactory {
-    private _entity: Entity;
+    private _core: ObjectCore;
     private _sprite: SpriteObject;
     private _slice: SliceObject;
     private _spine: SpineObject;
     private _text: TextObject;
     private _container: ContainerObject;
 
-    constructor(entity: Entity, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject, 
+    constructor(core: ObjectCore, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject, 
         container: ContainerObject) {
-        this._entity = entity; this._slice = slice; this._spine = spine; this._text = text; this._container = container;
+        this._core = core; this._slice = slice; this._spine = spine; this._text = text; this._container = container;
     }
 
     /**

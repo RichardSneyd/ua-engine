@@ -1,4 +1,4 @@
-import Entity from './GameObjects/Components/Entity';
+//import ObjectCore from './GameObjects/Components/ObjectCore';
 import IScreen from '../../Services/IScreen';
 import ILevel from '../Engine/ILevel';
 import LevelManager from './LevelManager';
@@ -8,20 +8,22 @@ class World {
   private _width: number;
   private _height: number;
 
+  private _screen: IScreen;
+
   private _initialized: boolean;
 
   private _currentLevel: ILevel | null;
 
-  private _entity: Entity; _screen: IScreen;
+  //private _objectCore: ObjectCore; _screen: IScreen;
   private _events: Events;
 
-  constructor(entity: Entity, screen: IScreen, events: Events) {
+  constructor(screen: IScreen, events: Events) {
     this._width = 0;
     this._height = 0;
 
     this._initialized = false;
 
-    this._entity = entity;
+   // this._objectCore;
     this._screen = screen;
 
     this._events = events;

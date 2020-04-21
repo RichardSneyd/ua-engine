@@ -1,5 +1,4 @@
 import World from './Core/Engine/World';
-import Entity from './Core/Engine/GameObjects/Components/Entity';
 import Loop from './Core/Engine/Loop';
 import Loader from './Core/Engine/Loader';
 import Events from './Core/Engine/Events';
@@ -17,7 +16,6 @@ import Utils from './Core/Engine/Utils/Utils';
  */
 class UAENGINE {
   public static world: World;
-  public static entity: Entity;
   public static loop: Loop;
   public static loader: Loader;
   public static events: Events;
