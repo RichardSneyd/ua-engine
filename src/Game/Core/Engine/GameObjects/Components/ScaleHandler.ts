@@ -9,8 +9,33 @@ class ScaleHandler {
   private _events: Events;
   private _scaleManager: ScaleManager;
 
+  private _scaleX: number;
+  private _scaleY: number;
+
+  get scaleX(): number {
+    return this._scaleX;
+  }
+
+  get scaleY(): number {
+    return this._scaleY;
+  }
+
+  set scaleX(xVal: number) {
+    this._scaleX = xVal;
+
+    this.updateScale();
+  }
+
+  set scaleY(yVal: number) {
+    this._scaleY = yVal;
+
+    this.updateScale();
+  }
+
   constructor(scaleManager: ScaleManager) {
     this._scaleManager = scaleManager;
+    this._scaleX = 1;
+    this._scaleY = 1;
   }
 
   public init(go: IGameObject) {
@@ -44,10 +69,10 @@ class ScaleHandler {
   }
 
   private _updateScale() {
-    let scaleX = this._scaleManager.getScale(this._go.core.scaleX);
-    let scaleY = this._scaleManager.getScale(this._go.core.scaleY);
+    let scaleX = this._scaleManager.getScale(this._scaleX);
+    let scaleY = this._scaleManager.getScale(this._scaleY);
 
-    this._go.core.objectHandler.setScaleXY(this._go.core.data, scaleX, scaleX);
+    this._go.core.objectHandler.setScaleXY(this._go.core.data, scaleX, scaleY);
   }
 
   private _addListeners() {
@@ -58,6 +83,7 @@ class ScaleHandler {
     if (this._go.pcHandler.parent == null || this._go instanceof ContainerObject) {
       this._updateScale();
       this._go.core.updateXY();
+      this._go.core.updateOrigin();
     }
   }
 
