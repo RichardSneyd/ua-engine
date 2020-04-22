@@ -755,19 +755,19 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore' {
         get width(): number;
         get height(): number;
         get events(): Events;
+        get scaleX(): number;
+        get scaleY(): number;
+        set scaleX(sclX: number);
+        set scaleY(sclY: number);
         set origin(origin: Point);
         get origin(): Point;
         set height(height: number);
         setSize(width: number, height: number): void;
-        set scaleX(xVal: number);
-        set scaleY(yVal: number);
         get x(): number;
         get y(): number;
         get visible(): boolean;
         set visible(visible: boolean);
         get input(): InputHandler;
-        get scaleX(): number;
-        get scaleY(): number;
         get atlas(): any;
         set atlas(atlas: any);
         get pixelPerfect(): boolean;
@@ -778,6 +778,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore' {
         moveBy(x: number, y: number): void;
         moveTo(x: number, y: number): void;
         setOrigin(x: number, y?: number): void;
+        updateOrigin(): void;
         anim(): AnimationManager;
         enableInput(): void;
         makePixelPerfect(threshold?: number): void;
@@ -1315,6 +1316,10 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler' {
     import IGameObject from 'UAENGINE/Core/Engine/GameObjects/IGameObject';
     import ScaleManager from 'UAENGINE/Core/Engine/ScaleManager';
     class ScaleHandler {
+        get scaleX(): number;
+        get scaleY(): number;
+        set scaleX(xVal: number);
+        set scaleY(yVal: number);
         constructor(scaleManager: ScaleManager);
         init(go: IGameObject): void;
         createNew(): ScaleHandler;
