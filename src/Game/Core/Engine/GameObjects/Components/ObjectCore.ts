@@ -18,8 +18,6 @@ class ObjectCore {
   private _origin: Point; // should always be between 0 and 1.
   private _width: number;
   private _height: number;
-  private _scaleX: number;
-  private _scaleY: number;
   private _textureName: string;
   private _initialized: boolean;
   private _atlas: string | null;
@@ -40,15 +38,11 @@ class ObjectCore {
     this._math = math;
     this._events = events;
     this._pointFactory = pointFactory;
-
-
     this._x = 0;
     this._y = 0;
     this._origin = this._pointFactory.createNew(0.5, 0.5);
     this._width = 0;
     this._height = 0;
-    this._scaleX = 1;
-    this._scaleY = 1;
     this._textureName = '';
     this._atlas = null;
 
@@ -152,20 +146,6 @@ class ObjectCore {
     this._updateXY();
   }
 
-
-
-  set scaleX(xVal: number) {
-    this._scaleX = xVal;
-
-    this._scaleHandler.updateScale();
-  }
-
-  set scaleY(yVal: number) {
-    this._scaleY = yVal;
-
-    this._scaleHandler.updateScale();
-  }
-
   get x(): number {
     return this._x;
   }
@@ -184,14 +164,6 @@ class ObjectCore {
 
   get input(): InputHandler {
     return this._input;
-  }
-
-  get scaleX(): number {
-    return this._scaleX;
-  }
-
-  get scaleY(): number {
-    return this._scaleY;
   }
 
   get atlas() {
@@ -220,8 +192,8 @@ class ObjectCore {
     this._data = data;
   }
   public relativeMove(xDiff: number, yDiff: number) {
-    let scaleX = this._scaleHandler.getScale(this._scaleX);
-    let scaleY = this._scaleHandler.getScale(this._scaleY);
+    let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
+    let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
 
     this.x += (xDiff / scaleX);
     this.y += (yDiff / scaleY);
@@ -241,14 +213,19 @@ class ObjectCore {
 
   public setOrigin(x: number, y?: number) {
     let yVal: number;
+    let xVal = x;
     if (y) {
       yVal = y;
     }
     else {
-      yVal = x;
+      yVal = xVal;
     }
 
-    this.origin = this._pointFactory.createNew(x, yVal);
+    this.origin = this._pointFactory.createNew(xVal, yVal);
+  }
+
+  updateOrigin(){
+    this.objectHandler.setPivot(this.data, this.origin);
   }
 
   public anim() {
