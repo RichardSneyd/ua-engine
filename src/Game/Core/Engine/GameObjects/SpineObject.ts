@@ -32,9 +32,14 @@ class SpineObject implements IGameObject, IParentChild {
 
     }
 
-    createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): SpineObject {
-        let sprite = new SpineObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew());
+    public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): SpineObject {
+        let sprite = this.createEmpty();
         sprite.init(x, y, textureName, frame, parent);
+        return sprite;
+    }
+
+    public createEmpty(): SpineObject {
+        let sprite = new SpineObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew());
         return sprite;
     }
 

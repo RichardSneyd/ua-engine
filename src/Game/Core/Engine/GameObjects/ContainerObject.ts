@@ -27,10 +27,14 @@ class ContainerObject implements IGameObject, IParentChild {
         this._scaleHandler.init(this);
     }
 
-    createNew(x: number, y: number, parent: IParentChild | null): ContainerObject {
-        let cont = new ContainerObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this.scaleHandler.createNew());
+    public createNew(x: number, y: number, parent: IParentChild | null): ContainerObject {
+        let cont = this.createEmpty();
         cont.init(x, y, parent);
         return cont;
+    }
+
+    public createEmpty(): ContainerObject {
+        return new ContainerObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this.scaleHandler.createNew());
     }
 
     public changeTexture(textureName: string) {

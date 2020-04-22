@@ -36,10 +36,15 @@ class SliceObject implements IGameObject, IParentChild {
       //  this.setOrigin(0.5);
     }
 
-    createNew(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent: IParentChild | null = null): SliceObject{
-    
-        let slice = new SliceObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this.input.createNew(), this.scaleHandler.createNew());
+    public createNew(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent: IParentChild | null = null): SliceObject {
+        let slice = this.createEmpty();    
         slice.init(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight, parent);
+        return slice;
+    }
+
+    public createEmpty() {
+        let slice = new SliceObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this.input.createNew(), this.scaleHandler.createNew());
+
         return slice;
     }
 
