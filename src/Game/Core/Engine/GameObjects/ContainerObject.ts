@@ -97,14 +97,6 @@ class ContainerObject implements IGameObject, IParentChild {
         this._core.y = y;
     }
 
-    get scaleX() {
-        return this._core.scaleX;
-    }
-
-    get scaleY() {
-        return this._core.scaleY;
-    }
-
     get visible() {
         return this._core.visible;
     }

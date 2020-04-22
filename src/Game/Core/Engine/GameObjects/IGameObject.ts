@@ -12,8 +12,6 @@ interface IGameObject {
     createNew(...args: any[]): any;
     x: number;
     y: number;
-    scaleX: number;
-    scaleY: number;
     width: number;
     height: number;
     visible: boolean;
