@@ -33,9 +33,14 @@ class TextObject implements IGameObject, IParentChild {
         this._pcHandler.init(this._core, parent);
     }
 
-    createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null): TextObject {
-        let textObj = new TextObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew());
+    public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null): TextObject {
+        let textObj = this.createEmpty();
         textObj.init(x, y, textureName, frame, parent);
+        return textObj;
+    }
+
+    public createEmpty(): TextObject {
+        let textObj = new TextObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew());
         return textObj;
     }
 

@@ -104,10 +104,11 @@ declare module 'UAENGINE/Core/Engine/Loader' {
             /**
                 * @description the base path to load assets from.
                 */
-            base: string;
-            readonly scripts: any;
+            get base(): string;
+            set base(base: string);
+            get scripts(): any;
             constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader, ajaxLoader: AjaxLoader, gameConfig: GameConfig);
-            readonly downloadComplete: boolean;
+            get downloadComplete(): boolean;
             /**
                 * @description Creates an image resource and adds the image to the load queue. The data property of the resource will be
                 * populated with the image once loaded; Everything in the queue is processed when the download() method is called
@@ -126,7 +127,7 @@ declare module 'UAENGINE/Core/Engine/Loader' {
                 * @description download everything in the load queue. This must be done before the activity can start.
                 * @param onDone (optional) called when loading is complete
                 */
-            download(onDone?: Function): Promise<{}>;
+            download(onDone?: Function): Promise<unknown>;
             getResource(name: string): Resource | null;
             getTexture(sprite: string, frame?: string | null): any;
             update(): void;
@@ -149,15 +150,15 @@ declare module 'UAENGINE/Core/Engine/Loader' {
 declare module 'UAENGINE/Core/Engine/Events' {
     class Events {
             constructor();
-            readonly events: any;
+            get events(): any;
             /**
                 * @description returns an array of all timers
                 */
-            readonly timers: any;
+            get timers(): any;
             /**
                 * @description is the timer system paused?
                 */
-            readonly paused: boolean;
+            get paused(): boolean;
             /**
                 * @description returns a string array of the names of all registered events
                 */
@@ -275,12 +276,12 @@ declare module 'UAENGINE/Core/Engine/LevelManager' {
           * @param processText (optional) the column names to convert into lines and words of text. Mainly useful in passage (reading) types.
           */
         init(scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]): void;
-        readonly events: Events;
-        readonly audio: AudioManager;
-        readonly script: ScriptHandler;
-        readonly utils: Utils;
-        readonly input: InputHandler;
-        readonly goFactory: GOFactory;
+        get events(): Events;
+        get audio(): AudioManager;
+        get script(): ScriptHandler;
+        get utils(): Utils;
+        get input(): InputHandler;
+        get goFactory(): GOFactory;
     }
     export default LevelManager;
 }
@@ -321,7 +322,7 @@ declare module 'UAENGINE/Core/Game' {
                 * @description start the game. Calls game.init internally, to create the game screen.
                 * @param configPath the path to the config.json file, which specified Display widht, height, file paths etc
                 */
-            startGame(configPath: string): Promise<{}>;
+            startGame(configPath: string): Promise<unknown>;
             /**
                 * @description load a level (via world.loadLevel).
                 * @param level the level to load
@@ -344,12 +345,12 @@ declare module 'UAENGINE/Core/Game' {
 declare module 'UAENGINE/Core/Engine/GameConfig' {
     class GameConfig {
         constructor();
-        readonly data: any;
+        get data(): any;
         /**
           * @desecription load a config.json file from the specified path
           * @param path the path to load the config json data from
           */
-        loadConfig(path: string): Promise<{}>;
+        loadConfig(path: string): Promise<unknown>;
     }
     export default GameConfig;
 }
@@ -371,7 +372,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/GOFactory' {
                 * @param text the text value to initialize with
                 * @param style a css style object to apply to the text
                 */
-            text(x: number, y: number, text: string, style: any, parent?: IParentChild | null): TextObject;
+            text(x?: number, y?: number, text?: string, style?: any, parent?: IParentChild | null): TextObject;
             /**
                 * @description returns a Sprite object
                 * @param x the x coordinate to initialize with
@@ -379,7 +380,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/GOFactory' {
                 * @param textureName the name of the texture to initialize the sprite with
                 * @param frame the default frame for the Sprite. Optional. Provide this if working with an atlas animation
                 */
-            sprite(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): SpriteObject;
+            sprite(x?: number, y?: number, textureName?: string, frame?: string | null, parent?: IParentChild | null): SpriteObject;
             /**
                 * @description returns a nineSlice object
                 * @param x the x coordinate to initialze with
@@ -390,20 +391,20 @@ declare module 'UAENGINE/Core/Engine/GameObjects/GOFactory' {
                 * @param rightWidth The number of pixels to come in from the right before you reach the repeating section of the slice. This part will never stretch
                 * @param bottomHeight The number of pixels to come in from the bottom before you reach the repeating section of the slice. This part will never stretch
                 */
-            nineSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent?: IParentChild | null): SliceObject;
+            nineSlice(x?: number, y?: number, textureName?: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent?: IParentChild | null): SliceObject;
             /**
                 * @description creates and returns an empty 'container', analogous to PIXI.Container
                 * @param x the x coordinate to initialize with
                 * @param y the y coordinate to initialize with
                 */
-            container(x: number, y: number, parent?: IParentChild | null): ContainerObject;
+            container(x?: number, y?: number, parent?: IParentChild | null): ContainerObject;
             /**
                 * @description creates and returns a Spine object
                 * @param x the x coordinate to initialize with
                 * @param y the y coordinate to initialize with
                 * @param spineName the name of the spine file to initialize with
                 */
-            spine(x: number, y: number, spineName: string, parent?: IParentChild | null): SpineObject;
+            spine(x: number | null, y?: number, spineName?: string, parent?: IParentChild | null): SpineObject;
     }
     export default GOFactory;
 }
@@ -440,13 +441,13 @@ declare module 'UAENGINE/Core/Engine/Utils/Utils' {
     import Vectors from 'UAENGINE/Core/Engine/Utils/Vectors';
     class Utils {
         constructor(actScripts: ActScripts, collections: Collections, colors: Colors, mixins: Mixins, math: MathUtils, text: Text, vectors: Vectors);
-        readonly script: ActScripts;
-        readonly coll: Collections;
-        readonly color: ActScripts;
-        readonly mixin: Mixins;
-        readonly math: MathUtils;
-        readonly text: Text;
-        readonly vector: Vectors;
+        get script(): ActScripts;
+        get coll(): Collections;
+        get color(): ActScripts;
+        get mixin(): Mixins;
+        get math(): MathUtils;
+        get text(): Text;
+        get vector(): Vectors;
     }
     export default Utils;
 }
@@ -487,7 +488,7 @@ declare module 'UAENGINE/Core/Engine/ILevel' {
 declare module 'UAENGINE/Core/Data/FunObj' {
     class FunObj {
         constructor();
-        readonly function: any;
+        get function(): any;
         init(f: any, context: any): void;
         execute(data: any): any;
         createNew(): FunObj;
@@ -498,14 +499,16 @@ declare module 'UAENGINE/Core/Data/FunObj' {
 declare module 'UAENGINE/Core/Data/Resource' {
     class Resource {
             constructor();
-            data: any;
-            readonly name: string;
+            get data(): any;
+            get name(): string;
             /**
                 * @description returns the basename of the file, without file extension
                 */
-            readonly basename: string;
-            readonly url: string;
-            loaded: boolean;
+            get basename(): string;
+            get url(): string;
+            get loaded(): boolean;
+            set data(dat: any);
+            set loaded(ld: boolean);
             initImage(url: string, loaded: boolean): void;
             initSnd(url: string, loaded: boolean): void;
             initJSON(url: string, loaded: boolean): void;
@@ -549,7 +552,7 @@ declare module 'UAENGINE/Core/Engine/AudioManager' {
     class AudioManager {
             _hwPlayer: HwPlayer;
             constructor(loader: Loader, hwLoader: HwPlayer);
-            readonly filesPlaying: string[];
+            get filesPlaying(): string[];
             /**
                 * @description play the specified audio file
                 * @param name the name of the file to play
@@ -600,18 +603,22 @@ declare module 'UAENGINE/Core/Engine/ScriptHandler' {
                  * @param processText (optional) the column names to convert into lines and _words of text. Mainly useful in passage (reading) types.
                  */
             init(name: string, raw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]): void;
-            readonly name: string;
-            readonly initialized: boolean;
-            readonly raw: any[];
-            readonly rows: any[];
+            get name(): string;
+            get initialized(): boolean;
+            get raw(): any[];
+            get rows(): any[];
+            /**
+                * @description get the active row.
+                */
+            get active(): any;
             /**
                 * @description set the active row.
                 */
-            active: any;
+            set active(row: any);
             /**
                 * @description get the last row (the previous value of active)
                 */
-            readonly last: any;
+            get last(): any;
             /**
                 * @description switches the active row to the one specified
                 * @param row the row object to switch to
@@ -657,7 +664,7 @@ declare module 'UAENGINE/Core/Engine/InputManager' {
             /**
                 * @description get the pointer position as a Point object (x, y)
                 */
-            readonly pointer: Point;
+            get pointer(): Point;
             /**
                 * @description enable input for the specified object
                 * @param displayObject the object to enable input for
@@ -737,25 +744,36 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore' {
         protected _pointFactory: Point;
         constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, pointFactory: Point);
         init(go: IGameObject, x: number, y: number, textureName?: string): void;
-        readonly objectHandler: IObjectHandler;
-        readonly screen: IScreen;
-        textureName: string;
-        x: number;
-        y: number;
-        width: number;
-        readonly animations: AnimationManager;
-        height: number;
-        readonly events: Events;
-        origin: Point;
+        get objectHandler(): IObjectHandler;
+        get screen(): IScreen;
+        get textureName(): string;
+        set textureName(name: string);
+        set x(xVal: number);
+        set y(yVal: number);
+        set width(width: number);
+        get animations(): AnimationManager;
+        get width(): number;
+        get height(): number;
+        get events(): Events;
+        set origin(origin: Point);
+        get origin(): Point;
+        set height(height: number);
         setSize(width: number, height: number): void;
-        scaleX: number;
-        scaleY: number;
-        visible: boolean;
-        readonly input: InputHandler;
-        atlas: any;
-        readonly pixelPerfect: boolean;
+        set scaleX(xVal: number);
+        set scaleY(yVal: number);
+        get x(): number;
+        get y(): number;
+        get visible(): boolean;
+        set visible(visible: boolean);
+        get input(): InputHandler;
+        get scaleX(): number;
+        get scaleY(): number;
+        get atlas(): any;
+        set atlas(atlas: any);
+        get pixelPerfect(): boolean;
         destroy(): void;
-        data: any;
+        get data(): any;
+        set data(data: any);
         relativeMove(xDiff: number, yDiff: number): void;
         moveBy(x: number, y: number): void;
         moveTo(x: number, y: number): void;
@@ -784,24 +802,32 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpriteObject' {
         constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler);
         init(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): void;
         createNew(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): SpriteObject;
+        createEmpty(): SpriteObject;
         changeTexture(textureName: string): void;
-        readonly input: InputHandler;
-        readonly scaleHandler: ScaleHandler;
-        readonly pcHandler: ParentChildHandler;
-        readonly animations: AnimationManager;
-        data: any;
-        parent: IParentChild;
-        readonly children: IParentChild[];
-        readonly textureName: string;
-        atlas: any;
-        x: number;
-        readonly core: ObjectCore;
-        y: number;
-        readonly scaleX: number;
-        readonly scaleY: number;
-        readonly visible: boolean;
-        width: number;
-        height: number;
+        get input(): InputHandler;
+        get scaleHandler(): ScaleHandler;
+        get pcHandler(): ParentChildHandler;
+        get animations(): AnimationManager;
+        get data(): any;
+        set data(data: any);
+        get textureName(): string;
+        get atlas(): any;
+        set atlas(textureName: any);
+        get x(): number;
+        set x(x: number);
+        get core(): ObjectCore;
+        get y(): number;
+        set y(y: number);
+        get scaleX(): number;
+        get scaleY(): number;
+        get visible(): boolean;
+        get width(): number;
+        set width(width: number);
+        get height(): number;
+        set height(height: number);
+        get parent(): IParentChild;
+        set parent(parent: IParentChild);
+        get children(): IParentChild[];
         addChild(child: IParentChild): void;
         removeChild(child: IParentChild): void;
         destroy(): void;
@@ -821,23 +847,30 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SliceObject' {
         constructor(objectCore: ObjectCore, parentChildHandler: ParentChildHandler, screen: IScreen, inputHandler: InputHandler, scaleHandler: ScaleHandler);
         init(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent?: IParentChild | null): void;
         createNew(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent?: IParentChild | null): SliceObject;
+        createEmpty(): SliceObject;
         changeTexture(textureName: string): void;
-        readonly input: InputHandler;
-        readonly scaleHandler: ScaleHandler;
-        readonly pcHandler: ParentChildHandler;
-        data: any;
-        readonly parent: IParentChild;
-        readonly children: IParentChild[];
-        readonly textureName: string;
-        atlas: any;
-        x: number;
-        readonly core: ObjectCore;
-        y: number;
-        readonly scaleX: number;
-        readonly scaleY: number;
-        readonly visible: boolean;
-        width: number;
-        height: number;
+        get input(): InputHandler;
+        get scaleHandler(): ScaleHandler;
+        get pcHandler(): ParentChildHandler;
+        get data(): any;
+        set data(data: any);
+        get parent(): IParentChild;
+        get children(): IParentChild[];
+        get textureName(): string;
+        get atlas(): any;
+        set atlas(textureName: any);
+        get x(): number;
+        set x(x: number);
+        get core(): ObjectCore;
+        get y(): number;
+        set y(y: number);
+        get scaleX(): number;
+        get scaleY(): number;
+        get visible(): boolean;
+        get width(): number;
+        set width(width: number);
+        get height(): number;
+        set height(height: number);
         addChild(child: IParentChild): void;
         removeChild(child: IParentChild): void;
         destroy(): void;
@@ -857,23 +890,30 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpineObject' {
         constructor(objectCore: ObjectCore, ParentChildHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler);
         init(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): void;
         createNew(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): SpineObject;
+        createEmpty(): SpineObject;
         changeTexture(textureName: string): void;
-        readonly input: InputHandler;
-        readonly scaleHandler: ScaleHandler;
-        readonly pcHandler: ParentChildHandler;
-        data: any;
-        readonly parent: IParentChild;
-        readonly children: IParentChild[];
-        readonly textureName: string;
-        atlas: any;
-        x: number;
-        readonly core: ObjectCore;
-        y: number;
-        readonly scaleX: number;
-        readonly scaleY: number;
-        readonly visible: boolean;
-        width: number;
-        height: number;
+        get input(): InputHandler;
+        get scaleHandler(): ScaleHandler;
+        get pcHandler(): ParentChildHandler;
+        get data(): any;
+        set data(data: any);
+        get parent(): IParentChild;
+        get children(): IParentChild[];
+        get textureName(): string;
+        get atlas(): any;
+        set atlas(textureName: any);
+        get x(): number;
+        set x(x: number);
+        get core(): ObjectCore;
+        get y(): number;
+        set y(y: number);
+        get scaleX(): number;
+        get scaleY(): number;
+        get visible(): boolean;
+        get width(): number;
+        set width(width: number);
+        get height(): number;
+        set height(height: number);
         addChild(child: IParentChild): void;
         removeChild(child: IParentChild): void;
         destroy(): void;
@@ -893,25 +933,33 @@ declare module 'UAENGINE/Core/Engine/GameObjects/TextObject' {
         constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler);
         init(x: number, y: number, text: string, style?: any, parent?: IParentChild | null): void;
         createNew(x: number, y: number, textureName: string, frame: string | null | undefined, parent: IParentChild | null): TextObject;
-        readonly input: InputHandler;
-        readonly scaleHandler: ScaleHandler;
-        readonly pcHandler: ParentChildHandler;
-        text: string;
+        createEmpty(): TextObject;
+        get input(): InputHandler;
+        get scaleHandler(): ScaleHandler;
+        get pcHandler(): ParentChildHandler;
+        set text(lett: string);
         setStyle(style: any): void;
         setTextColor(color: string): void;
-        data: any;
-        readonly parent: IParentChild;
-        readonly children: IParentChild[];
-        readonly textureName: string;
-        atlas: any;
-        x: number;
-        readonly core: ObjectCore;
-        y: number;
-        readonly scaleX: number;
-        readonly scaleY: number;
-        readonly visible: boolean;
-        width: number;
-        height: number;
+        get text(): string;
+        get data(): any;
+        set data(data: any);
+        get parent(): IParentChild;
+        get children(): IParentChild[];
+        get textureName(): string;
+        get atlas(): any;
+        set atlas(textureName: any);
+        get x(): number;
+        set x(x: number);
+        get core(): ObjectCore;
+        get y(): number;
+        set y(y: number);
+        get scaleX(): number;
+        get scaleY(): number;
+        get visible(): boolean;
+        get width(): number;
+        set width(width: number);
+        get height(): number;
+        set height(height: number);
         changeTexture(textureName: string): void;
         addChild(child: IParentChild): void;
         removeChild(child: IParentChild): void;
@@ -933,22 +981,27 @@ declare module 'UAENGINE/Core/Engine/GameObjects/ContainerObject' {
         constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler);
         init(x: number, y: number, parent: IParentChild | null): void;
         createNew(x: number, y: number, parent: IParentChild | null): ContainerObject;
+        createEmpty(): ContainerObject;
         changeTexture(textureName: string): void;
-        readonly events: Events;
-        readonly pcHandler: ParentChildHandler;
-        readonly input: InputHandler;
-        readonly scaleHandler: ScaleHandler;
-        data: any;
-        parent: IParentChild;
-        readonly children: IParentChild[];
-        x: number;
-        readonly core: ObjectCore;
-        y: number;
-        readonly scaleX: number;
-        readonly scaleY: number;
-        readonly visible: boolean;
-        readonly width: number;
-        readonly height: number;
+        get events(): Events;
+        get pcHandler(): ParentChildHandler;
+        get input(): InputHandler;
+        get scaleHandler(): ScaleHandler;
+        get data(): any;
+        set data(data: any);
+        get parent(): IParentChild;
+        set parent(parent: IParentChild);
+        get children(): IParentChild[];
+        get x(): number;
+        set x(x: number);
+        get core(): ObjectCore;
+        get y(): number;
+        set y(y: number);
+        get scaleX(): number;
+        get scaleY(): number;
+        get visible(): boolean;
+        get width(): number;
+        get height(): number;
         addChild(child: IParentChild): void;
         removeChild(child: IParentChild): void;
         destroy(): void;
@@ -977,8 +1030,10 @@ declare module 'UAENGINE/Core/Geom/Circle' {
         protected _radius: number;
         constructor(pointFactory: Point);
         init(x: number, y: number, r: number): void;
-        center: Point;
-        radius: number;
+        set center(center: Point);
+        get center(): Point;
+        set radius(radius: number);
+        get radius(): number;
         createNew(x: number, y: number, r: number): Circle;
     }
     export default Circle;
@@ -990,8 +1045,10 @@ declare module 'UAENGINE/Core/Geom/Point' {
         protected _y: number;
         constructor();
         init(x: number, y: number): void;
-        x: number;
-        y: number;
+        get x(): number;
+        set x(x: number);
+        get y(): number;
+        set y(y: number);
         createNew(x: number, y: number): Point;
     }
     export default Point;
@@ -1018,10 +1075,14 @@ declare module 'UAENGINE/Core/Geom/Rect' {
         _height: number;
         constructor(pointFactory: Point);
         init(x: number, y: number, width: number, height: number): void;
-        x: number;
-        y: number;
-        width: number;
-        height: number;
+        get x(): number;
+        get y(): number;
+        set x(x: number);
+        set y(y: number);
+        get width(): number;
+        set width(width: number);
+        get height(): number;
+        set height(height: number);
         halfHeight(): number;
         halfWidth(): number;
         topLeft(): Point;
@@ -1044,9 +1105,11 @@ declare module 'UAENGINE/Core/Geom/Polygon' {
         protected _pointFactory: Point;
         constructor(pointFactory: Point);
         init(center: Point, points: Point[]): void;
-        center: Point;
+        get center(): Point;
+        set center(center: Point);
         setCenter(x: number, y: number): void;
-        points: Point[];
+        get points(): Point[];
+        set points(points: Point[]);
         createNew(center: Point, points: Point[]): Polygon;
     }
     export default Polygon;
@@ -1286,11 +1349,11 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/InputHandler' {
     import InputManager from 'UAENGINE/Core/Engine/InputManager';
     import IGameObject from "UAENGINE/Core/Engine/GameObjects/IGameObject";
     class InputHandler {
-        readonly pixelPerfect: boolean;
+        get pixelPerfect(): boolean;
         constructor(inputManager: InputManager);
         init(go: IGameObject): void;
         makePixelPerfect(threshold?: number): boolean;
-        readonly data: any;
+        get data(): any;
         enableInput(): void;
         disableInput(): void;
         addInputListener(event: string, callback: Function, context: any, once?: boolean): void;
@@ -1332,9 +1395,9 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ParentChildHandler' 
         _children: IParentChild[];
         constructor();
         createNew(): ParentChildHandler;
-        readonly children: IParentChild[];
-        readonly core: ObjectCore;
-        init(entity: ObjectCore, parent: IParentChild | null): void;
+        get children(): IParentChild[];
+        get core(): ObjectCore;
+        init(core: ObjectCore, parent: IParentChild | null): void;
         addChild(object: IParentChild): boolean;
         removeChild(object: IParentChild): void;
         hasChild(object: IParentChild): boolean;
@@ -1346,10 +1409,10 @@ declare module 'UAENGINE/Core/Data/Anim' {
     import Events from 'UAENGINE/Core/Engine/Events';
     class Anim {
         constructor(events: Events);
-        readonly name: string;
-        readonly data: any;
-        readonly frames: string[];
-        readonly fps: number;
+        get name(): string;
+        get data(): any;
+        get frames(): string[];
+        get fps(): number;
         init(name: string, base: string, max: number, fps: number, data: any): void;
         getNextFrame(): string;
         createNew(): Anim;
@@ -1370,7 +1433,7 @@ declare module 'UAENGINE/Core/Data/Tween' {
         _time: number;
         _pauseDiff: number;
         constructor();
-        readonly name: string;
+        get name(): string;
         init(name: string, easing: string, object: any): void;
         to(toObject: any, time: number, updateFunction?: Function): void;
         createNew(): Tween;

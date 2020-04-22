@@ -28,9 +28,12 @@ class GOFactory {
      * @param text the text value to initialize with
      * @param style a css style object to apply to the text
      */
-    text(x: number, y: number, text: string, style: any, parent: IParentChild | null = null): TextObject {
-        let textObj = this._text.createNew(x, y, text, style, parent);
-        return textObj;
+    public text(x?: number, y?: number, text?: string, style?: any, parent: IParentChild | null = null): TextObject {
+        if (x != null && y != null && text != null && style != null) {
+            return this._text.createNew(x, y, text, style, parent);
+        } else {
+            return this._text.createEmpty();
+        }
     }
 
     /**
@@ -40,9 +43,12 @@ class GOFactory {
      * @param textureName the name of the texture to initialize the sprite with
      * @param frame the default frame for the Sprite. Optional. Provide this if working with an atlas animation
      */
-    sprite(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): SpriteObject{
-        let sprite = this._sprite.createNew(x, y, textureName, frame, parent);
-        return sprite;
+    public sprite(x?: number, y?: number, textureName?: string, frame: string | null = null, parent: IParentChild | null = null): SpriteObject{
+        if (x != null && y != null && textureName != null) {
+            return this._sprite.createNew(x, y, textureName, frame, parent);
+        } else {
+            return this._sprite.createEmpty();
+        }
     }
 
     /**
@@ -55,9 +61,12 @@ class GOFactory {
      * @param rightWidth The number of pixels to come in from the right before you reach the repeating section of the slice. This part will never stretch
      * @param bottomHeight The number of pixels to come in from the bottom before you reach the repeating section of the slice. This part will never stretch
      */
-    nineSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent: IParentChild | null = null): SliceObject {
-        let slice = this._slice.createNew(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight, parent);
-        return slice;
+    public nineSlice(x?: number, y?: number, textureName?: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent: IParentChild | null = null): SliceObject {
+        if (x != null && y != null && textureName != null) {
+            return this._slice.createNew(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight, parent);
+        } else {
+            return this._slice.createEmpty();
+        }
     }
 
     /**
@@ -65,9 +74,13 @@ class GOFactory {
      * @param x the x coordinate to initialize with
      * @param y the y coordinate to initialize with
      */
-    container(x: number, y: number, parent: IParentChild | null = null): ContainerObject {
-        let container = this._container.createNew(x, y, parent);
-        return container;
+    public container(x?: number, y?: number, parent: IParentChild | null = null): ContainerObject {
+
+        if (x != null && y != null) {
+            return this._container.createNew(x, y, parent);
+        } else {
+            return this._container.createEmpty();
+        }
     }
 
     /**
@@ -76,9 +89,12 @@ class GOFactory {
      * @param y the y coordinate to initialize with
      * @param spineName the name of the spine file to initialize with
      */
-    spine(x: number, y: number, spineName: string, parent: IParentChild | null = null): SpineObject {
-        let spine = this._spine.createNew(x, y, spineName, null, parent);
-        return spine;
+    public spine(x: number | null, y?: number, spineName?: string, parent: IParentChild | null = null): SpineObject {
+        if (x != null && y != null && spineName != null) {
+            return this._spine.createNew(x, y, spineName, null, parent);
+        } else {
+            return this._spine.createEmpty();
+        }
     }
 }
 
