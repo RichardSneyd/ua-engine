@@ -10,6 +10,7 @@ import Point from '../../../Geom/Point';
 import ResType from '../../../Data/ResType';
 import IGameObject from '../IGameObject';
 import ContainerObject from '../ContainerObject';
+import Mask from '../Mask';
 
 
 class ObjectCore {
@@ -29,8 +30,9 @@ class ObjectCore {
   private _letters: string;
 
   private _go: IGameObject;
+  private _mask: Mask;
 
-  constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, pointFactory: Point) {
+  constructor(screen: IScreen, animationManager: AnimationManager, mask: Mask, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, pointFactory: Point) {
     this._screen = screen;
     this._animationManager = animationManager;
     this._objectHandler = objectHandler;
@@ -45,6 +47,7 @@ class ObjectCore {
     this._height = 0;
     this._textureName = '';
     this._atlas = null;
+    this._mask = mask;
 
     this._initialized = false;
   }
@@ -178,6 +181,18 @@ class ObjectCore {
     return this._input.pixelPerfect;
   }
 
+  public enableMask(x: number, y: number, width: number, height: number) {
+    this._mask.init(x, y, width, height);
+    this._mask.scaleX = this._go.scaleHandler.scaleX;
+    this._mask.scaleY = this._go.scaleHandler.scaleY;
+
+    this._objectHandler.setMask(this._data, this._mask.data);
+  }
+
+  public disableMask() {
+    this._objectHandler.setMask(this._data, null);
+  }
+
   public destroy() {
     // remember to ALWAYS remove event listeners when destroying a GameObject
     this._events.off('resize', this._go.scaleHandler.onResize);
@@ -243,7 +258,7 @@ class ObjectCore {
   public createNew(): ObjectCore {
     let am = this._animationManager.createNew();
     //  console.log('new am: ', am);
-    return new ObjectCore(this._screen, am, this._objectHandler, this._input, this._math, this._events, this._pointFactory);
+    return new ObjectCore(this._screen, am, this._mask.createNew(), this._objectHandler, this._input, this._math, this._events, this._pointFactory);
   }
 
   public changeTexture(textureName: string) {

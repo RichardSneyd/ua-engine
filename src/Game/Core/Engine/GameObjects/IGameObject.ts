@@ -15,6 +15,7 @@ interface IGameObject {
     width: number;
     height: number;
     visible: boolean;
+    data: any;
     destroy(): void;
 }
 

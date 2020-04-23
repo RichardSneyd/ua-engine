@@ -141,6 +141,10 @@ class SpriteObject implements IGameObject, IParentChild {
     removeChild(child: IParentChild): void {
         this._pcHandler.removeChild(child);
     }
+
+    update(time: number) {
+        this._core.update(time);
+    }
  
    
  destroy() {

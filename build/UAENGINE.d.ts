@@ -461,6 +461,7 @@ declare module 'UAENGINE/Services/IScreen' {
         createText(x: number, y: number, text: string, style?: any): any;
         createSprite(x: number, y: number, name: string, frame: string | null): any;
         createNineSlice(x: number, y: number, name: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): any;
+        createGraphics(x: number, y: number, width: number, height: number): any;
         clearScreen(): void;
         changeTexture(sprite: Sprite, name: string, frame?: string | null): void;
         createSpine(name: string): any;
@@ -736,13 +737,14 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore' {
     import MathUtils from 'UAENGINE/Core/Engine/Utils/MathUtils';
     import Point from 'UAENGINE/Core/Geom/Point';
     import IGameObject from 'UAENGINE/Core/Engine/GameObjects/IGameObject';
+    import Mask from 'UAENGINE/Core/Engine/GameObjects/Mask';
     class ObjectCore {
         _animationManager: AnimationManager;
         _objectHandler: IObjectHandler;
         _math: MathUtils;
         _scaleHandler: ScaleManager;
         protected _pointFactory: Point;
-        constructor(screen: IScreen, animationManager: AnimationManager, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, pointFactory: Point);
+        constructor(screen: IScreen, animationManager: AnimationManager, mask: Mask, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, pointFactory: Point);
         init(go: IGameObject, x: number, y: number, textureName?: string): void;
         get objectHandler(): IObjectHandler;
         get screen(): IScreen;
@@ -755,10 +757,6 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore' {
         get width(): number;
         get height(): number;
         get events(): Events;
-        get scaleX(): number;
-        get scaleY(): number;
-        set scaleX(sclX: number);
-        set scaleY(sclY: number);
         set origin(origin: Point);
         get origin(): Point;
         set height(height: number);
@@ -771,6 +769,8 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore' {
         get atlas(): any;
         set atlas(atlas: any);
         get pixelPerfect(): boolean;
+        enableMask(x: number, y: number, width: number, height: number): void;
+        disableMask(): void;
         destroy(): void;
         get data(): any;
         set data(data: any);
@@ -819,8 +819,6 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpriteObject' {
         get core(): ObjectCore;
         get y(): number;
         set y(y: number);
-        get scaleX(): number;
-        get scaleY(): number;
         get visible(): boolean;
         get width(): number;
         set width(width: number);
@@ -829,8 +827,11 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpriteObject' {
         get parent(): IParentChild;
         set parent(parent: IParentChild);
         get children(): IParentChild[];
+        enableMask(x: number, y: number, width: number, height: number): void;
+        disableMask(): void;
         addChild(child: IParentChild): void;
         removeChild(child: IParentChild): void;
+        update(time: number): void;
         destroy(): void;
     }
     export default SpriteObject;
@@ -865,8 +866,6 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SliceObject' {
         get core(): ObjectCore;
         get y(): number;
         set y(y: number);
-        get scaleX(): number;
-        get scaleY(): number;
         get visible(): boolean;
         get width(): number;
         set width(width: number);
@@ -908,8 +907,6 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpineObject' {
         get core(): ObjectCore;
         get y(): number;
         set y(y: number);
-        get scaleX(): number;
-        get scaleY(): number;
         get visible(): boolean;
         get width(): number;
         set width(width: number);
@@ -954,8 +951,6 @@ declare module 'UAENGINE/Core/Engine/GameObjects/TextObject' {
         get core(): ObjectCore;
         get y(): number;
         set y(y: number);
-        get scaleX(): number;
-        get scaleY(): number;
         get visible(): boolean;
         get width(): number;
         set width(width: number);
@@ -998,8 +993,6 @@ declare module 'UAENGINE/Core/Engine/GameObjects/ContainerObject' {
         get core(): ObjectCore;
         get y(): number;
         set y(y: number);
-        get scaleX(): number;
-        get scaleY(): number;
         get visible(): boolean;
         get width(): number;
         get height(): number;
@@ -1346,6 +1339,9 @@ declare module 'UAENGINE/Services/IObjectHandler' {
         setStyle(text: any, style: any): void;
         setTextColor(text: any, color: string): void;
         destroy(object: any): void;
+        setWidth(object: any, width: number): void;
+        setHeight(object: any, height: number): void;
+        setMask(object: any, mask: any): void;
     }
     export default IObjectHandler;
 }
@@ -1382,14 +1378,43 @@ declare module 'UAENGINE/Core/Engine/GameObjects/IGameObject' {
         createNew(...args: any[]): any;
         x: number;
         y: number;
-        scaleX: number;
-        scaleY: number;
         width: number;
         height: number;
         visible: boolean;
+        data: any;
         destroy(): void;
     }
     export default IGameObject;
+}
+
+declare module 'UAENGINE/Core/Engine/GameObjects/Mask' {
+    import IObjectHandler from 'UAENGINE/Services/IObjectHandler';
+    import IScreen from 'UAENGINE/Services/IScreen';
+    class Mask {
+        _screen: IScreen;
+        _y: number;
+        _width: number;
+        _height: number;
+        _scaleX: number;
+        _scaleY: number;
+        constructor(objectHandler: IObjectHandler);
+        get x(): number;
+        get y(): number;
+        get width(): number;
+        get height(): number;
+        get scaleX(): number;
+        get scaleY(): number;
+        set x(xVal: number);
+        set y(yVal: number);
+        set width(wSize: number);
+        set height(hSize: number);
+        set scaleX(sX: number);
+        set scaleY(sY: number);
+        get data(): any;
+        init(x: number, y: number, width: number, height: number): void;
+        createNew(): Mask;
+    }
+    export default Mask;
 }
 
 declare module 'UAENGINE/Core/Engine/GameObjects/Components/ParentChildHandler' {

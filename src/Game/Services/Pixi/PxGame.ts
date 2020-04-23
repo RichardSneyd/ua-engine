@@ -1,4 +1,4 @@
-import { Application, Sprite, Renderer, Container, DisplayObject, NineSlicePlane, BaseTexture } from 'pixi.js';
+import { Application, Sprite, Renderer, Container, DisplayObject, NineSlicePlane, BaseTexture, Graphics } from 'pixi.js';
 import PxText from './PxText';
 import PxFactory from './PxFactory';
 import Loader from '../../Core/Engine/Loader';
@@ -67,6 +67,18 @@ class PxGame {
 
       return <PxText>t;
     }
+  }
+
+  public addGraphic(x: number, y: number, width: number, height: number): Graphics {
+    let gfx = new Graphics();
+    gfx.x = x;
+    gfx.y = y;
+    gfx.width = width;
+    gfx.height = height;
+
+    this._addChild(gfx);
+
+    return gfx;
   }
 
   public addContainer(x: number, y: number): Container {

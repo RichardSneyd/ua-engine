@@ -51,8 +51,20 @@ class ObjectHandler implements IObjectHandler {
     object.scale.y = y;
   }
 
+  public setWidth(object: any, width: number) {
+    object.width = width;
+  }
+
+  public setHeight(object: any, height: number) {
+    object.height = height;
+  }
+
   public destroy(object: any){
     object.destroy();
+  }
+
+  public setMask(object: any, mask: any) {
+    object.mask = mask;
   }
 }
 
