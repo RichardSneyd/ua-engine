@@ -6,6 +6,7 @@ import ParentChildHandler from "./Components/ParentChildHandler";
 import IScreen from "../../../Services/IScreen";
 import InputHandler from "./Components/InputHandler";
 import ScaleHandler from "./Components/ScaleHandler";
+import AnimationManager from "./Components/AnimationManager";
 
 class SpineObject implements IGameObject, IParentChild {
     private _screen: IScreen;
@@ -20,7 +21,7 @@ class SpineObject implements IGameObject, IParentChild {
     }
 
     public init(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): void {
-        this.data = this._screen.createSprite(x, y, textureName, frame);
+        this._core.data = this._screen.createSprite(x, y, textureName, frame);
         this.width = this.data.width;
         this.height = this.data.height;
 
@@ -53,6 +54,10 @@ class SpineObject implements IGameObject, IParentChild {
 
     get scaleHandler(){
         return this._scaleHandler;
+    }
+    
+    get animations(){
+        return this._core.animations;
     }
 
     get pcHandler(){

@@ -20,7 +20,7 @@ class SliceObject implements IGameObject, IParentChild {
     }
 
     public init(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent: IParentChild | null = null): void {
-        this.data = this._screen.createNineSlice(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight);
+        this._core.data = this._screen.createNineSlice(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight);
         this.data.x = x;
         this.data.y = y;
         //  console.log('boudns before calc', this._data.getBounds());

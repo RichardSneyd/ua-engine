@@ -21,7 +21,7 @@ class SpriteObject implements IGameObject, IParentChild {
     }
 
     public init(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): void {
-        this.data = this._screen.createSprite(x, y, textureName, frame);
+        this._core.data = this._screen.createSprite(x, y, textureName, frame);
         this.width = this.data.width;
         this.height = this.data.height;
 

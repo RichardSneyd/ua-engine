@@ -10,6 +10,7 @@ interface IGameObject {
     pcHandler: ParentChildHandler;
     init(...args: any[]): void;
     createNew(...args: any[]): any;
+    createEmpty(): any;
     x: number;
     y: number;
     width: number;
