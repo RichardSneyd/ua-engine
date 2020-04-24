@@ -30,6 +30,7 @@ class SpriteObject implements IGameObject, IParentChild {
         this._core.init(this, x, y, textureName);
         this._input.init(this);
         this._pcHandler.init(this._core, parent);
+        this._scaleHandler.init(this);
     }
 
     public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): SpriteObject {

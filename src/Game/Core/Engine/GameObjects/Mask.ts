@@ -8,8 +8,10 @@ class Mask {
   private _x: number; _y: number; _width: number; _height: number; _scaleX: number; _scaleY: number;
   private _data: any;
 
-  constructor(objectHandler: IObjectHandler) {
+  constructor(objectHandler: IObjectHandler, screen: IScreen) {
     this._objectHandler = objectHandler;
+    this._screen = screen;
+
     this._x = 0;
     this._y = 0;
     this._width = 0;
@@ -82,17 +84,22 @@ class Mask {
     this._y = y;
     this._width = width;
     this._height = height;
+
+    console.log("addin mask ", x, y, width, height);
+
     this._data = this._screen.createGraphics(x, y, width, height);
   }
 
   public createNew(): Mask {
-    return new Mask(this._objectHandler);
+    return new Mask(this._objectHandler, this._screen);
   }
 
   private _updateScale() {
+    /*
     this._objectHandler.setXy(this._data, this._x * this._scaleX, this._y * this._scaleY);
     this._objectHandler.setWidth(this._data, this._width * this._scaleX);
     this._objectHandler.setHeight(this._data, this._height * this._scaleY);
+    */
   }
 }
 

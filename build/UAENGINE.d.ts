@@ -827,8 +827,6 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpriteObject' {
         get parent(): IParentChild;
         set parent(parent: IParentChild);
         get children(): IParentChild[];
-        enableMask(x: number, y: number, width: number, height: number): void;
-        disableMask(): void;
         addChild(child: IParentChild): void;
         removeChild(child: IParentChild): void;
         update(time: number): void;
@@ -1397,7 +1395,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Mask' {
         _height: number;
         _scaleX: number;
         _scaleY: number;
-        constructor(objectHandler: IObjectHandler);
+        constructor(objectHandler: IObjectHandler, screen: IScreen);
         get x(): number;
         get y(): number;
         get width(): number;

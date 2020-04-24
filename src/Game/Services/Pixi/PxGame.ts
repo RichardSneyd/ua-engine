@@ -31,6 +31,8 @@ class PxGame {
       console.warn("No element by id: '%s', appending to the body.", container);
       document.body.appendChild(this._game.view);
     }
+
+    (<any> window).pixiGame = this._game;
   }
 
   _onMouseMove(evt: any) {
@@ -73,8 +75,10 @@ class PxGame {
     let gfx = new Graphics();
     gfx.x = x;
     gfx.y = y;
-    gfx.width = width;
-    gfx.height = height;
+
+    gfx.beginFill();
+    gfx.drawRect(x, y, width, height);
+    gfx.endFill();
 
     this._addChild(gfx);
 
