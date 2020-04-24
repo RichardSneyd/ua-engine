@@ -50,18 +50,6 @@ class FrameAnimationManager implements IAnimationManager {
     }
   }
 
-  public addSpineAnimation(name: string, fps: number, data: any) {
-    let prevAnim = this._getAnim(name);
-    let anim: Anim = this._anim.createNew();
-
-    if (prevAnim == null) {
-      anim.init(name, '', 0, fps, data);
-      this._animations.push(anim);
-    } else {
-      console.warn('Animation with name: "%s" already added, not adding it again!', name);
-    }
-  }
-
   //max has to be dynamic
   //-1 for nothing, single frame
 
@@ -127,10 +115,6 @@ class FrameAnimationManager implements IAnimationManager {
 
   private _play(anim: Anim) {
     this._activeAnimation = anim;
-  }
-
-  private _playSpine(anim: Anim) {
-    anim.startSpineAnimation();
   }
 
   private _getAnim(name: string): Anim | null {
