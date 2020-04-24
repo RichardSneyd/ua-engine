@@ -89,7 +89,7 @@ class FrameAnimationManager implements IAnimationManager {
     }
   }
 
-  public update(time: number){
+  public update(){
     if (!this._go.core.initialized) return;
 
     let updatedFrame = this.getUpdatedFrame();

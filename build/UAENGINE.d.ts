@@ -1325,11 +1325,10 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/FrameAnimationManage
         play(name: string, loop?: boolean): void;
         pause(name: string): void;
         resume(name: string): void;
-        addSpineAnimation(name: string, fps: number, data: any): void;
         addAnimation(name: string, base: string, max: number, fps: number, data?: any): void;
         createNew(): FrameAnimationManager;
         getUpdatedFrame(): string | null;
-        update(time: number): void;
+        update(): void;
     }
     export default FrameAnimationManager;
 }
