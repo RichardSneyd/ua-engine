@@ -6,6 +6,7 @@ import ParentChildHandler from "./Components/ParentChildHandler";
 import IScreen from "../../../Services/IScreen";
 import InputHandler from "./Components/InputHandler";
 import ScaleHandler from "./Components/ScaleHandler";
+import TweenManager from "./Components/TweenManager";
 
 class TextObject implements IGameObject, IParentChild {
     private _screen: IScreen;
@@ -14,10 +15,12 @@ class TextObject implements IGameObject, IParentChild {
     private _pcHandler: ParentChildHandler;
     private _scaleHandler: ScaleHandler;
     private _letters: string;
+    private _tweenManager: TweenManager;
 
-    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler) {
+    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, 
+        scaleHandler: ScaleHandler, tweenManager: TweenManager) {
         this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input; 
-        this._scaleHandler = scaleHandler;
+        this._scaleHandler = scaleHandler; this._tweenManager = tweenManager;
         this._letters = '$$$$____$$$$'; //default uninitialized string
     }
 
@@ -33,6 +36,10 @@ class TextObject implements IGameObject, IParentChild {
         this._pcHandler.init(this._core, parent);
     }
 
+    public update(time: any){
+       // this.animations.update(time);
+    }
+
     public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null): TextObject {
         let textObj = this.createEmpty();
         textObj.init(x, y, textureName, frame, parent);
@@ -40,8 +47,12 @@ class TextObject implements IGameObject, IParentChild {
     }
 
     public createEmpty(): TextObject {
-        let textObj = new TextObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew());
+        let textObj = new TextObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenManager.createNew());
         return textObj;
+    }
+
+    get tweens(){
+        return this._tweenManager;
     }
 
     get input(): InputHandler {

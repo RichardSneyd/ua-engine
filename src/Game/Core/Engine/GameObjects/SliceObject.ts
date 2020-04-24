@@ -6,6 +6,7 @@ import ParentChildHandler from "./Components/ParentChildHandler";
 import IScreen from "../../../Services/IScreen";
 import InputHandler from "./Components/InputHandler";
 import ScaleHandler from "./Components/ScaleHandler";
+import TweenManager from "./Components/TweenManager";
 
 class SliceObject implements IGameObject, IParentChild {
     private _screen: IScreen;
@@ -13,10 +14,12 @@ class SliceObject implements IGameObject, IParentChild {
     private _input: InputHandler;
     private _pcHandler: ParentChildHandler;
     private _scaleHandler: ScaleHandler;
+    private _tweenManager: TweenManager;
 
-    constructor(objectCore: ObjectCore, parentChildHandler: ParentChildHandler, screen: IScreen, inputHandler: InputHandler, scaleHandler: ScaleHandler) {
+    constructor(objectCore: ObjectCore, parentChildHandler: ParentChildHandler, screen: IScreen, inputHandler: InputHandler, 
+        scaleHandler: ScaleHandler, tweenManager: TweenManager) {
         this._core = objectCore; this._pcHandler = parentChildHandler; this._screen = screen; this._input = inputHandler;
-        this._scaleHandler = scaleHandler;
+        this._scaleHandler = scaleHandler; this._tweenManager = tweenManager;
     }
 
     public init(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent: IParentChild | null = null): void {
@@ -42,14 +45,22 @@ class SliceObject implements IGameObject, IParentChild {
         return slice;
     }
 
+    public update(time: any){
+       // this.animations.update(time);
+    }
+
     public createEmpty() {
-        let slice = new SliceObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this.input.createNew(), this.scaleHandler.createNew());
+        let slice = new SliceObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this.input.createNew(), this.scaleHandler.createNew(), this._tweenManager.createNew());
 
         return slice;
     }
 
     public changeTexture(textureName: string) {
         this._core.changeTexture(textureName);
+    }
+
+    get tweens(){
+        return this._tweenManager;
     }
 
     get input(){

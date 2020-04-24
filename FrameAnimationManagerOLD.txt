@@ -1,8 +1,13 @@
 import Anim from '../../../Data/Anim';
 import Tween from '../../../Data/Tween';
+import IGameObject from 'UAENGINE/Core/Engine/GameObjects/IGameObject';
+import IFrameAnimatedGameObject from '../IFrameAnimatedGameObject';
 
-class AnimationManager {
-  private _anim: Anim; _activeAnimation: Anim | null; _tween: Tween;
+// TODO --- refactor into 2 seperate AnimationManagers, 1 for atlases and 1 for spines, which both implement 
+// an IAnimationManager interface
+
+class FrameAnimationManager implements IAnimationManager {
+  private _go: IFrameAnimatedGameObject; private _anim: Anim; _activeAnimation: Anim | null; _tween: Tween;
   private _animations: Anim[];
   private _tweens: Tween[];
   private _loopIndex: number;
@@ -15,6 +20,10 @@ class AnimationManager {
 
     this._animations = [];
     this._tweens = [];
+  }
+
+  init(go: IFrameAnimatedGameObject){
+    this._go = go;
   }
 
   public play(name: string, loop: boolean = false) {
@@ -111,8 +120,8 @@ class AnimationManager {
     }
   }
 
-  public createNew(): AnimationManager {
-    return new AnimationManager(this._anim.createNew(), this._tween.createNew());
+  public createNew(): FrameAnimationManager {
+    return new FrameAnimationManager(this._anim.createNew(), this._tween.createNew());
   }
 
   public getUpdatedFrame(): string | null {
@@ -135,7 +144,23 @@ class AnimationManager {
     }
   }
 
-  public update(time: number) {
+  public update(time: number){
+    if (!this._go.core.initialized) return;
+
+    let updatedFrame = this.getUpdatedFrame();
+
+    if (updatedFrame != null) {
+      if (this._go.core.atlas != null) {
+        this._go.core.screen.changeTexture(this._go.core.data, this._go.core.atlas, updatedFrame);
+      } else {
+        this._go.core.screen.changeTexture(this._go.core.data, updatedFrame);
+      }
+    }
+
+    this.updateTween(time);
+  }
+
+  public updateTween(time: number) {
     for (let c = 0; c < this._tweens.length; c++) {
       let tween = this._tweens[c];
       tween.update(time);
@@ -180,4 +205,4 @@ class AnimationManager {
   }
 }
 
-export default AnimationManager;
+export default FrameAnimationManager;

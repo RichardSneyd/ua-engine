@@ -2,6 +2,7 @@ import ObjectCore from "./Components/ObjectCore";
 import InputHandler from "./Components/InputHandler";
 import ScaleHandler from "./Components/ScaleHandler";
 import ParentChildHandler from './Components/ParentChildHandler';
+import TweenManager from "./Components/TweenManager";
 
 interface IGameObject {
     core: ObjectCore;
@@ -16,7 +17,10 @@ interface IGameObject {
     width: number;
     height: number;
     visible: boolean;
+    data: any;
     destroy(): void;
+    update(time: any): void;
+    tweens: TweenManager;
 }
 
 export default IGameObject;
