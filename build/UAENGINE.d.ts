@@ -753,13 +753,13 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore' {
         set x(xVal: number);
         set y(yVal: number);
         set width(width: number);
+        set height(height: number);
         get animations(): AnimationManager;
         get width(): number;
         get height(): number;
         get events(): Events;
         set origin(origin: Point);
         get origin(): Point;
-        set height(height: number);
         setSize(width: number, height: number): void;
         get x(): number;
         get y(): number;
@@ -786,6 +786,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore' {
         changeTexture(textureName: string): void;
         update(time: number): void;
         updateXY(): void;
+        scaleMask(): void;
     }
     export default ObjectCore;
 }
@@ -1340,6 +1341,10 @@ declare module 'UAENGINE/Services/IObjectHandler' {
         setWidth(object: any, width: number): void;
         setHeight(object: any, height: number): void;
         setMask(object: any, mask: any): void;
+        getSize(object: any): {
+            width: number;
+            height: number;
+        };
     }
     export default IObjectHandler;
 }
@@ -1393,24 +1398,21 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Mask' {
         _y: number;
         _width: number;
         _height: number;
-        _scaleX: number;
-        _scaleY: number;
+        _initialized: boolean;
         constructor(objectHandler: IObjectHandler, screen: IScreen);
         get x(): number;
         get y(): number;
         get width(): number;
         get height(): number;
-        get scaleX(): number;
-        get scaleY(): number;
+        get initialized(): boolean;
         set x(xVal: number);
         set y(yVal: number);
         set width(wSize: number);
         set height(hSize: number);
-        set scaleX(sX: number);
-        set scaleY(sY: number);
         get data(): any;
         init(x: number, y: number, width: number, height: number): void;
         createNew(): Mask;
+        scale(scaleX: number, scaleY: number): void;
     }
     export default Mask;
 }

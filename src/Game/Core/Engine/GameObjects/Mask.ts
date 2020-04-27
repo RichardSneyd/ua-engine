@@ -5,8 +5,8 @@ import IScreen from '../../../Services/IScreen';
 class Mask {
   private _objectHandler: IObjectHandler; _screen: IScreen;
 
-  private _x: number; _y: number; _width: number; _height: number; _scaleX: number; _scaleY: number;
-  private _data: any;
+  private _x: number; _y: number; _width: number; _height: number;
+  private _data: any; _initialized: boolean;
 
   constructor(objectHandler: IObjectHandler, screen: IScreen) {
     this._objectHandler = objectHandler;
@@ -16,9 +16,7 @@ class Mask {
     this._y = 0;
     this._width = 0;
     this._height = 0;
-
-    this._scaleX = 1;
-    this._scaleY = 1;
+    this._initialized = false;
   }
 
   get x(): number {
@@ -37,12 +35,8 @@ class Mask {
     return this._height;
   }
 
-  get scaleX(): number {
-    return this._scaleX;
-  }
-
-  get scaleY(): number {
-    return this._scaleY;
+  get initialized(): boolean {
+    return this._initialized;
   }
 
   set x(xVal: number) {
@@ -65,16 +59,6 @@ class Mask {
     this._objectHandler.setHeight(this._data, this._height);
   }
 
-  set scaleX(sX: number) {
-    this._scaleX = sX;
-    this._updateScale();
-  }
-
-  set scaleY(sY: number) {
-    this._scaleY = sY;
-    this._updateScale();
-  }
-
   get data(): any {
     return this._data;
   }
@@ -88,10 +72,17 @@ class Mask {
     console.log("addin mask ", x, y, width, height);
 
     this._data = this._screen.createGraphics(x, y, width, height);
+    this._initialized = true;
   }
 
   public createNew(): Mask {
     return new Mask(this._objectHandler, this._screen);
+  }
+
+  public scale(scaleX: number, scaleY: number) {
+    this._objectHandler.setXy(this._data, this._x * scaleX, this._y * scaleY);
+    this._objectHandler.setWidth(this._data, this._width * scaleX);
+    this._objectHandler.setHeight(this._data, this._height * scaleY);
   }
 
   private _updateScale() {

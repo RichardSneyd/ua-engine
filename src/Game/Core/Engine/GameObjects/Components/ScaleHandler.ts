@@ -86,11 +86,24 @@ class ScaleHandler {
   private _onResize() {
     console.log("{debug3} scale manager resize!", this._scaleManager.getScale(this._scaleX), this._scaleManager.getScale(this._scaleY), this._go);
 
+
+    if (this._go instanceof ContainerObject) {
+      
+    } else {
+      this._updateScale();
+    }
+
+    this._go.core.updateXY();
+    this._go.core.updateOrigin();
+    this._go.core.scaleMask();
+
+    /*
     if (this._go.pcHandler.parent == null || this._go instanceof ContainerObject) {
       this._updateScale();
       this._go.core.updateXY();
       this._go.core.updateOrigin();
     }
+    */
   }
 
 }

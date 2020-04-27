@@ -25,9 +25,6 @@ class SliceObject implements IGameObject, IParentChild {
         this.data.y = y;
         //  console.log('boudns before calc', this._data.getBounds());
         this.data.calculateBounds();
-        
-        this.width = this.data.width;
-        this.height = this.data.height;
 
         this._core.init(this, x, y);
         this._pcHandler.init(this._core, parent);
@@ -120,8 +117,8 @@ class SliceObject implements IGameObject, IParentChild {
         return this._core.width;
     }
 
-    set width(width: number){
-        this.data.width = width;
+    set width(width: number) {
+        this._core.width = width;
     }
 
     get height() {
@@ -129,7 +126,7 @@ class SliceObject implements IGameObject, IParentChild {
     }
 
     set height(height: number){
-        this.data.height = height;
+        this._core.height = height;
     }
 
     addChild(child: IParentChild): void {

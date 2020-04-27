@@ -41,19 +41,19 @@ class ContainerObject implements IGameObject, IParentChild {
         this._core.changeTexture(textureName);
     }
 
-    get events(){
+    get events() {
         return this._core.events;
     }
 
-    get pcHandler(){
+    get pcHandler() {
         return this._pcHandler;
     }
 
-    get input(){
+    get input() {
         return this._input;
     }
 
-    get scaleHandler(){
+    get scaleHandler() {
         return this._scaleHandler;
     }
 

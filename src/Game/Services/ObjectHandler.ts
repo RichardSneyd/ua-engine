@@ -66,6 +66,10 @@ class ObjectHandler implements IObjectHandler {
   public setMask(object: any, mask: any) {
     object.mask = mask;
   }
+
+  public getSize(object: any): {width: number, height: number} {
+    return {width: object.width, height: object.height};
+  }
 }
 
 export default ObjectHandler;

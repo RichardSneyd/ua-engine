@@ -42,7 +42,7 @@ class ObjectCore {
     this._pointFactory = pointFactory;
     this._x = 0;
     this._y = 0;
-    this._origin = this._pointFactory.createNew(0.5, 0.5);
+    this._origin = this._pointFactory.createNew(0, 0);
     this._width = 0;
     this._height = 0;
     this._textureName = '';
@@ -62,6 +62,8 @@ class ObjectCore {
     this._data.x = x;
     this._data.y = y;
     this._initialized = true;
+
+    this._importSize();
   }
 
   get objectHandler() {
@@ -87,7 +89,7 @@ class ObjectCore {
     }
     else {
       this._objectHandler.setXy(this._data, xVal, this._y);
-      this._objectHandler.setPivot(this._data, this._origin);
+      this.updateOrigin()
     }
   }
 
@@ -97,7 +99,7 @@ class ObjectCore {
       this._updateXY();
     }
     else {
-      this._objectHandler.setPivot(this._data, this._origin);
+      this.updateOrigin()
       this._objectHandler.setXy(this._data, this._x, yVal);
     }
   }
@@ -105,8 +107,15 @@ class ObjectCore {
   set width(width: number) {
     this._width = width;
 
-    this._objectHandler.setPivot(this._data, this._origin);
-    this._objectHandler.setSize(this._data, this._width, this._height);
+    this._updateSize();
+    this.updateOrigin();
+  }
+
+  set height(height: number) {
+    this._height = height;
+
+    this._updateSize();
+    this.updateOrigin();
   }
 
   get animations(){
@@ -128,7 +137,7 @@ class ObjectCore {
   set origin(origin: Point) {
     this._origin.x = origin.x;
     this._origin.y = origin.y;
-    this._objectHandler.setPivot(this._data, this._origin);
+    this.updateOrigin()
     this._objectHandler.setXy(this._data, this._x, this._y);
   }
 
@@ -136,16 +145,10 @@ class ObjectCore {
     return this._origin;
   }
 
-  set height(height: number) {
-    this._height = height;
-
-    this._objectHandler.setSize(this._data, this._width, height);
-  }
-
   setSize(width: number, height: number) {
     this._width = width;
     this._height = height;
-    this._objectHandler.setSize(this._data, this._width, this._height);
+    this._updateSize();
     this._updateXY();
   }
 
@@ -183,8 +186,6 @@ class ObjectCore {
 
   public enableMask(x: number, y: number, width: number, height: number) {
     this._mask.init(x, y, width, height);
-    this._mask.scaleX = this._go.scaleHandler.scaleX;
-    this._mask.scaleY = this._go.scaleHandler.scaleY;
 
     this._objectHandler.setMask(this._data, this._mask.data);
   }
@@ -240,7 +241,11 @@ class ObjectCore {
   }
 
   updateOrigin(){
-    this.objectHandler.setPivot(this.data, this.origin);
+    let scaleX = this._scaleHandler.getScale(this._scaleHandler.scaleX);
+    let scaleY = this._scaleHandler.getScale(this._scaleHandler.scaleY);
+
+    let p = this._pointFactory.createNew(this._origin.x * scaleX, this._origin.y * scaleY);
+    this._objectHandler.setPivot(this._data, p);
   }
 
   public anim() {
@@ -285,14 +290,38 @@ class ObjectCore {
     this._animationManager.update(time);
   }
 
-  updateXY() {
+  public updateXY() {
     this._updateXY();
+  }
+
+  public scaleMask() {
+    if (this._mask.initialized) {
+      let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
+      let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
+
+      this._mask.scale(scaleX, scaleY);
+    }
   }
 
   private _updateXY() {
     let target = this._scaleHandler.getXY(this._x, this._y);
 
     this._objectHandler.setXy(this._data, target.x, target.y);
+  }
+
+  private _importSize() {
+    let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
+    let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
+
+    this._width = this._objectHandler.getSize(this._data).width / scaleX;
+    this._height = this._objectHandler.getSize(this._data).height / scaleY;
+  }
+
+  private _updateSize() {
+    let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
+    let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
+
+    this._objectHandler.setSize(this._data, this._width * scaleX, this._height * scaleY);
   }
 
 

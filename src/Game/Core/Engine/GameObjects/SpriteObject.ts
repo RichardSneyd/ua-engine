@@ -22,8 +22,6 @@ class SpriteObject implements IGameObject, IParentChild {
 
     public init(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): void {
         this.data = this._screen.createSprite(x, y, textureName, frame);
-        this.width = this.data.width;
-        this.height = this.data.height;
 
         if (frame != null) this.atlas = textureName;
 
@@ -112,15 +110,15 @@ class SpriteObject implements IGameObject, IParentChild {
     }
 
     set width(width: number) {
-        this.data.width = width;
+        this._core.width = width;
     }
 
     get height() {
         return this._core.height;
     }
 
-    set height(height: number) {
-        this.data.height = height;
+    set height(height: number){
+        this._core.height = height;
     }
 
      get parent() {
