@@ -29,7 +29,7 @@ class ScaleManager {
   }
 
   public getScale(currentScale: number): number {
-    let scale = this._scaleFactor();
+    let scale = this._scaleFactor() * currentScale;
 
     return scale;
   }

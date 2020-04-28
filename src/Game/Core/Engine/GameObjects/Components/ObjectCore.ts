@@ -26,7 +26,6 @@ class ObjectCore {
   private _input: InputHandler; _math: MathUtils;
   private _data: any;
   private _events: Events; _scaleHandler: ScaleManager; protected _pointFactory: Point;
-  private _letters: string;
 
   private _go: IGameObject;
   private _atlas: string | null;
@@ -195,6 +194,7 @@ class ObjectCore {
   set data(data: any) {
     this._data = data;
   }
+
   public relativeMove(xDiff: number, yDiff: number) {
     let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
     let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
@@ -273,7 +273,6 @@ class ObjectCore {
 
   private _updateXY() {
     let target = this._scaleHandler.getXY(this._x, this._y);
-
     this._objectHandler.setXy(this._data, target.x, target.y);
   }
 
