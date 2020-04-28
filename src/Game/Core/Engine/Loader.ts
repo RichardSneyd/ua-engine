@@ -5,6 +5,7 @@ import ISndLoader from '../../Services/ISndLoader';
 import AjaxLoader from '../../Services/AjaxLoader';
 import GameConfig from './GameConfig';
 
+
 class Loader {
   private _resource: Resource;
   private _gameConfig: GameConfig;
@@ -89,9 +90,9 @@ class Loader {
   }
 
 
-  public addSpine(name: string, jsonUrl: string) {
+  public addSpine(filename: string) {
     let res = this._createResource();
-    res.initImage(this._base + jsonUrl, false);
+    res.initImage(this._base + filename, false);
 
     this._spineList.push(res);
   }

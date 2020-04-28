@@ -1,5 +1,5 @@
 import Events from "../Events";
-import AnimationManager from "./Components/AnimationManager";
+import AnimationManager from "./Components/FrameAnimationManager";
 import IGameObject from "./IGameObject";
 import ObjectCore from "./Components/ObjectCore";
 import IParentChild from "./IParentChild";
@@ -7,23 +7,29 @@ import ParentChildHandler from "./Components/ParentChildHandler";
 import IScreen from "../../../Services/IScreen";
 import InputHandler from "./Components/InputHandler";
 import ScaleHandler from "./Components/ScaleHandler";
+import IFramedGameObject from "./IFrameAnimatedGameObject";
+import FrameAnimationManager from './Components/FrameAnimationManager';
+import TweenManager from "./Components/TweenManager";
 
-class SpriteObject implements IGameObject, IParentChild {
+class SpriteObject implements IFramedGameObject, IParentChild {
     private _screen: IScreen;
     private _core: ObjectCore;
     private _input: InputHandler;
     private _pcHandler: ParentChildHandler;
     private _scaleHandler: ScaleHandler;
+    private _animationManager: FrameAnimationManager;
+    private _tweenManager: TweenManager;
 
-    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler) {
+    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, 
+        scaleHandler: ScaleHandler, animationManager: FrameAnimationManager, tweenManager: TweenManager) {
         this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input;
-        this._scaleHandler = scaleHandler;
+        this._scaleHandler = scaleHandler; this._animationManager = animationManager; this._tweenManager = tweenManager;
     }
 
     public init(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): void {
         this.data = this._screen.createSprite(x, y, textureName, frame);
 
-        if (frame != null) this.atlas = textureName;
+        if (frame != null) this.core.atlas = textureName;
 
         this._core.init(this, x, y, textureName);
         this._input.init(this);
@@ -38,11 +44,15 @@ class SpriteObject implements IGameObject, IParentChild {
     }
 
     public createEmpty(): SpriteObject {
-        return new SpriteObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew());
+        return new SpriteObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._animationManager.createNew(), this._tweenManager.createNew());
     }
 
     public changeTexture(textureName: string) {
         this._core.changeTexture(textureName);
+    }
+
+    get tweens(){
+        return this._tweenManager;
     }
 
     get input(){
@@ -58,7 +68,7 @@ class SpriteObject implements IGameObject, IParentChild {
     }
 
     get animations(){
-        return this._core.animations;
+        return this._animationManager;
     }
 
     get data() {
@@ -74,11 +84,11 @@ class SpriteObject implements IGameObject, IParentChild {
     }
 
     get atlas() {
-        return this._core.atlas;
+        return this.core.atlas;
     }
 
     set atlas(textureName: any) {
-        this._core.atlas = textureName;
+        this.core.atlas = textureName;
     }
 
     get x() {

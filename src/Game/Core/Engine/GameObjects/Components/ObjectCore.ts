@@ -1,4 +1,4 @@
-import AnimationManager from './AnimationManager';
+import FrameAnimationManager from './FrameAnimationManager';
 import Events from '../../Events';
 import ScaleManager from './ScaleHandler';
 import IScreen from '../../../../Services/IScreen';
@@ -21,20 +21,19 @@ class ObjectCore {
   private _height: number;
   private _textureName: string;
   private _initialized: boolean;
-  private _atlas: string | null;
 
-  private _screen: IScreen; _animationManager: AnimationManager; _objectHandler: IObjectHandler;
+  private _screen: IScreen; _objectHandler: IObjectHandler;
   private _input: InputHandler; _math: MathUtils;
   private _data: any;
   private _events: Events; _scaleHandler: ScaleManager; protected _pointFactory: Point;
   private _letters: string;
 
   private _go: IGameObject;
+  private _atlas: string | null;
   private _mask: Mask;
 
-  constructor(screen: IScreen, animationManager: AnimationManager, mask: Mask, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, pointFactory: Point) {
+  constructor(screen: IScreen, objectHandler: IObjectHandler, input: InputHandler, mask: Mask, math: MathUtils, events: Events, pointFactory: Point) {
     this._screen = screen;
-    this._animationManager = animationManager;
     this._objectHandler = objectHandler;
     this._input = input;
     this._math = math;
@@ -48,7 +47,6 @@ class ObjectCore {
     this._textureName = '';
     this._atlas = null;
     this._mask = mask;
-
     this._initialized = false;
   }
 
@@ -68,6 +66,10 @@ class ObjectCore {
 
   get objectHandler() {
     return this._objectHandler;
+  }
+
+  get initialized(){
+    return this._initialized;
   }
 
   get screen(){
@@ -106,10 +108,6 @@ class ObjectCore {
 
     this._updateSize();
     this.updateOrigin();
-  }
-
-  get animations(){
-    return this._animationManager;
   }
 
   get width() {
@@ -238,46 +236,26 @@ class ObjectCore {
     this._objectHandler.setPivot(this._data, p);
   }
 
-  public anim() {
-    return this._animationManager;
-  }
-
   public enableInput() {
     this._input.enableInput();
   }
 
-  public makePixelPerfect(threshold?: number) {
-    this._go.input.makePixelPerfect(threshold);
-  }
-
   public createNew(): ObjectCore {
-    let am = this._animationManager.createNew();
+  //  let am = this._animationManager.createNew();
     //  console.log('new am: ', am);
-    return new ObjectCore(this._screen, am, this._mask.createNew(), this._objectHandler, this._input, this._math, this._events, this._pointFactory);
+    return new ObjectCore(this._screen, this._objectHandler, this._input.createNew(), this._mask.createNew(), this._math, this._events, this._pointFactory);
   }
 
   public changeTexture(textureName: string) {
-    if (this._atlas != null) {
-      this._screen.changeTexture(this._data, this._atlas, textureName);
-    } else {
-      this._screen.changeTexture(this._data, textureName);
-    }
+      if (this._atlas != null) {
+        this._screen.changeTexture(this._data, this._atlas, textureName);
+      } else {
+        this._screen.changeTexture(this._data, textureName);
+      }
   }
 
   public update(time: number) {
-    if (!this._initialized) return;
-
-    let updatedFrame = this._animationManager.getUpdatedFrame();
-
-    if (updatedFrame != null) {
-      if (this._atlas != null) {
-        this._screen.changeTexture(this._data, this._atlas, updatedFrame);
-      } else {
-        this._screen.changeTexture(this._data, updatedFrame);
-      }
-    }
-
-    this._animationManager.update(time);
+   this._go.update(time);
   }
 
   public updateXY() {
