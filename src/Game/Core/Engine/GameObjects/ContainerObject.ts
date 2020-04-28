@@ -26,7 +26,7 @@ class ContainerObject implements IGameObject, IParentChild {
         this.data = this._screen.createContainer(x, y);
         this._core.init(this, x, y);
         this._input.init(this);
-        this._pcHandler.init(this._core, parent);
+        this._pcHandler.init(this, parent);
         this._scaleHandler.init(this);
     }
 
@@ -80,7 +80,7 @@ class ContainerObject implements IGameObject, IParentChild {
         return this._pcHandler.parent;
     }
 
-    set parent(parent: IParentChild){
+    set parent(parent: IParentChild | null){
         this._pcHandler.parent = parent;
     }
 
@@ -130,7 +130,7 @@ class ContainerObject implements IGameObject, IParentChild {
     }
 
     destroy(){
-        if(this.parent !== null) this._pcHandler.parent.removeChild(this);
+        if(this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
         this._core.destroy();
     }
 }

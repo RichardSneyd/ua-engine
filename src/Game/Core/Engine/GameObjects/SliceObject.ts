@@ -30,7 +30,7 @@ class SliceObject implements IGameObject, IParentChild {
         this.data.calculateBounds();
 
         this._core.init(this, x, y);
-        this._pcHandler.init(this._core, parent);
+        this._pcHandler.init(this, parent);
         this._scaleHandler.init(this);
        
       //  this.setOrigin(0.5);
@@ -149,7 +149,7 @@ class SliceObject implements IGameObject, IParentChild {
     }
 
     destroy(){
-        if(this.parent !== null) this._pcHandler.parent.removeChild(this);
+        if(this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
         this._core.destroy();
     }
 }
