@@ -84,24 +84,14 @@ class ObjectCore {
 
   set x(xVal: number) {
     this._x = xVal;
-    if (this._go.pcHandler.parent == null || this._go.pcHandler.parent instanceof ContainerObject) {
-      this._updateXY();
-    }
-    else {
-      this._objectHandler.setXy(this._data, xVal, this._y);
-      this.updateOrigin()
-    }
+    this._updateXY();
+    this.updateOrigin();
   }
 
   set y(yVal: number) {
     this._y = yVal;
-    if (this._go.pcHandler.parent == null || this._go.pcHandler.parent instanceof ContainerObject) {
-      this._updateXY();
-    }
-    else {
-      this.updateOrigin()
-      this._objectHandler.setXy(this._data, this._x, yVal);
-    }
+    this._updateXY();
+    this.updateOrigin();
   }
 
   set width(width: number) {
