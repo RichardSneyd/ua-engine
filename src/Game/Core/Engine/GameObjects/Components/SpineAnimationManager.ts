@@ -1,5 +1,5 @@
-import IGameObject from "UAENGINE/Core/Engine/GameObjects/IGameObject";
-import SpineObject from "UAENGINE/Core/Engine/GameObjects/SpineObject";
+import IGameObject from "../IGameObject";
+import SpineObject from "../SpineObject";
 
 class SpineAnimationManager implements IAnimationManager{
     protected _go: SpineObject;

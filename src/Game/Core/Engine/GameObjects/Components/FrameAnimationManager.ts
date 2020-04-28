@@ -1,6 +1,6 @@
 import Anim from '../../../Data/Anim';
 import Tween from '../../../Data/Tween';
-import IGameObject from 'UAENGINE/Core/Engine/GameObjects/IGameObject';
+import IGameObject from '../IGameObject';
 import IFrameAnimatedGameObject from '../IFrameAnimatedGameObject';
 
 // TODO --- refactor into 2 seperate AnimationManagers, 1 for atlases and 1 for spines, which both implement 
