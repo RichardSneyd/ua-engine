@@ -27,21 +27,14 @@ class SpriteObject implements IFramedGameObject, IParentChild {
     }
 
     public init(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): void {
-        this._core.data = this._screen.createSprite(x, y, textureName, frame);
-        this.width = this.data.width;
-        this.height = this.data.height;
+        this.data = this._screen.createSprite(x, y, textureName, frame);
 
         if (frame != null) this.core.atlas = textureName;
 
         this._core.init(this, x, y, textureName);
         this._input.init(this);
         this._pcHandler.init(this._core, parent);
-        this._animationManager.init(this);
-    }
-
-    public update(time: any){
-        this.animations.update();
-        this.tweens.update(time);
+        this._scaleHandler.init(this);
     }
 
     public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): SpriteObject {
@@ -127,15 +120,15 @@ class SpriteObject implements IFramedGameObject, IParentChild {
     }
 
     set width(width: number) {
-        this.data.width = width;
+        this._core.width = width;
     }
 
     get height() {
         return this._core.height;
     }
 
-    set height(height: number) {
-        this.data.height = height;
+    set height(height: number){
+        this._core.height = height;
     }
 
      get parent() {
@@ -156,6 +149,10 @@ class SpriteObject implements IFramedGameObject, IParentChild {
 
     removeChild(child: IParentChild): void {
         this._pcHandler.removeChild(child);
+    }
+
+    update(time: number) {
+        this._core.update(time);
     }
  
    

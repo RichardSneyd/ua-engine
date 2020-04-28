@@ -461,6 +461,7 @@ declare module 'UAENGINE/Services/IScreen' {
         createText(x: number, y: number, text: string, style?: any): any;
         createSprite(x: number, y: number, name: string, frame: string | null): any;
         createNineSlice(x: number, y: number, name: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): any;
+        createGraphics(x: number, y: number, width: number, height: number): any;
         clearScreen(): void;
         changeTexture(sprite: Sprite, name: string, frame?: string | null): void;
         createSpine(name: string): any;
@@ -729,11 +730,13 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore' {
     import MathUtils from 'UAENGINE/Core/Engine/Utils/MathUtils';
     import Point from 'UAENGINE/Core/Geom/Point';
     import IGameObject from 'UAENGINE/Core/Engine/GameObjects/IGameObject';
+    import Mask from 'UAENGINE/Core/Engine/GameObjects/Mask';
     class ObjectCore {
         _objectHandler: IObjectHandler;
         _math: MathUtils;
         _scaleHandler: ScaleManager;
         protected _pointFactory: Point;
+<<<<<<< HEAD
         constructor(screen: IScreen, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, pointFactory: Point);
         init(go: IGameObject, x: number, y: number, textureName?: string): void;
         readonly objectHandler: IObjectHandler;
@@ -751,6 +754,35 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore' {
         readonly input: InputHandler;
         atlas: any;
         readonly pixelPerfect: boolean;
+=======
+        constructor(screen: IScreen, animationManager: AnimationManager, mask: Mask, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, pointFactory: Point);
+        init(go: IGameObject, x: number, y: number, textureName?: string): void;
+        get objectHandler(): IObjectHandler;
+        get screen(): IScreen;
+        get textureName(): string;
+        set textureName(name: string);
+        set x(xVal: number);
+        set y(yVal: number);
+        set width(width: number);
+        set height(height: number);
+        get animations(): AnimationManager;
+        get width(): number;
+        get height(): number;
+        get events(): Events;
+        set origin(origin: Point);
+        get origin(): Point;
+        setSize(width: number, height: number): void;
+        get x(): number;
+        get y(): number;
+        get visible(): boolean;
+        set visible(visible: boolean);
+        get input(): InputHandler;
+        get atlas(): any;
+        set atlas(atlas: any);
+        get pixelPerfect(): boolean;
+        enableMask(x: number, y: number, width: number, height: number): void;
+        disableMask(): void;
+>>>>>>> 4fab513f13fd11baa90882fe56054e8dc5070910
         destroy(): void;
         data: any;
         relativeMove(xDiff: number, yDiff: number): void;
@@ -758,11 +790,16 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore' {
         moveTo(x: number, y: number): void;
         setOrigin(x: number, y?: number): void;
         updateOrigin(): void;
+<<<<<<< HEAD
+=======
+        anim(): AnimationManager;
+>>>>>>> 4fab513f13fd11baa90882fe56054e8dc5070910
         enableInput(): void;
         createNew(): ObjectCore;
         changeTexture(textureName: string): void;
         update(time: number): void;
         updateXY(): void;
+        scaleMask(): void;
     }
     export default ObjectCore;
 }
@@ -785,6 +822,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpriteObject' {
         createNew(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): SpriteObject;
         createEmpty(): SpriteObject;
         changeTexture(textureName: string): void;
+<<<<<<< HEAD
         readonly tweens: TweenManager;
         readonly input: InputHandler;
         readonly scaleHandler: ScaleHandler;
@@ -801,8 +839,33 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpriteObject' {
         height: number;
         parent: IParentChild;
         readonly children: IParentChild[];
+=======
+        get input(): InputHandler;
+        get scaleHandler(): ScaleHandler;
+        get pcHandler(): ParentChildHandler;
+        get animations(): AnimationManager;
+        get data(): any;
+        set data(data: any);
+        get textureName(): string;
+        get atlas(): any;
+        set atlas(textureName: any);
+        get x(): number;
+        set x(x: number);
+        get core(): ObjectCore;
+        get y(): number;
+        set y(y: number);
+        get visible(): boolean;
+        get width(): number;
+        set width(width: number);
+        get height(): number;
+        set height(height: number);
+        get parent(): IParentChild;
+        set parent(parent: IParentChild);
+        get children(): IParentChild[];
+>>>>>>> 4fab513f13fd11baa90882fe56054e8dc5070910
         addChild(child: IParentChild): void;
         removeChild(child: IParentChild): void;
+        update(time: number): void;
         destroy(): void;
     }
     export default SpriteObject;
@@ -824,6 +887,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SliceObject' {
         update(time: any): void;
         createEmpty(): SliceObject;
         changeTexture(textureName: string): void;
+<<<<<<< HEAD
         readonly tweens: TweenManager;
         readonly input: InputHandler;
         readonly scaleHandler: ScaleHandler;
@@ -839,6 +903,28 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SliceObject' {
         readonly visible: boolean;
         width: number;
         height: number;
+=======
+        get input(): InputHandler;
+        get scaleHandler(): ScaleHandler;
+        get pcHandler(): ParentChildHandler;
+        get data(): any;
+        set data(data: any);
+        get parent(): IParentChild;
+        get children(): IParentChild[];
+        get textureName(): string;
+        get atlas(): any;
+        set atlas(textureName: any);
+        get x(): number;
+        set x(x: number);
+        get core(): ObjectCore;
+        get y(): number;
+        set y(y: number);
+        get visible(): boolean;
+        get width(): number;
+        set width(width: number);
+        get height(): number;
+        set height(height: number);
+>>>>>>> 4fab513f13fd11baa90882fe56054e8dc5070910
         addChild(child: IParentChild): void;
         removeChild(child: IParentChild): void;
         destroy(): void;
@@ -863,6 +949,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpineObject' {
         createNew(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): SpineObject;
         createEmpty(): SpineObject;
         changeTexture(textureName: string): void;
+<<<<<<< HEAD
         readonly tweens: TweenManager;
         readonly input: InputHandler;
         readonly scaleHandler: ScaleHandler;
@@ -878,6 +965,28 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpineObject' {
         readonly visible: boolean;
         width: number;
         height: number;
+=======
+        get input(): InputHandler;
+        get scaleHandler(): ScaleHandler;
+        get pcHandler(): ParentChildHandler;
+        get data(): any;
+        set data(data: any);
+        get parent(): IParentChild;
+        get children(): IParentChild[];
+        get textureName(): string;
+        get atlas(): any;
+        set atlas(textureName: any);
+        get x(): number;
+        set x(x: number);
+        get core(): ObjectCore;
+        get y(): number;
+        set y(y: number);
+        get visible(): boolean;
+        get width(): number;
+        set width(width: number);
+        get height(): number;
+        set height(height: number);
+>>>>>>> 4fab513f13fd11baa90882fe56054e8dc5070910
         addChild(child: IParentChild): void;
         removeChild(child: IParentChild): void;
         destroy(): void;
@@ -907,6 +1016,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/TextObject' {
         text: string;
         setStyle(style: any): void;
         setTextColor(color: string): void;
+<<<<<<< HEAD
         data: any;
         readonly parent: IParentChild;
         readonly children: IParentChild[];
@@ -918,6 +1028,26 @@ declare module 'UAENGINE/Core/Engine/GameObjects/TextObject' {
         readonly visible: boolean;
         width: number;
         height: number;
+=======
+        get text(): string;
+        get data(): any;
+        set data(data: any);
+        get parent(): IParentChild;
+        get children(): IParentChild[];
+        get textureName(): string;
+        get atlas(): any;
+        set atlas(textureName: any);
+        get x(): number;
+        set x(x: number);
+        get core(): ObjectCore;
+        get y(): number;
+        set y(y: number);
+        get visible(): boolean;
+        get width(): number;
+        set width(width: number);
+        get height(): number;
+        set height(height: number);
+>>>>>>> 4fab513f13fd11baa90882fe56054e8dc5070910
         changeTexture(textureName: string): void;
         addChild(child: IParentChild): void;
         removeChild(child: IParentChild): void;
@@ -943,6 +1073,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/ContainerObject' {
         createNew(x: number, y: number, parent: IParentChild | null): ContainerObject;
         createEmpty(): ContainerObject;
         changeTexture(textureName: string): void;
+<<<<<<< HEAD
         readonly tweens: TweenManager;
         readonly events: Events;
         readonly pcHandler: ParentChildHandler;
@@ -957,6 +1088,25 @@ declare module 'UAENGINE/Core/Engine/GameObjects/ContainerObject' {
         readonly visible: boolean;
         readonly width: number;
         readonly height: number;
+=======
+        get events(): Events;
+        get pcHandler(): ParentChildHandler;
+        get input(): InputHandler;
+        get scaleHandler(): ScaleHandler;
+        get data(): any;
+        set data(data: any);
+        get parent(): IParentChild;
+        set parent(parent: IParentChild);
+        get children(): IParentChild[];
+        get x(): number;
+        set x(x: number);
+        get core(): ObjectCore;
+        get y(): number;
+        set y(y: number);
+        get visible(): boolean;
+        get width(): number;
+        get height(): number;
+>>>>>>> 4fab513f13fd11baa90882fe56054e8dc5070910
         addChild(child: IParentChild): void;
         removeChild(child: IParentChild): void;
         destroy(): void;
@@ -1236,8 +1386,15 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler' {
     import IGameObject from 'UAENGINE/Core/Engine/GameObjects/IGameObject';
     import ScaleManager from 'UAENGINE/Core/Engine/ScaleManager';
     class ScaleHandler {
+<<<<<<< HEAD
         scaleX: number;
         scaleY: number;
+=======
+        get scaleX(): number;
+        get scaleY(): number;
+        set scaleX(xVal: number);
+        set scaleY(yVal: number);
+>>>>>>> 4fab513f13fd11baa90882fe56054e8dc5070910
         constructor(scaleManager: ScaleManager);
         init(go: IGameObject): void;
         createNew(): ScaleHandler;
@@ -1264,6 +1421,13 @@ declare module 'UAENGINE/Services/IObjectHandler' {
         setStyle(text: any, style: any): void;
         setTextColor(text: any, color: string): void;
         destroy(object: any): void;
+        setWidth(object: any, width: number): void;
+        setHeight(object: any, height: number): void;
+        setMask(object: any, mask: any): void;
+        getSize(object: any): {
+            width: number;
+            height: number;
+        };
     }
     export default IObjectHandler;
 }
@@ -1313,6 +1477,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/IGameObject' {
     export default IGameObject;
 }
 
+<<<<<<< HEAD
 declare module 'UAENGINE/Core/Engine/GameObjects/Components/FrameAnimationManager' {
     import Anim from 'UAENGINE/Core/Data/Anim';
     import Tween from 'UAENGINE/Core/Data/Tween';
@@ -1331,6 +1496,33 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/FrameAnimationManage
         update(): void;
     }
     export default FrameAnimationManager;
+=======
+declare module 'UAENGINE/Core/Engine/GameObjects/Mask' {
+    import IObjectHandler from 'UAENGINE/Services/IObjectHandler';
+    import IScreen from 'UAENGINE/Services/IScreen';
+    class Mask {
+        _screen: IScreen;
+        _y: number;
+        _width: number;
+        _height: number;
+        _initialized: boolean;
+        constructor(objectHandler: IObjectHandler, screen: IScreen);
+        get x(): number;
+        get y(): number;
+        get width(): number;
+        get height(): number;
+        get initialized(): boolean;
+        set x(xVal: number);
+        set y(yVal: number);
+        set width(wSize: number);
+        set height(hSize: number);
+        get data(): any;
+        init(x: number, y: number, width: number, height: number): void;
+        createNew(): Mask;
+        scale(scaleX: number, scaleY: number): void;
+    }
+    export default Mask;
+>>>>>>> 4fab513f13fd11baa90882fe56054e8dc5070910
 }
 
 declare module 'UAENGINE/Core/Engine/GameObjects/Components/ParentChildHandler' {

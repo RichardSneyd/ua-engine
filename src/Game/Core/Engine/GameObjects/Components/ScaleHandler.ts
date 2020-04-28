@@ -36,11 +36,14 @@ class ScaleHandler {
     this._scaleManager = scaleManager;
     this._scaleX = 1;
     this._scaleY = 1;
+
+    console.log("{debug3} scale manager allocated!");
   }
 
   public init(go: IGameObject) {
     this._go = go;
     this._events = this._go.core.events;
+    this._scaleManager.init();
 
     this.onResize();
     this._addListeners();
@@ -53,6 +56,7 @@ class ScaleHandler {
   }
 
   public onResize() {
+
     this._onResize();
   }
 
@@ -80,11 +84,26 @@ class ScaleHandler {
   }
 
   private _onResize() {
+    console.log("{debug3} scale manager resize!", this._scaleManager.getScale(this._scaleX), this._scaleManager.getScale(this._scaleY), this._go);
+
+
+    if (this._go instanceof ContainerObject) {
+      
+    } else {
+      this._updateScale();
+    }
+
+    this._go.core.updateXY();
+    this._go.core.updateOrigin();
+    this._go.core.scaleMask();
+
+    /*
     if (this._go.pcHandler.parent == null || this._go instanceof ContainerObject) {
       this._updateScale();
       this._go.core.updateXY();
       this._go.core.updateOrigin();
     }
+    */
   }
 
 }

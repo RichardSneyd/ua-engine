@@ -29,8 +29,6 @@ class TextObject implements IGameObject, IParentChild {
         this._letters = text;
 
         this.data = this._screen.createText(x, y, text, style);
-     //   this.width = this.data.width;
-     //   this.height = this.data.height;
         this._core.init(this, x, y);
         this._input.init(this);
         this._pcHandler.init(this._core, parent);
@@ -149,15 +147,15 @@ class TextObject implements IGameObject, IParentChild {
     }
 
     set width(width: number) {
-        this.data.width = width;
+        this._core.width = width;
     }
 
     get height() {
         return this._core.height;
     }
 
-    set height(height: number) {
-        this.data.height = height;
+    set height(height: number){
+        this._core.height = height;
     }
 
     public changeTexture(textureName: string) {

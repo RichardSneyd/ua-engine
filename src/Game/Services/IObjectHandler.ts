@@ -10,6 +10,10 @@ interface IObjectHandler {
   setStyle(text: any, style: any): void;
   setTextColor(text: any, color: string): void;
   destroy(object: any): void;
+  setWidth(object: any, width: number): void;
+  setHeight(object: any, height: number): void;
+  setMask(object: any, mask: any): void;
+  getSize(object: any): {width: number, height: number};
 }
 
 export default IObjectHandler;

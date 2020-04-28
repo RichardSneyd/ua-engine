@@ -10,6 +10,7 @@ import Point from '../../../Geom/Point';
 import ResType from '../../../Data/ResType';
 import IGameObject from '../IGameObject';
 import ContainerObject from '../ContainerObject';
+import Mask from '../Mask';
 
 
 class ObjectCore {
@@ -29,8 +30,9 @@ class ObjectCore {
 
   private _go: IGameObject;
   private _atlas: string | null;
+  private _mask: Mask;
 
-  constructor(screen: IScreen, objectHandler: IObjectHandler, input: InputHandler, math: MathUtils, events: Events, pointFactory: Point) {
+  constructor(screen: IScreen, objectHandler: IObjectHandler, input: InputHandler, mask: Mask, math: MathUtils, events: Events, pointFactory: Point) {
     this._screen = screen;
     this._objectHandler = objectHandler;
     this._input = input;
@@ -39,11 +41,12 @@ class ObjectCore {
     this._pointFactory = pointFactory;
     this._x = 0;
     this._y = 0;
-    this._origin = this._pointFactory.createNew(0.5, 0.5);
+    this._origin = this._pointFactory.createNew(0, 0);
     this._width = 0;
     this._height = 0;
     this._textureName = '';
     this._atlas = null;
+    this._mask = mask;
     this._initialized = false;
   }
 
@@ -57,6 +60,8 @@ class ObjectCore {
     this._data.x = x;
     this._data.y = y;
     this._initialized = true;
+
+    this._importSize();
   }
 
   get objectHandler() {
@@ -81,31 +86,28 @@ class ObjectCore {
 
   set x(xVal: number) {
     this._x = xVal;
-    if (this._go.pcHandler.parent == null || this._go.pcHandler.parent instanceof ContainerObject) {
-      this._updateXY();
-    }
-    else {
-      this._objectHandler.setXy(this._data, xVal, this._y);
-      this._objectHandler.setPivot(this._data, this._origin);
-    }
+    this._updateXY();
+    this.updateOrigin();
   }
 
   set y(yVal: number) {
     this._y = yVal;
-    if (this._go.pcHandler.parent == null || this._go.pcHandler.parent instanceof ContainerObject) {
-      this._updateXY();
-    }
-    else {
-      this._objectHandler.setPivot(this._data, this._origin);
-      this._objectHandler.setXy(this._data, this._x, yVal);
-    }
+    this._updateXY();
+    this.updateOrigin();
   }
 
   set width(width: number) {
     this._width = width;
 
-    this._objectHandler.setPivot(this._data, this._origin);
-    this._objectHandler.setSize(this._data, this._width, this._height);
+    this._updateSize();
+    this.updateOrigin();
+  }
+
+  set height(height: number) {
+    this._height = height;
+
+    this._updateSize();
+    this.updateOrigin();
   }
 
   get width() {
@@ -123,7 +125,7 @@ class ObjectCore {
   set origin(origin: Point) {
     this._origin.x = origin.x;
     this._origin.y = origin.y;
-    this._objectHandler.setPivot(this._data, this._origin);
+    this.updateOrigin()
     this._objectHandler.setXy(this._data, this._x, this._y);
   }
 
@@ -131,16 +133,10 @@ class ObjectCore {
     return this._origin;
   }
 
-  set height(height: number) {
-    this._height = height;
-
-    this._objectHandler.setSize(this._data, this._width, height);
-  }
-
   setSize(width: number, height: number) {
     this._width = width;
     this._height = height;
-    this._objectHandler.setSize(this._data, this._width, this._height);
+    this._updateSize();
     this._updateXY();
   }
 
@@ -174,6 +170,16 @@ class ObjectCore {
 
   get pixelPerfect(): boolean {
     return this._input.pixelPerfect;
+  }
+
+  public enableMask(x: number, y: number, width: number, height: number) {
+    this._mask.init(x, y, width, height);
+
+    this._objectHandler.setMask(this._data, this._mask.data);
+  }
+
+  public disableMask() {
+    this._objectHandler.setMask(this._data, null);
   }
 
   public destroy() {
@@ -223,7 +229,11 @@ class ObjectCore {
   }
 
   updateOrigin(){
-    this.objectHandler.setPivot(this.data, this.origin);
+    let scaleX = this._scaleHandler.getScale(this._scaleHandler.scaleX);
+    let scaleY = this._scaleHandler.getScale(this._scaleHandler.scaleY);
+
+    let p = this._pointFactory.createNew(this._origin.x * scaleX, this._origin.y * scaleY);
+    this._objectHandler.setPivot(this._data, p);
   }
 
   public enableInput() {
@@ -233,7 +243,7 @@ class ObjectCore {
   public createNew(): ObjectCore {
   //  let am = this._animationManager.createNew();
     //  console.log('new am: ', am);
-    return new ObjectCore(this._screen, this._objectHandler, this._input, this._math, this._events, this._pointFactory);
+    return new ObjectCore(this._screen, this._objectHandler, this._input.createNew(), this._mask.createNew(), this._math, this._events, this._pointFactory);
   }
 
   public changeTexture(textureName: string) {
@@ -248,14 +258,38 @@ class ObjectCore {
    this._go.update(time);
   }
 
-  updateXY() {
+  public updateXY() {
     this._updateXY();
+  }
+
+  public scaleMask() {
+    if (this._mask.initialized) {
+      let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
+      let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
+
+      this._mask.scale(scaleX, scaleY);
+    }
   }
 
   private _updateXY() {
     let target = this._scaleHandler.getXY(this._x, this._y);
 
     this._objectHandler.setXy(this._data, target.x, target.y);
+  }
+
+  private _importSize() {
+    let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
+    let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
+
+    this._width = this._objectHandler.getSize(this._data).width / scaleX;
+    this._height = this._objectHandler.getSize(this._data).height / scaleY;
+  }
+
+  private _updateSize() {
+    let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
+    let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
+
+    this._objectHandler.setSize(this._data, this._width * scaleX, this._height * scaleY);
   }
 
 

@@ -1,4 +1,4 @@
-import { Application, Sprite, Renderer, Container, DisplayObject, NineSlicePlane, BaseTexture } from 'pixi.js';
+import { Application, Sprite, Renderer, Container, DisplayObject, NineSlicePlane, BaseTexture, Graphics } from 'pixi.js';
 import PxText from './PxText';
 import PxFactory from './PxFactory';
 import Loader from '../../Core/Engine/Loader';
@@ -31,6 +31,8 @@ class PxGame {
       console.warn("No element by id: '%s', appending to the body.", container);
       document.body.appendChild(this._game.view);
     }
+
+    (<any> window).pixiGame = this._game;
   }
 
   _onMouseMove(evt: any) {
@@ -67,6 +69,20 @@ class PxGame {
 
       return <PxText>t;
     }
+  }
+
+  public addGraphic(x: number, y: number, width: number, height: number): Graphics {
+    let gfx = new Graphics();
+    gfx.x = x;
+    gfx.y = y;
+
+    gfx.beginFill();
+    gfx.drawRect(x, y, width, height);
+    gfx.endFill();
+
+    this._addChild(gfx);
+
+    return gfx;
   }
 
   public addContainer(x: number, y: number): Container {

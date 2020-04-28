@@ -32,6 +32,10 @@ class Screen implements IScreen {
     return this._pxGame.addSpine(name);
   }
 
+  public createGraphics(x: number, y: number, width: number, height: number): any {
+    return this._pxGame.addGraphic(x, y, width, height);
+  }
+
   public enableInput(sprite: any) {
     this._pxGame.enableInput(sprite);
   }
