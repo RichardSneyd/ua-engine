@@ -6,7 +6,7 @@ interface IObjectHandler {
  // move(object: any, x: number, y: number): void;
   setX(object: any, x: number): void;
   setY(object: any, y: number): void;
-  setScaleXY(object: any, x: number, y: number): void;
+  setScale(object: any, x: number, y: number): void;
   setStyle(text: any, style: any): void;
   setTextColor(text: any, color: string): void;
   destroy(object: any): void;

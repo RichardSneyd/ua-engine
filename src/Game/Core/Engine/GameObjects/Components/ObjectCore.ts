@@ -53,11 +53,13 @@ class ObjectCore {
   public init(go: IGameObject, x: number, y: number, textureName: string = '') {
     this._go = go;
     this._scaleHandler = go.scaleHandler;
+  //  let pos = this._go.scaleHandler.getXY(x, y);
     this._x = x;
     this._y = y;
+   // console.log(pos, ' for ', this);
     this._textureName = textureName;
-    this._data.x = x;
-    this._data.y = y;
+    /* this._data.x = x;
+    this._data.y = y; */
     this._initialized = true;
 
     this._importSize();
@@ -87,12 +89,14 @@ class ObjectCore {
     this._x = xVal;
     this._updateXY();
     this.updateOrigin();
+    console.log('game x: ', xVal, 'pixel x:', this._data.x);
   }
 
   set y(yVal: number) {
     this._y = yVal;
     this._updateXY();
     this.updateOrigin();
+    console.log('game y: ', yVal, 'pixel y:', this._data.y);
   }
 
   set width(width: number) {
@@ -124,7 +128,7 @@ class ObjectCore {
   set origin(origin: Point) {
     this._origin.x = origin.x;
     this._origin.y = origin.y;
-    this.updateOrigin()
+    this.updateOrigin();
     this._objectHandler.setXy(this._data, this._x, this._y);
   }
 
@@ -272,7 +276,11 @@ class ObjectCore {
   }
 
   private _updateXY() {
-    let target = this._scaleHandler.getXY(this._x, this._y);
+    let target = {x: this._x, y: this._y};
+   /*  if(this._go.pcHandler.parent !== null && this._go.pcHandler.parent !== undefined){
+
+      target = this._scaleHandler.getXY(this._x, this._y);
+   } */
     this._objectHandler.setXy(this._data, target.x, target.y);
   }
 
@@ -288,7 +296,7 @@ class ObjectCore {
     let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
     let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
 
-    this._objectHandler.setSize(this._data, this._width * scaleX, this._height * scaleY);
+ //   this._objectHandler.setSize(this._data, this._width * scaleX, this._height * scaleY);
   }
 
 

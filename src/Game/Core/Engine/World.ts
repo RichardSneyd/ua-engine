@@ -55,8 +55,8 @@ class World {
       this._currentLevel.shutdown();
     }
 
-    this._screen.clearScreen();
-
+   // this._screen.clearScreen();
+    this._screen.newLevel();
     this._currentLevel = level;
     this._currentLevel.init(scriptName);
   }

@@ -3,7 +3,7 @@ import IGameObject from '../IGameObject';
 import ObjectCore from './ObjectCore';
 
 class ParentChildHandler implements IParentChild {
-    private _parent: IParentChild | null;
+    private _parent: IParentChild | null = null;
     _children: IParentChild[];
     private _core: ObjectCore;
     private _go: IGameObject;
@@ -35,7 +35,9 @@ class ParentChildHandler implements IParentChild {
 
     init(go: IGameObject, parent: IParentChild | null = null) {
         this._core = go.core;
+        this._go = go;
         this._children = [];
+        this._parent = null;
 
         if (parent !== null) {
             parent.addChild(this);

@@ -27,7 +27,7 @@ class SpriteObject implements IFramedGameObject, IParentChild {
     }
 
     public init(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): void {
-        this.data = this._screen.createSprite(x, y, textureName, frame);
+        this.data = this._screen.createSprite(0, 0, textureName, frame);
 
         if (frame != null) this.core.atlas = textureName;
 

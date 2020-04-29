@@ -25,13 +25,13 @@ class TextObject implements IGameObject, IParentChild {
     }
 
     public init(x: number, y: number, text: string, style: any = undefined, parent: IParentChild | null = null): void {
-
         this._letters = text;
 
         this.data = this._screen.createText(x, y, text, style);
         this._core.init(this, x, y);
         this._input.init(this);
         this._pcHandler.init(this, parent);
+        this._scaleHandler.init(this);
     }
 
     public update(time: any){

@@ -46,9 +46,8 @@ class ObjectHandler implements IObjectHandler {
     object.y = y;
   }
 
-  public setScaleXY(object: any, x: number, y: number) {
-    object.scale.x = x;
-    object.scale.y = y;
+  public setScale(object: any, x: number, y: number) {
+    object.scale.set(x, y);
   }
 
   public setWidth(object: any, width: number) {

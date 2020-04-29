@@ -24,12 +24,13 @@ class SliceObject implements IGameObject, IParentChild {
 
     public init(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent: IParentChild | null = null): void {
         this._core.data = this._screen.createNineSlice(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight);
-        this.data.x = x;
-        this.data.y = y;
+       /*  this.data.x = x;
+        this.data.y = y; */
         //  console.log('boudns before calc', this._data.getBounds());
         this.data.calculateBounds();
 
         this._core.init(this, x, y);
+        this._input.init(this);
         this._pcHandler.init(this, parent);
         this._scaleHandler.init(this);
        
