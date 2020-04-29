@@ -4,16 +4,19 @@ import PxFactory from './PxFactory';
 import Loader from '../../Core/Engine/Loader';
 import 'pixi-spine';
 import Events from '../../Core/Engine/Events';
+import GameConfig from '../../Core/Engine/GameConfig';
 
 class PxGame {
   private _pxFactory: PxFactory; _loader: Loader; _events: Events;
   private _game: Application | null; private _levelCont: Container; private _lastLevelCont: Container;
+  private _gameConfig: GameConfig;
 
-  constructor(pxFactory: PxFactory, loader: Loader, events: Events) {
+  constructor(pxFactory: PxFactory, loader: Loader, events: Events, gameConfig: GameConfig) {
     this._pxFactory = pxFactory;
     this._loader = loader;
     this._events = events;
     this._game = null;
+    this._gameConfig = gameConfig;
     //  Object.defineProperty(Resource, 'source', any);
   }
 
@@ -70,7 +73,7 @@ class PxGame {
     if (this._game != null) {
       this._game.renderer.resize(width, height)
       console.warn('width provided: ', width);
-      let scale = width / 1920;
+      let scale = width / this._gameConfig.data.DISPLAY.WIDTH;
       console.warn('scale::: ', scale);
       this._game.stage.scale.set(scale);
     }
