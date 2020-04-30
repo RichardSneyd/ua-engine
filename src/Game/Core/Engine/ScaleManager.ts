@@ -26,9 +26,9 @@ class ScaleManager {
     let scale = this._scaleFactor();
     console.log('scaleFactor: ', scale);
     let xPos = x, yPos = y;
-    if (x !== 0) xPos = x * scale;
+    if (x !== 0) xPos = (x * scale);
 
-    if (y !== 0) yPos = y * scale;
+    if (y !== 0) yPos = (y * scale);
     return { x: xPos, y: yPos };
   }
 
@@ -51,6 +51,7 @@ class ScaleManager {
     let height = window.innerHeight;
 
     return (height / this._height);
+    // devicePixelRatio
   }
 
   private _gameWidth(): number {

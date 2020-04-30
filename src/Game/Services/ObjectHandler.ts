@@ -8,13 +8,8 @@ class ObjectHandler implements IObjectHandler {
   }
 
   public setXy(object: any, x: number, y: number) {
-    if(Number(x)){
-     // console.log('setting new value');
-      object.x = x;
-    }
-    if(Number(y)){
+      object.x = x; 
       object.y = y;
-    }
   }
 
   public setPivot(object: Container, anchor: Point){

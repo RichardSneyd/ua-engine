@@ -53,16 +53,13 @@ class ObjectCore {
   public init(go: IGameObject, x: number, y: number, textureName: string = '') {
     this._go = go;
     this._scaleHandler = go.scaleHandler;
-  //  let pos = this._go.scaleHandler.getXY(x, y);
     this._x = x;
     this._y = y;
-   // console.log(pos, ' for ', this);
     this._textureName = textureName;
-    /* this._data.x = x;
-    this._data.y = y; */
     this._initialized = true;
 
     this._importSize();
+    this._updateSize();
   }
 
   get objectHandler() {
@@ -87,16 +84,16 @@ class ObjectCore {
 
   set x(xVal: number) {
     this._x = xVal;
-    this._updateXY();
-    this.updateOrigin();
-    console.log('game x: ', xVal, 'pixel x:', this._data.x);
+    this.objectHandler.setX(this._data, this._x);
+   // this._updateXY();
+   // this.updateOrigin();
   }
 
   set y(yVal: number) {
     this._y = yVal;
-    this._updateXY();
-    this.updateOrigin();
-    console.log('game y: ', yVal, 'pixel y:', this._data.y);
+    this.objectHandler.setY(this._data, this.y);
+  //  this._updateXY();
+  //  this.updateOrigin();
   }
 
   set width(width: number) {
@@ -129,7 +126,7 @@ class ObjectCore {
     this._origin.x = origin.x;
     this._origin.y = origin.y;
     this.updateOrigin();
-    this._objectHandler.setXy(this._data, this._x, this._y);
+   // this._objectHandler.setXy(this._data, this._x, this._y);
   }
 
   get origin() {
@@ -222,7 +219,7 @@ class ObjectCore {
   public setOrigin(x: number, y?: number) {
     let yVal: number;
     let xVal = x;
-    if (y) {
+    if (y !== undefined) {
       yVal = y;
     }
     else {
@@ -233,10 +230,10 @@ class ObjectCore {
   }
 
   updateOrigin(){
-    let scaleX = this._scaleHandler.getScale(this._scaleHandler.scaleX);
-    let scaleY = this._scaleHandler.getScale(this._scaleHandler.scaleY);
+   // let scaleX = this._scaleHandler.getScale(this._scaleHandler.scaleX);
+  //  let scaleY = this._scaleHandler.getScale(this._scaleHandler.scaleY);
 
-    let p = this._pointFactory.createNew(this._origin.x * scaleX, this._origin.y * scaleY);
+    let p = this._pointFactory.createNew(this._origin.x * this._scaleHandler.scaleX, this._origin.y * this._scaleHandler.scaleY);
     this._objectHandler.setPivot(this._data, p);
   }
 
@@ -283,19 +280,17 @@ class ObjectCore {
    } */
     this._objectHandler.setXy(this._data, target.x, target.y);
   }
-
+ 
   private _importSize() {
-    let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
-    let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
-
-    this._width = this._objectHandler.getSize(this._data).width / scaleX;
-    this._height = this._objectHandler.getSize(this._data).height / scaleY;
-  }
+    this._width = this._objectHandler.getSize(this._data).width / this._scaleHandler.scaleX;
+    this._height = this._objectHandler.getSize(this._data).height / this._scaleHandler.scaleY;
+  } 
 
   private _updateSize() {
-    let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
-    let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
+   // let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
+  //  let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
 
+    this._objectHandler.setSize(this._data, this._width * this._go.scaleHandler.scaleX, this._height * this._go.scaleHandler.scaleY);
  //   this._objectHandler.setSize(this._data, this._width * scaleX, this._height * scaleY);
   }
 

@@ -73,7 +73,7 @@ class PxGame {
     if (this._game != null) {
       this._game.renderer.resize(width, height)
       console.warn('width provided: ', width);
-      let scale = width / this._gameConfig.data.DISPLAY.WIDTH;
+      let scale = (width / this._gameConfig.data.DISPLAY.WIDTH);
       console.warn('scale::: ', scale);
       this._game.stage.scale.set(scale);
     }
