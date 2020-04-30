@@ -32,7 +32,8 @@ class SpineObject implements IGameObject, IParentChild {
 
         this._core.init(this, x, y, textureName);
         this._input.init(this);
-        this._pcHandler.init(this._core, parent);
+        this._pcHandler.init(this, parent);
+        this._scaleHandler.init(this);
 
     }
 

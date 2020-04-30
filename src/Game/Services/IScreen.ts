@@ -32,6 +32,7 @@ interface IScreen {
   debugScreen(): void;
   width(): number | null;
   height(): number | null;
+  newLevel(): void;
 }
 
 export default IScreen;

@@ -4,17 +4,24 @@ import PxFactory from './PxFactory';
 import Loader from '../../Core/Engine/Loader';
 import 'pixi-spine';
 import Events from '../../Core/Engine/Events';
+import GameConfig from '../../Core/Engine/GameConfig';
 
 class PxGame {
   private _pxFactory: PxFactory; _loader: Loader; _events: Events;
-  private _game: Application | null;
+  private _game: Application | null; private _levelCont: Container; private _lastLevelCont: Container;
+  private _gameConfig: GameConfig;
 
-  constructor(pxFactory: PxFactory, loader: Loader, events: Events) {
+  constructor(pxFactory: PxFactory, loader: Loader, events: Events, gameConfig: GameConfig) {
     this._pxFactory = pxFactory;
     this._loader = loader;
     this._events = events;
     this._game = null;
+    this._gameConfig = gameConfig;
     //  Object.defineProperty(Resource, 'source', any);
+  }
+
+  get levelCont(){
+    return this._levelCont;
   }
 
   public init(w: number, h: number, container: string) {
@@ -33,6 +40,20 @@ class PxGame {
     }
 
     (<any> window).pixiGame = this._game;
+
+    
+  }
+
+  public newLevel(){
+    if(this._game !== null){
+      if(this.levelCont !== null && this.levelCont !== undefined){
+        this._lastLevelCont = this.levelCont;
+        this._lastLevelCont.destroy();
+      }
+      this._levelCont = this._pxFactory.createContainer();
+      this._game.stage.addChild(this._levelCont);
+      this.levelCont.x = 0; this.levelCont.y = 0;
+    }
   }
 
   _onMouseMove(evt: any) {
@@ -49,7 +70,15 @@ class PxGame {
   }
 
   public resize(width: number, height: number) {
-    if (this._game != null) this._game.renderer.resize(width, height);
+    if (this._game != null) {
+      this._game.renderer.resize(width, height)
+      console.warn('width provided: ', width);
+      let scale = (width / this._gameConfig.data.DISPLAY.WIDTH);
+      console.warn('scale::: ', scale);
+      this._game.stage.scale.set(scale);
+    }
+   // if(this._levelCont !== null && this._levelCont !== undefined){
+   // }
   }
 
   public addText(x: number, y: number, text: string, style: any = undefined): PxText {
@@ -131,8 +160,9 @@ class PxGame {
   }
 
   private _addChild(child: DisplayObject) {
-    if (this._game != null) {
-      this._game.stage.addChild(child);
+    if (this._game != null && this.levelCont !== null && this.levelCont !== undefined) {
+      //this._game.stage.addChild(child);
+      this.levelCont.addChild(child);
     } else {
       console.error("Can not add sprite before initializing the game!");
     }

@@ -91,6 +91,10 @@ class Screen implements IScreen {
   public height(): number | null {
     return this._pxGame.height();
   }
+
+  public newLevel(){
+    this._pxGame.newLevel();
+  }
 }
 
 export default Screen;

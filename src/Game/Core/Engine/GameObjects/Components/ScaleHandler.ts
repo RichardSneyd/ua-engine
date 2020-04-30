@@ -73,10 +73,17 @@ class ScaleHandler {
   }
 
   private _updateScale() {
-    let scaleX = this._scaleManager.getScale(this._scaleX);
-    let scaleY = this._scaleManager.getScale(this._scaleY);
+    let scaleX = this._scaleX;
+    let scaleY = this._scaleY;
 
-    this._go.core.objectHandler.setScaleXY(this._go.core.data, scaleX, scaleY);
+    if (this._go.pcHandler.parent == null || this._go.pcHandler.parent == undefined) {
+      scaleX = this._scaleManager.getScale(this._scaleX);
+      scaleY = this._scaleManager.getScale(this._scaleY);
+    } else {
+
+    }
+
+    this._go.core.objectHandler.setScale(this._go.core.data, scaleX, scaleY);
   }
 
   private _addListeners() {
@@ -85,17 +92,20 @@ class ScaleHandler {
 
   private _onResize() {
     console.log("{debug3} scale manager resize!", this._scaleManager.getScale(this._scaleX), this._scaleManager.getScale(this._scaleY), this._go);
-
-
+    
     if (this._go instanceof ContainerObject) {
       
     } else {
-      this._updateScale();
     }
+    
+   // this._updateScale();
 
-    this._go.core.updateXY();
-    this._go.core.updateOrigin();
-    this._go.core.scaleMask();
+    if (this._go.pcHandler.parent == null || this._go.pcHandler.parent == undefined) {
+    }
+    //   this._go.core.updateXY();
+  this._go.core.updateOrigin();
+  this._go.core.scaleMask();
+
 
     /*
     if (this._go.pcHandler.parent == null || this._go instanceof ContainerObject) {

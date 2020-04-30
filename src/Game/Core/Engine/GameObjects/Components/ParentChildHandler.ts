@@ -3,9 +3,10 @@ import IGameObject from '../IGameObject';
 import ObjectCore from './ObjectCore';
 
 class ParentChildHandler implements IParentChild {
-    parent: IParentChild;
+    private _parent: IParentChild | null = null;
     _children: IParentChild[];
     private _core: ObjectCore;
+    private _go: IGameObject;
 
     constructor() {
 
@@ -13,6 +14,15 @@ class ParentChildHandler implements IParentChild {
 
     createNew() {
         return new ParentChildHandler();
+    }
+
+    get parent() {
+        return this._parent;
+    }
+
+    set parent(parent: IParentChild | null) {
+        this._parent = parent;
+        this._go.scaleHandler.onResize();
     }
 
     get children() {
@@ -23,9 +33,11 @@ class ParentChildHandler implements IParentChild {
         return this._core;
     }
 
-    init(core: ObjectCore, parent: IParentChild | null) {
-        this._core = core;
+    init(go: IGameObject, parent: IParentChild | null = null) {
+        this._core = go.core;
+        this._go = go;
         this._children = [];
+        this._parent = null;
 
         if (parent !== null) {
             parent.addChild(this);

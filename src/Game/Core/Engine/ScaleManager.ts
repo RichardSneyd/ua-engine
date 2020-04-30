@@ -22,14 +22,18 @@ class ScaleManager {
     //console.log("smanager w(%s) h(%s)", this._width, this._height);
   }
 
-  public getXY(x: number, y: number): {x: number, y: number} {
+  public getXY(x: number, y: number): { x: number, y: number } {
     let scale = this._scaleFactor();
+    console.log('scaleFactor: ', scale);
+    let xPos = x, yPos = y;
+    if (x !== 0) xPos = (x * scale);
 
-    return {x: (x * scale), y: (y * scale)};
+    if (y !== 0) yPos = (y * scale);
+    return { x: xPos, y: yPos };
   }
 
   public getScale(currentScale: number): number {
-    let scale = this._scaleFactor();
+    let scale = this._scaleFactor() * currentScale;
 
     return scale;
   }
@@ -38,12 +42,16 @@ class ScaleManager {
     return new ScaleManager(this._gameConfig);
   }
 
+  public scaleFactor(): number {
+    return this._scaleFactor();
+  }
 
   private _scaleFactor(): number {
     let width = window.innerWidth;
     let height = window.innerHeight;
 
-    return height / this._height;
+    return (height / this._height);
+    // devicePixelRatio
   }
 
   private _gameWidth(): number {

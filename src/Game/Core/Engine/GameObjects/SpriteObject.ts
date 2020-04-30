@@ -20,7 +20,7 @@ class SpriteObject implements IFramedGameObject, IParentChild {
     private _animationManager: FrameAnimationManager;
     private _tweenManager: TweenManager;
 
-    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, 
+    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler,
         scaleHandler: ScaleHandler, animationManager: FrameAnimationManager, tweenManager: TweenManager) {
         this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input;
         this._scaleHandler = scaleHandler; this._animationManager = animationManager; this._tweenManager = tweenManager;
@@ -33,7 +33,7 @@ class SpriteObject implements IFramedGameObject, IParentChild {
 
         this._core.init(this, x, y, textureName);
         this._input.init(this);
-        this._pcHandler.init(this._core, parent);
+        this._pcHandler.init(this, parent);
         this._scaleHandler.init(this);
     }
 
@@ -51,23 +51,23 @@ class SpriteObject implements IFramedGameObject, IParentChild {
         this._core.changeTexture(textureName);
     }
 
-    get tweens(){
+    get tweens() {
         return this._tweenManager;
     }
 
-    get input(){
+    get input() {
         return this._input;
     }
 
-    get scaleHandler(){
+    get scaleHandler() {
         return this._scaleHandler;
     }
 
-    get pcHandler(){
+    get pcHandler() {
         return this._pcHandler;
     }
 
-    get animations(){
+    get animations() {
         return this._animationManager;
     }
 
@@ -94,8 +94,8 @@ class SpriteObject implements IFramedGameObject, IParentChild {
     get x() {
         return this._core.x;
     }
-    
-    set x(x: number){
+
+    set x(x: number) {
         this._core.x = x;
     }
 
@@ -127,15 +127,15 @@ class SpriteObject implements IFramedGameObject, IParentChild {
         return this._core.height;
     }
 
-    set height(height: number){
+    set height(height: number) {
         this._core.height = height;
     }
 
-     get parent() {
+    get parent() {
         return this._pcHandler.parent;
     }
 
-    set parent(parent: IParentChild) {
+    set parent(parent: IParentChild | null) {
         this._pcHandler.parent = parent;
     }
 
@@ -154,10 +154,10 @@ class SpriteObject implements IFramedGameObject, IParentChild {
     update(time: number) {
         this._core.update(time);
     }
- 
-   
- destroy() {
-        if(this.pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
+
+
+    destroy() {
+        if (this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
         this._core.destroy();
     }
 }
