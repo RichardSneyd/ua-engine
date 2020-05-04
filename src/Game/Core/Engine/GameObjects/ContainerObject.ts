@@ -26,8 +26,8 @@ class ContainerObject implements IGameObject, IParentChild {
         this.data = this._screen.createContainer(x, y);
         this._core.init(this, x, y);
         this._input.init(this);
-        this._pcHandler.init(this, parent);
         this._scaleHandler.init(this);
+        this._pcHandler.init(this, parent);
     }
 
     public update(time: any){

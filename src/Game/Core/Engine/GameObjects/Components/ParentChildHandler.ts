@@ -1,6 +1,7 @@
 import IParentChild from "../IParentChild";
 import IGameObject from '../IGameObject';
 import ObjectCore from './ObjectCore';
+import TextObject from "../TextObject";
 
 class ParentChildHandler implements IParentChild {
     private _parent: IParentChild | null = null;
@@ -69,8 +70,14 @@ class ParentChildHandler implements IParentChild {
 
     removeChild(object: IParentChild): void {
         if (this.hasChild(object)) {
+            if(object instanceof TextObject){
+                this.core.data.removeChild(object.core.data.data);
+            }
+            else {
+                this.core.data.removeChid(object.core.data);
+            }
+            object.parent = null;
             this._children.splice(this._children.indexOf(object), 1);
-            this.core.data.removeChild(object.core.data);
         }
         console.warn('could not remove, no such entity found in children array');
     }
