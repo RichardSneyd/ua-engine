@@ -38,15 +38,41 @@ class PxText {
   }
 
 
-  get width(){
+  get width(): number{
     if(this._data){
       return this._data.width;
+    }
+    return -1;
+  }
+
+  get pivot(){
+    if(this._data){
+      return this._data.pivot;
+    }
+  }
+
+  set pivot(val: any){
+    if(this._data){
+      this._data.pivot = val;
+    }
+  }
+
+  set width(width: number){
+    if(this._data){
+      this._data.width = width;
     }
   }
 
   get height(){
     if(this._data){
       return this._data.height; 
+    }
+    return -1;
+  }
+
+  set height(height: number){
+    if(this._data){
+      this._data.height = height;
     }
   }
 
@@ -66,7 +92,7 @@ class PxText {
   set fill(fill: string){
     this._style.fill = fill;
     this._fill = this._style.fill;
-    if(this._rawText){
+    if(this._rawText !== null && this._rawText !== undefined){
       this._rawText.style = this._style;
     }
     this.updateTexture();
@@ -172,13 +198,17 @@ class PxText {
     if (this._data != null && this._renderer != null && this._rawText != null) {
       this._data.texture = this._renderer.generateTexture(this._rawText, SCALE_MODES.LINEAR, 1);
     } else {
-      console.error("Can not update text texutre before init!");
+      console.error("Can not update text texture before init!");
     }
   }
 
   public destroy(){
     if(this._data){
       this._data.destroy();
+      
+    }
+    if(this._rawText){
+      this._rawText.destroy();
     }
   }
 }

@@ -72,13 +72,12 @@ class PxGame {
   public resize(width: number, height: number) {
     if (this._game != null) {
       this._game.renderer.resize(width, height)
-      console.warn('width provided: ', width);
+     // console.warn('width provided: ', width);
       let scale = (width / this._gameConfig.data.DISPLAY.WIDTH);
-      console.warn('scale::: ', scale);
+  //    console.warn('scale::: ', scale);
       this._game.stage.scale.set(scale);
     }
-   // if(this._levelCont !== null && this._levelCont !== undefined){
-   // }
+
   }
 
   public addText(x: number, y: number, text: string, style: any = undefined): PxText {

@@ -37,7 +37,7 @@ class ScaleHandler {
     this._scaleX = 1;
     this._scaleY = 1;
 
-    console.log("{debug3} scale manager allocated!");
+  //  console.log("{debug3} scale manager allocated!");
   }
 
   public init(go: IGameObject) {
@@ -91,7 +91,7 @@ class ScaleHandler {
   }
 
   private _onResize() {
-    console.log("{debug3} scale manager resize!", this._scaleManager.getScale(this._scaleX), this._scaleManager.getScale(this._scaleY), this._go);
+  //  console.log("{debug3} scale manager resize!", this._scaleManager.getScale(this._scaleX), this._scaleManager.getScale(this._scaleY), this._go);
     
     if (this._go instanceof ContainerObject) {
       

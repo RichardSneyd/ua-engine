@@ -31,8 +31,8 @@ class SliceObject implements IGameObject, IParentChild {
 
         this._core.init(this, x, y);
         this._input.init(this);
-        this._pcHandler.init(this, parent);
         this._scaleHandler.init(this);
+        this._pcHandler.init(this, parent);
        
       //  this.setOrigin(0.5);
     }
