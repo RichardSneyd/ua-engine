@@ -60,6 +60,7 @@ class ObjectCore {
 
     this._importSize();
     this._updateSize();
+    this._setListners();
   }
 
   get objectHandler() {
@@ -292,6 +293,13 @@ class ObjectCore {
 
     this._objectHandler.setSize(this._data, this._width * this._go.scaleHandler.scaleX, this._height * this._go.scaleHandler.scaleY);
  //   this._objectHandler.setSize(this._data, this._width * scaleX, this._height * scaleY);
+  }
+
+  private _setListners() {
+    this._origin.onUpdate = () => {
+      this.updateOrigin();
+      this.updateXY();
+    }
   }
 
 

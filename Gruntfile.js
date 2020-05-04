@@ -36,10 +36,10 @@ module.exports = (grunt) => {
     connect: {
       server: {
         options: {
-          port: 3000,
+          port: 3005,
           hostname: '*',
           onCreateServer: (server, connect, options) => {
-            console.log("Listening on port 3000...");
+            console.log("Listening on port 3005...");
           }
         }
       }

@@ -1,9 +1,10 @@
 class Point {
     protected _x: number;
     protected _y: number;
+    private _onUpdate: Function;
 
     constructor() {
-       
+        this._onUpdate = () => {};
     }
 
     init(x: number, y: number){
@@ -14,16 +15,22 @@ class Point {
         return this._x;
     }
 
-    set x(x: number) {
-        this._x = x;
-    }
-
     get y(): number {
         return this._y;
     }
 
     set y(y: number) {
         this._y = y;
+        this._onUpdate();
+    }
+
+    set x(x: number) {
+        this._x = x;
+        this._onUpdate();
+    }
+
+    set onUpdate(update: Function) {
+        this._onUpdate = update;
     }
 
     public createNew(x: number, y: number): Point {
