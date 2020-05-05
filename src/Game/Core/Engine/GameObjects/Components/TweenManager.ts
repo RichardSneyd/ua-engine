@@ -1,20 +1,20 @@
 import Tween from "../../../Data/Tween";
 
 class TweenManager {
-    private _tweenFact: Tween;
+    private _tween: Tween;
     private _tweens: Tween[];
 
-    consructor(tweenFact: Tween) {
-        this._tweenFact = tweenFact;
+    constructor(tween: Tween) {
+        this._tween = tween;
         this._tweens = [];
     }
 
     createNew() {
-        return new TweenManager;
+        return new TweenManager(this._tween.createNew());
     }
 
     public add(tweenName: string, easing: string, object: any): Tween {
-        let tween = this._tweenFact.createNew();
+        let tween = this._tween.createNew();
         tween.init(name, easing, object);
         this._tweens.push(tween);
         return tween;

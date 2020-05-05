@@ -1462,7 +1462,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/IFrameAnimatedGameObject' {
 declare module 'UAENGINE/Core/Engine/GameObjects/Components/TweenManager' {
     import Tween from "UAENGINE/Core/Data/Tween";
     class TweenManager {
-        consructor(tweenFact: Tween): void;
+        constructor(tween: Tween);
         createNew(): TweenManager;
         add(tweenName: string, easing: string, object: any): Tween;
         play(tweenName: string, toObject: any, time: number, updateFunction?: Function): void;
