@@ -11,6 +11,7 @@ import ResType from '../../../Data/ResType';
 import IGameObject from '../IGameObject';
 import ContainerObject from '../ContainerObject';
 import Mask from '../Mask';
+import SpineObject from '../SpineObject';
 
 
 class ObjectCore {
@@ -58,6 +59,9 @@ class ObjectCore {
     this._textureName = textureName;
     this._initialized = true;
 
+    if(this._go instanceof SpineObject == false){
+
+    } 
     this._importSize();
     this._updateSize();
     this._setListners();
