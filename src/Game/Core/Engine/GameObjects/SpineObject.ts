@@ -26,11 +26,12 @@ class SpineObject implements IGameObject, IParentChild {
     }
 
     public init(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): void {
-        this.data = this._screen.createSprite(x, y, textureName, frame);
+        this.data = this._screen.createSpine(textureName);
 
         if (frame != null) this._core.atlas = textureName;
 
         this._core.init(this, x, y, textureName);
+        this._animations.init(this);
         this._input.init(this);
         this._scaleHandler.init(this);
         this._pcHandler.init(this, parent);
