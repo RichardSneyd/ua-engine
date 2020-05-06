@@ -44,7 +44,7 @@ class SliceObject implements IGameObject, IParentChild {
     }
 
     public update(time: any){
-       // this.animations.update(time);
+       this.tweens.update(time);
     }
 
     public createEmpty() {

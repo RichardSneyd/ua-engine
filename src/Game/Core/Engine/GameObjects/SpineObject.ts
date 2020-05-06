@@ -40,6 +40,7 @@ class SpineObject implements IGameObject, IParentChild {
 
     public update(time: any){
       //  this.animations.update(time);
+      this.tweens.update(time);
     }
 
     public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): SpineObject {

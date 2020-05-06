@@ -31,7 +31,7 @@ class ContainerObject implements IGameObject, IParentChild {
     }
 
     public update(time: any){
-       // this.animations.update(time);
+      this.tweens.update(time);
     }
 
     public createNew(x: number, y: number, parent: IParentChild | null): ContainerObject {
