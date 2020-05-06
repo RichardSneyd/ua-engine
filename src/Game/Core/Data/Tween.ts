@@ -24,23 +24,35 @@ class Tween {
     this._easing = easing;
     this._object = object;
 
+    //console.log('init tween object, ', this._object);
+
     this._data = new TWEEN.Tween(this._object);
 
     if (this._easing.split('.').length != 2) console.error("invalid easing: %s", easing);
   }
 
   to(toObject: any, time: number, updateFunction: Function = ()=>{}) {
+    //console.log('going to', toObject);
+    //console.log('easing', (<any>TWEEN).Easing);
+
     if (this._data != null) {
       let easing = this._easing.split('.')[0];
       let inOut = this._easing.split('.')[1];
+
+      //console.log('target easing ', (<any>TWEEN).Easing[easing][inOut]);
+
       this._data.to(toObject, time)
       .easing((<any>TWEEN).Easing[easing][inOut])
       .onUpdate(() => {
+        //console.log("Tweening!!");
         updateFunction();
       })
       .start();
+
+
+
     } else {
-      //console.error("no animation data exists");
+      console.error("no animation data exists");
     }
   }
 

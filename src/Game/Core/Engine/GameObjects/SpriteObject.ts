@@ -152,7 +152,7 @@ class SpriteObject implements IFramedGameObject, IParentChild {
     }
 
     update(time: number) {
-        this._core.update(time);
+        this._tweenManager.update(time);
     }
 
 
