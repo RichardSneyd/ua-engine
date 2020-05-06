@@ -54,8 +54,8 @@ class ObjectCore {
   public init(go: IGameObject, x: number, y: number, textureName: string = '') {
     this._go = go;
     this._scaleHandler = go.scaleHandler;
-    this._x = x;
-    this._y = y;
+    this.x = x;
+    this.y = y;
     this._textureName = textureName;
     this._initialized = true;
 

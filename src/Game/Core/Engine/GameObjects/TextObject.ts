@@ -35,8 +35,7 @@ class TextObject implements IGameObject, IParentChild {
     }
 
     public update(time: any){
-       // this.animations.update(time);
-       this.tweens.update(time);
+       this._tweenManager.update(time);
     }
 
     public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null): TextObject {

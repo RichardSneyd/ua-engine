@@ -15,18 +15,26 @@ class TweenManager {
 
     public add(tweenName: string, easing: string, object: any): Tween {
         let tween = this._tween.createNew();
-        tween.init(name, easing, object);
+
+        tween.init(tweenName, easing, object);
+
         this._tweens.push(tween);
+
         return tween;
     }
 
     public play(tweenName: string, toObject: any, time: number, updateFunction: Function = () => { }) {
-        let tween = this._getTween(name);
-        if (tween != null) tween.to(toObject, time, updateFunction);
+        let tween = this._getTween(tweenName);
+        if (tween != null) {
+            //console.log("Tween", tween);
+            tween.to(toObject, time, updateFunction);
+        } else {
+            console.warn("Tween not found!");
+        }
     }
 
     public pause(tweenName: string) {
-        let tween = this._getTween(name);
+        let tween = this._getTween(tweenName);
 
         if (tween != null) {
             tween.pause();
@@ -36,9 +44,9 @@ class TweenManager {
     }
 
     public resume(tweenName: string) {
-        let tween = this._getTween(name);
+        let tween = this._getTween(tweenName);
 
-        if (tween = this._getTween(name)) {
+        if (tween = this._getTween(tweenName)) {
             tween.resume();
         } else {
             console.warn("Tween named '%s' doesn't exist to be paused!", name);
