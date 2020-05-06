@@ -32,6 +32,7 @@ class SpriteObject implements IFramedGameObject, IParentChild {
         if (frame != null) this.core.atlas = textureName;
 
         this._core.init(this, x, y, textureName);
+        this._animationManager.init(this);
         this._input.init(this);
         this._scaleHandler.init(this);
         this._pcHandler.init(this, parent);

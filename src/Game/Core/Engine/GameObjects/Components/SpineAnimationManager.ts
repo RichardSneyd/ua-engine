@@ -14,7 +14,9 @@ class SpineAnimationManager implements IAnimationManager{
 
     init(go: SpineObject){
         this._go = go;
-    }
+        this._go.core.events.on('pause', this.pause, this);
+        this._go.core.events.on('resume', this.resume, this);
+    }   
 
     createNew(){
         return new SpineAnimationManager();
@@ -22,6 +24,14 @@ class SpineAnimationManager implements IAnimationManager{
 
     play(animName: string, loop: boolean = false){
         this._go.data.state.setAnimation(0, animName, loop);
+    }
+
+    pause(){
+        this._go.data.state.timeScale = 0;
+    }
+
+    resume(){
+        this._go.data.state.timeScale = 1;
     }
 
     public addAnimation(animName: string, loop: boolean, delay: number = 0){
@@ -41,6 +51,11 @@ class SpineAnimationManager implements IAnimationManager{
 
     public setToSetupPose(){
         this._go.data.skeleton.setToSetupPose();
+    }
+
+    destroy(){
+        this._go.core.events.off('pause', this.pause);
+        this._go.core.events.off('resume', this.resume);
     }
 
 

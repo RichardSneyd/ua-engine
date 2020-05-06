@@ -10,6 +10,7 @@ class Loader {
   private _resource: Resource;
   private _gameConfig: GameConfig;
   private _imgLoader: IImgLoader; _sndLoader: ISndLoader; _ajaxLoader: AjaxLoader;
+  private _resList: Resource[];
   private _imgList: Resource[];
   private _sndList: Resource[];
   private _spineList: Resource[];
@@ -38,14 +39,15 @@ class Loader {
     this._resource = resource;
     this._imgLoader = imgLoader;
     this._sndLoader = sndLoader;
-    this._spineList = [];
     this._ajaxLoader = ajaxLoader;
     this._gameConfig = gameConfig;
 
     this._base = "";
 
+    this._resList = [];
     this._imgList = [];
     this._sndList = [];
+    this._spineList = [];
     this._scripts = {}
 
     this._downloadComplete = false;
@@ -64,6 +66,7 @@ class Loader {
     let res = this._createResource();
     res.initImage(this._base + name, false);
 
+    this._resList.push(res);
     this._imgList.push(res);
   }
 
@@ -77,6 +80,7 @@ class Loader {
     res.initImage(this._base + filename, false);
     //console.log("atlas location '%s'", this._base + url);
 
+    this._resList.push(res);
     this._imgList.push(res);
   }
 
@@ -86,6 +90,7 @@ class Loader {
     let res = this._createResource();
     res.initJSON(this._base + basename + '.json', false);
 
+    this._resList.push(res);
     this._sndList.push(res);
   }
 
@@ -94,7 +99,9 @@ class Loader {
     let res = this._createResource();
     res.initImage(this._base + filename, false);
 
+    this._resList.push(res);
     this._spineList.push(res);
+    this._imgList.push(res);
   }
 
   /**
@@ -296,6 +303,7 @@ class Loader {
     let res = this._createResource();
     res.initSnd(this._base + name, false);
 
+    this._resList.push(res);
     this._sndList.push(res);
   }
 
