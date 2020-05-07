@@ -34,6 +34,36 @@ class Loader {
     return this._scripts;
   }
 
+  get progress(): number {
+    let done: number = 0;
+    let notDone: number = 0;
+
+    for (let c = 0; c < this._resList.length; c++) {
+      let res = this._resList[c];
+
+      if (res.name.length > 0) {
+
+        if(res.loaded) {
+          done++
+        } else {
+          notDone++;
+        }
+
+
+      }
+    }
+
+    let total = done + notDone;
+
+    let prog = done / total;
+
+    if (isNaN(prog)) {
+      return 0;
+    } else {
+      return prog;
+    }
+  }
+
   constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader,
     ajaxLoader: AjaxLoader, gameConfig: GameConfig) {
     this._resource = resource;
@@ -138,6 +168,7 @@ class Loader {
     })
   }
 
+
   private _sendAllDone(resolve: Function, reject: Function) {
     if (this._downloadComplete) {
       resolve({status: true});
@@ -171,10 +202,15 @@ class Loader {
   public update(): void {
     let isLoaded = true;
 
-    for (let c = 0; c < this._imgList.length; c++) {
-      let res = this._imgList[c];
+    for (let c = 0; c < this._resList.length; c++) {
+      let res = this._resList[c];
 
-      if (!res.loaded) isLoaded = false;
+      
+
+      if (!res.loaded && res.name.length > 0) {
+        isLoaded = false;
+        //console.log("%s is loaded(%s)", res.name.length, res.loaded);
+      }
     }
 
     this._downloadComplete = isLoaded;

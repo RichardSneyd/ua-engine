@@ -107,6 +107,7 @@ declare module 'UAENGINE/Core/Engine/Loader' {
             get base(): string;
             set base(base: string);
             get scripts(): any;
+            get progress(): number;
             constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader, ajaxLoader: AjaxLoader, gameConfig: GameConfig);
             get downloadComplete(): boolean;
             /**
@@ -1482,10 +1483,13 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/SpineAnimationManage
         init(go: SpineObject): void;
         createNew(): SpineAnimationManager;
         play(animName: string, loop?: boolean): void;
+        pause(): void;
+        resume(): void;
         addAnimation(animName: string, loop: boolean, delay?: number): void;
         playAnimations(animNames: string[], loop?: boolean): void;
         clearAnimations(): void;
         setToSetupPose(): void;
+        destroy(): void;
     }
     export default SpineAnimationManager;
 }
