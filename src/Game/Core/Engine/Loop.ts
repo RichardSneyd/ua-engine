@@ -65,7 +65,7 @@ class Loop {
   }
 
   private _executeAll(time: number) {
-    console.log('execute all..: ', this._fList);
+  //  console.log('execute all..: ', this._fList);
     if (this._paused == 1) {
       this._delay = this._oldDelay + (time - this._lastTime);
       //console.log("delay %s", this._delay);
@@ -75,9 +75,9 @@ class Loop {
       this._lastTime = time;
     } else if (this._paused == 0) {
 
-      console.log('fList length: ', this._fList.length);
+    //  console.log('fList length: ', this._fList.length);
       for (let c = 0; c < this._fList.length; c++) {
-        console.log('exec loop callback %s', c);
+      //  console.log('exec loop callback %s', c);
         this._fList[c].execute(time - this._delay);
       }
 
