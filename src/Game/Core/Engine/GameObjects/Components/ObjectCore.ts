@@ -88,14 +88,14 @@ class ObjectCore {
   }
 
   set x(xVal: number) {
-    this._x = xVal;
+    this._x = Number(xVal);
     this.objectHandler.setX(this._data, this._x);
    // this._updateXY();
    // this.updateOrigin();
   }
 
   set y(yVal: number) {
-    this._y = yVal;
+    this._y = Number(yVal);
     this.objectHandler.setY(this._data, this.y);
   //  this._updateXY();
   //  this.updateOrigin();
@@ -191,6 +191,16 @@ class ObjectCore {
     // remember to ALWAYS remove event listeners when destroying a GameObject
     this._events.off('resize', this._go.scaleHandler.onResize);
     this._objectHandler.destroy(this._data);
+  }
+
+  public getGameUnitBounds() : {x: number, y: number, width: number, height: number} {
+    let pxBounds = this._objectHandler.getBounds(this.data);
+    let bounds = pxBounds;
+    bounds.x /= this._scaleHandler.scaleFactor;
+    bounds.y /= this._scaleHandler.scaleFactor;
+    bounds.width /= this._scaleHandler.scaleFactor;
+    bounds.height /= this._scaleHandler.scaleFactor;
+    return bounds;
   }
 
   get data(): any {

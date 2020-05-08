@@ -1,4 +1,5 @@
 import Point from '../Core/Geom/Point';
+import { Container } from 'pixi.js';
 interface IObjectHandler {
   setXy(object: any, x: number, y: number): void;
   setSize(object: any, width: number, height: number): void;
@@ -14,6 +15,7 @@ interface IObjectHandler {
   setHeight(object: any, height: number): void;
   setMask(object: any, mask: any): void;
   getSize(object: any): {width: number, height: number};
+  getBounds(object: Container): {x: number, y: number, width: number, height: number}
 }
 
 export default IObjectHandler;

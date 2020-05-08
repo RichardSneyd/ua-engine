@@ -16,6 +16,10 @@ class ScaleHandler {
     return this._scaleX;
   }
 
+  get scaleFactor(): number {
+    return this._scaleManager.scaleFactor();
+  }
+
   get scaleY(): number {
     return this._scaleY;
   }
