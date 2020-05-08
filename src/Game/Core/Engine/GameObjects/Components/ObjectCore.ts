@@ -282,7 +282,7 @@ class ObjectCore {
 
   // ALWAYS listen for this update, because it calls the gameObjects update. 
   public update(time: number) {
-    console.log('update called in ObjectCore');
+    // console.log('update called in ObjectCore');
     if(this._updateCallback !== undefined && this._updateCallback !== null){
       this._updateCallback.bind(this._go)(time);
     }
