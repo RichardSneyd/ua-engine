@@ -12,6 +12,7 @@ import IGameObject from '../IGameObject';
 import ContainerObject from '../ContainerObject';
 import Mask from '../Mask';
 import SpineObject from '../SpineObject';
+import Loop from '../../Loop';
 
 
 class ObjectCore {
@@ -26,19 +27,21 @@ class ObjectCore {
   private _screen: IScreen; _objectHandler: IObjectHandler;
   private _input: InputHandler; _math: MathUtils;
   private _data: any;
-  private _events: Events; _scaleHandler: ScaleManager; protected _pointFactory: Point;
+  private _events: Events; _scaleHandler: ScaleManager; protected _pointFactory: Point; private _loop: Loop;
 
   private _go: IGameObject;
   private _atlas: string | null;
   private _mask: Mask;
+  private _updateCallback: Function;
 
-  constructor(screen: IScreen, objectHandler: IObjectHandler, input: InputHandler, mask: Mask, math: MathUtils, events: Events, pointFactory: Point) {
+  constructor(screen: IScreen, objectHandler: IObjectHandler, input: InputHandler, mask: Mask, math: MathUtils, events: Events, pointFactory: Point, loop: Loop) {
     this._screen = screen;
     this._objectHandler = objectHandler;
     this._input = input;
     this._math = math;
     this._events = events;
     this._pointFactory = pointFactory;
+    this._loop = loop;
     this._x = 0;
     this._y = 0;
     this._origin = this._pointFactory.createNew(0, 0);
@@ -51,13 +54,14 @@ class ObjectCore {
   }
 
   // keep this one for GENERIC initializations 
-  public init(go: IGameObject, x: number, y: number, textureName: string = '') {
+  public init(go: IGameObject, x: number, y: number, textureName: string = '', updateCallback: Function) {
     this._go = go;
     this._scaleHandler = go.scaleHandler;
     this.x = x;
     this.y = y;
     this._textureName = textureName;
     this._initialized = true;
+    this._updateCallback = updateCallback;
 
     if(this._go instanceof SpineObject == false){
 
@@ -65,6 +69,8 @@ class ObjectCore {
     this._importSize();
     this._updateSize();
     this._setListners();
+    this._loop.addFunction(this.update, this);
+    this._events.on('shutdown', this._go.destroy, this._go);
   }
 
   get objectHandler() {
@@ -88,14 +94,14 @@ class ObjectCore {
   }
 
   set x(xVal: number) {
-    this._x = xVal;
+    this._x = Number(xVal);
     this.objectHandler.setX(this._data, this._x);
    // this._updateXY();
    // this.updateOrigin();
   }
 
   set y(yVal: number) {
-    this._y = yVal;
+    this._y = Number(yVal);
     this.objectHandler.setY(this._data, this.y);
   //  this._updateXY();
   //  this.updateOrigin();
@@ -187,10 +193,24 @@ class ObjectCore {
     this._objectHandler.setMask(this._data, null);
   }
 
+  // ONLY to be called by gameObject this component attaches to -- always listen for the destroy method on 
+  // the gameObject itself.
   public destroy() {
     // remember to ALWAYS remove event listeners when destroying a GameObject
+    this._loop.removeFunction(this.update);
     this._events.off('resize', this._go.scaleHandler.onResize);
+    this._events.off('shutdown', this._go.destroy);
     this._objectHandler.destroy(this._data);
+  }
+
+  public getGameUnitBounds() : {x: number, y: number, width: number, height: number} {
+    let pxBounds = this._objectHandler.getBounds(this.data);
+    let bounds = pxBounds;
+    bounds.x /= this._scaleHandler.scaleFactor;
+    bounds.y /= this._scaleHandler.scaleFactor;
+    bounds.width /= this._scaleHandler.scaleFactor;
+    bounds.height /= this._scaleHandler.scaleFactor;
+    return bounds;
   }
 
   get data(): any {
@@ -249,7 +269,7 @@ class ObjectCore {
   public createNew(): ObjectCore {
   //  let am = this._animationManager.createNew();
     //  console.log('new am: ', am);
-    return new ObjectCore(this._screen, this._objectHandler, this._input.createNew(), this._mask.createNew(), this._math, this._events, this._pointFactory);
+    return new ObjectCore(this._screen, this._objectHandler, this._input.createNew(), this._mask.createNew(), this._math, this._events, this._pointFactory, this._loop);
   }
 
   public changeTexture(textureName: string) {
@@ -260,8 +280,12 @@ class ObjectCore {
       }
   }
 
+  // ALWAYS listen for this update, because it calls the gameObjects update. 
   public update(time: number) {
-   this._go.update(time);
+    console.log('update called in ObjectCore');
+    if(this._updateCallback !== undefined && this._updateCallback !== null){
+      this._updateCallback.bind(this._go)(time);
+    }
   }
 
   public updateXY() {

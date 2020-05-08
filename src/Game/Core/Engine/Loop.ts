@@ -32,13 +32,14 @@ class Loop {
    * @param context the context
    */
   public addFunction(f: any, context: any) {
-    let i = this._findFunction(f);
+    let fObj: FunObj | null = this._getFunObj(f, context);
 
-    if (i == null) {
+    if (fObj == null) {
       let o = this._newFunObj(f, context);
       this._fList.push(o);
+      console.log('added. updated funObj callback list: ', this._fList);
     } else {
-      console.error("trying to add function %s twice", f);
+      console.error("trying to add function twice with identical context: ", context);
     }
   }
 
@@ -64,6 +65,7 @@ class Loop {
   }
 
   private _executeAll(time: number) {
+    console.log('execute all..: ', this._fList);
     if (this._paused == 1) {
       this._delay = this._oldDelay + (time - this._lastTime);
       //console.log("delay %s", this._delay);
@@ -73,18 +75,28 @@ class Loop {
       this._lastTime = time;
     } else if (this._paused == 0) {
 
+      console.log('fList length: ', this._fList.length);
       for (let c = 0; c < this._fList.length; c++) {
+        console.log('exec loop callback %s', c);
         this._fList[c].execute(time - this._delay);
       }
 
     }
-
+ //   debugger;
     window.requestAnimationFrame(this._boundExecuteAll);
   }
 
   private _findFunction(f: any): number | null {
     for (let c = 0; c < this._fList.length; c++) {
       if (f == this._fList[c].function) return c;
+    }
+
+    return null;
+  }
+
+  private _getFunObj(f: Function, context: any): FunObj | null {
+    for (let c = 0; c < this._fList.length; c++) {
+      if (f == this._fList[c].function && this._fList[c].context == context) return this._fList[c];
     }
 
     return null;

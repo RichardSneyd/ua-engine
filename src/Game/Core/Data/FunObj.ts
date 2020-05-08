@@ -13,6 +13,10 @@ class FunObj {
     return this._f;
   }
 
+  get context(): any {
+    return this._context;
+  }
+
   init(f: any, context: any) {
     this._f = f;
     this._context = context;

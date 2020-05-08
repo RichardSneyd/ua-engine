@@ -13,6 +13,12 @@ class TweenManager {
         return new TweenManager(this._tween.createNew());
     }
 
+    /**
+     * 
+     * @param tweenName the name of the tween. You will referense this when playing it in future
+     * @param easing The easing Algorithm to use.
+     * @param object The GameObject to apply the tween to
+     */
     public add(tweenName: string, easing: string, object: any): Tween {
         let tween = this._tween.createNew();
 
@@ -23,14 +29,33 @@ class TweenManager {
         return tween;
     }
 
-    public play(tweenName: string, toObject: any, time: number, updateFunction: Function = () => { }) {
+    public remove(tweenName: string){
+        let tween = this._getTween(tweenName);
+        if(tween !== null) this._remove(tween); else console.warn('cannot remove tween because none by that name found');
+    }
+
+    private _remove(tween: Tween){
+        this._tweens.splice(this._tweens.indexOf(tween), 1);
+    }
+
+    public play(tweenName: string, toObject: any, duration: number, updateFunction: Function = () => { }) {
         let tween = this._getTween(tweenName);
         if (tween != null) {
             //console.log("Tween", tween);
-            tween.to(toObject, time, updateFunction);
+            tween.to(toObject, duration, updateFunction);
         } else {
             console.warn("Tween not found!");
         }
+    }
+
+
+    public once(tweenName: string, easing: string, object: any, toObject: any, duration: number, updateFunction?: Function){
+        let tween = this.add(tweenName, easing, object);
+        this.play(tweenName, toObject, duration, updateFunction);
+        tween.onComplete(()=>{
+            console.log('onComplete called through TweenManager.once, removing tween...');
+            this._remove(tween);
+        });
     }
 
     public pause(tweenName: string) {

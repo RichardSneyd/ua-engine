@@ -1,6 +1,6 @@
 module.exports = (grunt) => {
   grunt.initConfig({
-   
+
     uglify: {
       options: {
         mangle: true,
@@ -64,30 +64,31 @@ module.exports = (grunt) => {
       dest: 'src/Dep/ControlContainer.ts',
       //Maintain no space between commas!
       single: ['Loader',
-            'Events',
-            'AudioManager',
-            'ImgLoader',
-            'SndLoader',
-            'AjaxLoader',
-            'Screen',
-            'PxGame',
-            'PxFactory',
-            'PxLoader',
-            'HwFactory',
-            'HwLoader',
-            'HwPlayer',
-            'Utils',
-            'ActScripts',
-            'Collections',
-            'Colors',
-            'Mixins',
-            'Numbers',
-            'Text',
-            'Vectors',
-            'GameConfig'],
+        'Loop',
+        'Events',
+        'AudioManager',
+        'ImgLoader',
+        'SndLoader',
+        'AjaxLoader',
+        'Screen',
+        'PxGame',
+        'PxFactory',
+        'PxLoader',
+        'HwFactory',
+        'HwLoader',
+        'HwPlayer',
+        'Utils',
+        'ActScripts',
+        'Collections',
+        'Colors',
+        'Mixins',
+        'Numbers',
+        'Text',
+        'Vectors',
+        'GameConfig'],
       ignore: [
-                'UAENGINE'
-                ],
+        'UAENGINE'
+      ],
     }
     /*
     notify: {

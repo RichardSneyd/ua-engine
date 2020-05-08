@@ -24,14 +24,14 @@ class ContainerObject implements IGameObject, IParentChild {
 
     public init(x: number, y: number, parent: IParentChild | null): void {
         this.data = this._screen.createContainer(x, y);
-        this._core.init(this, x, y);
+        this._core.init(this, x, y, undefined, this._update);
         this._input.init(this);
         this._scaleHandler.init(this);
         this._pcHandler.init(this, parent);
     }
 
     // only to be called by ObjectCore
-    public update(time: any){
+    private _update(time: any){
       this._tweenManager.update(time);
     }
 

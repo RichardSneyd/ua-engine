@@ -19,7 +19,6 @@ interface IGameObject {
     visible: boolean;
     data: any;
     destroy(): void;
-    update(time: any): void;
     tweens: TweenManager;
 }
 

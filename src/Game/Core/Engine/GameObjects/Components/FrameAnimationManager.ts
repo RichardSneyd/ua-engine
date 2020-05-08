@@ -2,26 +2,30 @@ import Anim from '../../../Data/Anim';
 import Tween from '../../../Data/Tween';
 import IGameObject from '../IGameObject';
 import IFrameAnimatedGameObject from '../IFrameAnimatedGameObject';
+import Loader from '../../Loader';
 
-// TODO --- refactor into 2 seperate AnimationManagers, 1 for atlases and 1 for spines, which both implement 
-// an IAnimationManager interface
 
 class FrameAnimationManager implements IAnimationManager {
   private _go: IFrameAnimatedGameObject; private _anim: Anim; _activeAnimation: Anim | null; _tween: Tween;
-  private _animations: Anim[];
+  private _animations: Anim[]; private _loader: Loader;
   private _loopIndex: number;
 
-  constructor(anim: Anim, tween: Tween) {
+  constructor(anim: Anim, loader: Loader) {
     this._anim = anim;
-    this._tween = tween;
+    this._loader = loader;
     this._activeAnimation = null;
     this._loopIndex = 0;
 
     this._animations = [];
+  
   }
 
-  init(go: IFrameAnimatedGameObject){
+  init(go: IFrameAnimatedGameObject) {
     this._go = go;
+  }
+
+  get current(){
+    return this._anim;
   }
 
   public play(name: string, loop: boolean = false) {
@@ -53,20 +57,63 @@ class FrameAnimationManager implements IAnimationManager {
   //max has to be dynamic
   //-1 for nothing, single frame
 
-  public addAnimation(name: string, base: string, max: number, fps: number, data: any = null) {
+  public addAnimation(name: string, frames: string[], fps: number = 24) {
     let prevAnim = this._getAnim(name);
     let anim: Anim = this._anim.createNew();
 
     if (prevAnim == null) {
-      anim.init(name, base, max, fps, data);
+      anim.init(name, frames, fps);
       this._animations.push(anim);
     } else {
       console.warn('Animation with name: "%s" already added, not adding it again!', name);
     }
   }
 
+  /**
+   * @description a helper function to generate frames based on a max value etc
+   * @param name 
+   * @param base 
+   * @param max 
+   * @param fps 
+   */
+  public genFramesNumerically(name: string, base: string = '', max: number): string[] {
+    let arr: string[] = [];
+
+    for (let c = 0; c < max; c++) {
+      arr.push(base + name + (c + 1).toString());
+    }
+    return arr;
+  }
+
+  public autoGenFrames(name: string): string[] {
+    let atlasName = this._go.core.atlas;
+    let res = this._loader.getResource(atlasName);
+    if (res !== null) {
+      let json = res.data.data;
+      console.log('json: ', res);
+      let frames = json.frames;
+      let frameNames: string[] = [];
+
+      for (let x = 0; x < frames.length; x++) {
+        let fname: string = frames[x].filename;
+        let reg = new RegExp(name + '[-_]' + '[0-9]|' + name + '[0-9]');
+
+        if (fname == name) {
+          frameNames.push(fname);
+        }
+        else if (fname.match(reg)) {
+          frameNames.push(fname);
+        }
+      }
+      console.log('frames: ', frameNames);
+      return frameNames;
+    }
+    console.warn('no json file found for ');
+    return [];
+  }
+
   public createNew(): FrameAnimationManager {
-    return new FrameAnimationManager(this._anim.createNew(), this._tween.createNew());
+    return new FrameAnimationManager(this._anim.createNew(), this._loader);
   }
 
   public getUpdatedFrame(): string | null {
@@ -89,10 +136,11 @@ class FrameAnimationManager implements IAnimationManager {
     }
   }
 
-  public update(){
+  public update() {
     if (!this._go.core.initialized) return;
 
     let updatedFrame = this.getUpdatedFrame();
+    console.log('updated frame: ', updatedFrame);
 
     if (updatedFrame != null) {
       if (this._go.core.atlas != null) {

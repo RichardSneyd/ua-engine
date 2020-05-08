@@ -64,6 +64,10 @@ class ObjectHandler implements IObjectHandler {
   public getSize(object: any): {width: number, height: number} {
     return {width: object.width, height: object.height};
   }
+
+  public getBounds(object: Container): {x: number, y: number, width: number, height: number} {
+    return object.getBounds();
+  }
 }
 
 export default ObjectHandler;
