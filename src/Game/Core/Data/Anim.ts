@@ -12,18 +12,20 @@ class Anim {
   private _paused: boolean;
   private _isSpine: boolean;
   private _globalPaused: boolean;
+  private _frames: string[];
 
   constructor(events: Events) {
     this._events = events;
 
     this._name = '';
     this._base = '';
-    this._fps = 0;
+    this._fps = 24;
     this._max = 0;
     this._data = null;
     this._index = 0;
     this._isSpine = false;
     this._paused = false;
+    this._frames = [];
 
     this._globalPaused = false;
     this._addListeners();
@@ -38,25 +40,25 @@ class Anim {
   }
 
   get frames(): string[] {
-    return this._getFrames();
+    return this._frames;
   }
 
   get fps(): number {
     return this._fps;
   }
 
-  public init(name: string, base: string, max: number, fps: number, data: any) {
+  public init(name: string, frames: string[], fps: number = 24) {
     this._name = name;
-    this._base = base;
-    this._max = max;
-    this._fps = fps;
-    this._data = data;
+   // this._data = data;
+    this._frames = frames; 
+    this._fps = 24;
+    console.log(name + ' frames: ', frames);
   }
 
   public getNextFrame(): string {
-    if (this._paused) return this._getFrames()[this._index - 1];
+    if (this._paused) return this._frames[this._index - 1];
 
-    let frames = this._getFrames();
+    let frames = this._frames;
     let frm = frames[this._index];
 
     this._index++;
@@ -101,16 +103,6 @@ class Anim {
     this._globalPaused = false;
 
     this.resume();
-  }
-
-  private _getFrames(): string[] {
-    let arr: string[] = [];
-
-    for (let c = 0; c < this._max; c++) {
-      arr.push(this._base + this._name + (c+1).toString());
-    }
-
-    return arr;
   }
 
   private _addListeners() {

@@ -29,7 +29,7 @@ class SliceObject implements IGameObject, IParentChild {
         //  console.log('boudns before calc', this._data.getBounds());
         this.data.calculateBounds();
 
-        this._core.init(this, x, y);
+        this._core.init(this, x, y, textureName, this._update);
         this._input.init(this);
         this._scaleHandler.init(this);
         this._pcHandler.init(this, parent);
@@ -43,7 +43,7 @@ class SliceObject implements IGameObject, IParentChild {
         return slice;
     }
 
-    public update(time: any){
+    private _update(time: any){
        this._tweenManager.update(time);
     }
 

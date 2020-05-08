@@ -31,7 +31,7 @@ class SpriteObject implements IFramedGameObject, IParentChild {
 
         if (frame != null) this.core.atlas = textureName;
 
-        this._core.init(this, x, y, textureName);
+        this._core.init(this, x, y, textureName, this._update);
         this._animationManager.init(this);
         this._input.init(this);
         this._scaleHandler.init(this);
@@ -152,10 +152,12 @@ class SpriteObject implements IFramedGameObject, IParentChild {
         this._pcHandler.removeChild(child);
     }
 
-    update(time: number) {
+     // ALWAYS listen for core.update in events, never this one directly, as it is called from core.update.
+    private _update(time: number) {
+        console.log('update called in SpriteObject!');
         this._tweenManager.update(time);
+        this._animationManager.update();
     }
-
 
     destroy() {
         if (this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);

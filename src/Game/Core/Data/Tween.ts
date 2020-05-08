@@ -19,6 +19,34 @@ class Tween {
     return this._name;
   }
 
+  get onComplete(){
+    if(this._data){
+      return this._data.onComplete;
+    }
+    return (callback: Function)=>{console.warn('no onComplete function, dummy returned')}
+  }
+
+  get onStop(){
+    if(this._data){
+      return this._data.onStop;
+    }
+    return (callback: Function)=>{console.warn('no onStop function, dummy returned')}
+  }
+
+  get onStart(){
+    if(this._data){
+      return this._data.onStart;
+    }
+    return (callback: Function)=>{console.warn('no onStart function, dummy returned')}
+  }
+
+  get onUpdate(){
+    if(this._data){
+      return this._data.onUpdate;
+    }
+    return (callback: Function)=>{console.warn('no onUpdate function, dummy returned')}
+  }
+
   init(name: string, easing: string, object: any) {
     this._name = name;
     this._easing = easing;
