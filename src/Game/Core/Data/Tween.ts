@@ -19,6 +19,22 @@ class Tween {
     return this._name;
   }
 
+  get stop(): Function {
+    if(this._data){
+      return this._data.stop;
+    }
+    console.error('cannot return stop property for uninitialized tween object');
+    return ()=>{}
+  }
+
+  get isPaused(): boolean {
+    if(this._data){
+      return this._data.isPaused();
+    }
+    console.error('cannot return isPaused for uninitialized tween object');
+    return false;
+  }
+
   get onComplete(){
     if(this._data){
       return this._data.onComplete;

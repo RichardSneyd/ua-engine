@@ -78,12 +78,12 @@ declare module 'UAENGINE/Core/Engine/Loop' {
                 * @param f the function to add to the list of callbacks
                 * @param context the context
                 */
-            addFunction(f: any, context: any): void;
+            addFunction(f: Function, context: any): void;
             /**
                 * @description remove a callback from this loop
                 * @param f the function to remove from callbacks array
                 */
-            removeFunction(f: any): void;
+            removeFunction(f: Function): void;
             /**
                 * @description start the loop -- interally, this binds the loop to requestAnimatonFrame on window obj.
                 */
@@ -98,6 +98,7 @@ declare module 'UAENGINE/Core/Engine/Loader' {
     import ISndLoader from 'UAENGINE/Services/ISndLoader';
     import AjaxLoader from 'UAENGINE/Services/AjaxLoader';
     import GameConfig from 'UAENGINE/Core/Engine/GameConfig';
+    import Loop from 'UAENGINE/Core/Engine/Loop';
     class Loader {
             _sndLoader: ISndLoader;
             _ajaxLoader: AjaxLoader;
@@ -107,7 +108,7 @@ declare module 'UAENGINE/Core/Engine/Loader' {
             base: string;
             readonly scripts: any;
             readonly progress: number;
-            constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader, ajaxLoader: AjaxLoader, gameConfig: GameConfig);
+            constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader, ajaxLoader: AjaxLoader, gameConfig: GameConfig, loop: Loop);
             readonly downloadComplete: boolean;
             /**
                 * @description Creates an image resource and adds the image to the load queue. The data property of the resource will be
@@ -130,7 +131,6 @@ declare module 'UAENGINE/Core/Engine/Loader' {
             download(onDone?: Function): Promise<{}>;
             getResource(name: string): Resource | null;
             getTexture(sprite: string, frame?: string | null): any;
-            update(): void;
             getSndResByBasename(basename: string): Resource | null;
             /**
                 * @description create a sound resource, to be inject with data later, at download
@@ -644,7 +644,7 @@ declare module 'UAENGINE/Core/Engine/ScriptHandler' {
                 * @param colname the columns (properties) to search for the respective vals in
                 * @param val the vals to search for. The order of this array must match colname.
                 */
-            rowByCellVals(colname: string[], val: any[]): any[] | null;
+            rowByCellVals(colname: string[], val: any[]): any | null;
             isFalsy(val: any): boolean;
     }
     export default ScriptHandler;
@@ -754,6 +754,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore' {
         readonly events: Events;
         origin: Point;
         setSize(width: number, height: number): void;
+        alpha: number;
         visible: boolean;
         readonly input: InputHandler;
         atlas: any;
@@ -812,6 +813,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpriteObject' {
         readonly core: ObjectCore;
         y: number;
         readonly visible: boolean;
+        alpha: number;
         width: number;
         height: number;
         parent: IParentChild | null;
@@ -848,6 +850,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SliceObject' {
         readonly textureName: string;
         atlas: any;
         x: number;
+        alpha: number;
         readonly core: ObjectCore;
         y: number;
         readonly visible: boolean;
@@ -888,6 +891,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpineObject' {
         x: number;
         readonly core: ObjectCore;
         y: number;
+        alpha: number;
         readonly visible: boolean;
         width: number;
         height: number;
@@ -926,6 +930,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/TextObject' {
         readonly textureName: string;
         atlas: any;
         x: number;
+        alpha: number;
         readonly core: ObjectCore;
         y: number;
         readonly visible: boolean;
@@ -964,6 +969,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/ContainerObject' {
         parent: IParentChild | null;
         readonly children: IParentChild[];
         x: number;
+        alpha: number;
         readonly core: ObjectCore;
         y: number;
         readonly visible: boolean;
@@ -1292,6 +1298,8 @@ declare module 'UAENGINE/Services/IObjectHandler' {
             width: number;
             height: number;
         };
+        getAlpha(object: Container): number;
+        setAlpha(object: Container, alpha: number): void;
     }
     export default IObjectHandler;
 }
@@ -1491,6 +1499,8 @@ declare module 'UAENGINE/Core/Data/Tween' {
         _pauseDiff: number;
         constructor();
         readonly name: string;
+        readonly stop: Function;
+        readonly isPaused: boolean;
         readonly onComplete: ((callback: (object?: any) => void) => TWEEN.Tween) | ((callback: Function) => void);
         readonly onStop: ((callback: (object?: any) => void) => TWEEN.Tween) | ((callback: Function) => void);
         readonly onStart: ((callback: (object?: any) => void) => TWEEN.Tween) | ((callback: Function) => void);

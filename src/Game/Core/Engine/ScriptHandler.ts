@@ -127,7 +127,7 @@ class ScriptHandler {
      * @param colname the columns (properties) to search for the respective vals in
      * @param val the vals to search for. The order of this array must match colname.
      */
-    public rowByCellVals(colname: string[], val: any[]): any[] | null {
+    public rowByCellVals(colname: string[], val: any[]): any | null {
         return this._rowByCellVals(colname, val);
     }
 

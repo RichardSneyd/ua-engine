@@ -4,11 +4,13 @@ import SndLoader from '../../Services/SndLoader';
 import ISndLoader from '../../Services/ISndLoader';
 import AjaxLoader from '../../Services/AjaxLoader';
 import GameConfig from './GameConfig';
+import Loop from './Loop';
+
 
 
 class Loader {
   private _resource: Resource;
-  private _gameConfig: GameConfig;
+  private _gameConfig: GameConfig; private _loop: Loop;
   private _imgLoader: IImgLoader; _sndLoader: ISndLoader; _ajaxLoader: AjaxLoader;
   private _resList: Resource[];
   private _imgList: Resource[];
@@ -65,12 +67,13 @@ class Loader {
   }
 
   constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader,
-    ajaxLoader: AjaxLoader, gameConfig: GameConfig) {
+    ajaxLoader: AjaxLoader, gameConfig: GameConfig, loop: Loop) {
     this._resource = resource;
     this._imgLoader = imgLoader;
     this._sndLoader = sndLoader;
     this._ajaxLoader = ajaxLoader;
     this._gameConfig = gameConfig;
+    this._loop = loop;
 
     this._base = "";
 
@@ -81,6 +84,7 @@ class Loader {
     this._scripts = {}
 
     this._downloadComplete = false;
+    this._loop.addFunction(this._update, this);
   }
 
   get downloadComplete(): boolean {
@@ -199,7 +203,7 @@ class Loader {
     }
   }
 
-  public update(): void {
+  private _update(): void {
     let isLoaded = true;
 
     for (let c = 0; c < this._resList.length; c++) {

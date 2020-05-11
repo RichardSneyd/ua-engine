@@ -1,35 +1,35 @@
 import IObjectHandler from './IObjectHandler';
 import Point from '../Core/Geom/Point';
-import {Container, DisplayObject} from 'pixi.js';
+import { Container, DisplayObject } from 'pixi.js';
 
 class ObjectHandler implements IObjectHandler {
   constructor() {
-    
+
   }
 
   public setXy(object: any, x: number, y: number) {
-      object.x = x; 
-      object.y = y;
+    object.x = x;
+    object.y = y;
   }
 
-  public setPivot(object: Container, anchor: Point){
+  public setPivot(object: Container, anchor: Point) {
     object.pivot.set(Math.floor(anchor.x * object.width), Math.floor(anchor.y * object.height));
   }
 
-  public setSize(object: Container, width: number, height: number){
+  public setSize(object: Container, width: number, height: number) {
     object.width = width;
     object.height = height;
   }
 
-  public setStyle(text: any, style: any){
+  public setStyle(text: any, style: any) {
     text.style = style;
   }
 
-  public setTextColor(text: any, color: string){
+  public setTextColor(text: any, color: string) {
     text.fill = color;
   }
 
-  public move(object: Container, x: number, y: number){
+  public move(object: Container, x: number, y: number) {
     this.setXy(object, x, y);
   }
 
@@ -53,7 +53,7 @@ class ObjectHandler implements IObjectHandler {
     object.height = height;
   }
 
-  public destroy(object: any){
+  public destroy(object: any) {
     object.destroy();
   }
 
@@ -61,12 +61,20 @@ class ObjectHandler implements IObjectHandler {
     object.mask = mask;
   }
 
-  public getSize(object: any): {width: number, height: number} {
-    return {width: object.width, height: object.height};
+  public getSize(object: any): { width: number, height: number } {
+    return { width: object.width, height: object.height };
   }
 
-  public getBounds(object: Container): {x: number, y: number, width: number, height: number} {
+  public getBounds(object: Container): { x: number, y: number, width: number, height: number } {
     return object.getBounds();
+  }
+
+  public getAlpha(object: Container): number {
+    return object.alpha;
+  }
+
+  public setAlpha(object: Container, alpha: number) {
+    object.alpha = Number(alpha);
   }
 }
 

@@ -117,6 +117,14 @@ class SpineObject implements IGameObject, IParentChild {
         this._core.y = y;
     }
 
+    get alpha(){
+        return this._core.alpha;
+    }
+
+    set alpha(alpha: number){
+        this._core.alpha = alpha;
+    }
+
     get visible() {
         return this._core.visible;
     }

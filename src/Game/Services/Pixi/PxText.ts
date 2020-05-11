@@ -146,6 +146,20 @@ class PxText {
     return this._scale;
   }
 
+  get alpha(): number {
+    if(this._data){
+      return this._data.alpha;
+    }
+    console.warn('cannot return alpha for object that is not initialized!');
+    return -1;
+  }
+
+  set alpha(alpha: number){
+    if(this._data){
+      this._data.alpha = alpha;
+    }
+  }
+
   get x(): number {
     if (this._data != null) {
       return this._data.x;
