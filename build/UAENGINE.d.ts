@@ -361,11 +361,12 @@ declare module 'UAENGINE/Core/Engine/GameObjects/GOFactory' {
     import SliceObject from 'UAENGINE/Core/Engine/GameObjects/SliceObject';
     import SpineObject from 'UAENGINE/Core/Engine/GameObjects/SpineObject';
     import TextObject from 'UAENGINE/Core/Engine/GameObjects/TextObject';
+    import Button from 'UAENGINE/Core/Engine/GameObjects/Button';
     import ContainerObject from 'UAENGINE/Core/Engine/GameObjects/ContainerObject';
     import IParentChild from "UAENGINE/Core/Engine/GameObjects/IParentChild";
     import ScaleManager from 'UAENGINE/Core/Engine/ScaleManager';
     class GOFactory {
-            constructor(core: ObjectCore, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject, container: ContainerObject, scaleManager: ScaleManager);
+            constructor(core: ObjectCore, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject, container: ContainerObject, scaleManager: ScaleManager, button: Button);
             /**
                 * @description creates and returns a text object
                 * @param x the x coordinate to initialize with
@@ -382,6 +383,12 @@ declare module 'UAENGINE/Core/Engine/GameObjects/GOFactory' {
                 * @param frame the default frame for the Sprite. Optional. Provide this if working with an atlas animation
                 */
             sprite(x?: number, y?: number, textureName?: string, frame?: string | null, parent?: IParentChild | null): SpriteObject;
+            button(x?: number, y?: number, atlas?: string, frame?: string, anims?: {
+                    up: string;
+                    down: string;
+                    over: string;
+                    out: string;
+            }, onDown?: Function, context?: any, onUp?: Function, parent?: IParentChild): Button;
             /**
                 * @description returns a nineSlice object
                 * @param x the x coordinate to initialze with
@@ -942,6 +949,42 @@ declare module 'UAENGINE/Core/Engine/GameObjects/TextObject' {
         destroy(): void;
     }
     export default TextObject;
+}
+
+declare module 'UAENGINE/Core/Engine/GameObjects/Button' {
+    import SpriteObject from "UAENGINE/Core/Engine/GameObjects/SpriteObject";
+    import IParentChild from "UAENGINE/Core/Engine/GameObjects/IParentChild";
+    class Button {
+        sprite: SpriteObject;
+        protected _onDownCallback: Function | null;
+        protected _context: any;
+        protected _onUpCallback: Function | null;
+        protected animNames: any;
+        constructor(sprite: SpriteObject);
+        init(x: number, y: number, atlas: string, frame: string, animNames: {
+            up: string;
+            down: string;
+            over: string;
+            out: string;
+        }, onDown: Function | null | undefined, context: any, onUp?: Function | null, parent?: IParentChild): void;
+        x: number;
+        y: number;
+        readonly width: number;
+        readonly height: number;
+        visible: boolean;
+        addInputListener(event: string, callback: Function, context: any): void;
+        addAnimation(name: string): void;
+        createNew(x: number, y: number, atlas: string, frame: string, animNames: any, onDown: Function, context: any, onUp?: Function | null, parent?: IParentChild): Button;
+        createEmpty(): Button;
+        enableInput(): void;
+        disableInput(): void;
+        hide(): void;
+        show(): void;
+        setOrigin(x: number, y: number): void;
+        playAnimation(name: string, loop?: boolean): void;
+        destroy(): void;
+    }
+    export default Button;
 }
 
 declare module 'UAENGINE/Core/Engine/GameObjects/ContainerObject' {
