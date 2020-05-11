@@ -159,6 +159,14 @@ class ObjectCore {
     return this._y;
   }
 
+  get alpha(): number {
+    return this._objectHandler.getAlpha(this._data);
+  }
+
+  set alpha(alpha: number) {
+    this._objectHandler.setAlpha(this._data, alpha);
+  }
+
   get visible(): boolean {
     return this.data.visible;
   }

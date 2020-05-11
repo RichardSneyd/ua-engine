@@ -31,7 +31,7 @@ class Loop {
    * @param f the function to add to the list of callbacks
    * @param context the context
    */
-  public addFunction(f: any, context: any) {
+  public addFunction(f: Function, context: any) {
     let fObj: FunObj | null = this._getFunObj(f, context);
 
     if (fObj == null) {
@@ -47,7 +47,7 @@ class Loop {
    * @description remove a callback from this loop
    * @param f the function to remove from callbacks array
    */
-  public removeFunction(f: any) {
+  public removeFunction(f: Function) {
     let i = this._findFunction(f);
 
     if (i != null) {

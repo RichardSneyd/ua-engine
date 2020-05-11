@@ -140,7 +140,6 @@ class FrameAnimationManager implements IAnimationManager {
     if (!this._go.core.initialized) return;
 
     let updatedFrame = this.getUpdatedFrame();
-    console.log('updated frame: ', updatedFrame);
 
     if (updatedFrame != null) {
       if (this._go.core.atlas != null) {

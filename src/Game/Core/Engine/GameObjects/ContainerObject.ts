@@ -97,6 +97,14 @@ class ContainerObject implements IGameObject, IParentChild {
         this._core.x = x;
     }
 
+    get alpha(){
+        return this._core.alpha;
+    }
+
+    set alpha(alpha: number){
+        this._core.alpha = alpha;
+    }
+
     get core() {
         return this._core;
     }

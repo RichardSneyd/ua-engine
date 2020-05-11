@@ -116,6 +116,14 @@ class SpriteObject implements IFramedGameObject, IParentChild {
         return this._core.visible;
     }
 
+    get alpha(){
+        return this._core.alpha;
+    }
+
+    set alpha(alpha: number){
+        this._core.alpha = alpha;
+    }
+
     get width() {
         return this._core.width;
     }
@@ -154,7 +162,6 @@ class SpriteObject implements IFramedGameObject, IParentChild {
 
      // ALWAYS listen for core.update in events, never this one directly, as it is called from core.update.
     private _update(time: number) {
-        console.log('update called in SpriteObject!');
         this._tweenManager.update(time);
         this._animationManager.update();
     }

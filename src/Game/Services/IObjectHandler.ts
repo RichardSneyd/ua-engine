@@ -15,7 +15,9 @@ interface IObjectHandler {
   setHeight(object: any, height: number): void;
   setMask(object: any, mask: any): void;
   getSize(object: any): {width: number, height: number};
-  getBounds(object: Container): {x: number, y: number, width: number, height: number}
+  getBounds(object: Container): {x: number, y: number, width: number, height: number};
+  getAlpha(object: Container): number;
+  setAlpha(object: Container, alpha: number): void;
 }
 
 export default IObjectHandler;
