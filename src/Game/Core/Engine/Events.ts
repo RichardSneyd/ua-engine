@@ -21,6 +21,7 @@ class Events {
 
         this.addListener('pause', this.pause, this);
         this.addListener('resume', this.resume, this);
+        (<any> window).evt = this;
     }
 
     get events() {

@@ -53,7 +53,6 @@ class ParentChildHandler implements IParentChild {
             // added this condition because text objects hold their Px data 1 level deeper, due to custom PxText class
             let child;
             if (object.core.data.data) {
-                console.log('trying to add data 1 level deeper for text...');
                 child = object.core.data.data;
             }
             else {

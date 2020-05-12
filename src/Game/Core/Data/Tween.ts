@@ -3,6 +3,10 @@ import * as TWEEN from '@tweenjs/tween.js';
 class Tween {
   private _name: string; _easing: string; _object: any; _data: TWEEN.Tween | null;
   private _paused: boolean; _pausedTime: number; _time: number; _pauseDiff: number;
+  private _onCompleteListeners: Function[];
+  private _onUpdateListeners: Function[];
+  private _onRepeatListeners: Function[];
+  private _onStartListeners: Function[];
 
   constructor() {
     this._name = '';
@@ -13,6 +17,10 @@ class Tween {
     this._pausedTime = 0;
     this._time = 0;
     this._pauseDiff = 0;
+    this._onCompleteListeners = [];
+    this._onRepeatListeners = [];
+    this._onStartListeners = [];
+    this._onUpdateListeners = [];
   }
 
   get name(): string {
@@ -27,6 +35,14 @@ class Tween {
     return ()=>{}
   }
 
+  get end(): Function {
+    if(this._data){
+      return this._data.end;
+    }
+    console.error('cannot return end property for uninitialized tween object');
+    return ()=>{}
+  }
+
   get isPaused(): boolean {
     if(this._data){
       return this._data.isPaused();
@@ -36,31 +52,64 @@ class Tween {
   }
 
   get onComplete(){
-    if(this._data){
-      return this._data.onComplete;
-    }
-    return (callback: Function)=>{console.warn('no onComplete function, dummy returned')}
-  }
-
-  get onStop(){
-    if(this._data){
-      return this._data.onStop;
-    }
-    return (callback: Function)=>{console.warn('no onStop function, dummy returned')}
+    return this._onComplete;
   }
 
   get onStart(){
-    if(this._data){
-      return this._data.onStart;
-    }
-    return (callback: Function)=>{console.warn('no onStart function, dummy returned')}
+   return this._onStart;
+  }
+
+  get onRepeat(){
+    return this._onRepeat;
   }
 
   get onUpdate(){
-    if(this._data){
-      return this._data.onUpdate;
+    return this._onUpdate;
+  }
+
+  private _onComplete(callback: Function): Tween{
+    this._onCompleteListeners.push(callback);
+    return this;
+  }
+
+  private _onStart(callback: Function): Tween{
+    this._onStartListeners.push(callback);
+    return this;
+  }
+
+  private _onRepeat(callback: Function): Tween{
+    this._onRepeatListeners.push(callback);
+    return this;
+  }
+
+  private _onUpdate(callback: Function): Tween{
+    this._onUpdateListeners.push(callback);
+    return this;
+  }
+
+  private _callOnComplete(){
+    this._callAll(this._onCompleteListeners);
+    return this;
+  }
+  
+  private _callOnRepeat(){
+    this._callAll(this._onRepeatListeners);
+    return this;
+  }
+  
+  private _callOnStart(){
+    this._callAll(this._onStartListeners);
+    return this;
+  }
+  
+  private _callOnUpdate(){
+    this._callAll(this._onUpdateListeners);
+  }
+
+  private _callAll(callbacks: Function[]){
+    for(let x = 0; x < callbacks.length; x++){
+      callbacks[x]();
     }
-    return (callback: Function)=>{console.warn('no onUpdate function, dummy returned')}
   }
 
   init(name: string, easing: string, object: any) {
@@ -71,33 +120,56 @@ class Tween {
     //console.log('init tween object, ', this._object);
 
     this._data = new TWEEN.Tween(this._object);
+    this._data.onComplete(()=>{this._callOnComplete()});
+    this._data.onRepeat(()=>{this._callOnRepeat()});
+    this._data.onStart(()=>{this._callOnStart()});
+    this._data.onUpdate(()=>{this._callOnUpdate()});
 
     if (this._easing.split('.').length != 2) console.error("invalid easing: %s", easing);
   }
 
-  to(toObject: any, time: number, updateFunction: Function = ()=>{}) {
+  /* set(toObject: any){
+    if(this._data !== null){
+      this._data.
+    }
+  } */
+
+  remove(){
+    if(this._data){
+      TWEEN.remove(this._data);
+      this._data = null;
+    }
+  }
+
+  to(toObject: any, time: number, updateFunction: Function = ()=>{}): Tween {
     //console.log('going to', toObject);
     //console.log('easing', (<any>TWEEN).Easing);
-
+    //this.stop();
+    this.reset();
+    console.log('in tween.to');
     if (this._data != null) {
       let easing = this._easing.split('.')[0];
       let inOut = this._easing.split('.')[1];
 
       //console.log('target easing ', (<any>TWEEN).Easing[easing][inOut]);
-
+      this._paused = false;
       this._data.to(toObject, time)
-      .easing((<any>TWEEN).Easing[easing][inOut])
-      .onUpdate(() => {
-        //console.log("Tweening!!");
+      .easing((<any>TWEEN).Easing[easing][inOut]).start();
+      
+      this.onUpdate(() => {
         updateFunction();
-      })
-      .start();
+      });
+      this.onComplete(()=>{
+        this.freeze();
+      });
+    
 
 
 
     } else {
       console.error("no animation data exists");
     }
+    return this;
   }
 
   createNew(): Tween {
@@ -105,9 +177,11 @@ class Tween {
   }
 
   update(time: number) {
+  //  console.log(this._name + ' update');
     if (this._data != null) {
+  //    console.log('data not null');
       if (!this._paused) {
-
+     //   console.log('not paused');
         this._data.update(time - this._pauseDiff);
       }
     }
@@ -115,16 +189,36 @@ class Tween {
     this._time = time;
   }
 
-  pause() {
+  pause(): Tween{
+    console.warn('Tween.pause called');
     if (this._data != null) {
       this._paused = true;
       this._pausedTime = this._time;
     } else {
       console.warn("Tween doesn't exist to be paused!");
     }
+
+    return this;
   }
 
-  resume() {
+  freeze(): Tween{
+    if (this._data != null) {
+      this._paused = true;
+    }
+    
+    return this;
+  }
+
+  reset(): Tween{
+    if (this._data != null) {
+      this._paused = false;
+    }
+
+    return this;
+  }
+
+  resume(): Tween {
+    console.log('Tween.resume called');
     if (this._data != null) {
       this._paused = false;
       let diff = this._time - this._pausedTime;
@@ -132,8 +226,8 @@ class Tween {
     } else {
       console.warn("Tween doesn't exist to be resumed!");
     }
+    return this;
   }
-
 
 }
 
