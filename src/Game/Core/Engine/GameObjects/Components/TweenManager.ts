@@ -20,14 +20,18 @@ class TweenManager {
      * @param object The GameObject to apply the tween to
      */
     public add(tweenName: string, easing: string, object: any): Tween {
-        let tween = this._tween.createNew();
-
+        let tween = this._getTween(tweenName);
+        if (tween != null) {
+            console.warn('cannot create 2 tweens with same name; original will be returned'); 
+            return tween;
+        }
+        tween = this._tween.createNew();
         tween.init(tweenName, easing, object);
 
         this._tweens.push(tween);
 
         return tween;
-    }
+    }   
 
     public remove(tweenName: string){
         let tween = this._getTween(tweenName);
@@ -35,27 +39,33 @@ class TweenManager {
     }
 
     private _remove(tween: Tween){
+        tween.remove();
         this._tweens.splice(this._tweens.indexOf(tween), 1);
     }
 
-    public play(tweenName: string, toObject: any, duration: number, updateFunction: Function = () => { }) {
+    public play(tweenName: string, toObject: any, duration: number, updateFunction: Function = () => { }) : Tween{
         let tween = this._getTween(tweenName);
         if (tween != null) {
             //console.log("Tween", tween);
             tween.to(toObject, duration, updateFunction);
+            return tween;
         } else {
-            console.warn("Tween not found!");
+            console.error("Tween not found!");
+            tween = this._tween.createNew();
         }
+
+       return tween;
     }
 
 
-    public once(tweenName: string, easing: string, object: any, toObject: any, duration: number, updateFunction?: Function){
+    public once(tweenName: string, easing: string, object: any, toObject: any, duration: number, updateFunction?: Function): Tween{
         let tween = this.add(tweenName, easing, object);
         this.play(tweenName, toObject, duration, updateFunction);
         tween.onComplete(()=>{
             console.log('onComplete called through TweenManager.once, removing tween...');
             this._remove(tween);
         });
+        return tween;
     }
 
     public pause(tweenName: string) {

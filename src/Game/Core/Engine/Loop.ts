@@ -37,7 +37,6 @@ class Loop {
     if (fObj == null) {
       let o = this._newFunObj(f, context);
       this._fList.push(o);
-      console.log('added. updated funObj callback list: ', this._fList);
     } else {
       console.error("trying to add function twice with identical context: ", context);
     }

@@ -90,7 +90,7 @@ class FrameAnimationManager implements IAnimationManager {
     let res = this._loader.getResource(atlasName);
     if (res !== null) {
       let json = res.data.data;
-      console.log('json: ', res);
+     // console.log('json: ', res);
       let frames = json.frames;
       let frameNames: string[] = [];
 
@@ -105,10 +105,10 @@ class FrameAnimationManager implements IAnimationManager {
           frameNames.push(fname);
         }
       }
-      console.log('frames: ', frameNames);
+    //  console.log('frames: ', frameNames);
       return frameNames;
     }
-    console.warn('no json file found for ');
+  //  console.warn('no json file found for ');
     return [];
   }
 
