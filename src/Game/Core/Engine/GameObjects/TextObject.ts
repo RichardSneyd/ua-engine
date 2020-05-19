@@ -178,6 +178,10 @@ class TextObject implements IGameObject, IParentChild {
         this._pcHandler.removeChild(child);
     }
 
+    hasChild(child: IParentChild): boolean {
+        return this._pcHandler.hasChild(child);
+    }
+
     destroy() {
         if(this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
         this._core.destroy();

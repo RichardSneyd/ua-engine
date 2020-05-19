@@ -185,7 +185,7 @@ declare module 'UAENGINE/Core/Engine/Events' {
                 * @param event the event
                 * @param callback the callback to remove
                 */
-            removeListener(event: string, callback: Function): void;
+            removeListener(event: string, callback: Function, context: any): void;
             /**
                 * @description add a listener to an event.
                 * @param event name of the event. If it doesn't exist, it will be created.
@@ -205,7 +205,7 @@ declare module 'UAENGINE/Core/Engine/Events' {
              * @param event the event
              * @param callback the callback to remove
              */
-            off(event: string, callback: Function): void;
+            off(event: string, callback: Function, context: any): void;
             /**
                 * @description emit an event
                 * @param event the event to emit
@@ -981,6 +981,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Button' {
             out: string;
         }, onDown: Function | null | undefined, context: any, onUp?: Function | null, parent?: IParentChild): void;
         x: number;
+        alpha: number;
         y: number;
         readonly width: number;
         readonly height: number;
@@ -1498,7 +1499,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/TweenManager' {
         add(tweenName: string, easing: string, object: any): Tween;
         remove(tweenName: string): void;
         play(tweenName: string, toObject: any, duration: number, updateFunction?: Function): Tween;
-        once(tweenName: string, easing: string, object: any, toObject: any, duration: number, updateFunction?: Function): void;
+        once(tweenName: string, easing: string, object: any, toObject: any, duration: number, updateFunction?: Function): Tween;
         pause(tweenName: string): void;
         resume(tweenName: string): void;
         update(time: number): void;
@@ -1558,17 +1559,19 @@ declare module 'UAENGINE/Core/Data/Tween' {
         readonly stop: Function;
         readonly end: Function;
         readonly isPaused: boolean;
-        readonly onComplete: ((callback: (object?: any) => void) => TWEEN.Tween) | ((callback: Function) => void);
-        readonly onStop: ((callback: (object?: any) => void) => TWEEN.Tween) | ((callback: Function) => void);
-        readonly onStart: ((callback: (object?: any) => void) => TWEEN.Tween) | ((callback: Function) => void);
-        readonly onUpdate: ((callback: (object?: any) => void) => TWEEN.Tween) | ((callback: Function) => void);
+        readonly onComplete: (callback: Function) => Tween;
+        readonly onStart: (callback: Function) => Tween;
+        readonly onRepeat: (callback: Function) => Tween;
+        readonly onUpdate: (callback: Function) => Tween;
         init(name: string, easing: string, object: any): void;
         remove(): void;
         to(toObject: any, time: number, updateFunction?: Function): Tween;
         createNew(): Tween;
         update(time: number): void;
-        pause(): void;
-        resume(): void;
+        pause(): Tween;
+        freeze(): Tween;
+        reset(): Tween;
+        resume(): Tween;
     }
     export default Tween;
 }

@@ -35,11 +35,22 @@ class Button {
         this.addInputListener('pointerup', this._onUp, this);
         this.addInputListener('pointerover', this._onOver, this);
         this.addInputListener('pointerout', this._onOut, this);
-
+        this.sprite.core.events.timer(()=>{
+          
+        }, 5000, this, -1);
+        (<any> window)[atlas] = this;
     }
 
     get x(){
         return this.sprite.x;
+    }
+
+    get alpha(){
+        return this.sprite.alpha;
+    }
+
+    set alpha(alpha: number){
+        this.sprite.alpha = alpha;
     }
 
     set x(x: number){
@@ -104,12 +115,12 @@ class Button {
     }
 
     public hide(){
-        this.visible = false;
+        this.alpha = 0;
         this.disableInput();
     }
 
     public show(){
-        this.visible = true;
+        this.alpha = 1;
         this.enableInput();
     }
 

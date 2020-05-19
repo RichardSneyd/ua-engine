@@ -132,7 +132,7 @@ class ScriptHandler {
     }
 
     public isFalsy(val: any): boolean {
-        if(val !== null && val !== undefined && val !== '') return false; return true;
+        if(val !== null && val !== undefined && val !== '') return false; else return true;
     }
 
      /**

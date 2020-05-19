@@ -152,6 +152,10 @@ class SpineObject implements IGameObject, IParentChild {
     removeChild(child: IParentChild): void {
         this._pcHandler.removeChild(child);
     }
+    
+    hasChild(child: IParentChild): boolean {
+        return this._pcHandler.hasChild(child);
+    }
 
     destroy(){
         if(this.parent !== null) this._pcHandler.removeChild(this);

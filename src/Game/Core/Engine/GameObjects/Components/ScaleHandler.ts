@@ -120,6 +120,10 @@ class ScaleHandler {
     */
   }
 
+  shutdown(){
+    this._events.off('resize', this._onResize, this);
+  }
+
 }
 
 export default ScaleHandler;
