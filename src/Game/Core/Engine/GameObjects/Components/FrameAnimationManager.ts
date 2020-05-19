@@ -17,14 +17,14 @@ class FrameAnimationManager implements IAnimationManager {
     this._loopIndex = 0;
 
     this._animations = [];
-  
+
   }
 
   init(go: IFrameAnimatedGameObject) {
     this._go = go;
   }
 
-  get current(){
+  get current() {
     return this._anim;
   }
 
@@ -90,7 +90,7 @@ class FrameAnimationManager implements IAnimationManager {
     let res = this._loader.getResource(atlasName);
     if (res !== null) {
       let json = res.data.data;
-     // console.log('json: ', res);
+      // console.log('json: ', res);
       let frames = json.frames;
       let frameNames: string[] = [];
 
@@ -105,10 +105,10 @@ class FrameAnimationManager implements IAnimationManager {
           frameNames.push(fname);
         }
       }
-    //  console.log('frames: ', frameNames);
+      //  console.log('frames: ', frameNames);
       return frameNames;
     }
-  //  console.warn('no json file found for ');
+    //  console.warn('no json file found for ');
     return [];
   }
 
@@ -140,10 +140,17 @@ class FrameAnimationManager implements IAnimationManager {
     if (!this._go.core.initialized) return;
 
     let updatedFrame = this.getUpdatedFrame();
-
+    // monitor if update is called
+   /*  if (this._go.core.atlas == 'continue_button') {
+      console.log('AnimManager.update called for %s at %s', this._go.core.atlas, new Date().getTime());
+    } */
     if (updatedFrame != null) {
       if (this._go.core.atlas != null) {
         this._go.core.screen.changeTexture(this._go.core.data, this._go.core.atlas, updatedFrame);
+        // monitor if the texture is being updated
+       /*  if (this._go.core.atlas == 'continue_button') {
+          console.log('changeTexture called for', this._go.core.atlas);
+        } */
       } else {
         this._go.core.screen.changeTexture(this._go.core.data, updatedFrame);
       }

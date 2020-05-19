@@ -46,11 +46,11 @@ class Loop {
    * @description remove a callback from this loop
    * @param f the function to remove from callbacks array
    */
-  public removeFunction(f: Function) {
-    let i = this._findFunction(f);
+  public removeFunction(f: Function, context: any) {
+    let i = this._getFunObj(f, context);
 
     if (i != null) {
-      this._fList.splice(i, 1);
+      this._fList.splice(this._fList.indexOf(i), 1);
     } else {
       console.warn("Did not find function %s to remove", f);
     }
@@ -64,7 +64,7 @@ class Loop {
   }
 
   private _executeAll(time: number) {
-  //  console.log('execute all..: ', this._fList);
+  //  console.log('execute all.. at %s: ', new Date().getTime(), this._fList);
     if (this._paused == 1) {
       this._delay = this._oldDelay + (time - this._lastTime);
       //console.log("delay %s", this._delay);
@@ -85,13 +85,13 @@ class Loop {
     window.requestAnimationFrame(this._boundExecuteAll);
   }
 
-  private _findFunction(f: any): number | null {
+ /*  private _findFunction(f: Function, context: any): number | null {
     for (let c = 0; c < this._fList.length; c++) {
       if (f == this._fList[c].function) return c;
     }
 
     return null;
-  }
+  } */
 
   private _getFunObj(f: Function, context: any): FunObj | null {
     for (let c = 0; c < this._fList.length; c++) {
@@ -101,7 +101,7 @@ class Loop {
     return null;
   }
 
-  private _newFunObj(f: any, context: any) {
+  private _newFunObj(f: Function, context: any): FunObj {
     let obj = this._funObj.createNew();
     obj.init(f, context);
 

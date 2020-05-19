@@ -7,6 +7,7 @@ interface IParentChild {
     children: IParentChild[];
     addChild(child: IParentChild): void;
     removeChild(child: IParentChild): void;
+    hasChild(child:IParentChild): boolean;
 }
 
 export default IParentChild;

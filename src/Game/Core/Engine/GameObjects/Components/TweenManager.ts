@@ -35,7 +35,7 @@ class TweenManager {
 
     public remove(tweenName: string){
         let tween = this._getTween(tweenName);
-        if(tween !== null) this._remove(tween); else console.warn('cannot remove tween because none by that name found');
+        if(tween !== null) this._remove(tween); else console.warn("cannot remove tween '%s' because it does'nt exist", tweenName);
     }
 
     private _remove(tween: Tween){
@@ -50,7 +50,7 @@ class TweenManager {
             tween.to(toObject, duration, updateFunction);
             return tween;
         } else {
-            console.error("Tween not found!");
+            console.error("Tween called %s not found!", tweenName);
             tween = this._tween.createNew();
         }
 
@@ -89,6 +89,7 @@ class TweenManager {
     }
 
     public update(time: number) {
+     //   console.log('update called in TweenManager');
         for (let c = 0; c < this._tweens.length; c++) {
             let tween = this._tweens[c];
             tween.update(time);

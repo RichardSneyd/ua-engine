@@ -68,22 +68,22 @@ class Tween {
   }
 
   private _onComplete(callback: Function): Tween{
-    this._onCompleteListeners.push(callback);
-    return this;
-  }
-
-  private _onStart(callback: Function): Tween{
-    this._onStartListeners.push(callback);
-    return this;
-  }
-
-  private _onRepeat(callback: Function): Tween{
-    this._onRepeatListeners.push(callback);
+    this._onCompleteListeners[1] = callback;
     return this;
   }
 
   private _onUpdate(callback: Function): Tween{
-    this._onUpdateListeners.push(callback);
+    this._onUpdateListeners[1] = callback;
+    return this;
+  }
+
+  private _onStart(callback: Function): Tween{
+    this._onStartListeners[0] = callback;
+    return this;
+  }
+
+  private _onRepeat(callback: Function): Tween{
+    this._onRepeatListeners[0] = callback;
     return this;
   }
 
@@ -126,6 +126,7 @@ class Tween {
     this._data.onUpdate(()=>{this._callOnUpdate()});
 
     if (this._easing.split('.').length != 2) console.error("invalid easing: %s", easing);
+    this.reset();
   }
 
   /* set(toObject: any){
@@ -145,7 +146,7 @@ class Tween {
     //console.log('going to', toObject);
     //console.log('easing', (<any>TWEEN).Easing);
     //this.stop();
-    this.reset();
+    this.freeze();
     console.log('in tween.to');
     if (this._data != null) {
       let easing = this._easing.split('.')[0];
@@ -156,15 +157,8 @@ class Tween {
       this._data.to(toObject, time)
       .easing((<any>TWEEN).Easing[easing][inOut]).start();
       
-      this.onUpdate(() => {
-        updateFunction();
-      });
-      this.onComplete(()=>{
-        this.freeze();
-      });
-    
-
-
+      this._onUpdateListeners[0] = ()=>{updateFunction()};
+      this._onCompleteListeners[0] = ()=>{this.freeze()};
 
     } else {
       console.error("no animation data exists");
