@@ -39,6 +39,9 @@ class Text {
         let lines: string[] = rawText.trim().split(lineSeperator);
         for (let x = 0; x < lines.length; x++) {
             let sublines : string[] = lines[x].split(valueAssigner);
+
+            if (sublines.length < 2) console.error("error in assigning key value in line: %s", lines[x]);
+
             let vals = sublines[1].trim().split(valueSeperator);
             if (vals.length <= 1) {
                 obj[sublines[0]] = vals[0]
