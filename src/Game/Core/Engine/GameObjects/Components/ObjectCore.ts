@@ -233,8 +233,11 @@ class ObjectCore {
     let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
     let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
 
-    this.x += (xDiff / scaleX);
-    this.y += (yDiff / scaleY);
+    console.log(scaleX);
+    console.log(scaleY);
+
+    this.x += xDiff;
+    this.y += yDiff;
   }
 
   public moveBy(x: number, y: number) {
