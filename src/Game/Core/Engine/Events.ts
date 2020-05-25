@@ -80,8 +80,8 @@ class Events {
      * @param event the event
      * @param callback the callback to remove
      */
-    public removeListener(event: string, callback: Function) {
-        this._removeListener(event, callback);
+    public removeListener(event: string, callback: Function, context: any) {
+        this._removeListener(event, callback, context);
 
     }
 
@@ -110,8 +110,8 @@ class Events {
      * @param event the event
      * @param callback the callback to remove
      */
-    public off(event: string, callback: Function) {
-        this._removeListener(event, callback);
+    public off(event: string, callback: Function, context: any) {
+        this._removeListener(event, callback, context);
     }
 
     /**
@@ -174,12 +174,11 @@ class Events {
              //   console.log('callbacks for %s: ', event, objs);
                 for (let x = total; x >= 0; x--) {
                     let obj = objs[x];
-                    let callback =  obj[0], context = obj[1];
-                    let once = obj[2];
+                   
                //     console.log('about to attempt callback with context: ', context);
 
-                    callback.bind(context)(data);
-                    if (once == true) { // if 'once' is set to true, remove callback
+                    obj.callback.bind(obj.context)(data);
+                    if (obj.once == true) { // if 'once' is set to true, remove callback
                         let i = this._events[event].indexOf(this.events[event][x]);
                         this._events[event].splice(i, 1);
                     }
@@ -199,20 +198,48 @@ class Events {
             this._events[event] = [];
         }
 
-        this._events[event].push([callback, context, once]);
+        this._events[event].push({callback: callback, context: context, once: once});
     }
 
-    private _removeListener(eventName: string, callback: Function) {
-        console.log('remove listener from event %s: ', eventName, callback);
+    private _removeListener(eventName: string, callback: Function, context: any) {
+      //  console.log('requesting remove listener from %s: ', eventName, callback);
+    //    debugger;
         if (this.eventNames().indexOf(eventName) !== -1) {
+            let listener = this._findListener(eventName, callback, context);
             let event = this._events[eventName];
-            console.log('event exists: ', event);
-            let index = event.indexOf(callback);
-            event.splice(index, 1);
+          //  console.log('event exists: ', event);
+           // let index = event.indexOf(callback);
+           if(listener){
+            //   console.log('found a match!! now REMOVING IT with splice..');
+               event.splice(event.indexOf(listener), 1);    
+               return;
+           }
+           else {
+               console.warn("cannot remove a listener for %s that doesn't exist", eventName);
+           }
         }
         else {
             console.warn('event %s does not exist, cannot remove callback', eventName);
         }
+    }
+
+    private _findListener(eventName: string, callback: Function, context: any): {callback: Function, context: any, once: boolean} | undefined {
+        let event = this._events[eventName];
+      //  console.log('looking for callback %s of event %s for object: ', callback, event, context);
+        for(let x = 0; x < event.length; x++){
+         //   console.warn('checking if it matches: ', event[x]);
+            if(event[x].callback == callback && event[x].context == context){
+             //   console.log('it matches!!');
+               // debugger;
+                return event[x];
+            }
+            else {
+                console.log('not a match');
+            }
+
+        }
+
+        console.warn("couldn't find a match for %s: ", eventName, callback);
     }
 
     private _removeEvent(event: string) {

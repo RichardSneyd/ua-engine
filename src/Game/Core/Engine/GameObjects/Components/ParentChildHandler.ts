@@ -69,7 +69,8 @@ class ParentChildHandler implements IParentChild {
 
     removeChild(object: IParentChild): void {
         if (this.hasChild(object)) {
-            if(object instanceof TextObject){
+            if(object.core.data.data){
+             //   console.log('removing child TextObject, deal with it appropriately...')
                 this.core.data.removeChild(object.core.data.data);
             }
             else {
@@ -77,6 +78,7 @@ class ParentChildHandler implements IParentChild {
             }
             object.parent = null;
             this._children.splice(this._children.indexOf(object), 1);
+            return;
         }
         console.warn('could not remove, no such entity found in children array');
     }

@@ -205,9 +205,10 @@ class ObjectCore {
   // the gameObject itself.
   public destroy() {
     // remember to ALWAYS remove event listeners when destroying a GameObject
-    this._loop.removeFunction(this.update);
-    this._events.off('resize', this._go.scaleHandler.onResize);
-    this._events.off('shutdown', this._go.destroy);
+    this._loop.removeFunction(this.update, this);
+
+    this._go.scaleHandler.shutdown.bind(this._go.scaleHandler)();
+    this._events.off('shutdown', this._go.destroy, this._go);
     this._objectHandler.destroy(this._data);
   }
 

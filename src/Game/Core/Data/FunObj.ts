@@ -17,7 +17,7 @@ class FunObj {
     return this._context;
   }
 
-  init(f: any, context: any) {
+  init(f: Function, context: any) {
     this._f = f;
     this._context = context;
     this._function = f.bind(context);

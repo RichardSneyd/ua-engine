@@ -159,6 +159,10 @@ class SpriteObject implements IFramedGameObject, IParentChild {
     removeChild(child: IParentChild): void {
         this._pcHandler.removeChild(child);
     }
+    
+    hasChild(child: IParentChild): boolean {
+        return this._pcHandler.hasChild(child);
+    }
 
      // ALWAYS listen for core.update in events, never this one directly, as it is called from core.update.
     private _update(time: number) {

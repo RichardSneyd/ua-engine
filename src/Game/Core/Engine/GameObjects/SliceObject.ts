@@ -156,6 +156,10 @@ class SliceObject implements IGameObject, IParentChild {
     removeChild(child: IParentChild): void {
         this._pcHandler.removeChild(child);
     }
+    
+    hasChild(child: IParentChild): boolean {
+        return this._pcHandler.hasChild(child);
+    }
 
     destroy(){
         if(this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);

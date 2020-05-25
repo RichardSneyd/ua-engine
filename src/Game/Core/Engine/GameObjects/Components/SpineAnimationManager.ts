@@ -54,8 +54,8 @@ class SpineAnimationManager implements IAnimationManager{
     }
 
     destroy(){
-        this._go.core.events.off('pause', this.pause);
-        this._go.core.events.off('resume', this.resume);
+        this._go.core.events.off('pause', this.pause, this);
+        this._go.core.events.off('resume', this.resume, this);
     }
 
 
