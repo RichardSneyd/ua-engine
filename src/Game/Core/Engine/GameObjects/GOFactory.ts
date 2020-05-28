@@ -7,6 +7,7 @@ import Button from './Button';
 import ContainerObject from './ContainerObject';
 import IParentChild from "./IParentChild";
 import ScaleManager from '../ScaleManager';
+import VideoObject from "./VideoObject";
 
 
 class GOFactory {
@@ -18,11 +19,12 @@ class GOFactory {
     private _button: Button;
     private _container: ContainerObject;
     private _scaleManager: ScaleManager;
+    private _video: VideoObject;
 
     constructor(core: ObjectCore, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject,
-        container: ContainerObject, scaleManager: ScaleManager, button: Button) {
+        container: ContainerObject, scaleManager: ScaleManager, button: Button, video: VideoObject) {
         this._core = core; this._slice = slice; this._spine = spine; this._text = text; this._container = container;
-        this._sprite = sprite; this._scaleManager = scaleManager; this._button = button;
+        this._sprite = sprite; this._scaleManager = scaleManager; this._button = button; this._video = video;
     }
 
     /**
@@ -56,6 +58,16 @@ class GOFactory {
         } else {
             return this._sprite.createEmpty();
         }
+    }
+
+    /**
+     * 
+     * @param x the x position of the video sprite
+     * @param y the y position of the video sprite
+     * @param videoName the name of the video sprite, including the file extension. The path will be read from config.json.
+     */
+    public video(x: number, y: number, videoName: string): VideoObject {
+        return this._video.createNew(x, y, videoName);
     }
 
     /**

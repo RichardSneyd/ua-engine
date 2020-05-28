@@ -3,7 +3,8 @@
         "IMG": "assets/img/",
         "JSN": "assets/json/",
         "SND": "assets/snd/",
-        "SPN": "assets/spine/"
+        "SPN": "assets/spine/",
+        "VIDEO": "assets/video"
     },
     "SND": {
         "EXT": ["ogg", "mp3"]
