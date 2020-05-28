@@ -24,6 +24,10 @@ class Screen implements IScreen {
     return this._pxGame.addSprite(x, y, name, frame);
   }
 
+  public createVideo(x: number, y: number, videoName: string){
+    return this._pxGame.addVideo(x, y, videoName);
+  }
+
   public createNineSlice(x: number, y: number, name: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): any {
     return this._pxGame.addNineSlice(x, y, name, leftWidth, topHeight, rightWidth, bottomHeight);
   }

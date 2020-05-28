@@ -29,6 +29,7 @@ class PxGame {
 
     this._game = this._createGame(w, h, container);
     this._game.renderer.backgroundColor = 0xfafad2;
+    
 
     if (elm != null) {
       elm.appendChild(this._game.view);
@@ -135,6 +136,13 @@ class PxGame {
     // this._enableInputEvents(sprite);
 
     return sprite;
+  }
+
+  public addVideo(x: number, y: number, videoName: string): Sprite{
+    let video = this._createVideo(x, y, videoName);
+
+    this._addChild(video);
+    return video;
   }
 
   public addNineSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): NineSlicePlane {
@@ -276,6 +284,14 @@ class PxGame {
     sprite.y = y;
 
     return sprite;
+  }
+
+  private _createVideo(x: number, y: number, videoName: string): Sprite{
+    let vSprite = this._pxFactory.createVideo(this._gameConfig.data.PATHS.VIDEO + videoName);
+    vSprite.x = x;
+    vSprite.y = y;
+
+    return vSprite;
   }
 
   private _createNineSlice(textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): NineSlicePlane {
