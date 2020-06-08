@@ -137,7 +137,7 @@ class SpineObject implements IGameObject {
     }
 
     get setOrigin(): (x: number, y?: number) => void {
-        return this._core.setOrigin;
+        return this._core.setOrigin.bind(this._core);
     }
 
     get width() {

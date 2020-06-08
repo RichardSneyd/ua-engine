@@ -150,8 +150,8 @@ class TextObject implements IGameObject {
         this._core.visible = visible;
     }
     
-    get setOrigin(): (x: number, y?: number) => void{
-        return this._core.setOrigin;
+    get setOrigin(): (x: number, y?: number) => void {
+        return this._core.setOrigin.bind(this._core);
     }
     
     get width() {
