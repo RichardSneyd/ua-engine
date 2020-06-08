@@ -1,13 +1,15 @@
 import ObjectCore from "./Components/ObjectCore";
+import IGameObject from "./IGameObject";
 
 interface IParentChild {
-    core: ObjectCore;
-    parent: IParentChild | null;
+  //  core: ObjectCore;
+    parent: IGameObject | null;
     init(...args: any[]): void;
-    children: IParentChild[];
-    addChild(child: IParentChild): void;
-    removeChild(child: IParentChild): void;
-    hasChild(child:IParentChild): boolean;
+    children: IGameObject[];
+    addChild(child: IGameObject): void;
+    removeChild(child: IGameObject): void;
+    hasChild(child:IGameObject): boolean;
+    data: any;
 }
 
 export default IParentChild;

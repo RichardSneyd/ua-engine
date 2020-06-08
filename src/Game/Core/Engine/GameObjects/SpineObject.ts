@@ -10,7 +10,7 @@ import AnimationManager from "./Components/FrameAnimationManager";
 import SpineAnimationManager from './Components/SpineAnimationManager';
 import TweenManager from "./Components/TweenManager";
 
-class SpineObject implements IGameObject, IParentChild {
+class SpineObject implements IGameObject {
     private _screen: IScreen;
     private _core: ObjectCore;
     private _input: InputHandler;
@@ -19,7 +19,7 @@ class SpineObject implements IGameObject, IParentChild {
     private _animations: SpineAnimationManager;
     private _tweenManager: TweenManager;
 
-    constructor(objectCore: ObjectCore, ParentChildHandler: ParentChildHandler, screen: IScreen, input: InputHandler, 
+    constructor(objectCore: ObjectCore, ParentChildHandler: ParentChildHandler, screen: IScreen, input: InputHandler,
         scaleHandler: ScaleHandler, animationManager: SpineAnimationManager, tweenManager: TweenManager) {
         this._core = objectCore; this._pcHandler = ParentChildHandler; this._screen = screen; this._input = input;
         this._scaleHandler = scaleHandler; this._animations = animationManager; this._tweenManager = tweenManager;
@@ -31,15 +31,15 @@ class SpineObject implements IGameObject, IParentChild {
         if (frame != null) this._core.atlas = textureName;
 
         this._core.init(this, x, y, textureName, this._update);
-        this._animations.init(this);
-        this._input.init(this);
-        this._scaleHandler.init(this);
-        this._pcHandler.init(this, parent);
+        this._animations.init(this, this._core);
+        this._input.init(this, this._core);
+        this._scaleHandler.init(this, this._core);
+        this._pcHandler.init(this, this._core, parent);
 
     }
 
-    private _update(time: any){
-      this._tweenManager.update(time);
+    private _update(time: any) {
+        this._tweenManager.update(time);
     }
 
     public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): SpineObject {
@@ -57,27 +57,27 @@ class SpineObject implements IGameObject, IParentChild {
         this._core.changeTexture(textureName);
     }
 
-    get tweens(){
+    get tweens() {
         return this._tweenManager;
     }
 
-    get input(){
+    get input() {
         return this._input;
     }
 
-    get scaleHandler(){
+    get scaleHandler() {
         return this._scaleHandler;
     }
-    
-    get animations(){
+
+    get animations() {
         return this._animations;
     }
 
-    get pcHandler(){
+    get pcHandler() {
         return this._pcHandler;
     }
 
-    get data(): PIXI.spine.Spine{
+    get data(): PIXI.spine.Spine {
         return this._core.data;
     }
 
@@ -85,28 +85,31 @@ class SpineObject implements IGameObject, IParentChild {
         this._core.data = data;
     }
 
-    get parent(){
-        return this._pcHandler.parent;
-    }
-
-    get children(){
-        return this._pcHandler.children;
-    }
-
     get textureName() {
         return this._core.textureName;
+    }
+
+    /**
+  * @description READ-ONLY.
+  */
+    get atlas() {
+        return this._core.atlas;
     }
 
     get x() {
         return this._core.x;
     }
-    
-    set x(x: number){
+
+    set x(x: number) {
         this._core.x = x;
     }
 
-    get core() {
-        return this._core;
+    /*  get core() {
+         return this._core;
+     } */
+
+    get events() {
+        return this._core.events;
     }
 
     get y() {
@@ -117,16 +120,24 @@ class SpineObject implements IGameObject, IParentChild {
         this._core.y = y;
     }
 
-    get alpha(){
+    get alpha() {
         return this._core.alpha;
     }
 
-    set alpha(alpha: number){
+    set alpha(alpha: number) {
         this._core.alpha = alpha;
     }
 
     get visible() {
         return this._core.visible;
+    }
+
+    set visible(visible: boolean) {
+        this._core.visible = visible;
+    }
+
+    get setOrigin(): (x: number, y?: number) => void {
+        return this._core.setOrigin;
     }
 
     get width() {
@@ -141,24 +152,36 @@ class SpineObject implements IGameObject, IParentChild {
         return this._core.height;
     }
 
-    set height(height: number){
+    set height(height: number) {
         this._core.height = height;
     }
 
-    addChild(child: IParentChild): void {
+    addChild(child: IGameObject): void {
         this._pcHandler.addChild(child);
     }
 
-    removeChild(child: IParentChild): void {
+    removeChild(child: IGameObject): void {
         this._pcHandler.removeChild(child);
     }
-    
-    hasChild(child: IParentChild): boolean {
+
+    hasChild(child: IGameObject): boolean {
         return this._pcHandler.hasChild(child);
     }
 
-    destroy(){
-        if(this.parent !== null) this._pcHandler.removeChild(this);
+    get parent() {
+        return this._pcHandler.parent;
+    }
+
+    set parent(parent: IGameObject | null) {
+        this._pcHandler.parent = parent;
+    }
+
+    get children() {
+        return this._pcHandler.children;
+    }
+
+    destroy() {
+        if (this.parent !== null) this._pcHandler.removeChild(this);
         this._core.destroy();
         this._animations.destroy();
     }

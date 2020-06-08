@@ -7,6 +7,7 @@ import ScaleHandler from "./Components/ScaleHandler";
 import TweenManager from "./Components/TweenManager";
 import IParentChild from "./IParentChild";
 import GameConfig from '../GameConfig';
+import Events from '../Events';
 
 
 
@@ -28,29 +29,29 @@ class VideoObject implements IGameObject {
 
     public init(x: number, y: number, videoName: string, parent: IParentChild | null = null): void {
         this.data = this._screen.createVideo(x, y, videoName);
-        
+
         this._core.init(this, x, y, videoName, this._update);
-        this._input.init(this);
-        this._scaleHandler.init(this);
-        this._pcHandler.init(this, parent);
-        
-     //   let sprite = <PIXI.Sprite>this.data;
+        this._input.init(this, this._core);
+        this._scaleHandler.init(this, this._core);
+        this._pcHandler.init(this, this._core, parent);
+
         //@ts-ignore
         this._vidElement = this.data.texture.baseTexture.resource.source;
-        this._vidElement.addEventListener('canplay', ()=>{
-         //   console.log('new width: ', this._vidElement.videoWidth);
-         //   console.log('new height: ', this._vidElement.videoHeight);
-            this.core.width = this._vidElement.videoWidth;
-            this.core.height = this._vidElement.videoHeight;
+        this._vidElement.addEventListener('canplay', () => {
+            //   console.log('new width: ', this._vidElement.videoWidth);
+            //   console.log('new height: ', this._vidElement.videoHeight);
+            this._core.width = this._vidElement.videoWidth;
+            this._core.height = this._vidElement.videoHeight;
+            this._vidElement.pause();
         });
 
-        this.core.setOrigin(0.5);
+        this._core.setOrigin(0.5);
         this.input.enableInput();
         this.input.addInputListener('pointerdown', this._togglePause, this);
     }
 
-    private _togglePause(){
-        if(this._vidElement.paused){
+    private _togglePause() {
+        if (this._vidElement.paused) {
             this._vidElement.play();
         }
         else {
@@ -71,8 +72,8 @@ class VideoObject implements IGameObject {
     public changeTexture(textureName: string) {
         this._core.changeTexture(textureName);
     }
-    
-    get tweens(){
+
+    get tweens() {
         return this._tweenManager;
     }
 
@@ -80,11 +81,11 @@ class VideoObject implements IGameObject {
         return this._input;
     }
 
-    get scaleHandler(){
+    get scaleHandler() {
         return this._scaleHandler;
     }
 
-    get pcHandler(){
+    get pcHandler() {
         return this._pcHandler;
     }
 
@@ -100,12 +101,11 @@ class VideoObject implements IGameObject {
         return this._core.textureName;
     }
 
+    /**
+     * @description READ ONLY.
+     */
     get atlas() {
-        return this.core.atlas;
-    }
-
-    set atlas(textureName: any) {
-        this.core.atlas = textureName;
+        return this._core.atlas;
     }
 
     get x() {
@@ -116,9 +116,18 @@ class VideoObject implements IGameObject {
         this._core.x = x;
     }
 
-    get core() {
-        return this._core;
+    /*  get core() {
+         return this._core;
+     } */
+
+    get events() {
+        return this._core.events;
     }
+
+    get setOrigin(): (x: number, y?: number) => void {
+        return this._core.setOrigin;
+    }
+
 
     get y() {
         return this._core.y;
@@ -132,11 +141,15 @@ class VideoObject implements IGameObject {
         return this._core.visible;
     }
 
-    get alpha(){
+    set visible(visible: boolean) {
+        this._core.visible = visible;
+    }
+
+    get alpha() {
         return this._core.alpha;
     }
 
-    set alpha(alpha: number){
+    set alpha(alpha: number) {
         this._core.alpha = alpha;
     }
 
@@ -156,11 +169,23 @@ class VideoObject implements IGameObject {
         this._core.height = height;
     }
 
+    addChild(child: IGameObject): void {
+        this._pcHandler.addChild(child);
+    }
+
+    removeChild(child: IGameObject): void {
+        this._pcHandler.removeChild(child);
+    }
+
+    hasChild(child: IGameObject): boolean {
+        return this._pcHandler.hasChild(child);
+    }
+
     get parent() {
         return this._pcHandler.parent;
     }
 
-    set parent(parent: IParentChild | null) {
+    set parent(parent: IGameObject | null) {
         this._pcHandler.parent = parent;
     }
 
@@ -168,24 +193,12 @@ class VideoObject implements IGameObject {
         return this._pcHandler.children;
     }
 
-    addChild(child: IParentChild): void {
-        this._pcHandler.addChild(child);
-    }
-
-    removeChild(child: IParentChild): void {
-        this._pcHandler.removeChild(child);
-    }
-    
-    hasChild(child: IParentChild): boolean {
-        return this._pcHandler.hasChild(child);
-    }
-
     destroy(): void {
         this.input.removeInputListener('pointerdown', this._togglePause);
-       this.core.destroy();
+        this._core.destroy();
     }
-    
-    private _update(time: number){
+
+    private _update(time: number) {
         this._tweenManager.update(time);
     }
 

@@ -815,7 +815,9 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore' {
 }
 
 declare module 'UAENGINE/Core/Engine/GameObjects/SpriteObject' {
+    import Events from "UAENGINE/Core/Engine/Events";
     import AnimationManager from "UAENGINE/Core/Engine/GameObjects/Components/FrameAnimationManager";
+    import IGameObject from "UAENGINE/Core/Engine/GameObjects/IGameObject";
     import ObjectCore from "UAENGINE/Core/Engine/GameObjects/Components/ObjectCore";
     import IParentChild from "UAENGINE/Core/Engine/GameObjects/IParentChild";
     import ParentChildHandler from "UAENGINE/Core/Engine/GameObjects/Components/ParentChildHandler";
@@ -825,7 +827,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpriteObject' {
     import IFramedGameObject from "UAENGINE/Core/Engine/GameObjects/IFrameAnimatedGameObject";
     import FrameAnimationManager from 'UAENGINE/Core/Engine/GameObjects/Components/FrameAnimationManager';
     import TweenManager from "UAENGINE/Core/Engine/GameObjects/Components/TweenManager";
-    class SpriteObject implements IFramedGameObject, IParentChild {
+    class SpriteObject implements IFramedGameObject {
         constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler, animationManager: FrameAnimationManager, tweenManager: TweenManager);
         init(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): void;
         createNew(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): SpriteObject;
@@ -838,25 +840,32 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpriteObject' {
         readonly animations: AnimationManager;
         data: any;
         readonly textureName: string;
-        atlas: any;
+        readonly atlas: any;
         x: number;
-        readonly core: ObjectCore;
+        readonly events: Events;
         y: number;
-        readonly visible: boolean;
+        visible: boolean;
+        /**
+          * @description set the origin of the display object
+          * @param x the origin value for the x axis. A value between 0 and 1.
+          * @param y the origin value for the y axis. A value between 0 and 1.
+          */
+        readonly setOrigin: (x: number, y?: number) => void;
         alpha: number;
         width: number;
         height: number;
-        parent: IParentChild | null;
-        readonly children: IParentChild[];
-        addChild(child: IParentChild): void;
-        removeChild(child: IParentChild): void;
-        hasChild(child: IParentChild): boolean;
+        addChild(child: IGameObject): void;
+        removeChild(child: IGameObject): void;
+        hasChild(child: IGameObject): boolean;
+        parent: IGameObject | null;
+        readonly children: IGameObject[];
         destroy(): void;
     }
     export default SpriteObject;
 }
 
 declare module 'UAENGINE/Core/Engine/GameObjects/SliceObject' {
+    import Events from "UAENGINE/Core/Engine/Events";
     import IGameObject from "UAENGINE/Core/Engine/GameObjects/IGameObject";
     import ObjectCore from "UAENGINE/Core/Engine/GameObjects/Components/ObjectCore";
     import IParentChild from "UAENGINE/Core/Engine/GameObjects/IParentChild";
@@ -865,7 +874,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SliceObject' {
     import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
     import ScaleHandler from "UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler";
     import TweenManager from "UAENGINE/Core/Engine/GameObjects/Components/TweenManager";
-    class SliceObject implements IGameObject, IParentChild {
+    class SliceObject implements IGameObject {
         constructor(objectCore: ObjectCore, parentChildHandler: ParentChildHandler, screen: IScreen, inputHandler: InputHandler, scaleHandler: ScaleHandler, tweenManager: TweenManager);
         init(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent?: IParentChild | null): void;
         createNew(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent?: IParentChild | null): SliceObject;
@@ -876,26 +885,31 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SliceObject' {
         readonly scaleHandler: ScaleHandler;
         readonly pcHandler: ParentChildHandler;
         data: any;
-        readonly parent: IParentChild | null;
-        readonly children: IParentChild[];
         readonly textureName: string;
-        atlas: any;
+        /**
+       * @description READ-ONLY.
+       */
+        readonly atlas: any;
         x: number;
         alpha: number;
-        readonly core: ObjectCore;
+        readonly events: Events;
         y: number;
-        readonly visible: boolean;
+        visible: boolean;
+        readonly setOrigin: (x: number, y?: number) => void;
         width: number;
         height: number;
-        addChild(child: IParentChild): void;
-        removeChild(child: IParentChild): void;
-        hasChild(child: IParentChild): boolean;
+        addChild(child: IGameObject): void;
+        removeChild(child: IGameObject): void;
+        hasChild(child: IGameObject): boolean;
+        parent: IGameObject | null;
+        readonly children: IGameObject[];
         destroy(): void;
     }
     export default SliceObject;
 }
 
 declare module 'UAENGINE/Core/Engine/GameObjects/SpineObject' {
+    import Events from "UAENGINE/Core/Engine/Events";
     import IGameObject from "UAENGINE/Core/Engine/GameObjects/IGameObject";
     import ObjectCore from "UAENGINE/Core/Engine/GameObjects/Components/ObjectCore";
     import IParentChild from "UAENGINE/Core/Engine/GameObjects/IParentChild";
@@ -905,7 +919,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpineObject' {
     import ScaleHandler from "UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler";
     import SpineAnimationManager from 'UAENGINE/Core/Engine/GameObjects/Components/SpineAnimationManager';
     import TweenManager from "UAENGINE/Core/Engine/GameObjects/Components/TweenManager";
-    class SpineObject implements IGameObject, IParentChild {
+    class SpineObject implements IGameObject {
         constructor(objectCore: ObjectCore, ParentChildHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler, animationManager: SpineAnimationManager, tweenManager: TweenManager);
         init(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): void;
         createNew(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): SpineObject;
@@ -917,25 +931,31 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpineObject' {
         readonly animations: SpineAnimationManager;
         readonly pcHandler: ParentChildHandler;
         data: PIXI.spine.Spine;
-        readonly parent: IParentChild | null;
-        readonly children: IParentChild[];
         readonly textureName: string;
+        /**
+       * @description READ-ONLY.
+       */
+        readonly atlas: any;
         x: number;
-        readonly core: ObjectCore;
+        readonly events: Events;
         y: number;
         alpha: number;
-        readonly visible: boolean;
+        visible: boolean;
+        readonly setOrigin: (x: number, y?: number) => void;
         width: number;
         height: number;
-        addChild(child: IParentChild): void;
-        removeChild(child: IParentChild): void;
-        hasChild(child: IParentChild): boolean;
+        addChild(child: IGameObject): void;
+        removeChild(child: IGameObject): void;
+        hasChild(child: IGameObject): boolean;
+        parent: IGameObject | null;
+        readonly children: IGameObject[];
         destroy(): void;
     }
     export default SpineObject;
 }
 
 declare module 'UAENGINE/Core/Engine/GameObjects/TextObject' {
+    import Events from "UAENGINE/Core/Engine/Events";
     import IGameObject from "UAENGINE/Core/Engine/GameObjects/IGameObject";
     import ObjectCore from "UAENGINE/Core/Engine/GameObjects/Components/ObjectCore";
     import IParentChild from "UAENGINE/Core/Engine/GameObjects/IParentChild";
@@ -944,7 +964,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/TextObject' {
     import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
     import ScaleHandler from "UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler";
     import TweenManager from "UAENGINE/Core/Engine/GameObjects/Components/TweenManager";
-    class TextObject implements IGameObject, IParentChild {
+    class TextObject implements IGameObject {
         constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler, tweenManager: TweenManager);
         init(x: number, y: number, text: string, style?: any, parent?: IParentChild | null): void;
         _update(time: any): void;
@@ -958,21 +978,25 @@ declare module 'UAENGINE/Core/Engine/GameObjects/TextObject' {
         setStyle(style: any): void;
         setTextColor(color: string): void;
         data: any;
-        readonly parent: IParentChild | null;
-        readonly children: IParentChild[];
         readonly textureName: string;
-        atlas: any;
+        /**
+        * @description READ-ONLY.
+        */
+        readonly atlas: any;
         x: number;
         alpha: number;
-        readonly core: ObjectCore;
+        readonly events: Events;
         y: number;
-        readonly visible: boolean;
+        visible: boolean;
+        readonly setOrigin: (x: number, y?: number) => void;
         width: number;
         height: number;
         changeTexture(textureName: string): void;
-        addChild(child: IParentChild): void;
-        removeChild(child: IParentChild): void;
-        hasChild(child: IParentChild): boolean;
+        addChild(child: IGameObject): void;
+        removeChild(child: IGameObject): void;
+        hasChild(child: IGameObject): boolean;
+        parent: IGameObject | null;
+        readonly children: IGameObject[];
         destroy(): void;
     }
     export default TextObject;
@@ -1025,45 +1049,50 @@ declare module 'UAENGINE/Core/Engine/GameObjects/ContainerObject' {
     import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
     import ScaleHandler from 'UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler';
     import TweenManager from 'UAENGINE/Core/Engine/GameObjects/Components/TweenManager';
-    class ContainerObject implements IGameObject, IParentChild {
+    class ContainerObject implements IGameObject {
         constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler, tweenManager: TweenManager);
         init(x: number, y: number, parent: IParentChild | null): void;
         createNew(x: number, y: number, parent: IParentChild | null): ContainerObject;
         createEmpty(): ContainerObject;
         changeTexture(textureName: string): void;
         readonly tweens: TweenManager;
-        readonly events: Events;
-        readonly pcHandler: ParentChildHandler;
         readonly input: InputHandler;
         readonly scaleHandler: ScaleHandler;
+        readonly pcHandler: ParentChildHandler;
         data: any;
-        parent: IParentChild | null;
-        readonly children: IParentChild[];
+        readonly textureName: string;
+        /**
+       * @description READ-ONLY.
+       */
+        readonly atlas: any;
         x: number;
         alpha: number;
-        readonly core: ObjectCore;
+        readonly events: Events;
         y: number;
-        readonly visible: boolean;
-        readonly width: number;
-        readonly height: number;
-        addChild(child: IParentChild): void;
-        removeChild(child: IParentChild): void;
-        hasChild(child: IParentChild): boolean;
+        visible: boolean;
+        readonly setOrigin: (x: number, y?: number) => void;
+        width: number;
+        height: number;
+        addChild(child: IGameObject): void;
+        removeChild(child: IGameObject): void;
+        hasChild(child: IGameObject): boolean;
+        parent: IGameObject | null;
+        readonly children: IGameObject[];
         destroy(): void;
     }
     export default ContainerObject;
 }
 
 declare module 'UAENGINE/Core/Engine/GameObjects/IParentChild' {
-    import ObjectCore from "UAENGINE/Core/Engine/GameObjects/Components/ObjectCore";
+    import IGameObject from "UAENGINE/Core/Engine/GameObjects/IGameObject";
     interface IParentChild {
-        core: ObjectCore;
-        parent: IParentChild | null;
+        parent: IGameObject | null;
         init(...args: any[]): void;
-        children: IParentChild[];
-        addChild(child: IParentChild): void;
-        removeChild(child: IParentChild): void;
-        hasChild(child: IParentChild): boolean;
+        children: IGameObject[];
+        addChild(child: IGameObject): void;
+        removeChild(child: IGameObject): void;
+        hasChild(child: IGameObject): boolean;
+        data: any;
     }
     export default IParentChild;
 }
@@ -1078,6 +1107,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/VideoObject' {
     import TweenManager from "UAENGINE/Core/Engine/GameObjects/Components/TweenManager";
     import IParentChild from "UAENGINE/Core/Engine/GameObjects/IParentChild";
     import GameConfig from 'UAENGINE/Core/Engine/GameConfig';
+    import Events from 'UAENGINE/Core/Engine/Events';
     class VideoObject implements IGameObject {
         constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler, tweenManager: TweenManager, gameConfig: GameConfig);
         init(x: number, y: number, videoName: string, parent?: IParentChild | null): void;
@@ -1090,19 +1120,23 @@ declare module 'UAENGINE/Core/Engine/GameObjects/VideoObject' {
         readonly pcHandler: ParentChildHandler;
         data: any;
         readonly textureName: string;
-        atlas: any;
+        /**
+          * @description READ ONLY.
+          */
+        readonly atlas: any;
         x: number;
-        readonly core: ObjectCore;
+        readonly events: Events;
+        readonly setOrigin: (x: number, y?: number) => void;
         y: number;
-        readonly visible: boolean;
+        visible: boolean;
         alpha: number;
         width: number;
         height: number;
-        parent: IParentChild | null;
-        readonly children: IParentChild[];
-        addChild(child: IParentChild): void;
-        removeChild(child: IParentChild): void;
-        hasChild(child: IParentChild): boolean;
+        addChild(child: IGameObject): void;
+        removeChild(child: IGameObject): void;
+        hasChild(child: IGameObject): boolean;
+        parent: IGameObject | null;
+        readonly children: IGameObject[];
         destroy(): void;
     }
     export default VideoObject;
@@ -1367,12 +1401,13 @@ declare module 'UAENGINE/Core/Engine/EventNames' {
 declare module 'UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler' {
     import IGameObject from 'UAENGINE/Core/Engine/GameObjects/IGameObject';
     import ScaleManager from 'UAENGINE/Core/Engine/ScaleManager';
+    import ObjectCore from 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore';
     class ScaleHandler {
         scaleX: number;
         readonly scaleFactor: number;
         scaleY: number;
         constructor(scaleManager: ScaleManager);
-        init(go: IGameObject): void;
+        init(go: IGameObject, core: ObjectCore): void;
         createNew(): ScaleHandler;
         onResize(): void;
         updateScale(): void;
@@ -1419,12 +1454,13 @@ declare module 'UAENGINE/Services/IObjectHandler' {
 }
 
 declare module 'UAENGINE/Core/Engine/GameObjects/Components/InputHandler' {
+    import ObjectCore from "UAENGINE/Core/Engine/GameObjects/Components/ObjectCore";
     import InputManager from 'UAENGINE/Core/Engine/InputManager';
     import IGameObject from "UAENGINE/Core/Engine/GameObjects/IGameObject";
     class InputHandler {
         readonly pixelPerfect: boolean;
         constructor(inputManager: InputManager);
-        init(go: IGameObject): void;
+        init(go: IGameObject, core: ObjectCore): void;
         makePixelPerfect(threshold?: number): boolean;
         readonly data: any;
         enableInput(): void;
@@ -1437,13 +1473,13 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/InputHandler' {
 }
 
 declare module 'UAENGINE/Core/Engine/GameObjects/IGameObject' {
-    import ObjectCore from "UAENGINE/Core/Engine/GameObjects/Components/ObjectCore";
     import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
     import ScaleHandler from "UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler";
     import ParentChildHandler from 'UAENGINE/Core/Engine/GameObjects/Components/ParentChildHandler';
     import TweenManager from "UAENGINE/Core/Engine/GameObjects/Components/TweenManager";
-    interface IGameObject {
-        core: ObjectCore;
+    import IParentChild from "UAENGINE/Core/Engine/GameObjects/IParentChild";
+    import Events from "UAENGINE/Core/Engine/Events";
+    interface IGameObject extends IParentChild {
         input: InputHandler;
         scaleHandler: ScaleHandler;
         pcHandler: ParentChildHandler;
@@ -1455,9 +1491,15 @@ declare module 'UAENGINE/Core/Engine/GameObjects/IGameObject' {
         width: number;
         height: number;
         visible: boolean;
+        alpha: number;
+        setOrigin(x: number, y?: number): void;
         data: any;
         destroy(): void;
         tweens: TweenManager;
+        events: Events;
+        changeTexture(textureName: string): void;
+        textureName: string;
+        atlas: string;
     }
     export default IGameObject;
 }
@@ -1490,11 +1532,12 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/FrameAnimationManage
     import Tween from 'UAENGINE/Core/Data/Tween';
     import IFrameAnimatedGameObject from 'UAENGINE/Core/Engine/GameObjects/IFrameAnimatedGameObject';
     import Loader from 'UAENGINE/Core/Engine/Loader';
+    import ObjectCore from 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore';
     class FrameAnimationManager implements IAnimationManager {
         _activeAnimation: Anim | null;
         _tween: Tween;
         constructor(anim: Anim, loader: Loader);
-        init(go: IFrameAnimatedGameObject): void;
+        init(go: IFrameAnimatedGameObject, core: ObjectCore): void;
         readonly current: Anim;
         play(name: string, loop?: boolean): void;
         pause(name: string): void;
@@ -1521,16 +1564,17 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/ParentChildHandler' 
     import IGameObject from 'UAENGINE/Core/Engine/GameObjects/IGameObject';
     import ObjectCore from 'UAENGINE/Core/Engine/GameObjects/Components/ObjectCore';
     class ParentChildHandler implements IParentChild {
-        _children: IParentChild[];
+        _children: IGameObject[];
         constructor();
         createNew(): ParentChildHandler;
-        parent: IParentChild | null;
-        readonly children: IParentChild[];
+        parent: IGameObject | null;
+        readonly data: any;
+        readonly children: IGameObject[];
         readonly core: ObjectCore;
-        init(go: IGameObject, parent?: IParentChild | null): void;
-        addChild(object: IParentChild): boolean;
-        removeChild(object: IParentChild): void;
-        hasChild(object: IParentChild): boolean;
+        init(go: IGameObject, core: ObjectCore, parent?: IParentChild | null): void;
+        addChild(object: IGameObject): boolean;
+        removeChild(object: IGameObject): void;
+        hasChild(object: IGameObject): boolean;
     }
     export default ParentChildHandler;
 }
@@ -1566,11 +1610,13 @@ declare module 'UAENGINE/Core/Engine/GameObjects/Components/TweenManager' {
 
 declare module 'UAENGINE/Core/Engine/GameObjects/Components/SpineAnimationManager' {
     import SpineObject from "UAENGINE/Core/Engine/GameObjects/SpineObject";
+    import ObjectCore from "UAENGINE/Core/Engine/GameObjects/Components/ObjectCore";
     class SpineAnimationManager implements IAnimationManager {
         protected _go: SpineObject;
+        protected _core: ObjectCore;
         constructor();
         update(): void;
-        init(go: SpineObject): void;
+        init(go: SpineObject, core: ObjectCore): void;
         createNew(): SpineAnimationManager;
         play(animName: string, loop?: boolean): void;
         pause(): void;

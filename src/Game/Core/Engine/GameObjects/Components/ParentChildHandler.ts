@@ -3,9 +3,9 @@ import IGameObject from '../IGameObject';
 import ObjectCore from './ObjectCore';
 import TextObject from "../TextObject";
 
-class ParentChildHandler implements IParentChild {
-    private _parent: IParentChild | null = null;
-    _children: IParentChild[];
+class ParentChildHandler implements IParentChild{
+    private _parent: IGameObject | null = null;
+    _children: IGameObject[];
     private _core: ObjectCore;
     private _go: IGameObject;
 
@@ -21,9 +21,13 @@ class ParentChildHandler implements IParentChild {
         return this._parent;
     }
 
-    set parent(parent: IParentChild | null) {
+    get data(){
+        return this._go.data;
+    }
+
+    set parent(parent: IGameObject | null) {
         this._parent = parent;
-        this._go.scaleHandler.onResize();
+      //  this._go.scaleHandler.onResize();
     }
 
     get children() {
@@ -34,29 +38,29 @@ class ParentChildHandler implements IParentChild {
         return this._core;
     }
 
-    init(go: IGameObject, parent: IParentChild | null = null) {
-        this._core = go.core;
+    init(go: IGameObject, core: ObjectCore, parent: IParentChild | null = null) {
+        this._core = core;
         this._go = go;
         this._children = [];
         this._parent = null;
 
         if (parent !== null) {
-            parent.addChild(this);
+            parent.addChild(this._go);
         }
     }
 
-    addChild(object: IParentChild): boolean {
+    addChild(object: IGameObject): boolean {
         if (!this.hasChild(object)) {
             this._children.push(object);
-            object.parent = this;
+            object.parent = this._go;
 
             // added this condition because text objects hold their Px data 1 level deeper, due to custom PxText class
             let child;
-            if (object.core.data.data) {
-                child = object.core.data.data;
+            if (object.data.data) {
+                child = object.data.data;
             }
             else {
-                child = object.core.data;
+                child = object.data;
             }
 
             this.core.data.addChild(child);
@@ -67,14 +71,14 @@ class ParentChildHandler implements IParentChild {
         return false;
     }
 
-    removeChild(object: IParentChild): void {
+    removeChild(object: IGameObject): void {
         if (this.hasChild(object)) {
-            if(object.core.data.data){
+            if(object.data.data){
              //   console.log('removing child TextObject, deal with it appropriately...')
-                this.core.data.removeChild(object.core.data.data);
+                this.core.data.removeChild(object.data.data);
             }
             else {
-                this.core.data.removeChid(object.core.data);
+                this.core.data.removeChid(object.data);
             }
             object.parent = null;
             this._children.splice(this._children.indexOf(object), 1);
@@ -83,7 +87,7 @@ class ParentChildHandler implements IParentChild {
         console.warn('could not remove, no such entity found in children array');
     }
 
-    hasChild(object: IParentChild): boolean {
+    hasChild(object: IGameObject): boolean {
         if (this._children.indexOf(object) !== -1) {
             return true;
         }

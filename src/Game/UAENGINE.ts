@@ -9,8 +9,6 @@ import GOFactory from './Core/Engine/GameObjects/GOFactory';
 import Geom from './Core/Geom/Geom';
 import Utils from './Core/Engine/Utils/Utils';
 
-
-
 /**
  * @class the UAEngine API. 
  */

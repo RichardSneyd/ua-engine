@@ -5,8 +5,7 @@ import IScreen from "../../../../Services/IScreen";
 
 class InputHandler {
   private _inputManager: InputManager;
-  private _go: IGameObject;
-  private _core: ObjectCore;
+  private _go: IGameObject; private _core: ObjectCore;
   private _screen: IScreen;
   private _pixelPerfect: boolean = false;
 
@@ -18,10 +17,10 @@ class InputHandler {
     this._inputManager = inputManager;
   }
 
-  init(go: IGameObject) {
+  init(go: IGameObject, core: ObjectCore) {
     this._go = go;
-    this._core = go.core;
-    this._screen = go.core.screen;
+    this._core = core;
+    this._screen = this._core.screen;
   }
 
   public makePixelPerfect(threshold: number = 127): boolean {

@@ -1,8 +1,9 @@
 import IGameObject from "../IGameObject";
 import SpineObject from "../SpineObject";
+import ObjectCore from "./ObjectCore";
 
 class SpineAnimationManager implements IAnimationManager{
-    protected _go: SpineObject;
+    protected _go: SpineObject; protected _core: ObjectCore;
 
     constructor(){
         
@@ -12,10 +13,10 @@ class SpineAnimationManager implements IAnimationManager{
         // do nothing for now
     }
 
-    init(go: SpineObject){
-        this._go = go;
-        this._go.core.events.on('pause', this.pause, this);
-        this._go.core.events.on('resume', this.resume, this);
+    init(go: SpineObject, core: ObjectCore){
+        this._go = go; this._core = core;
+        this._go.events.on('pause', this.pause, this);
+        this._go.events.on('resume', this.resume, this);
     }   
 
     createNew(){
@@ -54,8 +55,8 @@ class SpineAnimationManager implements IAnimationManager{
     }
 
     destroy(){
-        this._go.core.events.off('pause', this.pause, this);
-        this._go.core.events.off('resume', this.resume, this);
+        this._go.events.off('pause', this.pause, this);
+        this._go.events.off('resume', this.resume, this);
     }
 
 
