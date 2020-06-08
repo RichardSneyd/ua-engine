@@ -11,7 +11,7 @@ import IFramedGameObject from "./IFrameAnimatedGameObject";
 import FrameAnimationManager from './Components/FrameAnimationManager';
 import TweenManager from "./Components/TweenManager";
 
-class SpriteObject implements IFramedGameObject, IParentChild {
+class SpriteObject implements IFramedGameObject {
     private _screen: IScreen;
     private _core: ObjectCore;
     private _input: InputHandler;
@@ -29,13 +29,13 @@ class SpriteObject implements IFramedGameObject, IParentChild {
     public init(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): void {
         this.data = this._screen.createSprite(x, y, textureName, frame);
 
-        if (frame != null) this.core.atlas = textureName;
+        if (frame != null) this._core.atlas = textureName;
 
         this._core.init(this, x, y, textureName, this._update);
-        this._animationManager.init(this);
-        this._input.init(this);
-        this._scaleHandler.init(this);
-        this._pcHandler.init(this, parent);
+        this._animationManager.init(this, this._core);
+        this._input.init(this, this._core);
+        this._scaleHandler.init(this, this._core);
+        this._pcHandler.init(this, this._core, parent);
     }
 
     public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): SpriteObject {
@@ -85,11 +85,7 @@ class SpriteObject implements IFramedGameObject, IParentChild {
     }
 
     get atlas() {
-        return this.core.atlas;
-    }
-
-    set atlas(textureName: any) {
-        this.core.atlas = textureName;
+        return this._core.atlas;
     }
 
     get x() {
@@ -100,8 +96,12 @@ class SpriteObject implements IFramedGameObject, IParentChild {
         this._core.x = x;
     }
 
-    get core() {
+ /*    get core() {
         return this._core;
+    } */
+
+    get events() {
+        return this._core.events;
     }
 
     get y() {
@@ -114,6 +114,19 @@ class SpriteObject implements IFramedGameObject, IParentChild {
 
     get visible() {
         return this._core.visible;
+    }
+
+    set visible(visible: boolean){
+        this._core.visible = visible;
+    }
+
+    /**
+     * @description set the origin of the display object
+     * @param x the origin value for the x axis. A value between 0 and 1.
+     * @param y the origin value for the y axis. A value between 0 and 1. 
+     */
+    get setOrigin(): (x: number, y?: number) => void {
+        return this._core.setOrigin.bind(this._core);
     }
 
     get alpha(){
@@ -140,28 +153,28 @@ class SpriteObject implements IFramedGameObject, IParentChild {
         this._core.height = height;
     }
 
+    addChild(child: IGameObject): void {
+        this._pcHandler.addChild(child);
+    }
+    
+    removeChild(child: IGameObject): void {
+        this._pcHandler.removeChild(child);
+    }
+    
+    hasChild(child: IGameObject): boolean {
+        return this._pcHandler.hasChild(child);
+    }
+
     get parent() {
         return this._pcHandler.parent;
     }
 
-    set parent(parent: IParentChild | null) {
+    set parent(parent: IGameObject | null) {
         this._pcHandler.parent = parent;
     }
 
     get children() {
         return this._pcHandler.children;
-    }
-
-    addChild(child: IParentChild): void {
-        this._pcHandler.addChild(child);
-    }
-
-    removeChild(child: IParentChild): void {
-        this._pcHandler.removeChild(child);
-    }
-    
-    hasChild(child: IParentChild): boolean {
-        return this._pcHandler.hasChild(child);
     }
 
      // ALWAYS listen for core.update in events, never this one directly, as it is called from core.update.

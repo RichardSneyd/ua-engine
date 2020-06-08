@@ -83,7 +83,7 @@ class GOFactory {
      * @param onUp (optional) an onUp callback
      * @param parent (optional) a parent to add this object to
      */
-    public button(x?: number, y?: number, atlas?: string, frame?: string, anims?: {up: string, down: string, over: string, out: string}, onDown?: Function, context?: any, onUp?: Function, parent?: IParentChild ): Button {
+    public button(x?: number, y?: number, atlas?: string, frame?: string, anims?: { up: string, down: string, over: string, out: string }, onDown?: Function, context?: any, onUp?: Function, parent?: IParentChild): Button {
         if (x != null && y != null && atlas != null && frame && onDown) {
             //  let pos = this._scaleManager.getXY(x, y);
             //  console.log('pos: ', pos);

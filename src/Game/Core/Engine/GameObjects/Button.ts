@@ -35,7 +35,7 @@ class Button {
         this.addInputListener('pointerup', this._onUp, this);
         this.addInputListener('pointerover', this._onOver, this);
         this.addInputListener('pointerout', this._onOut, this);
-        this.sprite.core.events.timer(()=>{
+        this.sprite.events.timer(()=>{
           
         }, 5000, this, -1);
         (<any> window)[atlas] = this;
@@ -78,7 +78,7 @@ class Button {
     }
 
     set visible(visible: boolean){
-        this.sprite.core.visible = visible;
+        this.sprite.visible = visible;
     }
 
     addInputListener(event: string, callback: Function, context: any){
@@ -125,7 +125,7 @@ class Button {
     }
 
     setOrigin(x: number, y: number) {
-        this.sprite.core.setOrigin(x, y);
+        this.sprite.setOrigin(x, y);
     }
 
     playAnimation(name: string, loop: boolean = true) {

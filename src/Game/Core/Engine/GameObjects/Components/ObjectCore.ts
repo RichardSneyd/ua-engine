@@ -251,6 +251,7 @@ class ObjectCore {
   }
 
   public setOrigin(x: number, y?: number) {
+    console.log('setOrigin this: ', this);
     let yVal: number;
     let xVal = x;
     if (y !== undefined) {

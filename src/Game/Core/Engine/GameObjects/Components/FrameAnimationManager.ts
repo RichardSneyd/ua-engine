@@ -3,12 +3,13 @@ import Tween from '../../../Data/Tween';
 import IGameObject from '../IGameObject';
 import IFrameAnimatedGameObject from '../IFrameAnimatedGameObject';
 import Loader from '../../Loader';
+import ObjectCore from './ObjectCore';
 
 
 class FrameAnimationManager implements IAnimationManager {
   private _go: IFrameAnimatedGameObject; private _anim: Anim; _activeAnimation: Anim | null; _tween: Tween;
   private _animations: Anim[]; private _loader: Loader;
-  private _loopIndex: number;
+  private _loopIndex: number; private _core: ObjectCore;
 
   constructor(anim: Anim, loader: Loader) {
     this._anim = anim;
@@ -20,8 +21,8 @@ class FrameAnimationManager implements IAnimationManager {
 
   }
 
-  init(go: IFrameAnimatedGameObject) {
-    this._go = go;
+  init(go: IFrameAnimatedGameObject, core: ObjectCore) {
+    this._go = go; this._core = core;
   }
 
   get current() {
@@ -86,7 +87,7 @@ class FrameAnimationManager implements IAnimationManager {
   }
 
   public autoGenFrames(name: string): string[] {
-    let atlasName = this._go.core.atlas;
+    let atlasName = this._core.atlas;
     let res = this._loader.getResource(atlasName);
     if (res !== null) {
       let json = res.data.data;
@@ -137,22 +138,22 @@ class FrameAnimationManager implements IAnimationManager {
   }
 
   public update() {
-    if (!this._go.core.initialized) return;
+    if (!this._core.initialized) return;
 
     let updatedFrame = this.getUpdatedFrame();
     // monitor if update is called
-   /*  if (this._go.core.atlas == 'continue_button') {
-      console.log('AnimManager.update called for %s at %s', this._go.core.atlas, new Date().getTime());
+   /*  if (this._core.atlas == 'continue_button') {
+      console.log('AnimManager.update called for %s at %s', this._core.atlas, new Date().getTime());
     } */
     if (updatedFrame != null) {
-      if (this._go.core.atlas != null) {
-        this._go.core.screen.changeTexture(this._go.core.data, this._go.core.atlas, updatedFrame);
+      if (this._core.atlas != null) {
+        this._core.screen.changeTexture(this._core.data, this._core.atlas, updatedFrame);
         // monitor if the texture is being updated
-       /*  if (this._go.core.atlas == 'continue_button') {
-          console.log('changeTexture called for', this._go.core.atlas);
+       /*  if (this._core.atlas == 'continue_button') {
+          console.log('changeTexture called for', this._core.atlas);
         } */
       } else {
-        this._go.core.screen.changeTexture(this._go.core.data, updatedFrame);
+        this._core.screen.changeTexture(this._core.data, updatedFrame);
       }
     }
   }
