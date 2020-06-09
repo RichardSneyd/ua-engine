@@ -9,6 +9,7 @@ import ScaleHandler from "./Components/ScaleHandler";
 import AnimationManager from "./Components/FrameAnimationManager";
 import SpineAnimationManager from './Components/SpineAnimationManager';
 import TweenManager from "./Components/TweenManager";
+import Point from "../../Geom/Point";
 
 class SpineObject implements IGameObject {
     private _screen: IScreen;
@@ -138,6 +139,18 @@ class SpineObject implements IGameObject {
 
     get setOrigin(): (x: number, y?: number) => void {
         return this._core.setOrigin.bind(this._core);
+    }
+
+    get origin(): Point {
+        return this._core.origin;
+    }
+
+    get relativeMove() : (xDiff: number, yDiff: number) => void {
+        return this._core.relativeMove.bind(this._core);
+    }
+
+    get enableMask() : (x: number, y: number, width: number, height: number) => void {
+        return this._core.enableMask.bind(this._core);
     }
 
     get width() {

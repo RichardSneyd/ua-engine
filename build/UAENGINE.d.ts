@@ -827,6 +827,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpriteObject' {
     import IFramedGameObject from "UAENGINE/Core/Engine/GameObjects/IFrameAnimatedGameObject";
     import FrameAnimationManager from 'UAENGINE/Core/Engine/GameObjects/Components/FrameAnimationManager';
     import TweenManager from "UAENGINE/Core/Engine/GameObjects/Components/TweenManager";
+    import Point from "UAENGINE/Core/Geom/Point";
     class SpriteObject implements IFramedGameObject {
         constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler, animationManager: FrameAnimationManager, tweenManager: TweenManager);
         init(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): void;
@@ -851,6 +852,9 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpriteObject' {
           * @param y the origin value for the y axis. A value between 0 and 1.
           */
         readonly setOrigin: (x: number, y?: number) => void;
+        readonly origin: Point;
+        readonly relativeMove: (xDiff: number, yDiff: number) => void;
+        readonly enableMask: (x: number, y: number, width: number, height: number) => void;
         alpha: number;
         width: number;
         height: number;
@@ -874,6 +878,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SliceObject' {
     import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
     import ScaleHandler from "UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler";
     import TweenManager from "UAENGINE/Core/Engine/GameObjects/Components/TweenManager";
+    import Point from "UAENGINE/Core/Geom/Point";
     class SliceObject implements IGameObject {
         constructor(objectCore: ObjectCore, parentChildHandler: ParentChildHandler, screen: IScreen, inputHandler: InputHandler, scaleHandler: ScaleHandler, tweenManager: TweenManager);
         init(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent?: IParentChild | null): void;
@@ -896,6 +901,9 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SliceObject' {
         y: number;
         visible: boolean;
         readonly setOrigin: (x: number, y?: number) => void;
+        readonly origin: Point;
+        readonly relativeMove: (xDiff: number, yDiff: number) => void;
+        readonly enableMask: (x: number, y: number, width: number, height: number) => void;
         width: number;
         height: number;
         addChild(child: IGameObject): void;
@@ -919,6 +927,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpineObject' {
     import ScaleHandler from "UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler";
     import SpineAnimationManager from 'UAENGINE/Core/Engine/GameObjects/Components/SpineAnimationManager';
     import TweenManager from "UAENGINE/Core/Engine/GameObjects/Components/TweenManager";
+    import Point from "UAENGINE/Core/Geom/Point";
     class SpineObject implements IGameObject {
         constructor(objectCore: ObjectCore, ParentChildHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler, animationManager: SpineAnimationManager, tweenManager: TweenManager);
         init(x: number, y: number, textureName: string, frame?: string | null, parent?: IParentChild | null): void;
@@ -942,6 +951,9 @@ declare module 'UAENGINE/Core/Engine/GameObjects/SpineObject' {
         alpha: number;
         visible: boolean;
         readonly setOrigin: (x: number, y?: number) => void;
+        readonly origin: Point;
+        readonly relativeMove: (xDiff: number, yDiff: number) => void;
+        readonly enableMask: (x: number, y: number, width: number, height: number) => void;
         width: number;
         height: number;
         addChild(child: IGameObject): void;
@@ -964,6 +976,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/TextObject' {
     import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
     import ScaleHandler from "UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler";
     import TweenManager from "UAENGINE/Core/Engine/GameObjects/Components/TweenManager";
+    import Point from "UAENGINE/Core/Geom/Point";
     class TextObject implements IGameObject {
         constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler, tweenManager: TweenManager);
         init(x: number, y: number, text: string, style?: any, parent?: IParentChild | null): void;
@@ -989,6 +1002,9 @@ declare module 'UAENGINE/Core/Engine/GameObjects/TextObject' {
         y: number;
         visible: boolean;
         readonly setOrigin: (x: number, y?: number) => void;
+        readonly origin: Point;
+        readonly relativeMove: (xDiff: number, yDiff: number) => void;
+        readonly enableMask: (x: number, y: number, width: number, height: number) => void;
         width: number;
         height: number;
         changeTexture(textureName: string): void;
@@ -1049,6 +1065,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/ContainerObject' {
     import InputHandler from "UAENGINE/Core/Engine/GameObjects/Components/InputHandler";
     import ScaleHandler from 'UAENGINE/Core/Engine/GameObjects/Components/ScaleHandler';
     import TweenManager from 'UAENGINE/Core/Engine/GameObjects/Components/TweenManager';
+    import Point from "UAENGINE/Core/Geom/Point";
     class ContainerObject implements IGameObject {
         constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler, tweenManager: TweenManager);
         init(x: number, y: number, parent: IParentChild | null): void;
@@ -1071,6 +1088,9 @@ declare module 'UAENGINE/Core/Engine/GameObjects/ContainerObject' {
         y: number;
         visible: boolean;
         readonly setOrigin: (x: number, y?: number) => void;
+        readonly origin: Point;
+        readonly relativeMove: (xDiff: number, yDiff: number) => void;
+        readonly enableMask: (x: number, y: number, width: number, height: number) => void;
         width: number;
         height: number;
         addChild(child: IGameObject): void;
@@ -1108,6 +1128,7 @@ declare module 'UAENGINE/Core/Engine/GameObjects/VideoObject' {
     import IParentChild from "UAENGINE/Core/Engine/GameObjects/IParentChild";
     import GameConfig from 'UAENGINE/Core/Engine/GameConfig';
     import Events from 'UAENGINE/Core/Engine/Events';
+    import Point from "UAENGINE/Core/Geom/Point";
     class VideoObject implements IGameObject {
         constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, scaleHandler: ScaleHandler, tweenManager: TweenManager, gameConfig: GameConfig);
         init(x: number, y: number, videoName: string, parent?: IParentChild | null): void;
@@ -1127,6 +1148,9 @@ declare module 'UAENGINE/Core/Engine/GameObjects/VideoObject' {
         x: number;
         readonly events: Events;
         readonly setOrigin: (x: number, y?: number) => void;
+        readonly origin: Point;
+        readonly relativeMove: (xDiff: number, yDiff: number) => void;
+        readonly enableMask: (x: number, y: number, width: number, height: number) => void;
         y: number;
         visible: boolean;
         alpha: number;
