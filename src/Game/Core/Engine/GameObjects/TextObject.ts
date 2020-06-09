@@ -7,6 +7,7 @@ import IScreen from "../../../Services/IScreen";
 import InputHandler from "./Components/InputHandler";
 import ScaleHandler from "./Components/ScaleHandler";
 import TweenManager from "./Components/TweenManager";
+import Point from "../../Geom/Point";
 
 class TextObject implements IGameObject {
     private _screen: IScreen;
@@ -152,6 +153,18 @@ class TextObject implements IGameObject {
     
     get setOrigin(): (x: number, y?: number) => void {
         return this._core.setOrigin.bind(this._core);
+    }
+
+    get origin(): Point {
+        return this._core.origin;
+    }
+
+    get relativeMove() : (xDiff: number, yDiff: number) => void {
+        return this._core.relativeMove.bind(this._core);
+    }
+
+    get enableMask() : (x: number, y: number, width: number, height: number) => void {
+        return this._core.enableMask.bind(this._core);
     }
     
     get width() {

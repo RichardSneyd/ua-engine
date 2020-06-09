@@ -10,6 +10,7 @@ import ScaleHandler from "./Components/ScaleHandler";
 import IFramedGameObject from "./IFrameAnimatedGameObject";
 import FrameAnimationManager from './Components/FrameAnimationManager';
 import TweenManager from "./Components/TweenManager";
+import Point from "../../Geom/Point";
 
 class SpriteObject implements IFramedGameObject {
     private _screen: IScreen;
@@ -127,6 +128,18 @@ class SpriteObject implements IFramedGameObject {
      */
     get setOrigin(): (x: number, y?: number) => void {
         return this._core.setOrigin.bind(this._core);
+    }
+
+    get origin(): Point {
+        return this._core.origin;
+    }
+
+    get relativeMove() : (xDiff: number, yDiff: number) => void {
+        return this._core.relativeMove.bind(this._core);
+    }
+
+    get enableMask() : (x: number, y: number, width: number, height: number) => void {
+        return this._core.enableMask.bind(this._core);
     }
 
     get alpha(){
