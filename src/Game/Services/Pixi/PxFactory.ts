@@ -1,4 +1,5 @@
-import { Application, Loader, Sprite, Renderer, Container, NineSlicePlane, Point } from 'pixi.js';
+import { Application, Loader, Sprite, Renderer, Container, NineSlicePlane, Point, Texture} from 'pixi.js';
+import * as PIXI from 'pixi.js';
 import PxText from './PxText';
 
 class PxFactory {
@@ -19,6 +20,10 @@ class PxFactory {
   public createSprite(texture: any): Sprite {
 
     return new Sprite(texture);
+  }
+
+  public createVideo(url: string): Sprite {
+    return new Sprite(Texture.from(url));
   }
 
   public createNineSlice(texture: PIXI.Texture, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): NineSlicePlane {

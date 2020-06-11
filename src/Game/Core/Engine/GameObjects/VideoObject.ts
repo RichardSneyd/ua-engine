@@ -1,52 +1,73 @@
-import Events from "../Events";
-import AnimationManager from "./Components/FrameAnimationManager";
 import IGameObject from "./IGameObject";
-import ObjectCore from "./Components/ObjectCore";
-import IParentChild from "./IParentChild";
-import ParentChildHandler from "./Components/ParentChildHandler";
 import IScreen from "../../../Services/IScreen";
+import ObjectCore from "./Components/ObjectCore";
 import InputHandler from "./Components/InputHandler";
+import ParentChildHandler from "./Components/ParentChildHandler";
 import ScaleHandler from "./Components/ScaleHandler";
-import IFramedGameObject from "./IFrameAnimatedGameObject";
-import FrameAnimationManager from './Components/FrameAnimationManager';
 import TweenManager from "./Components/TweenManager";
+import IParentChild from "./IParentChild";
+import GameConfig from '../GameConfig';
+import Events from '../Events';
 import Point from "../../Geom/Point";
 
-class SpriteObject implements IFramedGameObject {
+
+
+class VideoObject implements IGameObject {
     private _screen: IScreen;
     private _core: ObjectCore;
     private _input: InputHandler;
     private _pcHandler: ParentChildHandler;
     private _scaleHandler: ScaleHandler;
-    private _animationManager: FrameAnimationManager;
     private _tweenManager: TweenManager;
+    private _gameConfig: GameConfig;
+    private _vidElement: HTMLVideoElement;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler,
-        scaleHandler: ScaleHandler, animationManager: FrameAnimationManager, tweenManager: TweenManager) {
+        scaleHandler: ScaleHandler, tweenManager: TweenManager, gameConfig: GameConfig) {
         this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input;
-        this._scaleHandler = scaleHandler; this._animationManager = animationManager; this._tweenManager = tweenManager;
+        this._scaleHandler = scaleHandler; this._tweenManager = tweenManager; this._gameConfig = gameConfig;
     }
 
-    public init(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): void {
-        this.data = this._screen.createSprite(x, y, textureName, frame);
+    public init(x: number, y: number, videoName: string, parent: IParentChild | null = null): void {
+        this.data = this._screen.createVideo(x, y, videoName);
 
-        if (frame != null) this._core.atlas = textureName;
-
-        this._core.init(this, x, y, textureName, this._update);
-        this._animationManager.init(this, this._core);
+        this._core.init(this, x, y, videoName, this._update);
         this._input.init(this, this._core);
         this._scaleHandler.init(this, this._core);
         this._pcHandler.init(this, this._core, parent);
+
+        //@ts-ignore
+        this._vidElement = this.data.texture.baseTexture.resource.source;
+        this._vidElement.addEventListener('canplay', () => {
+            //   console.log('new width: ', this._vidElement.videoWidth);
+            //   console.log('new height: ', this._vidElement.videoHeight);
+            this._core.width = this._vidElement.videoWidth;
+            this._core.height = this._vidElement.videoHeight;
+            this._vidElement.pause();
+        });
+
+        this._core.setOrigin(0.5);
+        this.input.enableInput();
+        this.input.addInputListener('pointerdown', this._togglePause, this);
     }
 
-    public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): SpriteObject {
+    private _togglePause() {
+        if (this._vidElement.paused) {
+            this._vidElement.play();
+        }
+        else {
+            this._vidElement.pause();
+        }
+    }
+
+    public createNew(x: number, y: number, videoName: string, parent: IParentChild | null = null): VideoObject {
         let sprite = this.createEmpty();
-        sprite.init(x, y, textureName, frame, parent);
+        sprite.init(x, y, videoName, parent);
         return sprite;
     }
 
-    public createEmpty(): SpriteObject {
-        return new SpriteObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._animationManager.createNew(), this._tweenManager.createNew());
+    public createEmpty(): VideoObject {
+        return new VideoObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenManager.createNew(), this._gameConfig);
     }
 
     public changeTexture(textureName: string) {
@@ -57,7 +78,7 @@ class SpriteObject implements IFramedGameObject {
         return this._tweenManager;
     }
 
-    get input() {
+    get input(): InputHandler {
         return this._input;
     }
 
@@ -67,10 +88,6 @@ class SpriteObject implements IFramedGameObject {
 
     get pcHandler() {
         return this._pcHandler;
-    }
-
-    get animations() {
-        return this._animationManager;
     }
 
     get data() {
@@ -85,6 +102,9 @@ class SpriteObject implements IFramedGameObject {
         return this._core.textureName;
     }
 
+    /**
+     * @description READ ONLY.
+     */
     get atlas() {
         return this._core.atlas;
     }
@@ -97,35 +117,14 @@ class SpriteObject implements IFramedGameObject {
         this._core.x = x;
     }
 
- /*    get core() {
-        return this._core;
-    } */
+    /*  get core() {
+         return this._core;
+     } */
 
     get events() {
         return this._core.events;
     }
 
-    get y() {
-        return this._core.y;
-    }
-
-    set y(y: number) {
-        this._core.y = y;
-    }
-
-    get visible() {
-        return this._core.visible;
-    }
-
-    set visible(visible: boolean){
-        this._core.visible = visible;
-    }
-
-    /**
-     * @description set the origin of the display object
-     * @param x the origin value for the x axis. A value between 0 and 1.
-     * @param y the origin value for the y axis. A value between 0 and 1. 
-     */
     get setOrigin(): (x: number, y?: number) => void {
         return this._core.setOrigin.bind(this._core);
     }
@@ -142,11 +141,27 @@ class SpriteObject implements IFramedGameObject {
         return this._core.enableMask.bind(this._core);
     }
 
-    get alpha(){
+    get y() {
+        return this._core.y;
+    }
+
+    set y(y: number) {
+        this._core.y = y;
+    }
+
+    get visible() {
+        return this._core.visible;
+    }
+
+    set visible(visible: boolean) {
+        this._core.visible = visible;
+    }
+
+    get alpha() {
         return this._core.alpha;
     }
 
-    set alpha(alpha: number){
+    set alpha(alpha: number) {
         this._core.alpha = alpha;
     }
 
@@ -169,11 +184,11 @@ class SpriteObject implements IFramedGameObject {
     addChild(child: IGameObject): void {
         this._pcHandler.addChild(child);
     }
-    
+
     removeChild(child: IGameObject): void {
         this._pcHandler.removeChild(child);
     }
-    
+
     hasChild(child: IGameObject): boolean {
         return this._pcHandler.hasChild(child);
     }
@@ -190,16 +205,15 @@ class SpriteObject implements IFramedGameObject {
         return this._pcHandler.children;
     }
 
-     // ALWAYS listen for core.update in events, never this one directly, as it is called from core.update.
-    private _update(time: number) {
-        this._tweenManager.update(time);
-        this._animationManager.update();
-    }
-
-    destroy() {
-        if (this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
+    destroy(): void {
+        this.input.removeInputListener('pointerdown', this._togglePause);
         this._core.destroy();
     }
+
+    private _update(time: number) {
+        this._tweenManager.update(time);
+    }
+
 }
 
-export default SpriteObject;
+export default VideoObject;

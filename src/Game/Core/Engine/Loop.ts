@@ -45,6 +45,7 @@ class Loop {
   /**
    * @description remove a callback from this loop
    * @param f the function to remove from callbacks array
+   * @param context the context of the function to remove (required to find the exact function of exact objectc)
    */
   public removeFunction(f: Function, context: any) {
     let i = this._getFunObj(f, context);

@@ -8,8 +8,8 @@ class ObjectHandler implements IObjectHandler {
   }
 
   public setXy(object: any, x: number, y: number) {
-    object.x = x;
-    object.y = y;
+    object.x = parseInt(<any>x);
+    object.y = parseInt(<any>y);
   }
 
   public setPivot(object: Container, anchor: Point) {
@@ -17,8 +17,8 @@ class ObjectHandler implements IObjectHandler {
   }
 
   public setSize(object: Container, width: number, height: number) {
-    object.width = width;
-    object.height = height;
+    this.setWidth(object, width)
+    this.setHeight(object, height);
   }
 
   public setStyle(text: any, style: any) {
@@ -30,15 +30,15 @@ class ObjectHandler implements IObjectHandler {
   }
 
   public move(object: Container, x: number, y: number) {
-    this.setXy(object, x, y);
+    this.setXy(object, parseInt(<any>x), parseInt(<any>y));
   }
 
   public setX(object: any, x: number) {
-    object.x = x;
+    object.x = parseInt(<any>x);
   }
 
   public setY(object: any, y: number) {
-    object.y = y;
+    object.y = parseInt(<any>y);
   }
 
   public setScale(object: any, x: number, y: number) {
@@ -46,11 +46,11 @@ class ObjectHandler implements IObjectHandler {
   }
 
   public setWidth(object: any, width: number) {
-    object.width = width;
+    object.width = parseInt(<any>width);
   }
 
   public setHeight(object: any, height: number) {
-    object.height = height;
+    object.height = parseInt(<any>height);
   }
 
   public destroy(object: any) {

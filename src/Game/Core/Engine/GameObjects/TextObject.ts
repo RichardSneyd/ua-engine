@@ -7,8 +7,9 @@ import IScreen from "../../../Services/IScreen";
 import InputHandler from "./Components/InputHandler";
 import ScaleHandler from "./Components/ScaleHandler";
 import TweenManager from "./Components/TweenManager";
+import Point from "../../Geom/Point";
 
-class TextObject implements IGameObject, IParentChild {
+class TextObject implements IGameObject {
     private _screen: IScreen;
     private _core: ObjectCore;
     private _input: InputHandler;
@@ -29,9 +30,9 @@ class TextObject implements IGameObject, IParentChild {
 
         this.data = this._screen.createText(x, y, text, style);
         this._core.init(this, x, y, undefined, this._update);
-        this._input.init(this);
-        this._scaleHandler.init(this);
-        this._pcHandler.init(this, parent);
+        this._input.init(this, this._core);
+        this._scaleHandler.init(this, this._core);
+        this._pcHandler.init(this, this._core, parent);
     }
 
     public _update(time: any){
@@ -98,90 +99,118 @@ class TextObject implements IGameObject, IParentChild {
         this._core.data = data;
     }
 
+    
+    get textureName() {
+        return this._core.textureName;
+    }
+    
+      /**
+     * @description READ-ONLY.
+     */
+    get atlas() {
+        return this._core.atlas;
+    }
+    
+    get x() {
+        return this._core.x;
+    }
+    
+    set x(x: number){
+        this._core.x = x;
+    }
+    
+    get alpha(){
+        return this._core.alpha;
+    }
+    
+    set alpha(alpha: number){
+        this._core.alpha = alpha;
+    }
+    
+    /*  get core() {
+        return this._core;
+    } */
+
+    get events() {
+        return this._core.events;
+    }
+    
+    get y() {
+        return this._core.y;
+    }
+    
+    set y(y: number) {
+        this._core.y = y;
+    }
+    
+    get visible() {
+        return this._core.visible;
+    }
+    
+    set visible(visible: boolean){
+        this._core.visible = visible;
+    }
+    
+    get setOrigin(): (x: number, y?: number) => void {
+        return this._core.setOrigin.bind(this._core);
+    }
+
+    get origin(): Point {
+        return this._core.origin;
+    }
+
+    get relativeMove() : (xDiff: number, yDiff: number) => void {
+        return this._core.relativeMove.bind(this._core);
+    }
+
+    get enableMask() : (x: number, y: number, width: number, height: number) => void {
+        return this._core.enableMask.bind(this._core);
+    }
+    
+    get width() {
+        return this._core.width;
+    }
+    
+    set width(width: number) {
+        this._core.width = width;
+    }
+    
+    get height() {
+        return this._core.height;
+    }
+    
+    set height(height: number){
+        this._core.height = height;
+    }
+    
+    public changeTexture(textureName: string) {
+        this._core.changeTexture(textureName);
+    }
+    
+    addChild(child: IGameObject): void {
+        this._pcHandler.addChild(child);
+    }
+    
+    removeChild(child: IGameObject): void {
+        this._pcHandler.removeChild(child);
+    }
+    
+    hasChild(child: IGameObject): boolean {
+        return this._pcHandler.hasChild(child);
+    }
+
     get parent() {
         return this._pcHandler.parent;
+    }
+
+    set parent(parent: IGameObject | null) {
+        this._pcHandler.parent = parent;
     }
 
     get children() {
         return this._pcHandler.children;
     }
-
-    get textureName() {
-        return this._core.textureName;
-    }
-
-    get atlas() {
-        return this._core.atlas;
-    }
-
-    set atlas(textureName: any) {
-        this._core.atlas = textureName;
-    }
-
-    get x() {
-        return this._core.x;
-    }
-
-    set x(x: number){
-        this._core.x = x;
-    }
-
-    get alpha(){
-        return this._core.alpha;
-    }
-
-    set alpha(alpha: number){
-        this._core.alpha = alpha;
-    }
-
-    get core() {
-        return this._core;
-    }
-
-    get y() {
-        return this._core.y;
-    }
-
-    set y(y: number) {
-        this._core.y = y;
-    }
-
-    get visible() {
-        return this._core.visible;
-    }
-
-    get width() {
-        return this._core.width;
-    }
-
-    set width(width: number) {
-        this._core.width = width;
-    }
-
-    get height() {
-        return this._core.height;
-    }
-
-    set height(height: number){
-        this._core.height = height;
-    }
-
-    public changeTexture(textureName: string) {
-        this._core.changeTexture(textureName);
-    }
-
-    addChild(child: IParentChild): void {
-        this._pcHandler.addChild(child);
-    }
-
-    removeChild(child: IParentChild): void {
-        this._pcHandler.removeChild(child);
-    }
-
-    hasChild(child: IParentChild): boolean {
-        return this._pcHandler.hasChild(child);
-    }
-
+    
     destroy() {
         if(this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
         this._core.destroy();

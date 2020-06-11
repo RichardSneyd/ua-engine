@@ -10,6 +10,7 @@ interface IScreen {
   createText(x: number, y: number, text: string, style?: any): any;
 
   createSprite(x: number, y: number, name: string, frame: string | null): any;
+  createVideo(x: number, y: number, videoName: string): any;
 
   createNineSlice(x: number, y: number, name: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): any;
 
