@@ -241,6 +241,22 @@ class ObjectCore {
     this.y += yDiff;
   }
 
+  public moveToMouse(mouseEvt: any) {
+    let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
+    let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
+
+    let c = document.getElementsByTagName('canvas')[0];
+    let rect = c.getBoundingClientRect();
+
+    let xPos = ((mouseEvt.clientX) / scaleX);
+    let yPos = ((mouseEvt.clientY) / scaleY);
+
+    this.x = xPos - (xPos * 0.13);
+    if (yPos > 300) {
+      this.y = yPos - (yPos * 0.16);
+    }
+  }
+
   public moveBy(x: number, y: number) {
     let xVal = this.x + x;
     let yVal = this.y + y;

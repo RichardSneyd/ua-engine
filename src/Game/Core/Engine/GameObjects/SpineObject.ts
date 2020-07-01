@@ -58,6 +58,11 @@ class SpineObject implements IGameObject {
         this._core.changeTexture(textureName);
     }
 
+    moveToMouse(evt: any) {
+        console.log(evt);
+        this._core.moveToMouse(evt);
+    }
+
     get tweens() {
         return this._tweenManager;
     }

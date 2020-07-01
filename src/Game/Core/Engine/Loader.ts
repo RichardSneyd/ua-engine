@@ -13,9 +13,6 @@ class Loader {
   private _gameConfig: GameConfig; private _loop: Loop;
   private _imgLoader: IImgLoader; _sndLoader: ISndLoader; _ajaxLoader: AjaxLoader;
   private _resList: Resource[];
-  private _imgList: Resource[];
-  private _sndList: Resource[];
-  private _spineList: Resource[];
   private _scripts: any;
   private _downloadComplete: boolean;
 
@@ -78,9 +75,6 @@ class Loader {
     this._base = "";
 
     this._resList = [];
-    this._imgList = [];
-    this._sndList = [];
-    this._spineList = [];
     this._scripts = {}
 
     this._downloadComplete = false;
@@ -101,7 +95,6 @@ class Loader {
     res.initImage(this._base + name, false);
 
     this._resList.push(res);
-    this._imgList.push(res);
   }
 
   /**
@@ -115,7 +108,6 @@ class Loader {
     //console.log("atlas location '%s'", this._base + url);
 
     this._resList.push(res);
-    this._imgList.push(res);
   }
 
 
@@ -125,17 +117,14 @@ class Loader {
     res.initJSON(this._base + basename + '.json', false);
 
     this._resList.push(res);
-    this._sndList.push(res);
   }
 
 
   public addSpine(filename: string) {
     let res = this._createResource();
-    res.initImage(this._base + filename, false);
+    res.initSpine(this._base + filename, false);
 
     this._resList.push(res);
-    this._spineList.push(res);
-    this._imgList.push(res);
   }
 
   /**
@@ -184,8 +173,8 @@ class Loader {
   }
 
   public getResource(name: string): Resource | null {
-    for (let c = 0; c < this._imgList.length; c++) {
-      if (this._imgList[c].name == name) return this._imgList[c];
+    for (let c = 0; c < this._resList.length; c++) {
+      if (this._resList[c].name == name) return this._resList[c];
     }
 
     return null;
@@ -265,12 +254,15 @@ class Loader {
     if (res != null) {
       res.loaded = true;
       res.data = data;
-    } else console.warn("no resource exists with url: %s", url);
+    } else {
+      //Turn off for now, no real use
+      //console.warn("no resource exists with url: %s", url);
+    }
   }
 
 
   private _getResource(url: string, byName: boolean = false): Resource | null {
-    let resArr = this._imgList;
+    let resArr = this._resList;
 
     for (let c = 0; c < resArr.length; c++) {
       let currentUrl = resArr[c].url;
@@ -305,7 +297,7 @@ class Loader {
   }
 
   getSndResByBasename(basename: string): Resource | null {
-    let resList = this._sndList;
+    let resList = this._getSndArray();
     for (let c = 0; c < resList.length; c++) {
       let bname = resList[c].basename;
 
@@ -324,13 +316,55 @@ class Loader {
   }
 
   private _downloadImages(onDone: Function) {
-    let urlList = this._getUrls(this._imgList);
+    let imgList = this._getImgArray();
+    let spnList = this._getSpnArray();
+    let spnImgList = imgList.concat(spnList);
+
+    let urlList = this._getUrls(spnImgList);
     this._imgLoader.loadImages(urlList, this._imgLoaded, this._imgDone, this);
 
     this._downloadSpines();
 
     this._imgLoader.download();
     this._imgLoader.download(onDone);
+  }
+
+  private _getSndArray(): Resource[] {
+    let r: Resource[] = [];
+
+    for (let c = 0; c < this._resList.length; c++) {
+      let res = this._resList[c];
+
+      if (res.isSnd()) r.push(res);
+    }
+
+    return r;
+  }
+
+
+  private _getSpnArray(): Resource[] {
+    let r: Resource[] = [];
+
+    for (let c = 0; c < this._resList.length; c++) {
+      let res = this._resList[c];
+
+      if (res.isSpn()) r.push(res);
+    }
+
+    return r;
+  }
+
+
+  private _getImgArray(): Resource[] {
+    let r: Resource[] = [];
+
+    for (let c = 0; c < this._resList.length; c++) {
+      let res = this._resList[c];
+
+      if (res.isImg()) r.push(res);
+    }
+
+    return r;
   }
 
   /**
@@ -344,7 +378,6 @@ class Loader {
     res.initSnd(this._base + name, false);
 
     this._resList.push(res);
-    this._sndList.push(res);
   }
 
   /**
@@ -359,7 +392,8 @@ class Loader {
 
   private _downloadSounds(onDone: Function) {
     // WIP
-    let urlList = this._getUrls(this._sndList);
+    let sndList = this._getSndArray();
+    let urlList = this._getUrls(sndList);
 
     this._sndLoader.loadSounds(urlList, this._getSndExt(), this._sndLoaded, (data: any) => {
       this._injectDataToSnds(data);
@@ -368,12 +402,13 @@ class Loader {
   }
 
   private _injectDataToSnds(data: any[]) {
+    let sndList = this._getSndArray();
     for (let x = 0; x < data.length; x++) {
-      this._sndList[x].data = data[x];
+      sndList[x].data = data[x];
     }
 
    // console.log(data);
-   // console.log(this._sndList);
+   // console.log(sndList);
   }
 
   public loadActScript(file: string, callback?: Function, staticPath: boolean = false): any {
@@ -408,8 +443,10 @@ class Loader {
    } */
 
   private _downloadSpines() {
-    for (let c = 0; c < this._spineList.length; c++) {
-      let res = this._spineList[c];
+    let spineList = this._getSpnArray();
+
+    for (let c = 0; c < spineList.length; c++) {
+      let res = spineList[c];
 
       this._imgLoader.loadSpine(res.name, res.url);
     }

@@ -190,6 +190,10 @@ class SpriteObject implements IFramedGameObject {
         return this._pcHandler.children;
     }
 
+    moveToMouse(evt: any) {
+        this._core.moveToMouse(evt);
+    }
+
      // ALWAYS listen for core.update in events, never this one directly, as it is called from core.update.
     private _update(time: number) {
         this._tweenManager.update(time);

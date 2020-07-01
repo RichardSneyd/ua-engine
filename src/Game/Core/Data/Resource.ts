@@ -51,6 +51,13 @@ class Resource {
 
   public initImage(url: string, loaded: boolean) {
     let type = this._getImgTag();
+
+    this._init(type, url, loaded);
+  }
+
+  public initSpine(url: string, loaded: boolean) {
+    let type = this._getSpnTag();
+
     this._init(type, url, loaded);
   }
 
@@ -82,6 +89,14 @@ class Resource {
     }
   }
 
+  public isSpn(): boolean {
+    if (this._type == ResType.SPN) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   public createNew(): Resource {
     return new Resource();
   }
@@ -100,6 +115,10 @@ class Resource {
 
   private _getSndTag(): string {
     return ResType.SND;
+  }
+
+  private _getSpnTag(): string {
+    return ResType.SPN;
   }
 
   private _getJSONTag(): string {
