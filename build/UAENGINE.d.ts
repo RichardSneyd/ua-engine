@@ -14,6 +14,7 @@ declare module 'UAENGINE' {
     import GOFactory from 'UAENGINE/Core/Engine/GameObjects/GOFactory';
     import Geom from 'UAENGINE/Core/Geom/Geom';
     import Utils from 'UAENGINE/Core/Engine/Utils/Utils';
+    import MultiplayerHandler from 'UAENGINE/Services/MultiplayerHandler';
     /**
       * @class the UAEngine API.
       */
@@ -28,6 +29,7 @@ declare module 'UAENGINE' {
         static gameConfig: GameConfig;
         static geom: Geom;
         static utils: Utils;
+        static multiplayer: MultiplayerHandler;
     }
     export default UAENGINE;
 }
@@ -481,6 +483,53 @@ declare module 'UAENGINE/Core/Engine/Utils/Utils' {
         get vector(): Vectors;
     }
     export default Utils;
+}
+
+declare module 'UAENGINE/Services/MultiplayerHandler' {
+    import RiseObserver from 'UAENGINE/Services/RISE/RiseObserver';
+    class MultiplayerHandler implements RiseObserver {
+            protected _observer: RiseObserver;
+            constructor();
+            /**
+                * @description set the max number of listeners for any event on this emitter
+                * @param num max number of listeners
+                */
+            setMaxListeners(num: number): void;
+            /**
+                * @description remove the specified listener for this event
+                * @param event the event to remove listener from
+                * @param listener the listener to remove
+                */
+            removeListener(event: string, listener: Function): void;
+            /**
+                * @description remove all listeners from the specified event
+                * @param event the event to remove all listeners from
+                */
+            removeAllListener(event: string): void;
+            /**
+                * @description emit event
+                * @param event the event to emit
+                */
+            emit(event: string): void;
+            /**
+                * @description add a listener to an event
+                * @param event the event to listen for
+                * @param listener the callback function
+                */
+            on(event: string, listener: Function): void;
+            /**
+             * @description adds a listener, but it will only execute once
+             * @param event the event to listen for
+             * @param listener the callback function
+             */
+            once(event: string, listener: Function): void;
+            /**
+                * @description returns an array of all listeners for the specified event
+                * @param event the event to return listeners for
+                */
+            listeners(event: string): any;
+    }
+    export default MultiplayerHandler;
 }
 
 declare module 'UAENGINE/Services/IScreen' {
@@ -1484,6 +1533,19 @@ declare module 'UAENGINE/Core/Engine/Utils/Vectors' {
         getPointGrid(hor: number[], vert: number[]): Array<Point>;
     }
     export default Vectors;
+}
+
+declare module 'UAENGINE/Services/RISE/RiseObserver' {
+    interface RiseObserver {
+        on(event: string, listener: Function): void;
+        once(event: string, listener: Function): void;
+        emit(event: string): void;
+        listeners(event: string): void;
+        setMaxListeners(num: number): void;
+        removeListener(event: string, listener: Function): void;
+        removeAllListener(event: string): void;
+    }
+    export default RiseObserver;
 }
 
 declare module 'UAENGINE/Services/Howler/HwPlayer' {

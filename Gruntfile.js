@@ -10,7 +10,10 @@ module.exports = (grunt) => {
       },
       js: {
         files: {
-          'js/game/game.min.js': ['js/game/game.js']
+          'js/game/game.js': [
+            'js/lib/rise_h5_sdk_v1.0.js',
+            'js/game/game.js'
+          ]
         }
       }
     },
@@ -46,7 +49,9 @@ module.exports = (grunt) => {
     },
     exorcise: {
       app: {
-        options: {},
+        options: {
+
+        },
         files: {
           'js/game/game.js.map': ['js/game/game.js'],
         }
@@ -56,7 +61,7 @@ module.exports = (grunt) => {
       js: {
         files: ['src/**/*.ts'],
         //tasks: ['browserify', 'exorcise', 'uglify'],
-        tasks: ['calculateDeps', 'browserify', 'exorcise'],
+        tasks: ['calculateDeps', 'browserify', 'exorcise', 'uglify'],
       }
     },
     calculateDeps: {
@@ -127,6 +132,6 @@ module.exports = (grunt) => {
 
 
   //grunt.registerTask('default', ['connect', 'browserify', 'exorcise', 'uglify', 'watch']);
-  grunt.registerTask('default', ['calculateDeps', 'browserify', 'exorcise', 'watch']);
+  grunt.registerTask('default', ['calculateDeps', 'browserify','exorcise', 'uglify',  'watch']);
 }
 

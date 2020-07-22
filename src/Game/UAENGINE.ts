@@ -8,6 +8,7 @@ import GameConfig from './Core/Engine/GameConfig';
 import GOFactory from './Core/Engine/GameObjects/GOFactory';
 import Geom from './Core/Geom/Geom';
 import Utils from './Core/Engine/Utils/Utils';
+import MultiplayerHandler from './Services/MultiplayerHandler';
 
 /**
  * @class the UAEngine API. 
@@ -23,6 +24,7 @@ class UAENGINE {
   public static gameConfig: GameConfig;
   public static geom: Geom;
   public static utils: Utils;
+  public static multiplayer: MultiplayerHandler;
 }
 
 export default UAENGINE;

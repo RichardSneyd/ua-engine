@@ -88,6 +88,7 @@ class ParentChildHandler implements IParentChild{
     }
 
     hasChild(object: IGameObject): boolean {
+        if(this._children == undefined) console.error('_children not initialized yet, so cannot add');
         if (this._children.indexOf(object) !== -1) {
             return true;
         }
