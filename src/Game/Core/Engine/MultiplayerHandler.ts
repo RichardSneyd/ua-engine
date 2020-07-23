@@ -1,6 +1,6 @@
-import RiseObserver from './RISE/RiseObserver'
+import RiseObserver from '../../Services/RISE/RiseObserver'
 
-class MultiplayerHandler implements RiseObserver {
+class MultiplayerHandler {
     protected _observer: RiseObserver;
 
     constructor(){

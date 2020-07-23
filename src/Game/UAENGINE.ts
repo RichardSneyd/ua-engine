@@ -8,7 +8,7 @@ import GameConfig from './Core/Engine/GameConfig';
 import GOFactory from './Core/Engine/GameObjects/GOFactory';
 import Geom from './Core/Geom/Geom';
 import Utils from './Core/Engine/Utils/Utils';
-import MultiplayerHandler from './Services/MultiplayerHandler';
+import MultiplayerHandler from './Core/Engine/MultiplayerHandler';
 
 /**
  * @class the UAEngine API. 

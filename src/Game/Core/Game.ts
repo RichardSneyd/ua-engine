@@ -11,6 +11,7 @@ import IActivity from './Engine/IActivity';
 import GOFactory from './Engine/GameObjects/GOFactory';
 import Geom from './Geom/Geom';
 import Utils from './Engine/Utils/Utils';
+import MultiplayerHandler from './Engine/MultiplayerHandler';
 //import ObjectCore from './Engine/GameObjects/Components/ObjectCore';
 
 class Game {
@@ -18,11 +19,11 @@ class Game {
   private _scaleManager: ScaleManager; _expose: Expose;
 
   private _loop: Loop; _loader: Loader; _gameConfig: GameConfig; _levelManager: LevelManager;
-  private _goFactory: GOFactory; _geom: Geom; _utils: Utils;
+  private _goFactory: GOFactory; _geom: Geom; _utils: Utils; _multiplayer: MultiplayerHandler;
 
   constructor(world: World, loop: Loop, loader: Loader,
     events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
-    levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils) {
+    levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils, multiplayer: MultiplayerHandler) {
 
     this._world = world;
     this._events = events;
@@ -38,6 +39,7 @@ class Game {
 
     this._geom = geom;
     this._utils = utils;
+    this._multiplayer = multiplayer;
 
     this._exposeGlobal();
   }
@@ -122,6 +124,7 @@ class Game {
     this._expose.add('goFactory', this._goFactory);
     this._expose.add('geom', this._geom);
     this._expose.add('utils', this._utils);
+    this._expose.add('multiplayer', this._multiplayer);
   }
 
   private _addListeners(): void {
