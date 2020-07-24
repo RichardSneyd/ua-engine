@@ -21,10 +21,9 @@ function handleError(error) {
     this.emit("end");
 }
 
-gulp.task('build', async function () {
-    build();
-    return;
-});
+function buildT() {
+    return build();
+}
 
 function build(watch) {
     var browserifyInstance = browserify({
@@ -43,7 +42,7 @@ function build(watch) {
     var build = function () {
         return b.bundle()
             .on("error", handleError)
-            .pipe(source("uae.js"))
+            .pipe(source("uae-pure.js"))
             .pipe(buffer())
             .pipe(sourcemaps.init({ loadMaps: true }))
             .pipe(sourcemaps.write("."))
@@ -51,49 +50,52 @@ function build(watch) {
     }
 
     if (watch) {
-		b.on("update", function() {
-			gutil.log("Rebundling...");
-			build();
-		});
-		b.on("log", function(e) {
-			gutil.log("Bundling Successful: " + gutil.colors.gray(e));
-		});
-	}
+        b.on("update", function () {
+            gutil.log("Rebundling...");
+            build();
+        });
+        b.on("log", function (e) {
+            gutil.log("Bundling Successful: " + gutil.colors.gray(e));
+        });
+    }
 
-	return build();
+    return build();
 }
 
-gulp.task("webserver", async function () {
+function webserverT() {
     gulp.src("./")
         .pipe(webserver({
             livereload: true,
             open: true
         }));
-});
+}
 
-gulp.task("browserify", async function () {
+function browserifyT() {
     return build();
-})
+}
 
-gulp.task("watch", async function () {
-  //  return gulp.watch('src/**/*.ts', gulp.series(['build', 'watch']));
-  return build(true);
-});
+function watchT() {
+    //  return gulp.watch('src/**/*.ts', gulp.series(['build', 'watch']));
+    return build(true);
+}
 
-gulp.task('uglify', async function () {
+function uglifyT() {
     return pipeline(
         gulp.src('lib/*.js'),
         uglify(),
         gulp.dest('lib')
     );
-});
+}
 
-gulp.task('concat', async function () {
-    return gulp.src(['./lib/rise_h5_sdk_v1.0.js', './dist/uae.js'])
+function concatT() {
+    return gulp.src(['./lib/rise_h5_sdk_v1.0.js', './dist/uae-pure.js'])
         .pipe(concat('uae.js'))
         .pipe(gulp.dest('./dist/'));
-})
+}
 
-gulp.task("default", async function () {
-    return gulp.series('watch', 'concat');
-});
+function watchT2() {
+    return gulp.watch('./dis/uae-pure.js', concatT);
+};
+
+//gulp.task("default", ['watch', 'concat']);
+exports.default = gulp.series(watchT, watchT2);
