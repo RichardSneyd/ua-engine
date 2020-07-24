@@ -36,7 +36,7 @@ function build(watch) {
     }).plugin(tsify).transform("babelify", {
         presets: ['@babel/preset-env'],
         extensions: ['.ts']
-    };
+    });
 
     var b = watch ? watchify(browserifyInstance) : browserifyInstance;
 
