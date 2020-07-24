@@ -62,7 +62,7 @@ function build(watch) {
     return build();
 }
 
-function webserverT() {
+function webserver() {
     gulp.src("./")
         .pipe(webserver({
             livereload: true,
@@ -70,16 +70,16 @@ function webserverT() {
         }));
 }
 
-function browserifyT() {
+function browserify() {
     return build();
 }
 
-function watchT() {
+function watch() {
     //  return gulp.watch('src/**/*.ts', gulp.series(['build', 'watch']));
     return build(true);
 }
 
-function uglifyT() {
+function uglify() {
     return pipeline(
         gulp.src('lib/*.js'),
         uglify(),
@@ -87,15 +87,19 @@ function uglifyT() {
     );
 }
 
-function concatT() {
+function concat() {
     return gulp.src(['./lib/rise_h5_sdk_v1.0.js', './dist/uae-pure.js'])
         .pipe(concat('uae.js'))
         .pipe(gulp.dest('./dist/'));
 }
 
-function watchT2() {
+function watchConcat() {
     return gulp.watch('./dis/uae-pure.js', concatT);
 };
 
-//gulp.task("default", ['watch', 'concat']);
-exports.default = gulp.series(watchT, watchT2);
+exports.default = gulp.series(watchT, watchConcat);
+exports.concat = concat;
+exports.uglify = uglify;
+exports.browserify = browserify;
+exports.webserver = webserver;
+exports.watchConcat = watchConcat;
