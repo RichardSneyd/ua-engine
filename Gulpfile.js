@@ -21,7 +21,7 @@ function handleError(error) {
     this.emit("end");
 }
 
-gulp.task('build', function () {
+gulp.task('build', async function () {
     build();
     return;
 });
@@ -63,7 +63,7 @@ function build(watch) {
 	return build();
 }
 
-gulp.task("webserver", function () {
+gulp.task("webserver", async function () {
     gulp.src("./")
         .pipe(webserver({
             livereload: true,
@@ -71,16 +71,16 @@ gulp.task("webserver", function () {
         }));
 });
 
-gulp.task("browserify", function () {
+gulp.task("browserify", async function () {
     return build();
 })
 
-gulp.task("watch", function () {
+gulp.task("watch", async function () {
   //  return gulp.watch('src/**/*.ts', gulp.series(['build', 'watch']));
   return build(true);
 });
 
-gulp.task('uglify', function () {
+gulp.task('uglify', async function () {
     return pipeline(
         gulp.src('lib/*.js'),
         uglify(),
@@ -88,12 +88,12 @@ gulp.task('uglify', function () {
     );
 });
 
-gulp.task('concat', function () {
+gulp.task('concat', async function () {
     return gulp.src(['./lib/rise_h5_sdk_v1.0.js', './dist/uae.js'])
         .pipe(concat('uae.js'))
         .pipe(gulp.dest('./dist/'));
 })
 
-gulp.task("default", function () {
+gulp.task("default", async function () {
     return gulp.series('watch', 'concat');
 });
