@@ -24,6 +24,7 @@ class CalculateDeps {
     this._loadModules(this._getAllFiles(sources));
     this._analyseModules();
     this._emit(dest);
+    return true;
   }
 
   _emit(dest) {
