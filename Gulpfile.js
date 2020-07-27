@@ -139,6 +139,7 @@ function browserifyT() {
 
 function watchT() {
     //  return gulp.watch('src/**/*.ts', gulp.series(['build', 'watch']));
+    
     return buildT(true);
 }
 
@@ -158,8 +159,13 @@ function concatT() {
 }
 
 function watchConcatT() {
+
     return gulp.watch(config.concat.watch, concatT);
 };
+
+function watchDecs() {
+    return gulp.watch('src/Game/**/*.ts', genDecs);
+}
 
 
 function calculateDeps() {
@@ -200,9 +206,10 @@ function genDecs(){
             resolve('generated declarations');
         } */
     });
+
 }
 
-exports.default = gulp.parallel(genDecs, gulp.series(calculateDeps, watchT));
+exports.default = gulp.parallel(genDecs, watchDecs, gulp.series(calculateDeps, watchT));
 exports.concat = concatT;
 exports.uglify = uglifyT;
 exports.browserify = browserifyT;
