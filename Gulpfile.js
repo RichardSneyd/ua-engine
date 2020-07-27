@@ -10,7 +10,70 @@ var gulp = require("gulp"),
     buffer = require("vinyl-buffer"),
     concat = require("gulp-concat"),
     uglify = require("gulp-uglify"),
-    pipeline = require('readable-stream').pipeline;
+    pipeline = require('readable-stream').pipeline,
+    shell = require('shelljs'),
+    exec = require('child_process').exec;
+
+// config object for tasks
+const config = {
+    calculateDeps: {
+        src: ['src/Game/'],
+        dest: 'src/Dep/ControlContainer.ts',
+        //Maintain no space between commas!
+        single: ['Loader',
+            'Loop',
+            'Events',
+            'AudioManager',
+            'ImgLoader',
+            'SndLoader',
+            'AjaxLoader',
+            'Screen',
+            'PxGame',
+            'PxFactory',
+            'PxLoader',
+            'HwFactory',
+            'HwLoader',
+            'HwPlayer',
+            'Utils',
+            'ActScripts',
+            'Collections',
+            'Colors',
+            'Mixins',
+            'Numbers',
+            'Text',
+            'Vectors',
+            'GameConfig'],
+        ignore: [
+            'UAENGINE'
+        ],
+    },
+    replaceAll: {
+        files: ['dist/game.js'],
+        replace: [['UAENGINE_1["default"]', 'window.UAENGINE']]
+    },
+    CopyUAE: {
+        src: ['../ua-engine/dist/uae.d.ts', '../ua-engine/dist/uae.js', '../ua-engine/dist/uae.js.map'],
+        dest: ['./@types/uae.d.ts', './js/lib/uae.js', './js/lib/uae.js.map']
+    },
+    concat: {
+        src: ['./lib/rise_h5_sdk_v1.0.js', './dist/uae-pure.js'],
+        filename: 'uae.js',
+        dest: 'dist/',
+        watch: ['./dist/uae-pure.js']
+    },
+    browserify: {
+        entries: [
+            'src/main.ts'
+        ],
+        outfile: "uae.js",
+        sourcemaps_dir: ".",
+        out_dir: "dist/"
+    },
+    uglify: {
+        src: 'dist/*.js',
+        dest: 'dist/'
+    }
+}
 
 function handleError(error) {
     notify.onError({
@@ -25,9 +88,9 @@ function buildT() {
     return build();
 }
 
-function build(watch) {
+function buildT(watch) {
     var browserifyInstance = browserify({
-        entries: ['src/main.ts'],
+        entries: [config.browserify.entries],
         debug: true,
         cache: {},
         packageCache: {},
@@ -42,11 +105,11 @@ function build(watch) {
     var build = function () {
         return b.bundle()
             .on("error", handleError)
-            .pipe(source("uae-pure.js"))
+            .pipe(source(config.browserify.outfile))
             .pipe(buffer())
             .pipe(sourcemaps.init({ loadMaps: true }))
-            .pipe(sourcemaps.write("."))
-            .pipe(gulp.dest("dist/"));
+            .pipe(sourcemaps.write(config.browserify.sourcemaps_dir))
+            .pipe(gulp.dest(config.browserify.out_dir));
     }
 
     if (watch) {
@@ -62,7 +125,7 @@ function build(watch) {
     return build();
 }
 
-function webserver() {
+function webserverT() {
     gulp.src("./")
         .pipe(webserver({
             livereload: true,
@@ -70,36 +133,80 @@ function webserver() {
         }));
 }
 
-function browserify() {
-    return build();
+function browserifyT() {
+    return buildT();
 }
 
-function watch() {
+function watchT() {
     //  return gulp.watch('src/**/*.ts', gulp.series(['build', 'watch']));
-    return build(true);
+    return buildT(true);
 }
 
-function uglify() {
+function uglifyT() {
+
     return pipeline(
-        gulp.src('lib/*.js'),
+        gulp.src(config.uglify.src),
         uglify(),
-        gulp.dest('lib')
+        gulp.dest(config.uglify.dest)
     );
 }
 
-function concat() {
-    return gulp.src(['./lib/rise_h5_sdk_v1.0.js', './dist/uae-pure.js'])
-        .pipe(concat('uae.js'))
-        .pipe(gulp.dest('./dist/'));
+function concatT() {
+    return gulp.src(config.concat.src)
+        .pipe(concat(config.concat.filename))
+        .pipe(gulp.dest(config.concat.dest));
 }
 
-function watchConcat() {
-    return gulp.watch('./dis/uae-pure.js', concatT);
+function watchConcatT() {
+    return gulp.watch(config.concat.watch, concatT);
 };
 
-exports.default = gulp.series(watchT, watchConcat);
-exports.concat = concat;
-exports.uglify = uglify;
-exports.browserify = browserify;
-exports.webserver = webserver;
-exports.watchConcat = watchConcat;
+
+function calculateDeps() {
+    const CalculateDeps = require('./CalculateDeps.js');
+    let calculateDeps = new CalculateDeps();
+
+    let src = config.calculateDeps.src;
+    let dest = config.calculateDeps.dest;
+    let single = config.calculateDeps.single;
+    let ignore = config.calculateDeps.ignore;
+    
+    return new Promise((resolve, reject)=>{      
+        if(calculateDeps.refreshDeps(src, dest, single, ignore) == true){
+            resolve('deps calculation finished!');
+        }
+        else {
+            reject('something went wrong');
+        }
+    })
+}
+
+function genDecs(){
+    return new Promise((resolve, reject) => {
+
+        exec('sh typecompile.sh',
+        (error, stdout, stderr) => {
+            if(stdout){
+                resolve('generated declarations');
+            }
+            console.log(stderr);
+            if (error !== null) {
+                console.log(`exec error: ${error}`);
+            }
+        });
+
+       /*  
+        if(shell.exec('./typecompile.sh')){
+            resolve('generated declarations');
+        } */
+    });
+}
+
+exports.default = gulp.parallel(genDecs, gulp.series(calculateDeps, watchT));
+exports.concat = concatT;
+exports.uglify = uglifyT;
+exports.browserify = browserifyT;
+exports.webserver = webserverT;
+exports.watchConcat = watchConcatT;
+exports.calc = calculateDeps;
+exports.genDecs = genDecs;
