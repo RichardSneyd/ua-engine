@@ -4,14 +4,14 @@ class Expose {
   }
 
   init() {
-    (<any>window).UAE_1= {
+    (<any>window).UAE = {
       "default": {}
     };
    // (<any>window).UAE = (<any> window).UAE_1['default'];
   }
 
   add(key: string, object: any) {
-    (<any>window).UAE_1["default"][key] = object;
+    (<any>window).UAE["default"][key] = object;
   }
 }
 
