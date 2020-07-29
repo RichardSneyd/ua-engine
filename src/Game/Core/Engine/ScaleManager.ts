@@ -22,9 +22,12 @@ class ScaleManager {
     //console.log("smanager w(%s) h(%s)", this._width, this._height);
   }
 
-  // todo - rewrite it to scale for vertical changes on page scale as well
-  
-  public getXY(x: number, y: number): { x: number, y: number } {
+  /**
+   * @description rescales for window resize events, adapting to both width and height changes while maintaining aspect ratio
+   * @param x width 
+   * @param y 
+   */
+  public getWidthHeight(x: number, y: number): { x: number, y: number } {
     let scale = this._scaleFactor();
     console.log('scaleFactor: ', scale);
     let xPos = x, yPos = y;
@@ -48,11 +51,17 @@ class ScaleManager {
     return this._scaleFactor();
   }
 
+  /**
+   * @description returns the current scaleFactor. This value will change based on window resize events etc
+   */
   private _scaleFactor(): number {
     let width = window.innerWidth;
     let height = window.innerHeight;
 
-    return (height / this._height);
+    let hRatio = (height / this._height);
+    let wRatio = (width / this._width);
+
+    return hRatio < wRatio ? hRatio : wRatio;
     // devicePixelRatio
   }
 

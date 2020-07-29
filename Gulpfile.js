@@ -76,10 +76,7 @@ const config = {
 }
 
 function handleError(error) {
-    notify.onError({
-        title: "Build Error!",
-        message: "<%= error.message %>"
-    })(error);
+    console.log(error);
 
     this.emit("end");
 }
