@@ -104,7 +104,7 @@ class Game {
   }
 
   private _onResize() {
-    let target = this._scaleManager.getXY(this._gameWidth(), this._gameHeight());
+    let target = this._scaleManager.getWidthHeight(this._gameWidth(), this._gameHeight());
 
     this._world.resize(target.x, target.y);
   }

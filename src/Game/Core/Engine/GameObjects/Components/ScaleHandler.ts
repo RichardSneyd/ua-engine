@@ -72,8 +72,8 @@ class ScaleHandler {
     this._updateScale();
   }
 
-  public getXY(x: number, y: number) {
-    return this._scaleManager.getXY(x, y);
+  public getWidthHeight(x: number, y: number) {
+    return this._scaleManager.getWidthHeight(x, y);
   }
 
   public getScale(currentScale: number) {
