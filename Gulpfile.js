@@ -88,7 +88,7 @@ function buildT() {
     return build();
 }
 
-function buildT(watch) {
+function build(watch) {
     var browserifyInstance = browserify({
         entries: [config.browserify.entries],
         debug: true,
@@ -140,7 +140,7 @@ function browserifyT() {
 function watchT() {
     //  return gulp.watch('src/**/*.ts', gulp.series(['build', 'watch']));
     
-    return buildT(true);
+    return build(true);
 }
 
 function uglifyT() {
@@ -217,3 +217,5 @@ exports.webserver = webserverT;
 exports.watchConcat = watchConcatT;
 exports.calc = calculateDeps;
 exports.genDecs = genDecs;
+exports.watchDecs = watchDecs;
+exports.watch = watchT;

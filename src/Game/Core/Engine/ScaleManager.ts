@@ -22,6 +22,8 @@ class ScaleManager {
     //console.log("smanager w(%s) h(%s)", this._width, this._height);
   }
 
+  // todo - rewrite it to scale for vertical changes on page scale as well
+  
   public getXY(x: number, y: number): { x: number, y: number } {
     let scale = this._scaleFactor();
     console.log('scaleFactor: ', scale);
