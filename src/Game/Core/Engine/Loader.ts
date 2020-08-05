@@ -5,12 +5,13 @@ import ISndLoader from '../../Services/ISndLoader';
 import AjaxLoader from '../../Services/AjaxLoader';
 import GameConfig from './GameConfig';
 import Loop from './Loop';
+import Events from './Events';
 
 
 
 class Loader {
   private _resource: Resource;
-  private _gameConfig: GameConfig; private _loop: Loop;
+  private _gameConfig: GameConfig; private _loop: Loop; private _events: Events;
   private _imgLoader: IImgLoader; _sndLoader: ISndLoader; _ajaxLoader: AjaxLoader;
   private _resList: Resource[];
   private _scripts: any;
@@ -42,7 +43,7 @@ class Loader {
 
       if (res.name.length > 0) {
 
-        if(res.loaded) {
+        if (res.loaded) {
           done++
         } else {
           notDone++;
@@ -64,25 +65,31 @@ class Loader {
   }
 
   constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader,
-    ajaxLoader: AjaxLoader, gameConfig: GameConfig, loop: Loop) {
+    ajaxLoader: AjaxLoader, gameConfig: GameConfig, loop: Loop, events: Events) {
     this._resource = resource;
     this._imgLoader = imgLoader;
     this._sndLoader = sndLoader;
     this._ajaxLoader = ajaxLoader;
     this._gameConfig = gameConfig;
     this._loop = loop;
+    this._events = events;
 
+    this._loop.addFunction(this._update, this);
+    this._init();
+  //  this._events.on('shutdown', this._init, this);
+  }
+
+  private _init(){
     this._base = "";
 
     this._resList = [];
     this._scripts = {}
 
     this._downloadComplete = false;
-    this._loop.addFunction(this._update, this);
   }
 
   get downloadComplete(): boolean {
-    return this._downloadComplete
+    return this._downloadComplete;
   }
 
   /**
@@ -91,40 +98,89 @@ class Loader {
    * @param name the filename of the image to load. This is added to the base path value to find the image file.
    */
   public addImage(name: string) {
-    let res = this._createResource();
-    res.initImage(this._base + name, false);
+    if (this._getResource(name, true) == null) {
+      let res = this._createResource();
+      res.initImage(this._base + name, false);
 
-    this._resList.push(res);
+      this._resList.push(res);
+      return true;
+    }
+
+    console.warn('did not add %s, as it already exists', name);
+    return false;
   }
 
   /**
    * @description Creates an atlas resource and adds adds the atlas to the load queue. The data property of the resource will be
    * populated with the image once loaded; Everything in the queue is processed when the download() method is called
-   * @param filename the filename of the atlas you wish to load
+   * @param name the filename of the atlas you wish to load
    */
-  public addAtlas(filename: string) {
-    let res = this._createResource();
-    res.initImage(this._base + filename, false);
-    //console.log("atlas location '%s'", this._base + url);
+  public addAtlas(name: string) {
+    if (this._getResource(name, true) == null) {
+      let res = this._createResource();
+      res.initImage(this._base + name, false);
+      //console.log("atlas location '%s'", this._base + url);
 
-    this._resList.push(res);
+      this._resList.push(res);
+      return true;
+    }
+    console.warn('did not add %s, as it already exists', name);
+    return false;
   }
 
 
-  public addJSON(basename: string) {
-    this.base = this._getPath().json;
-    let res = this._createResource();
-    res.initJSON(this._base + basename + '.json', false);
+  public addJSON(name: string) {
+    if (this._getResource(name, true) == null) {
+      this.base = this._getPath().json;
+      let res = this._createResource();
+      res.initJSON(this._base + name + '.json', false);
 
-    this._resList.push(res);
+      this._resList.push(res);
+      return true;
+    }
+    console.warn('did not add %s, as it already exists', name);
+    return false;
   }
 
 
-  public addSpine(filename: string) {
-    let res = this._createResource();
-    res.initSpine(this._base + filename, false);
+  public addSpine(name: string) {
+    if (this._getResource(name, true) == null) {
+      let res = this._createResource();
+      res.initSpine(this._base + name, false);
 
-    this._resList.push(res);
+      this._resList.push(res);
+      return false;
+    }
+    console.warn('did not add %s, as it already exists', name);
+    return false;
+  }
+
+  /**
+   * @description create a sound resource, to be inject with data later, at download
+   * @param filename the filename of the sound to be loaded, without extension.
+   */
+  addSnd(name: string) {
+    if (this._getResource(name, true) == null) {
+      // all sounds will be housed in the same directory, so..
+      this.base = this._getPath().sound;
+      let res = this._createResource();
+      res.initSnd(this._base + name, false);
+
+      this._resList.push(res);
+      return true;
+    }
+    console.warn('did not add %s, as it already exists', name);
+    return false;
+  }
+
+  /**
+  * @description create several sound resources, to be injected with data (howls) at download phase
+  * @param filenames filenames array of the sounds to be loaded, without extension (extentions are defined in config file).
+  */
+  addSnds(names: string[]) {
+    for (let x = 0; x < names.length; x++) {
+      this.addSnd(names[x]);
+    }
   }
 
   /**
@@ -134,7 +190,7 @@ class Loader {
   public download(onDone?: Function) {
     return new Promise((resolve: Function, reject: Function) => {
       let _imgsDone: boolean = false, _sndsDone: boolean = false;
-
+      
       this._downloadSounds(() => {
         _sndsDone = true;
         if (_imgsDone) {
@@ -164,7 +220,7 @@ class Loader {
 
   private _sendAllDone(resolve: Function, reject: Function) {
     if (this._downloadComplete) {
-      resolve({status: true});
+      resolve({ status: true });
     } else {
       setTimeout(() => {
         this._sendAllDone(resolve, reject);
@@ -192,13 +248,17 @@ class Loader {
     }
   }
 
+  /**
+   * @description continuely updates the _downloadComplete property, by checking the loaded property of all registered resources
+   * each tick.
+   */
   private _update(): void {
     let isLoaded = true;
 
     for (let c = 0; c < this._resList.length; c++) {
       let res = this._resList[c];
 
-      
+
 
       if (!res.loaded && res.name.length > 0) {
         isLoaded = false;
@@ -209,12 +269,31 @@ class Loader {
     this._downloadComplete = isLoaded;
   }
 
-  private _getUrls(arr: Resource[]): string[] {
+  /**
+   * @description a utility method which returns the URLs to be downloaded for resources
+   * @param arr an array of the resources to generate the list from
+   */
+  private _getUrls(arr: Resource[], ignoreLoaded: boolean = false): string[] {
     let urlList: string[] = [];
-
+    console.log(arr);
+    //debugger;
     for (let c = 0; c < arr.length; c++) {
-      let url = arr[c].url;
-      urlList.push(url);
+      // only return a URL for download if the resource hasn't already been loaded
+      if(!ignoreLoaded){
+        let url = arr[c].url;
+        urlList.push(url);
+        console.log('added ' + arr[c].name + ' to URL list');
+      }
+      else {
+        if(!arr[c].loaded){
+          let url = arr[c].url;
+          urlList.push(url);
+          console.log('added ' + arr[c].name + ' to URL list');
+        }
+        else {
+          console.trace(arr[c].name + ' already loaded, will not load again');
+        }
+      }
     }
 
     return urlList;
@@ -320,11 +399,15 @@ class Loader {
     let spnList = this._getSpnArray();
     let spnImgList = imgList.concat(spnList);
 
-    let urlList = this._getUrls(spnImgList);
+    let urlList = this._getUrls(spnImgList, true);
+   /*  console.log('images to load:');
+    console.log(urlList); */
+    //add images to the load queue
     this._imgLoader.loadImages(urlList, this._imgLoaded, this._imgDone, this);
 
     this._downloadSpines();
 
+    //start processing the load queue for images
     this._imgLoader.download();
     this._imgLoader.download(onDone);
   }
@@ -367,34 +450,12 @@ class Loader {
     return r;
   }
 
-  /**
-   * @description create a sound resource, to be inject with data later, at download
-   * @param filename the filename of the sound to be loaded, without extension.
-   */
-  addSnd(name: string) {
-    // all sounds will be housed in the same directory, so..
-    this.base = this._getPath().sound;
-    let res = this._createResource();
-    res.initSnd(this._base + name, false);
-
-    this._resList.push(res);
-  }
-
-  /**
-  * @description create several sound resources, to be injected with data (howls) at download phase
-  * @param filenames filenames array of the sounds to be loaded, without extension (extentions are defined in config file).
-  */
-  addSnds(filenames: string[]) {
-    for (let x = 0; x < filenames.length; x++) {
-      this.addSnd(filenames[x]);
-    }
-  }
-
   private _downloadSounds(onDone: Function) {
     // WIP
     let sndList = this._getSndArray();
     let urlList = this._getUrls(sndList);
-
+    /* console.log('sounds to load:');
+    console.log(urlList); */
     this._sndLoader.loadSounds(urlList, this._getSndExt(), this._sndLoaded, (data: any) => {
       this._injectDataToSnds(data);
       onDone();
@@ -407,8 +468,8 @@ class Loader {
       sndList[x].data = data[x];
     }
 
-   // console.log(data);
-   // console.log(sndList);
+    // console.log(data);
+    // console.log(sndList);
   }
 
   public loadActScript(file: string, callback?: Function, staticPath: boolean = false): any {
@@ -444,7 +505,8 @@ class Loader {
 
   private _downloadSpines() {
     let spineList = this._getSpnArray();
-
+    console.log('spines to load:');
+    console.table(spineList);
     for (let c = 0; c < spineList.length; c++) {
       let res = spineList[c];
 

@@ -21,6 +21,7 @@ class Game {
   private _goFactory: GOFactory; _geom: Geom; _utils: Utils;
 
   protected _activities: IActivity[];
+  protected _currentActivity: IActivity;
   protected _gameStarted: boolean;
 
   constructor(world: World, loop: Loop, loader: Loader,
@@ -82,20 +83,25 @@ class Game {
   }
 
   /**
-   * @description removes an activity from the game/engine
-   * @param act the activity type (object) to remove.
+   * @description Removes an activity from the game/engine
+   * @param act The activity type (object) to remove.
    */
-  public removeActivity(act: IActivity) {
-    this.activities.splice(this.activities.indexOf(act), 1);
+  public removeActivity(act: IActivity): boolean {
+    if(this.activities.indexOf(act) != -1){
+      this.activities.splice(this.activities.indexOf(act), 1);
+      return true;
+    }
+    console.warn('cannot remove an activity that has not been installed: ', act.name);
+    return false;
   }
 
   /**
-   * @description adds an activity to the engine, as a plugin (todo)
-   * @param act the activity type (object) to add. Takes the object itself, or it's name in the form of a string
+   * @description Starts the specified activity. Calls 'shutdown' event first.
+   * @param act The activity type (object) to start. Takes the object itself, or it's name in the form of a string
    */
   public startActivity(act: IActivity | string, scriptName: any) {
     if (typeof act !== 'string') {
-      act.startActivity(scriptName);
+      this._startActivity(act, scriptName);
     }
     else {
       let name = act;
@@ -105,9 +111,16 @@ class Game {
         console.error('no activity found by name: ', name);
       }
       else {
-        activity.startActivity(scriptName);
+        this._startActivity(activity, scriptName);
       }
     }
+  }
+
+  private _startActivity(act: IActivity, scriptName: string){
+    // call shutdown, to give the current activity a chance to tidy up before the transition
+    this._events.emit('shutdown');
+    // start the new activity, with the assumption that the shutdown has been handled
+    act.startActivity(scriptName);
   }
 
   /**
