@@ -100,7 +100,6 @@ class PxLoader {
     }
   }
 
-
   //Foreign dependencies
   private _createLoader(): Loader {
     return this._pxFactory.createLoader();

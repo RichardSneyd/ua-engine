@@ -97,7 +97,7 @@ class Loader {
       res.initImage(this._base + name, false);
 
       this._resList.push(res);
-      console.log(this._resList);
+     // console.log(this._resList);
       return true;
     }
 
@@ -140,7 +140,7 @@ class Loader {
       res.initSnd(this._base + name, false);
 
       this._resList.push(res);
-      console.log(this._resList);
+     // console.log(this._resList);
       return true;
     }
     console.warn('did not add %s, as it already exists', name);
@@ -266,13 +266,15 @@ class Loader {
     })
   }
 
+  // data is BS from PIXI, data2 is the actual PIXI resource object. Handles spine resource downloads/injections too
   private _imgLoaded(data: any, data2: any) {
     if (data2.texture != null) {
+      console.log('image loaded and returned: ', data2, 'attemping injection....');
       this._downloadedResource(data2.url, data2.texture);
     } else {
+      console.log('spine loaded and returned: ', data2, 'attempting injection...');
       this._downloadedResource(data2.url, data2); //Spine!
     }
-
   }
 
   private _sndDone() {
@@ -295,7 +297,7 @@ class Loader {
       res.loaded = true;
       res.data = data;
     } else {
-      console.error("no resource exists in Loader.resList with url: %s", url);
+      console.error("Injection failed: no resource exists in Loader.resList with url: %s", url);
     }
   }
 
@@ -398,16 +400,12 @@ class Loader {
       let res = this._resList[c];
       if (res.isImg()) r.push(res);
     }
-
     return r;
   }
 
   private _downloadSounds() {
-    // WIP
     let sndList = this._getSndArray();
     let urlList = this._getUrls(sndList);
-    /* console.log('sounds to load:');
-    console.log(urlList); */
     this._sndLoader.loadSounds(urlList, this._getSndExt(), this._sndLoaded, this._sndDone, this);
   }
 
@@ -429,7 +427,7 @@ class Loader {
     console.table(spineList);
     for (let c = 0; c < spineList.length; c++) {
       let res = spineList[c];
-
+      // the resources were already created in resList at the downloadImages phase, this is service level
       this._imgLoader.loadSpine(res.name, res.url);
     }
   }
