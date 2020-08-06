@@ -30,7 +30,7 @@ class Game {
 
     this._world = world;
     this._events = events;
-    console.log("TARGET: ", events);
+  //  console.log("TARGET: ", events);
     this._scaleManager = scaleManager;
     this._expose = expose;
 

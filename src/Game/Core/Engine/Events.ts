@@ -234,7 +234,7 @@ class Events {
                 return event[x];
             }
             else {
-                console.log('not a match');
+              //  console.log('not a match');
             }
 
         }
@@ -308,32 +308,25 @@ class Events {
     }
 
     private _ticker() {
-        //  console.log('made it to _ticker, this is: ', this);
           this._lastTime = this._time;
           this._time = new Date().getTime();
           this._delta = this._time - this._lastTime;
-        //  console.warn('time is %s, lastTime is %s, delta is: ', this._time, this._lastTime, this._delta);
           this._updateTimers();
       }
 
     private _updateTimers() {
-    //    console.log('made it to _updateTimers, timers: ', this._timers);
-    //    console.log('length: ', this._timers.length);
         
         for (let x = this._timers.length-1; x >= 0; x--) {
             let timer = this._timers[x];
-        //    console.log('handling timer at index %s: ', x, timer);
             timer.remaining -= this._delta;
             if (timer.remaining <= 0) {
                 if (timer.repeat > 0 || timer.repeat === -1) {
-                //    console.log('repeat is %s for timer: ', timer.repeat, timer);
                     timer.remaining = timer.delay;
                     if (timer.repeat > 0) {
                         timer.repeat--;
                     }
                 }
                 else {
-                ///<reference path= '' />    console.warn('removing timer from list: ', timer);
                     this._removeTimer(this._timers.indexOf(timer));
                 }
                 timer.callback.bind(timer.context)();
@@ -348,7 +341,6 @@ class Events {
          this._timer = setInterval(()=>{
              this._ticker();
          }, this._step);
-      //   console.log('_startTimer called, to call _ticker every %s, _timer set to setInterval ID', this._step);
      }
 
 }

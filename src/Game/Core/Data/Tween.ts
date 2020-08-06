@@ -184,7 +184,6 @@ class Tween {
   }
 
   pause(): Tween{
-    console.warn('Tween.pause called');
     if (this._data != null) {
       this._paused = true;
       this._pausedTime = this._time;
@@ -212,7 +211,6 @@ class Tween {
   }
 
   resume(): Tween {
-    console.log('Tween.resume called');
     if (this._data != null) {
       this._paused = false;
       let diff = this._time - this._pausedTime;

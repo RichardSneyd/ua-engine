@@ -21,6 +21,7 @@ const config = {
         dest: 'src/Dep/ControlContainer.ts',
         //Maintain no space between commas!
         single: [
+            'Loader',
             'Loop',
             'Events',
             'AudioManager',

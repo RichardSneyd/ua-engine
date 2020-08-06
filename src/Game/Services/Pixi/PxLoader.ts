@@ -1,4 +1,4 @@
-import {Loader} from 'pixi.js';
+import { Loader } from 'pixi.js';
 import 'pixi-spine';
 
 import PxFactory from './PxFactory';
@@ -13,7 +13,7 @@ class PxLoader {
     this._loader = this._createLoader();
 
     this._loader.use(PIXI.spine.AtlasParser.use);
-    (<any> window).resExists = this._resExists.bind(this);
+    (<any>window).resExists = this._resExists.bind(this);
   }
 
   public addOnLoad(onLoad: any) {
@@ -29,11 +29,14 @@ class PxLoader {
    * @param images the images to add to the load queue
    */
   public addImages(images: string[]) {
-    for(let i = 0; i < images.length; i++){
+    for (let i = 0; i < images.length; i++) {
       let image = images[i];
-      console.log(this._loader.resources);
-      if(!this._resExists(image)) this._loader.add(image);
+      if (!this._resExists(image)) {
+        this._loader.add(image);
+        console.log('added %s', image);
+      }
     }
+    console.log(this._loader.resources);
   }
 
   /**
@@ -43,8 +46,9 @@ class PxLoader {
    */
   public addSpine(name: string, jsonUrl: string) {
     console.log("adding spine(%s): %s", name, jsonUrl);
-    
-    this._loader.add(name, jsonUrl);
+    if (!this._resExists(name)) {
+      this._loader.add(name, jsonUrl);
+    }
   }
 
   /**
@@ -52,7 +56,7 @@ class PxLoader {
    * @param url the url of the resource to check
    */
   private _resExists(url: string): boolean {
-    if(this._loader.resources[url]){
+    if (this._loader.resources[url]) {
       console.warn(url + ' already exists');
       return true;
     }
@@ -69,8 +73,8 @@ class PxLoader {
   }
 
   public getResources(callback: Function): void {
-    for (const property in this._loader.resources){
-      let currentData = <any> this._loader.resources[property];
+    for (const property in this._loader.resources) {
+      let currentData = <any>this._loader.resources[property];
 
       if (currentData.hasOwnProperty('data')) {
         if (currentData.data.hasOwnProperty('frames')) {
@@ -83,7 +87,7 @@ class PxLoader {
         }
       }
 
-      callback({url: property, data: currentData});
+      callback({ url: property, data: currentData });
     }
   }
 

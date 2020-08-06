@@ -11,7 +11,7 @@ class SndLoader implements ISndLoader {
     }
 
     loadSounds(urls: string[], extensions: string[], onProgress: Function, onDone: Function, context: any): void {
-        this._loader.loadSounds(urls, extensions, onDone, context);
+        this._loader.loadSounds(urls, extensions, onProgress, onDone, context);
     }
 
 
