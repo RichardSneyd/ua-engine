@@ -1,4 +1,4 @@
-import {Application, Sprite} from 'pixi.js';
+import {Application, Sprite, DisplayObject, Texture, RenderTexture} from 'pixi.js';
 
 import IScreen from '../Services/IScreen';
 import PxGame from '../Services/Pixi/PxGame';
@@ -72,8 +72,8 @@ class Screen implements IScreen {
     return this._pxGame.addText(x, y, text, style);
   }
 
-  public changeTexture(sprite: Sprite, name: string, frame: string | null = null): void {
-    this._pxGame.updateTexture(sprite, name, frame);
+  public changeTexture(sprite: Sprite, texture: string | any, frame: string | null = null): void {
+    this._pxGame.updateTexture(sprite, texture, frame);
   }
 
   public clearScreen(): void {
@@ -90,6 +90,10 @@ class Screen implements IScreen {
 
   public width(): number | null {
     return this._pxGame.width();
+  }
+
+  public toTexture(object: DisplayObject) : any | null {
+    return this._pxGame.toTexture(object);
   }
 
   public height(): number | null {

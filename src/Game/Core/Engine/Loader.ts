@@ -12,7 +12,9 @@ class Loader {
   private _gameConfig: GameConfig; private _loop: Loop; private _events: Events;
   private _imgLoader: IImgLoader; _sndLoader: ISndLoader; _ajaxLoader: AjaxLoader;
   private _resList: Resource[];
+  private _newResList: Resource[];
   private _downloadComplete: boolean = false;
+  private _startedLoading: boolean = false;
 
   private _base: string;
 
@@ -70,16 +72,20 @@ class Loader {
     this._init();
     this._events.on('shutdown', this._init, this);
     // expose loader globaly for testing
-    (<any> window).loader = this;
+    (<any>window).loader = this;
   }
 
-  resList(){
+  resList() {
     return this._resList;
   }
 
   private _init() {
     this._base = "";
     this._downloadComplete = false;
+    this._startedLoading = false;
+    this._newResList = [];
+    console.log('%cLoader initialized', 'color: green;');
+    debugger;
   }
 
   get downloadComplete(): boolean {
@@ -92,12 +98,13 @@ class Loader {
    * @param name the filename of the image to load, including file extension. This is added to the base path value to find the image URL.
    */
   public addImage(name: string) {
-    if (this._getResource(name, true) == null) {
+    if (this._getResource(name.split('.')[0], true) == null) {
       let res = this._createResource();
       res.initImage(this._base + name, false);
 
       this._resList.push(res);
-     // console.log(this._resList);
+      this._newResList.push(res);
+      // console.log(this._resList);
       return true;
     }
 
@@ -121,6 +128,7 @@ class Loader {
       res.initSpine(this._base + name, false);
 
       this._resList.push(res);
+      this._newResList.push(res);
       console.log(this._resList);
       return false;
     }
@@ -140,7 +148,8 @@ class Loader {
       res.initSnd(this._base + name, false);
 
       this._resList.push(res);
-     // console.log(this._resList);
+      this._newResList.push(res);
+      // console.log(this._resList);
       return true;
     }
     console.warn('did not add %s, as it already exists', name);
@@ -165,11 +174,20 @@ class Loader {
     return new Promise((resolve: Function, reject: Function) => {
       let _imgsDone: boolean = false, _sndsDone: boolean = false;
 
+      // if no new resource being loaded for this activity, just resolve, as there is nothing to wait for
+      console.log('%ctotal new resources: ' + this._newResList.length, 'color: green;');
+      console.log(this._newResList);
+      if(this._newResList.length == 0) {
+        resolve('loading completed');
+        return;
+      }
+
       this._downloadSounds();
       this._downloadImages();
-
+      
       // recursively check if everyhthing is loaded, until true
       setTimeout(() => {
+        this._startedLoading = true;
         this._sendAllDone(resolve, reject);
       }, 100);
     })
@@ -178,7 +196,8 @@ class Loader {
 
   private _sendAllDone(resolve: Function, reject: Function) {
     if (this._downloadComplete) {
-      resolve({ status: true });
+      resolve({ status: true });      
+      console.log('%cdownload complete, promise RESOLVED', 'color: green;')
     } else {
       setTimeout(() => {
         this._sendAllDone(resolve, reject);
@@ -190,9 +209,9 @@ class Loader {
     return this._getResource(url, byName)
   }
 
-
   public getTexture(sprite: string, frame: string | null = null): any {
-    //let url = this._base + sprite;
+   // console.log(this._getPath().img);
+    let url = this._getPath().img + sprite;
     let res = this._getResource(sprite, true);
 
     if (res != null) {
@@ -209,8 +228,8 @@ class Loader {
   private _update(): void {
     let isLoaded = true;
 
-    if (this._downloadComplete == false) {
-    //  console.log('downloading');
+    if (this._downloadComplete == false && this._startedLoading == true) {
+      //  console.log('downloading');
       for (let c = 0; c < this._resList.length; c++) {
         let res = this._resList[c];
 
@@ -223,6 +242,7 @@ class Loader {
       this._downloadComplete = isLoaded;
       if (this._downloadComplete) {
         console.log('download complete!!!!!!!!!!!!!!!!!!!');
+        this._startedLoading = false;
       }
     }
   }
@@ -240,16 +260,16 @@ class Loader {
       if (!ignoreLoaded) {
         let url = arr[c].url;
         urlList.push(url);
-        console.log('added ' + arr[c].url + ' to URL list');
+        // console.log('added ' + arr[c].url + ' to URL list');
       }
       else {
         if (!arr[c].loaded) {
           let url = arr[c].url;
           urlList.push(url);
-          console.log('added ' + arr[c].url + ' to URL list');
+          //  console.log('added ' + arr[c].url + ' to URL list');
         }
         else {
-          console.trace(arr[c].url + ' already loaded, will not load again');
+          console.log(arr[c].url + ' already loaded, will not load again');
         }
       }
     }
@@ -270,10 +290,17 @@ class Loader {
   private _imgLoaded(data: any, data2: any) {
     if (data2.texture != null) {
       console.log('image loaded and returned: ', data2, 'attemping injection....');
-      this._downloadedResource(data2.url, data2.texture);
+      if (data2.name.indexOf('.json_image') !== -1) {
+        // ignore irrelavent returns from PxLoader
+        console.warn('will not inject a .json_image, no resource in resList for that, is internal PIXI Loader child image resource mapped to atlas json resource');
+      }
+      else {
+        this._downloadedResource(data2.url, data2.texture);
+      }
     } else {
       console.log('spine loaded and returned: ', data2, 'attempting injection...');
       this._downloadedResource(data2.url, data2); //Spine!
+
     }
   }
 
@@ -281,24 +308,31 @@ class Loader {
     // WIP
     console.log('all sounds loaded')
   }
-  
+
   private _sndLoaded(data: any) {
     // WIP
-  //  console.log(data);
+    //  console.log(data);
     // take the file extension off, since snd files are saved without a file extention in the URL
     console.log('sound loaded and returned: ', data);
     this._downloadedResource(data.url, data.data);
   }
 
   private _downloadedResource(url: string, data: any) {
-    let res = this._getResource(url);
-
-    if (res != null) {
-      res.loaded = true;
-      res.data = data;
-    } else {
-      console.error("Injection failed: no resource exists in Loader.resList with url: %s", url);
+    // don't load json_image resources, which PIXI uses internally as child-resources of the json resources (atlas, spine etc)
+    if (data.hasOwnProperty('name') && data.name.indexOf('.json_image') !== -1) {
+      console.warn('will not inject a json_image resource, used by PIXI Loader internally as children of json resources like atlases');
+      return;
     }
+      let res = this._getResource(url);
+  
+      if (res != null) {
+        res.loaded = true;
+        res.data = data;
+      } else {
+        console.error("Injection failed: no resource exists in Loader.resList with url: %s", url);
+      }
+    
+ 
   }
 
 
@@ -353,8 +387,8 @@ class Loader {
   }
 
   private _downloadImages() {
-    let imgList = this._getImgArray();
-    let spnList = this._getSpnArray();
+    let imgList = this._getImgArray(this._newResList);
+    let spnList = this._getSpnArray(this._newResList);
     let spnImgList = imgList.concat(spnList);
 
     let urlList = this._getUrls(spnImgList, true);
@@ -370,11 +404,13 @@ class Loader {
     //  this._imgLoader.download(onDone);
   }
 
-  private _getSndArray(): Resource[] {
+  private _getSndArray(array?: Resource[]): Resource[] {
     let r: Resource[] = [];
+    let resList = this._resList;
+    if(array !== undefined){ resList = array}
 
-    for (let c = 0; c < this._resList.length; c++) {
-      let res = this._resList[c];
+    for (let c = 0; c < resList.length; c++) {
+      let res = resList[c];
       if (res.isSnd()) r.push(res);
     }
 
@@ -382,29 +418,33 @@ class Loader {
   }
 
 
-  private _getSpnArray(): Resource[] {
+  private _getSpnArray(array?: Resource[]): Resource[] {
     let r: Resource[] = [];
-
-    for (let c = 0; c < this._resList.length; c++) {
-      let res = this._resList[c];
+    let resList = this._resList;
+    if(array !== undefined){ resList = array}
+    
+    for (let c = 0; c < resList.length; c++) {
+      let res = resList[c];
       if (res.isSpn()) r.push(res);
     }
     return r;
   }
 
 
-  private _getImgArray(): Resource[] {
+  private _getImgArray(array?: Resource[]): Resource[] {
     let r: Resource[] = [];
+    let resList = this._resList;
+    if(array !== undefined){ resList = array}
 
-    for (let c = 0; c < this._resList.length; c++) {
-      let res = this._resList[c];
+    for (let c = 0; c < resList.length; c++) {
+      let res = resList[c];
       if (res.isImg()) r.push(res);
     }
     return r;
   }
 
   private _downloadSounds() {
-    let sndList = this._getSndArray();
+    let sndList = this._getSndArray(this._newResList);
     let urlList = this._getUrls(sndList);
     this._sndLoader.loadSounds(urlList, this._getSndExt(), this._sndLoaded, this._sndDone, this);
   }
@@ -422,7 +462,7 @@ class Loader {
   }
 
   private _downloadSpines() {
-    let spineList = this._getSpnArray();
+    let spineList = this._getSpnArray(this._newResList);
     console.log('spines to load:');
     console.table(spineList);
     for (let c = 0; c < spineList.length; c++) {
@@ -436,9 +476,11 @@ class Loader {
     return this._imgLoader.getTexture(data, frame);
   }
 
-  private _getPath(): { jsn: string, snd: string, img: string, spn: string} {
-    return { jsn: this._gameConfig.data.PATHS.JSN, snd: this._gameConfig.data.PATHS.SND, 
-      img: this._gameConfig.data.PATHS.IMG, spn: this._gameConfig.data.PATHS.SPN};
+  private _getPath(): { jsn: string, snd: string, img: string, spn: string } {
+    return {
+      jsn: this._gameConfig.data.PATHS.JSN, snd: this._gameConfig.data.PATHS.SND,
+      img: this._gameConfig.data.PATHS.IMG, spn: this._gameConfig.data.PATHS.SPN
+    };
   }
 
   private _getSndExt(): string[] {

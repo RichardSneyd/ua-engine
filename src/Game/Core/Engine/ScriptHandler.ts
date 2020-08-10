@@ -38,7 +38,6 @@ class ScriptHandler {
         this._convertRowsFromRaw(parseCols, objectifyCols, processText);
         this._parseNumbers(['id', 'page', 'auto_next', 'round']);
         this._initialized = true;
-        console.log(this.rows);
     }
 
     get name(): string {

@@ -108,7 +108,7 @@ class Resource {
     this._type = type;
     this._url = url;
     this._loaded = loaded;
-    this._name = this._getName(url);
+    this._name = this._getBaseName(url);
     this._basename = this._getBaseName(url);
   }
 

@@ -29,7 +29,6 @@ class ScaleManager {
    */
   public getWidthHeight(x: number, y: number): { x: number, y: number } {
     let scale = this._scaleFactor();
-    console.log('scaleFactor: ', scale);
     let xPos = x, yPos = y;
     if (x !== 0) xPos = (x * scale);
 

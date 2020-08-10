@@ -13,6 +13,7 @@ import ContainerObject from '../ContainerObject';
 import Mask from '../Mask';
 import SpineObject from '../SpineObject';
 import Loop from '../../Loop';
+import { RenderTexture } from 'pixi.js';
 
 
 class ObjectCore {
@@ -301,11 +302,11 @@ class ObjectCore {
     return new ObjectCore(this._screen, this._objectHandler, this._input.createNew(), this._mask.createNew(), this._math, this._events, this._pointFactory, this._loop);
   }
 
-  public changeTexture(textureName: string) {
+  public changeTexture(texture: string | any) {
       if (this._atlas != null) {
-        this._screen.changeTexture(this._data, this._atlas, textureName);
+        this._screen.changeTexture(this._data, this._atlas, texture);
       } else {
-        this._screen.changeTexture(this._data, textureName);
+        this._screen.changeTexture(this._data, texture);
       }
   }
 
