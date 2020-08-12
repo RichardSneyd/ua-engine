@@ -21,7 +21,7 @@ class Events {
 
         this.addListener('pause', this.pause, this);
         this.addListener('resume', this.resume, this);
-        (<any> window).evt = this;
+        (<any> window).events = this;
     }
 
     get events() {
@@ -215,11 +215,11 @@ class Events {
                return;
            }
            else {
-               console.warn("cannot remove a listener for %s that doesn't exist", eventName);
+               console.error("cannot remove a listener for %s with context of %s that looks like: %s", eventName, context, callback);
            }
         }
         else {
-            console.warn('event %s does not exist, cannot remove callback', eventName);
+            console.error('event %s does not exist, cannot remove callback', eventName);
         }
     }
 

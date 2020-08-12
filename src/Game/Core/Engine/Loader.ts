@@ -85,7 +85,6 @@ class Loader {
     this._startedLoading = false;
     this._newResList = [];
     console.log('%cLoader initialized', 'color: green;');
-    debugger;
   }
 
   get downloadComplete(): boolean {
@@ -176,7 +175,7 @@ class Loader {
 
       // if no new resource being loaded for this activity, just resolve, as there is nothing to wait for
       console.log('%ctotal new resources: ' + this._newResList.length, 'color: green;');
-      console.log(this._newResList);
+    //  console.log(this._newResList);
       if(this._newResList.length == 0) {
         resolve('loading completed');
         return;
@@ -192,7 +191,6 @@ class Loader {
       }, 100);
     })
   }
-
 
   private _sendAllDone(resolve: Function, reject: Function) {
     if (this._downloadComplete) {
@@ -241,7 +239,7 @@ class Loader {
       }
       this._downloadComplete = isLoaded;
       if (this._downloadComplete) {
-        console.log('download complete!!!!!!!!!!!!!!!!!!!');
+        console.log('%cdownload complete!', 'color: green');
         this._startedLoading = false;
       }
     }
@@ -332,9 +330,7 @@ class Loader {
         console.error("Injection failed: no resource exists in Loader.resList with url: %s", url);
       }
     
- 
   }
-
 
   private _getResource(url: string, byName: boolean = false): Resource | null {
     let resArr = this._resList;
@@ -350,14 +346,12 @@ class Loader {
         if (currentName == url) return resArr[c];
       }
     }
-
     return null;
   }
 
   private _getResourceByBasename(basename: string, resList: Resource[]): Resource | null {
     for (let c = 0; c < resList.length; c++) {
       let bname = resList[c].url;
-
 
       if (bname == basename) {
         return resList[c];
@@ -371,7 +365,6 @@ class Loader {
     let resList = this._getSndArray();
     for (let c = 0; c < resList.length; c++) {
       let bname = resList[c].basename;
-
 
       if (bname == basename) {
         return resList[c];
@@ -429,7 +422,6 @@ class Loader {
     }
     return r;
   }
-
 
   private _getImgArray(array?: Resource[]): Resource[] {
     let r: Resource[] = [];

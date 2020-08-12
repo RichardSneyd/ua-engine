@@ -32,7 +32,6 @@ class Resource {
     return this._basename;
   }
 
-
   get url(): string {
     return this._url;
   }

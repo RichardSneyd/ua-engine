@@ -1,21 +1,24 @@
 import Loader from './Loader';
 import HwPlayer from '../../Services/Howler/HwPlayer';
+import Events from './Events';
 
 class AudioManager {
 
-    private _loader: Loader; _hwPlayer: HwPlayer;
+    private _loader: Loader; _hwPlayer: HwPlayer; _events: Events;
     private _playing: string[];
     private _instPlaying: string; // the ID of the instruction audio file currently playing
     private _instArr: string[]; // the array of instructional audio names currently being played through
     private _music: string; // the name of the current music file
 
-    constructor(loader: Loader, hwLoader: HwPlayer) {
+    constructor(loader: Loader, hwLoader: HwPlayer, events: Events) {
         this._loader = loader;
         this._hwPlayer = hwLoader;
         this._playing = [];
         this._instPlaying = '';
         this._instArr = [];
         this._music = '';
+        this._events = events;
+        this._events.on('shutdown', this._stopInstPlaying, this);
     }
 
     get filesPlaying() {

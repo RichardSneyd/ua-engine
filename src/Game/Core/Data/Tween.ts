@@ -117,8 +117,6 @@ class Tween {
     this._easing = easing;
     this._object = object;
 
-    //console.log('init tween object, ', this._object);
-
     this._data = new TWEEN.Tween(this._object);
     this._data.onComplete(()=>{this._callOnComplete()});
     this._data.onRepeat(()=>{this._callOnRepeat()});
@@ -129,12 +127,6 @@ class Tween {
     this.reset();
   }
 
-  /* set(toObject: any){
-    if(this._data !== null){
-      this._data.
-    }
-  } */
-
   remove(){
     if(this._data){
       TWEEN.remove(this._data);
@@ -143,16 +135,11 @@ class Tween {
   }
 
   to(toObject: any, time: number, updateFunction: Function = ()=>{}): Tween {
-    //console.log('going to', toObject);
-    //console.log('easing', (<any>TWEEN).Easing);
-    //this.stop();
     this.freeze();
-    console.log('in tween.to');
     if (this._data != null) {
       let easing = this._easing.split('.')[0];
       let inOut = this._easing.split('.')[1];
 
-      //console.log('target easing ', (<any>TWEEN).Easing[easing][inOut]);
       this._paused = false;
       this._data.to(toObject, time)
       .easing((<any>TWEEN).Easing[easing][inOut]).start();
@@ -171,11 +158,8 @@ class Tween {
   }
 
   update(time: number) {
-  //  console.log(this._name + ' update');
     if (this._data != null) {
-  //    console.log('data not null');
       if (!this._paused) {
-     //   console.log('not paused');
         this._data.update(time - this._pauseDiff);
       }
     }

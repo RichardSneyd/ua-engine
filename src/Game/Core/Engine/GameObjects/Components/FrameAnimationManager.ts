@@ -33,9 +33,10 @@ class FrameAnimationManager implements IAnimationManager {
     let anim = this._getAnim(name);
 
     if (anim != null) {
+      console.log(`%c calling play on ${name}  for ${this._go.textureName}?`, 'color: purple;');
       this._play(anim);
     } else {
-      console.error("Could not find aimation named: %s", name);
+      console.error("Could not find animation named: %s", name);
     }
   }
 
@@ -87,8 +88,9 @@ class FrameAnimationManager implements IAnimationManager {
   }
 
   public autoGenFrames(name: string): string[] {
+   // console.log('trying to gen frames for %s on %s', name, this._go.textureName);
     let atlasName = this._core.atlas;
-    let res = this._loader.getResource(atlasName);
+    let res = this._loader.getResource(atlasName, true);
     if (res !== null) {
       let json = res.data.data;
       // console.log('json: ', res);
@@ -109,7 +111,7 @@ class FrameAnimationManager implements IAnimationManager {
       //  console.log('frames: ', frameNames);
       return frameNames;
     }
-    //  console.warn('no json file found for ');
+    console.error('no resource in resList with name ', atlasName);
     return [];
   }
 
@@ -169,6 +171,7 @@ class FrameAnimationManager implements IAnimationManager {
   }
 
   private _play(anim: Anim) {
+  //  console.log('frames: ', anim.frames)
     this._activeAnimation = anim;
   }
 

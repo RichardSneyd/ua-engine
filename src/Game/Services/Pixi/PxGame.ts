@@ -246,7 +246,7 @@ class PxGame {
   }
 
   public addSpine(name: string): PIXI.spine.Spine | null {
-    let spineResource = this._loader.getResource(name);
+    let spineResource = this._loader.getResource(name, true);
     let sprite = null;
 
     if (spineResource != null) {
