@@ -1,4 +1,3 @@
-import Loop from './Loop';
 
 interface IScene {
   init(scriptName: string): void;
