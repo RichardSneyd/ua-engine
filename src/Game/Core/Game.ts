@@ -6,12 +6,12 @@ import Loop from './Engine/Loop';
 import Loader from './Engine/Loader';
 import GameConfig from './Engine/GameConfig';
 import LevelManager from './Engine/LevelManager';
-import ILevel from './Engine/IScene';
 import IActivity from './Engine/IActivity';
 import GOFactory from './Engine/GameObjects/GOFactory';
 import Geom from './Geom/Geom';
 import Utils from './Engine/Utils/Utils';
 import IScene from './Engine/IScene';
+import ILevel from './Engine/ILevel';
 //import ObjectCore from './Engine/GameObjects/Components/ObjectCore';
 
 class Game {
@@ -117,6 +117,10 @@ class Game {
     }
   }
 
+  public loadLevel(level: ILevel, scriptName: string){
+    this.loadScene(level, scriptName)
+  }
+  
   private _startActivity(act: IActivity, scriptName: string){
     // call shutdown, to give the current activity a chance to tidy up before the transition
    // setTimeout(()=>{debugger}, 1000); 
