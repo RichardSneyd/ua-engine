@@ -68,8 +68,8 @@ class Loader {
 
     this._resList = [];
 
-    this._loop.addFunction(this._update, this);
     this._init();
+    this._loop.addFunction(this._update, this);
     this._events.on('shutdown', this._init, this);
     // expose loader globaly for testing
     (<any>window).loader = this;
@@ -287,7 +287,7 @@ class Loader {
   // data is BS from PIXI, data2 is the actual PIXI resource object. Handles spine resource downloads/injections too
   private _imgLoaded(data: any, data2: any) {
     if (data2.texture != null) {
-      console.log('image loaded and returned: ', data2, 'attemping injection....');
+    //  console.log('image loaded and returned: ', data2, 'attemping injection....');
       if (data2.name.indexOf('.json_image') !== -1) {
         // ignore irrelavent returns from PxLoader
         console.warn('will not inject a .json_image, no resource in resList for that, is internal PIXI Loader child image resource mapped to atlas json resource');
@@ -296,7 +296,7 @@ class Loader {
         this._downloadedResource(data2.url, data2.texture);
       }
     } else {
-      console.log('spine loaded and returned: ', data2, 'attempting injection...');
+     // console.log('spine loaded and returned: ', data2, 'attempting injection...');
       this._downloadedResource(data2.url, data2); //Spine!
 
     }
@@ -308,10 +308,7 @@ class Loader {
   }
 
   private _sndLoaded(data: any) {
-    // WIP
-    //  console.log(data);
-    // take the file extension off, since snd files are saved without a file extention in the URL
-    console.log('sound loaded and returned: ', data);
+    // console.log('sound loaded and returned: ', data);
     this._downloadedResource(data.url, data.data);
   }
 
@@ -385,8 +382,7 @@ class Loader {
     let spnImgList = imgList.concat(spnList);
 
     let urlList = this._getUrls(spnImgList, true);
-    /*  console.log('images to load:');
-     console.log(urlList); */
+  
     //add images to the load queue
     this._imgLoader.loadImages(urlList, this._imgLoaded, this._imgDone, this);
 

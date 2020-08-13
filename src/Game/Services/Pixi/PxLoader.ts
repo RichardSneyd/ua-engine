@@ -33,10 +33,10 @@ class PxLoader {
       let image = images[i];
       if (!this._resExists(image)) {
         this._loader.add(image);
-        console.log('added %s', image);
+      //  console.log('added %s to queue', image);
       }
     }
-    console.log(this._loader.resources);
+   // console.log(this._loader.resources);
   }
 
   /**

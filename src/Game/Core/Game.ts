@@ -11,6 +11,7 @@ import IActivity from './Engine/IActivity';
 import GOFactory from './Engine/GameObjects/GOFactory';
 import Geom from './Geom/Geom';
 import Utils from './Engine/Utils/Utils';
+import IScene from './Engine/IScene';
 //import ObjectCore from './Engine/GameObjects/Components/ObjectCore';
 
 class Game {
@@ -119,6 +120,7 @@ class Game {
   private _startActivity(act: IActivity, scriptName: string){
     // call shutdown, to give the current activity a chance to tidy up before the transition
     this._events.emit('shutdown');
+   // setTimeout(()=>{debugger}, 1000); 
     // start the new activity, with the assumption that the shutdown has been handled
     act.startActivity(scriptName);
   }
@@ -142,7 +144,6 @@ class Game {
 
         this._world.init(this._gameConfig.data.DISPLAY.WIDTH, this._gameConfig.data.DISPLAY.HEIGHT);
 
-
         this._addListeners();
         this._onResize();
         this._gameStarted = true;
@@ -156,7 +157,7 @@ class Game {
    * @description load and start a level (via world.loadLevel). 
    * @param level the level to load
    */
-  public loadScene(level: ILevel, scriptName: string) {
+  public loadScene(level: IScene, scriptName: string) {
     this._world.startScene(level, scriptName);
   }
 

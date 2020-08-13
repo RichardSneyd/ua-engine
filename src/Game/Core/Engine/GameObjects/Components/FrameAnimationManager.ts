@@ -67,7 +67,7 @@ class FrameAnimationManager implements IAnimationManager {
       anim.init(name, frames, fps);
       this._animations.push(anim);
     } else {
-      console.warn('Animation with name: "%s" already added, not adding it again!', name);
+      console.warn(`Animation "${name}" already added to ${this._go.textureName}, not adding again!`);
     }
   }
 

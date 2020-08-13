@@ -11,9 +11,21 @@ class SndLoader implements ISndLoader {
     }
 
     loadSounds(urls: string[], extensions: string[], onProgress: Function, onDone: Function, context: any): void {
-        this._loader.loadSounds(urls, extensions, onProgress, onDone, context);
+        //  this._loader.loadSounds(urls, extensions, onProgress, onDone, context);
+        for (let i = 0; i < urls.length; i++) {
+            this.loadSound(urls[i], extensions, onProgress, onDone, context);
+        }
     }
 
+    loadSound(url: string, extensions: string[], onProgress: Function, onDone: Function, context: any) {
+        let p = new Promise((resolve, reject) => {
+            let result = this._loader.loadSound(url, extensions, onProgress, onDone, context);
+            resolve(result);
+        }).then((value: any) => {
+            console.log(value, 'color:blue');
+        }
+        );
+    }
 
     get baseURL(): string {
         return this._baseURL;

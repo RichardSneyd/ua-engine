@@ -13,12 +13,13 @@ class HwLoader {
        this._loadedSounds = [];
     }
 
-    loadSounds(urls: string[], extensions: string[], onProgress: Function, onDone: Function, context: any) {
-      //  console.log('in HwLoader.loadSounds.');
-      //  console.log(urls);
-        let i = 0;
-        this.loadSound(i, urls, extensions, onProgress, onDone, context);
-    }
+    // depricated -- extracting core logic into SndLoader, since it is Core to engine. 
+    /* loadSounds(urls: string[], extensions: string[], onProgress: Function, onDone: Function, context: any) {
+    
+        for(let i = 0; i < urls.length; i++){
+            this.loadSound(urls[i], extensions, onProgress, onDone, context);
+        }
+    } */
 
     /**
      * @description has this sound asset URL already been loaded?
@@ -28,34 +29,28 @@ class HwLoader {
         return this._loadedSounds.indexOf(url) == -1 ?  false : true;
     }
 
-    loadSound(i: number, urls: string[], extensions: string[], onProgress: Function, onDone: Function, context: any){
-        let _i = i;
-    //    console.log('in HwLoader.loadSound..');
-        if(_i<urls.length){
-            if(!this.loaded(urls[i])){
-                let url = urls[i];
-                this._loadedSounds.push(urls[i]);
-                let howl = this._factory.createHowl(url, extensions, ()=>{
-                //    console.log('loaded %s successfully...', [urls[_i].toString()]); 
-                    _i++;     
-                    this.loadSound(_i, urls, extensions, onProgress, onDone, context);
-                });
-                if(howl !== null){
-                    this._howls.push(howl);
-                    onProgress.bind(context)({data: howl, url: url});
-                }
-            }
-            else {
-                console.log('skipping %s, already loaded', urls[i]);
-                _i++;     
-                this.loadSound(_i, urls, extensions, onProgress, onDone, context);
-            }
-        }
-        else {
-            console.log('HwLoader loaded %s sounds, finished now....', i);
-          //  console.log(this._howls);
-            onDone.bind(context)(this._howls);
-        }
+    loadSound(url: string, extensions: string[], onProgress: Function, onDone: Function, context: any){
+    
+         // let loadP = new Promise((resolve, reject) =>{
+              if(!this.loaded(url)){
+       
+                  this._loadedSounds.push(url);
+                  let howl = this._factory.createHowl(url, extensions, ()=>{
+                    // howl created
+                  });
+                  if(howl !== null){
+                      this._howls.push(howl);
+                      onProgress.bind(context)({data: howl, url: url});
+                      return `%c${url} loaded asycronously`;
+                  }
+              }
+              else {
+                return `skipping ${url}, already loaded`;
+              }
+        //  }).then((value: any)=>{
+           //   console.log(value, 'color:blue');
+        //  })
+    
     }
 
   /*   public addOnLoad(onLoad: any) {
