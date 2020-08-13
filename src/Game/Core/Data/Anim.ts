@@ -52,7 +52,7 @@ class Anim {
    // this._data = data;
     this._frames = frames; 
     this._fps = 24;
-    console.log(name + ' frames: ', frames);
+   // console.log(name + ' frames: ', frames);
   }
 
   public getNextFrame(): string {

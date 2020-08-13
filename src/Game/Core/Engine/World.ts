@@ -1,6 +1,6 @@
 //import ObjectCore from './GameObjects/Components/ObjectCore';
 import IScreen from '../../Services/IScreen';
-import ILevel from '../Engine/ILevel';
+import IScene from './IScene';
 import LevelManager from './LevelManager';
 import Events from './Events';
 
@@ -12,7 +12,7 @@ class World {
 
   private _initialized: boolean;
 
-  private _currentLevel: ILevel | null;
+  private _currentLevel: IScene | null;
 
   //private _objectCore: ObjectCore; _screen: IScreen;
   private _events: Events;
@@ -47,10 +47,10 @@ class World {
   }
 
   /**
-   * @description launches the specified level. Will automatically shutdown the currentLevel, if there is one.
-   * @param level the level object to launch. 
+   * @description launches the specified level/scene (could be an activity or a menu). Will automatically shutdown the currentLevel, if there is one.
+   * @param level the scene/level object to launch. 
    */
-  public startLevel(level: ILevel, scriptName: string) {
+  public startScene(level: IScene, scriptName: string) {
     if (this._currentLevel != null) {
       this._currentLevel.shutdown();
     }

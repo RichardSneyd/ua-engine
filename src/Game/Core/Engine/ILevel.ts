@@ -1,11 +1,9 @@
-import Loop from './Loop';
+import IScene from "./IScene";
 
-interface ILevel {
-  init(scriptName: string): void;
-
-  start(): void;
-
-  shutdown(): void;
+interface ILevel extends IScene {
+    onNewRow(): void;
+    loadConfig(): void;
+    _waitForFirstInput(): void;
 }
 
 export default ILevel;

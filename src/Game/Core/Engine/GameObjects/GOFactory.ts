@@ -8,6 +8,9 @@ import ContainerObject from './ContainerObject';
 import IParentChild from "./IParentChild";
 import ScaleManager from '../ScaleManager';
 import VideoObject from "./VideoObject";
+import IGameObject from "./IGameObject";
+import IScreen from "../../../Services/IScreen";
+
 
 
 class GOFactory {
@@ -20,11 +23,12 @@ class GOFactory {
     private _container: ContainerObject;
     private _scaleManager: ScaleManager;
     private _video: VideoObject;
+    private _screen: IScreen;
 
     constructor(core: ObjectCore, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject,
-        container: ContainerObject, scaleManager: ScaleManager, button: Button, video: VideoObject) {
+        container: ContainerObject, scaleManager: ScaleManager, button: Button, video: VideoObject, screen: IScreen) {
         this._core = core; this._slice = slice; this._spine = spine; this._text = text; this._container = container;
-        this._sprite = sprite; this._scaleManager = scaleManager; this._button = button; this._video = video;
+        this._sprite = sprite; this._scaleManager = scaleManager; this._button = button; this._video = video; this._screen = screen;
     }
 
     /**
@@ -58,6 +62,20 @@ class GOFactory {
         } else {
             return this._sprite.createEmpty();
         }
+    }
+
+    /**
+     * @description create a sprite object with a texture generated from the provided IGameObject (especially useful for containers)
+     * @param x the starting x coordinate
+     * @param y the starting y coordinate
+     * @param generateFrom the IGameObject to generate the texture from
+     * @param parent the parent (if any) to this object as a child to
+     */
+    public spriteFromObject(x: number, y: number, generateFrom: IGameObject, parent: IParentChild): SpriteObject {
+        let sprite = this._sprite.createEmpty();
+        sprite.init(x, y, '', null, parent);
+        sprite.changeTexture(this._screen.toTexture(generateFrom.data));
+        return sprite;
     }
 
     /**

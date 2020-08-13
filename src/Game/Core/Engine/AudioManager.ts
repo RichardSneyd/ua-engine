@@ -1,21 +1,24 @@
 import Loader from './Loader';
 import HwPlayer from '../../Services/Howler/HwPlayer';
+import Events from './Events';
 
 class AudioManager {
 
-    private _loader: Loader; _hwPlayer: HwPlayer;
+    private _loader: Loader; _hwPlayer: HwPlayer; _events: Events;
     private _playing: string[];
     private _instPlaying: string; // the ID of the instruction audio file currently playing
     private _instArr: string[]; // the array of instructional audio names currently being played through
     private _music: string; // the name of the current music file
 
-    constructor(loader: Loader, hwLoader: HwPlayer) {
+    constructor(loader: Loader, hwLoader: HwPlayer, events: Events) {
         this._loader = loader;
         this._hwPlayer = hwLoader;
         this._playing = [];
         this._instPlaying = '';
         this._instArr = [];
         this._music = '';
+        this._events = events;
+        this._events.on('shutdown', this._stopInstPlaying, this);
     }
 
     get filesPlaying() {
@@ -30,20 +33,15 @@ class AudioManager {
      */
     public play(name: string, onStop: Function, loop: boolean = false) {
         let _name = name;
-        //  console.log('in HwPlayer.play.');
-        let res = this._loader.getSndResByBasename(name);
-        //  console.log('asked for resource:');
-        //  console.log(res);
+        let res = this._loader.getResource(name, true);
         if (res !== null) {
-
             this._hwPlayer.play(name, res, () => {
                 //   console.log('callback received for %s in AudioManager', _name)
                 this._playing.splice(this._playing.indexOf(name), 1);
                 onStop();
             }, loop);
-        } else console.log('resource %s returned null', name);
+        } else console.error("no resource named ", name);
 
-        //   console.log('end of play func');
     }
 
     /**
@@ -121,23 +119,16 @@ class AudioManager {
     }
 
     private _playInstruction(i: number, onDone: Function) {
-        //   console.log('playInst');
         let _i = i, _name = this._instArr[i];
 
-        // console.log('_playInstruction started for sound %s at position %s, time: %s', _name, _i, new Date().getMilliseconds());
-        //  console.log('instArr length: ' + this._instArr.length);
         this._instPlaying = _name;
         this.play(_name, () => {
             _i++;
             //  console.log('playing %s, at position %s, time: %s', _name, _i, new Date().getMilliseconds());
             if (_i < this._instArr.length) {
-                //  setTimeout(()=>{
                 this._playInstruction(_i, onDone);
-                //  }, 100)
 
             } else {
-                //       console.log('play loop finished on %s at position %s, time: %s', _name, _i, new Date().getMilliseconds  ());
-                //        debugger;
                 onDone();
             }
         });

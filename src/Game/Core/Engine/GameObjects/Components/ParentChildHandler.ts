@@ -78,7 +78,7 @@ class ParentChildHandler implements IParentChild{
                 this.core.data.removeChild(object.data.data);
             }
             else {
-                this.core.data.removeChid(object.data);
+                this.core.data.removeChild(object.data);
             }
             object.parent = null;
             this._children.splice(this._children.indexOf(object), 1);

@@ -1,4 +1,4 @@
-import { Application, Sprite, Renderer, Container, DisplayObject, NineSlicePlane, BaseTexture, Graphics } from 'pixi.js';
+import { Application, Sprite, Renderer, Container, DisplayObject, NineSlicePlane, BaseTexture, Graphics, RenderTexture } from 'pixi.js';
 import PxText from './PxText';
 import PxFactory from './PxFactory';
 import Loader from '../../Core/Engine/Loader';
@@ -246,7 +246,7 @@ class PxGame {
   }
 
   public addSpine(name: string): PIXI.spine.Spine | null {
-    let spineResource = this._loader.getResource(name);
+    let spineResource = this._loader.getResource(name, true);
     let sprite = null;
 
     if (spineResource != null) {
@@ -260,9 +260,18 @@ class PxGame {
     return sprite;
   }
 
-  public updateTexture(sprite: Sprite, sprName: string, frame: string | null = null): void {
-    let texture = this._loader.getTexture(sprName, frame);
+  public updateTexture(sprite: Sprite, texture: string | any, frame: string | null = null): void {
+    if(typeof texture == 'string'){
+      let tex = this._loader.getTexture(texture, frame);
+      sprite.texture = tex;
+      return;
+    }
+    // if texture is not a string, it must be a Texture object; assign directly
     sprite.texture = texture;
+  }
+
+  public toTexture(object: DisplayObject) : PIXI.RenderTexture | null {
+   if (this._game !== null ) return this._game.renderer.generateTexture(object, PIXI.SCALE_MODES.LINEAR, 1); return null;
   }
 
   public clearScreen() {

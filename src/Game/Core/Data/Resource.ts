@@ -32,7 +32,6 @@ class Resource {
     return this._basename;
   }
 
-
   get url(): string {
     return this._url;
   }
@@ -49,18 +48,21 @@ class Resource {
     this._loaded = ld;
   }
 
+  // also currently used to load atlas files. No distinction, other than file extension provided...
   public initImage(url: string, loaded: boolean) {
     let type = this._getImgTag();
 
     this._init(type, url, loaded);
   }
 
+  // same as initImg, except assigns different type tag - 'spn'
   public initSpine(url: string, loaded: boolean) {
     let type = this._getSpnTag();
 
     this._init(type, url, loaded);
   }
 
+  // url is provided with no file extension, because there are 2 -- ogg and mp3
   public initSnd(url: string, loaded: boolean) {
     let type = this._getSndTag();
 
@@ -105,7 +107,7 @@ class Resource {
     this._type = type;
     this._url = url;
     this._loaded = loaded;
-    this._name = this._getName(url);
+    this._name = this._getBaseName(url);
     this._basename = this._getBaseName(url);
   }
 

@@ -6,11 +6,12 @@ import Loop from './Engine/Loop';
 import Loader from './Engine/Loader';
 import GameConfig from './Engine/GameConfig';
 import LevelManager from './Engine/LevelManager';
-import ILevel from './Engine/ILevel';
+import ILevel from './Engine/IScene';
 import IActivity from './Engine/IActivity';
 import GOFactory from './Engine/GameObjects/GOFactory';
 import Geom from './Geom/Geom';
 import Utils from './Engine/Utils/Utils';
+import IScene from './Engine/IScene';
 //import ObjectCore from './Engine/GameObjects/Components/ObjectCore';
 
 class Game {
@@ -20,13 +21,17 @@ class Game {
   private _loop: Loop; _loader: Loader; _gameConfig: GameConfig; _levelManager: LevelManager;
   private _goFactory: GOFactory; _geom: Geom; _utils: Utils;
 
+  protected _activities: IActivity[];
+  protected _currentActivity: IActivity;
+  protected _gameStarted: boolean;
+
   constructor(world: World, loop: Loop, loader: Loader,
     events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
     levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils) {
 
     this._world = world;
     this._events = events;
-    console.log("TARGET: ", events);
+  //  console.log("TARGET: ", events);
     this._scaleManager = scaleManager;
     this._expose = expose;
 
@@ -39,15 +44,84 @@ class Game {
     this._geom = geom;
     this._utils = utils;
 
+    this._activities = [];
+    this._gameStarted = false;
     this._exposeGlobal();
   }
 
   /**
-   * @description adds an activity to the engine, as a plugin (todo)
-   * @param act the act object to add.
+   * @description returns a list of all installed activity plugins
+   */
+  public get activities(): IActivity[] {
+    return this._activities;
+  }
+
+  /**
+   * @description has the game already started (screen initialized on webpage)? 
+   */
+  public get gameStarted(): boolean {
+    return this._gameStarted;
+  }
+
+  /**
+     * @description finds and returns an activity type by its code
+     * @param name find the activity type by this code
+     */
+  public get getActivityByName(): Function {
+    return this._getActByName;
+  }
+
+  public get getActivityByCode(): Function {
+    return this._getActByCode;
+  }
+
+  /**
+   * @description adds an activity to the game/engine, as a plugin
+   * @param act the activity type (object) to add.
    */
   public addActivity(act: IActivity) {
+    this.activities.push(act);
+  }
 
+  /**
+   * @description Removes an activity from the game/engine
+   * @param act The activity type (object) to remove.
+   */
+  public removeActivity(act: IActivity): boolean {
+    if(this.activities.indexOf(act) != -1){
+      this.activities.splice(this.activities.indexOf(act), 1);
+      return true;
+    }
+    console.warn('cannot remove an activity that has not been installed: ', act.name);
+    return false;
+  }
+
+  /**
+   * @description Starts the specified activity. Calls 'shutdown' event first.
+   * @param act The activity type (object) to start. Takes the object itself, or it's name in the form of a string
+   */
+  public startActivity(act: IActivity | string, scriptName: any) {
+    if (typeof act !== 'string') {
+      this._startActivity(act, scriptName);
+    }
+    else {
+      let name = act;
+      let activity: IActivity | undefined;
+      activity = this._getActByName(name);
+      if (activity == undefined) {
+        console.error('no activity found by name: ', name);
+      }
+      else {
+        this._startActivity(activity, scriptName);
+      }
+    }
+  }
+
+  private _startActivity(act: IActivity, scriptName: string){
+    // call shutdown, to give the current activity a chance to tidy up before the transition
+   // setTimeout(()=>{debugger}, 1000); 
+    // start the new activity, with the assumption that the shutdown has been handled
+    act.startActivity(scriptName);
   }
 
   /**
@@ -69,10 +143,9 @@ class Game {
 
         this._world.init(this._gameConfig.data.DISPLAY.WIDTH, this._gameConfig.data.DISPLAY.HEIGHT);
 
-
         this._addListeners();
         this._onResize();
-
+        this._gameStarted = true;
         resolve({ status: 'sucess' });
 
       });
@@ -80,11 +153,12 @@ class Game {
   }
 
   /**
-   * @description load a level (via world.loadLevel). 
+   * @description load and start a level (via world.loadLevel). 
    * @param level the level to load
    */
-  public loadLevel(level: ILevel, scriptName: string) {
-    this._world.startLevel(level, scriptName);
+  public loadScene(level: IScene, scriptName: string) {
+    this._events.emit('shutdown');
+    this._world.startScene(level, scriptName);
   }
 
   /**
@@ -101,6 +175,34 @@ class Game {
    */
   public height() {
     return this._gameHeight();
+  }
+
+  /**
+   * @description finds and returns an activity type by its code
+   * @param name find the activity type by this code
+   */
+  private _getActByName(name: string): IActivity | undefined {
+    return this._getActByProperty('name', name);
+  }
+
+  /**
+  * @description finds and returns an activity type by its name
+  * @param code find the activity type by this name
+  */
+  private _getActByCode(code: string): IActivity | undefined {
+    return this._getActByProperty('code', code);
+  }
+
+  private _getActByProperty(property: string, value: string): any | undefined {
+    let acts: any[] = this._activities;
+    for (let i = 0; i < this._activities.length; i++) {
+      if (acts[i][property] == value) {
+        return this._activities[i];
+      }
+    }
+
+    console.warn('could not find an installed activity with %s: %s', property, value);
+    return undefined;
   }
 
   private _onResize() {

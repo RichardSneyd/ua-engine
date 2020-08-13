@@ -8,7 +8,6 @@ class AjaxLoader {
     loadFile(url: string, onDone?: Function) {
         axios.get(url).then((data) => {
             if(onDone !== undefined){
-                console.log('axios callback for %s', url);
                 onDone(data);
             }
         });

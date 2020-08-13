@@ -129,6 +129,7 @@ class Button {
     }
 
     playAnimation(name: string, loop: boolean = true) {
+       // console.log(`%c play ${name}  for ${this.sprite.textureName}?`, 'color: orange;');
         this.sprite.animations.play(name, loop);
     }
 
@@ -148,22 +149,22 @@ class Button {
 
     
     private _onUp() {
-        console.log('onUp called for: ', this);
+       // console.log('onUp called for: ', this);
         
         this.playAnimation(this.animNames.up);
         if(this._onUpCallback !== null){
-            console.log('onUpCallback not null');
+          //  console.log('onUpCallback not null');
             this._onUpCallback.bind(this._context)();
         }
     }
 
     private _onOver() {
-        console.log('onOver called for: ', this);
+       // console.log('onOver called for: ', this);
         this.playAnimation(this.animNames.over);
     }
 
     private _onOut() {
-        console.log('onOut called for: ', this);
+      //  console.log('onOut called for: ', this);
         this.playAnimation(this.animNames.out);
     }
 }

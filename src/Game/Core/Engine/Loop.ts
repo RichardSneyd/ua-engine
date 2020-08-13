@@ -37,8 +37,9 @@ class Loop {
     if (fObj == null) {
       let o = this._newFunObj(f, context);
       this._fList.push(o);
+      console.log(`%csuccessfully added listener with context %s to Loop`, 'color:green', context);
     } else {
-      console.error("trying to add function twice with identical context: ", context);
+      console.error("trying to add function %s twice with identical context: ", f, context);
     }
   }
 
@@ -48,12 +49,14 @@ class Loop {
    * @param context the context of the function to remove (required to find the exact function of exact objectc)
    */
   public removeFunction(f: Function, context: any) {
+    console.log(this._fList);
     let i = this._getFunObj(f, context);
 
     if (i != null) {
       this._fList.splice(this._fList.indexOf(i), 1);
+      console.log(`%cremoved listener with context %s`, 'color:green', context);
     } else {
-      console.warn("Did not find function %s to remove", f);
+      console.warn("Did not find loop listener with context %s, so cannot remove", context);
     }
   }
 
@@ -99,6 +102,7 @@ class Loop {
       if (f == this._fList[c].function && this._fList[c].context == context) return this._fList[c];
     }
 
+    console.warn("Did not find loop listener with context %", context);
     return null;
   }
 

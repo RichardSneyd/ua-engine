@@ -20,7 +20,8 @@ const config = {
         src: ['src/Game/'],
         dest: 'src/Dep/ControlContainer.ts',
         //Maintain no space between commas!
-        single: ['Loader',
+        single: [
+            'Loader',
             'Loop',
             'Events',
             'AudioManager',

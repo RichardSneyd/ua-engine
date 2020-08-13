@@ -18,8 +18,8 @@ interface IScreen {
 
   clearScreen(): void;
 
-  changeTexture(sprite: Sprite, name: string, frame?: string | null): void;
-
+  changeTexture(sprite: Sprite, texture: string | any, frame?: string | null): void;
+  toTexture(object: PIXI.DisplayObject): any;
   createSpine(name: string): any;
 
   enableInput(sprite: any): void;

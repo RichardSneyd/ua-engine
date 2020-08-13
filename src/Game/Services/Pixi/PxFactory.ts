@@ -1,4 +1,4 @@
-import { Application, Loader, Sprite, Renderer, Container, NineSlicePlane, Point, Texture} from 'pixi.js';
+import { Application, Loader, Sprite, Renderer, Container, NineSlicePlane, Point, Texture, RenderTexture, DisplayObject} from 'pixi.js';
 import * as PIXI from 'pixi.js';
 import PxText from './PxText';
 
@@ -16,7 +16,6 @@ class PxFactory {
       height: h
     });
   }
-
   public createSprite(texture: any): Sprite {
 
     return new Sprite(texture);
