@@ -129,7 +129,7 @@ class Button {
     }
 
     playAnimation(name: string, loop: boolean = true) {
-        console.log(`%c play ${name}  for ${this.sprite.textureName}?`, 'color: orange;');
+       // console.log(`%c play ${name}  for ${this.sprite.textureName}?`, 'color: orange;');
         this.sprite.animations.play(name, loop);
     }
 

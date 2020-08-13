@@ -33,7 +33,7 @@ class FrameAnimationManager implements IAnimationManager {
     let anim = this._getAnim(name);
 
     if (anim != null) {
-      console.log(`%c calling play on ${name}  for ${this._go.textureName}?`, 'color: purple;');
+     // console.log(`%c calling play on ${name}  for ${this._go.textureName}?`, 'color: purple;');
       this._play(anim);
     } else {
       console.error("Could not find animation named: %s", name);

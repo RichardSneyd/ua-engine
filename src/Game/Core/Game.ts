@@ -119,7 +119,6 @@ class Game {
 
   private _startActivity(act: IActivity, scriptName: string){
     // call shutdown, to give the current activity a chance to tidy up before the transition
-    this._events.emit('shutdown');
    // setTimeout(()=>{debugger}, 1000); 
     // start the new activity, with the assumption that the shutdown has been handled
     act.startActivity(scriptName);
@@ -158,6 +157,7 @@ class Game {
    * @param level the level to load
    */
   public loadScene(level: IScene, scriptName: string) {
+    this._events.emit('shutdown');
     this._world.startScene(level, scriptName);
   }
 
