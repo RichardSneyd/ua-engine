@@ -60,7 +60,7 @@ class HwPlayer {
     }
 
     private _getHowlByName(name: string): Howl | null {
-        let res = this._loader.getSndResByBasename(name);
+        let res = this._loader.getSndResource(name, true);
         if (res !== null) {
             return <Howl>res.data;
         }

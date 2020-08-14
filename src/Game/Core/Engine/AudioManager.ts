@@ -89,7 +89,7 @@ class AudioManager {
     }
 
     private _stop(name: string) {
-        let res = this._loader.getSndResByBasename(name);
+        let res = this._loader.getSndResource(name);
         if (res !== null) {
             this._playing.splice(this._playing.indexOf(name), 1);
             this._hwPlayer.stop(res);
@@ -109,12 +109,12 @@ class AudioManager {
     }
 
     private _pauseFile(name: string) {
-        let res = this._loader.getSndResByBasename(name);
+        let res = this._loader.getSndResource(name, true);
         if (res !== null) this._hwPlayer.pause(res);
     }
 
     private _resumeFile(name: string) {
-        let res = this._loader.getSndResByBasename(name);
+        let res = this._loader.getSndResource(name, true);
         if (res !== null) this._hwPlayer.resume(res);
     }
 
@@ -136,7 +136,7 @@ class AudioManager {
 
     private _stopInstPlaying() {
         this._instArr = [];
-        let res = this._loader.getSndResByBasename(this._instPlaying);
+        let res = this._loader.getSndResource(this._instPlaying, true);
         if (res !== null) {
             this._hwPlayer.stop(res);
             this._instPlaying = '';
