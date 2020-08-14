@@ -7,12 +7,14 @@ class Resource {
   private _basename: string; // filename, without extension
   private _loaded: boolean;
   private _data: any;
+  private _ext: string;
 
   constructor() {
     this._type = ResType.BLANK;
     this._url = '';
     this._name = '';
     this._basename = '';
+    this._ext = '';
     this._loaded = false;
     this._data = null;
   }
@@ -38,6 +40,10 @@ class Resource {
 
   get loaded(): boolean {
     return this._loaded;
+  }
+
+  get ext(): string {
+    return this._ext;
   }
 
   set data(dat: any) {
@@ -107,8 +113,9 @@ class Resource {
     this._type = type;
     this._url = url;
     this._loaded = loaded;
-    this._name = this._getBaseName(url);
-    this._basename = this._getBaseName(url);
+    this._name = this._getName(url);
+    this._ext = this._getExtension(url);
+    this._basename = this._name;
   }
 
   private _getImgTag(): string {
@@ -127,7 +134,7 @@ class Resource {
     return ResType.JSN;
   }
 
-  private _getName(url: string): string {
+  /* private _getName(url: string): string {
     let arr = this._getURLChunks(url);
     let filename = arr[arr.length - 1];
     let nameArr = filename.split('.');
@@ -146,10 +153,10 @@ class Resource {
     //console.log("name: %s", name);
 
     return name;
-  }
+  } */
 
   // WIP
-  private _getBaseName(url: string) {
+  private _getName(url: string) {
     return this._filenameArrFromURL(url)[0];
   }
 
