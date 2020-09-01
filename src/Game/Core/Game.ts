@@ -12,6 +12,7 @@ import Geom from './Geom/Geom';
 import Utils from './Engine/Utils/Utils';
 import IScene from './Engine/IScene';
 import ILevel from './Engine/ILevel';
+import Transitions from '../Core/Engine/Transitions';
 //import ObjectCore from './Engine/GameObjects/Components/ObjectCore';
 
 class Game {
@@ -24,6 +25,7 @@ class Game {
   protected _activities: IActivity[];
   protected _currentActivity: IActivity;
   protected _gameStarted: boolean;
+  protected _transitions = Transitions;
 
   constructor(world: World, loop: Loop, loader: Loader,
     events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
@@ -55,6 +57,10 @@ class Game {
   public get activities(): IActivity[] {
     return this._activities;
   }
+
+ /*  public get transitions() {
+    return this._transitions;
+  } */
 
   /**
    * @description has the game already started (screen initialized on webpage)? 
@@ -228,6 +234,7 @@ class Game {
     this._expose.add('goFactory', this._goFactory);
     this._expose.add('geom', this._geom);
     this._expose.add('utils', this._utils);
+    this._expose.add('transitions', this._transitions);
   }
 
   private _addListeners(): void {

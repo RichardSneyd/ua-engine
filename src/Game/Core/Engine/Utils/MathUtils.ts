@@ -28,7 +28,7 @@ class MathUtils {
         return lowest;
     }
 
-    clamp(val: number, min: number, max: number){
+    public static clamp(val: number, min: number, max: number){
         let result = val;
         if(result > max){
             result = max;
@@ -40,7 +40,7 @@ class MathUtils {
         return result;
     }
 
-    round(val: number){
+    public static round(val: number){
         return Math.round(val);
     }
 

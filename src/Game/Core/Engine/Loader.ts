@@ -29,6 +29,9 @@ class Loader {
     this._base = base;
   }
 
+  /**
+   * @description load progress as a float value between 0 and 1
+   */
   get progress(): number {
     let done: number = 0;
     let notDone: number = 0;
@@ -56,6 +59,13 @@ class Loader {
     }
   }
 
+  /**
+   * @description load progress as a percentage
+   */
+  get progressPercentage(): number {
+    return Math.floor(this.progress * 100);
+  }
+
   constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader,
     ajaxLoader: AjaxLoader, gameConfig: GameConfig, loop: Loop, events: Events) {
     this._resource = resource;
@@ -75,7 +85,7 @@ class Loader {
     (<any>window).loader = this;
   }
 
-  resList() {
+  get resList() {
     return this._resList;
   }
 
@@ -98,9 +108,8 @@ class Loader {
    */
   public addImage(name: string) {
     let url = this._getPath().img + name;
+    // if the file has .json extension, it's an atlas, so change path. Won't be confused with spine assets - they are loaded via addSpine
     if(name.indexOf('.json') !== -1){url = this._getPath().atlas + name}
-   /*  let urlNoExt = url.split('.')[0];
-    console.log('try adding:' + urlNoExt); */
     if (this._getResource(url, false) == null) {
       let res = this._createResource();
       res.initImage(url, false);
@@ -121,7 +130,7 @@ class Loader {
    * @param name the filename of the atlas you wish to load, including '.json' extension. image is loaded internally.
    */
   public addAtlas(name: string) {
-    // handles atlas at PxLoader level, added just the same as image resource....
+    // handles atlas at PxLoader level, added just the same as image resource, except with .json ext instead of .img ....
     this.addImage(name);
   }
 
@@ -147,8 +156,6 @@ class Loader {
   addSnd(name: string) {
     let url = this._getPath().snd + name;
     if (this._getResource(url, false) == null) {
-      // all sounds will be housed in the same directory, so..
-     // this.base = this._getPath().snd;
       let res = this._createResource();
       res.initSnd(url, false);
 
@@ -199,6 +206,7 @@ class Loader {
   }
 
   private _sendAllDone(resolve: Function, reject: Function) {
+    console.log('progress: ', this.progressPercentage, '%');
     if (this._downloadComplete) {
       resolve({ status: true });
       console.log('%cdownload complete, promise RESOLVED', 'color: green;')
@@ -214,10 +222,7 @@ class Loader {
   }
 
   public getTexture(sprite: string, frame: string | null = null): any {
-    // console.log(this._getPath().img);
-   // let url = this._getPath().img + sprite;
     let res = this.getImgResource(sprite, true);
-   // console.log('url:', url);
     if (res != null) {
       return this._extractTexture(res.data, frame);
     } else {
@@ -351,7 +356,7 @@ class Loader {
       let currentName = resArr[c].name;
 
       if (!byName) {
-        if (currentUrl == _url) return resArr[c];
+        if (currentUrl.indexOf(_url) !== -1) return resArr[c];
       } else {
         //console.log("currentName(%s) == name(%s)", currentName, url)
         if (currentName == _url) return resArr[c];
@@ -372,7 +377,6 @@ class Loader {
   getSpnResource(url: string, byName: boolean = false): Resource | null {
     return this._getResource(url, byName, this._getSpnArray());
   }
-
 
   //Foreign dependencies
   private _createResource(): Resource {
@@ -408,7 +412,6 @@ class Loader {
 
     return r;
   }
-
 
   private _getSpnArray(array?: Resource[]): Resource[] {
     let r: Resource[] = [];
@@ -463,6 +466,7 @@ class Loader {
     }
   }
 
+  // retrieve texture object from resource
   private _extractTexture(data: any, frame: any = null) {
     return this._imgLoader.getTexture(data, frame);
   }

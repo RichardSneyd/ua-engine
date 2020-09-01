@@ -3,17 +3,18 @@ import Loader from "./Loader";
 import Point from "../Geom/Point";
 import IScreen from "../../Services/IScreen";
 import EventNames from "./EventNames";
+import ScaleManager from "./ScaleManager";
 
 
 class InputManager {
     protected _pointFactory: Point;
     private _eventNames: EventNames;
-    private _events: Events; private _loader: Loader; private _screen: IScreen;
+    private _events: Events; private _loader: Loader; private _screen: IScreen; private _scaleManager: ScaleManager;
     private _pointer: Point; // the mouse/pointer x, y
     private _pointerMovement: Point; // the number of pixels the mouse x and y have moved since the last mousemove/pointermove event
 
-    constructor(events: Events, loader: Loader, screen: IScreen, eventNames: EventNames, pointFactory: Point) {
-        this._events = events; this._loader = loader; this._screen = screen;this._eventNames = eventNames;
+    constructor(events: Events, loader: Loader, screen: IScreen, eventNames: EventNames, pointFactory: Point, scaleManager: ScaleManager) {
+        this._events = events; this._loader = loader; this._screen = screen;this._eventNames = eventNames; this._scaleManager = scaleManager;
         // this._onDown = [];
         //  this._onUp = [];
         this._pointFactory = pointFactory;
@@ -77,10 +78,12 @@ class InputManager {
     }
 
     private _onPointerMove(data: any) { 
-        this._pointer = data.mouseX;
-        this._pointer = data.mouseY;
-        this._pointerMovement.x = data.moveX;
-        this._pointerMovement.y = data.moveY;
+        this._pointer.x = data.mouseX * this._scaleManager.scaleFactor();
+        this._pointer.y = data.mouseY * this._scaleManager.scaleFactor();
+        this._pointerMovement.x = data.moveX * this._scaleManager.scaleFactor();
+        this._pointerMovement.y = data.moveY * this._scaleManager.scaleFactor();
+        console.log('pointer moved: ', this._pointer);
+      //  console.log('data: ', data);
     }
 
     private _call(data: any, arr: any[]) {

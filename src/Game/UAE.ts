@@ -8,6 +8,7 @@ import GameConfig from './Core/Engine/GameConfig';
 import GOFactory from './Core/Engine/GameObjects/GOFactory';
 import Geom from './Core/Geom/Geom';
 import Utils from './Core/Engine/Utils/Utils';
+import Transitions from './Core/Engine/Transitions';
 
 /**
  * @class the UAEngine API. 
@@ -23,6 +24,7 @@ class UAE {
   public static gameConfig: GameConfig;
   public static geom: Geom;
   public static utils: Utils;
+  public static transitions = Transitions;
 }
 
 export default UAE;

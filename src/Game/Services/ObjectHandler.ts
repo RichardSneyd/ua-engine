@@ -16,6 +16,10 @@ class ObjectHandler implements IObjectHandler {
     object.pivot.set(Math.floor(anchor.x * object.width), Math.floor(anchor.y * object.height));
   }
 
+  public setAngle(object: Container, angle: number){
+    object.angle = angle;
+  }
+
   public setSize(object: Container, width: number, height: number) {
     this.setWidth(object, width)
     this.setHeight(object, height);
