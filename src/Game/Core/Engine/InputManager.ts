@@ -19,6 +19,7 @@ class InputManager {
         //  this._onUp = [];
         this._pointFactory = pointFactory;
         this._pointer = this._pointFactory.createNew(0, 0);
+
         this._pointerMovement = this._pointFactory.createNew(0, 0);
 
         // catch Sprite from inputdown event (mousedown and touchstart)
@@ -28,10 +29,17 @@ class InputManager {
     }
 
     /**
-     * @description get the pointer position as a Point object (x, y)
+     * @description get the pointer position as a Point object (x, y). In game-units (auto-corrected for scale)
      */
     get pointer() {
         return this._pointer;
+    }
+
+     /**
+     * @description get the amount the pointer moved since the last tick as a Point object (x, y). In game-units (auto-corrected for scale)
+     */
+    get pointerMovement() {
+        return this._pointerMovement;
     }
 
     /**
@@ -78,11 +86,12 @@ class InputManager {
     }
 
     private _onPointerMove(data: any) { 
-        this._pointer.x = data.mouseX * this._scaleManager.scaleFactor();
-        this._pointer.y = data.mouseY * this._scaleManager.scaleFactor();
-        this._pointerMovement.x = data.moveX * this._scaleManager.scaleFactor();
-        this._pointerMovement.y = data.moveY * this._scaleManager.scaleFactor();
-      //  console.log('pointer moved: ', this._pointer);
+      //  console.log('this: ', this);
+        this._pointer.x = data.mouseX / this._scaleManager.scaleFactor();
+        this._pointer.y = data.mouseY / this._scaleManager.scaleFactor();
+        this._pointerMovement.x = data.moveX / this._scaleManager.scaleFactor();
+        this._pointerMovement.y = data.moveY / this._scaleManager.scaleFactor();
+       // console.log('pointer moved: ', this._pointer);
       //  console.log('data: ', data);
     }
 

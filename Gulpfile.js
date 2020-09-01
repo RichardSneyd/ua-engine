@@ -44,7 +44,9 @@ const config = {
             'Text',
             'Vectors',
             'GameConfig',
-            'TransitionManager'
+            'ScaleManager',
+            'TransitionManager',
+            'InputManager'
         ],
         ignore: [
             'UAENGINE'
