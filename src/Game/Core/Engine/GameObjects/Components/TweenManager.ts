@@ -18,6 +18,8 @@ class TweenManager {
      * @param tweenName the name of the tween. You will referense this when playing it in future
      * @param easing The easing Algorithm to use.
      * @param object The GameObject to apply the tween to
+     * @param repeat 0 for no repeat. Infinity for infinite repeat.
+     * @param delay in milliseconds. Defaults to 0.
      */
     public add(tweenName: string, easing: string, object: any, repeat: number = 0, delay: number = 0): Tween {
         let tween = this._getTween(tweenName);
@@ -58,8 +60,8 @@ class TweenManager {
     }
 
 
-    public once(tweenName: string, easing: string, object: any, toObject: any, duration: number, updateFunction?: Function): Tween{
-        let tween = this.add(tweenName, easing, object);
+    public once(tweenName: string, easing: string, object: any, toObject: any, duration: number, delay: number = 0, updateFunction?: Function): Tween{
+        let tween = this.add(tweenName, easing, object, 0, delay);
         this.play(tweenName, toObject, duration, updateFunction);
         tween.onComplete(()=>{
             console.log('onComplete called through TweenManager.once, removing tween...');

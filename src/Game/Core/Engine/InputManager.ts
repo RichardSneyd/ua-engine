@@ -82,7 +82,7 @@ class InputManager {
         this._pointer.y = data.mouseY * this._scaleManager.scaleFactor();
         this._pointerMovement.x = data.moveX * this._scaleManager.scaleFactor();
         this._pointerMovement.y = data.moveY * this._scaleManager.scaleFactor();
-        console.log('pointer moved: ', this._pointer);
+      //  console.log('pointer moved: ', this._pointer);
       //  console.log('data: ', data);
     }
 
