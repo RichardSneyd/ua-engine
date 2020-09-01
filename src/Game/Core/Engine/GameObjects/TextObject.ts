@@ -18,9 +18,9 @@ class TextObject implements IGameObject {
     private _letters: string;
     private _tweenManager: TweenManager;
 
-    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler, 
+    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler,
         scaleHandler: ScaleHandler, tweenManager: TweenManager) {
-        this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input; 
+        this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input;
         this._scaleHandler = scaleHandler; this._tweenManager = tweenManager;
         this._letters = '$$$$____$$$$'; //default uninitialized string
     }
@@ -35,8 +35,8 @@ class TextObject implements IGameObject {
         this._pcHandler.init(this, this._core, parent);
     }
 
-    public _update(time: any){
-       this._tweenManager.update(time);
+    public _update(time: any) {
+        this._tweenManager.update(time);
     }
 
     public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null): TextObject {
@@ -50,7 +50,15 @@ class TextObject implements IGameObject {
         return textObj;
     }
 
-    get tweens(){
+    get angle() {
+        return this._core.angle;
+    }
+
+    set angle(angle: number) {
+        this._core.angle = angle;
+    }
+
+    get tweens() {
         return this._tweenManager;
     }
 
@@ -58,11 +66,11 @@ class TextObject implements IGameObject {
         return this._input;
     }
 
-    get scaleHandler(){
+    get scaleHandler() {
         return this._scaleHandler;
     }
 
-    get pcHandler(){
+    get pcHandler() {
         return this._pcHandler;
     }
 
@@ -99,34 +107,34 @@ class TextObject implements IGameObject {
         this._core.data = data;
     }
 
-    
+
     get textureName() {
         return this._core.textureName;
     }
-    
-      /**
-     * @description READ-ONLY.
-     */
+
+    /**
+   * @description READ-ONLY.
+   */
     get atlas() {
         return this._core.atlas;
     }
-    
+
     get x() {
         return this._core.x;
     }
-    
-    set x(x: number){
+
+    set x(x: number) {
         this._core.x = x;
     }
-    
-    get alpha(){
+
+    get alpha() {
         return this._core.alpha;
     }
-    
-    set alpha(alpha: number){
+
+    set alpha(alpha: number) {
         this._core.alpha = alpha;
     }
-    
+
     /*  get core() {
         return this._core;
     } */
@@ -134,23 +142,23 @@ class TextObject implements IGameObject {
     get events() {
         return this._core.events;
     }
-    
+
     get y() {
         return this._core.y;
     }
-    
+
     set y(y: number) {
         this._core.y = y;
     }
-    
+
     get visible() {
         return this._core.visible;
     }
-    
-    set visible(visible: boolean){
+
+    set visible(visible: boolean) {
         this._core.visible = visible;
     }
-    
+
     get setOrigin(): (x: number, y?: number) => void {
         return this._core.setOrigin.bind(this._core);
     }
@@ -159,42 +167,42 @@ class TextObject implements IGameObject {
         return this._core.origin;
     }
 
-    get relativeMove() : (xDiff: number, yDiff: number) => void {
+    get relativeMove(): (xDiff: number, yDiff: number) => void {
         return this._core.relativeMove.bind(this._core);
     }
 
-    get enableMask() : (x: number, y: number, width: number, height: number) => void {
+    get enableMask(): (x: number, y: number, width: number, height: number) => void {
         return this._core.enableMask.bind(this._core);
     }
-    
+
     get width() {
         return this._core.width;
     }
-    
+
     set width(width: number) {
         this._core.width = width;
     }
-    
+
     get height() {
         return this._core.height;
     }
-    
-    set height(height: number){
+
+    set height(height: number) {
         this._core.height = height;
     }
-    
+
     public changeTexture(textureName: string) {
         this._core.changeTexture(textureName);
     }
-    
+
     addChild(child: IGameObject): void {
         this._pcHandler.addChild(child);
     }
-    
+
     removeChild(child: IGameObject): void {
         this._pcHandler.removeChild(child);
     }
-    
+
     hasChild(child: IGameObject): boolean {
         return this._pcHandler.hasChild(child);
     }
@@ -210,9 +218,40 @@ class TextObject implements IGameObject {
     get children() {
         return this._pcHandler.children;
     }
-    
+
+
+    /**
+    * @description look at (angle towards) an object on screen. Any object with an x and y parameter is acceptible
+    * @param object the object (must have x and y properties) to angle towards 
+    */
+    public lookAt(object: { x: number, y: number }) {
+        this._core.lookAt(object);
+    }
+
+    /**
+     * @description find the angle (in degrees) between two objects.
+     * @param object the first object.
+     * @param object2 the second object.
+     */
+    public angleBetween(object: { x: number, y: number }, object2: { x: number, y: number }): number {
+        return this._core.angleBetween(object, object2);
+    }
+
+    /**
+     * @description find the angle in radians between two points, based on the y and x distances between them
+     * @param yDist the distance on the y axis between the objects
+     * @param xDist the distance on the x axis between the objects
+     */
+    public radiansBetween(yDist: number, xDist: number): number {
+        return this._core.radiansBetween(yDist, xDist);
+    }
+
+    public radiansToDegrees(radians: number): number {
+        return this._core.radiansToDegrees(radians);
+    }
+
     destroy() {
-        if(this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
+        if (this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
         this._core.destroy();
     }
 }

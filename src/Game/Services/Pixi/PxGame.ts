@@ -122,11 +122,11 @@ class PxGame {
     return cont;
   }
 
-  public addSprite(x: number, y: number, sprName: string, frame: string | null): Sprite {
+  public addSprite(x: number, y: number, texture: string, frame: string | null): Sprite {
     //  let texture = this._loader.getTexture(sprName);
     let sprite;
 
-    sprite = this._createSprite(x, y, sprName, frame);
+    sprite = this._createSprite(x, y, texture, frame);
 
     sprite.x = x;
     sprite.y = y;
@@ -286,9 +286,11 @@ class PxGame {
     if(this._game) return this._game.stage.height; return null;
   }
 
-  private _createSprite(x: number, y: number, sprName: string, frame: string | null = null) {
-    let texture = this._loader.getTexture(sprName, frame);
-    let sprite = this._pxFactory.createSprite(texture);
+  private _createSprite(x: number, y: number, texture: string | any, frame: string | null = null) {
+    let textureObj = texture;
+    if(typeof texture == 'string'){textureObj = this._loader.getTexture(texture, frame);}
+   
+    let sprite = this._pxFactory.createSprite(textureObj);
     sprite.x = x;
     sprite.y = y;
 

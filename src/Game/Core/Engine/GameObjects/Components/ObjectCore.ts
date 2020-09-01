@@ -64,9 +64,9 @@ class ObjectCore {
     this._initialized = true;
     this._updateCallback = updateCallback;
 
-    if(this._go instanceof SpineObject == false){
+    if (this._go instanceof SpineObject == false) {
 
-    } 
+    }
     this._importSize();
     this._updateSize();
     this._setListners();
@@ -78,11 +78,11 @@ class ObjectCore {
     return this._objectHandler;
   }
 
-  get initialized(){
+  get initialized() {
     return this._initialized;
   }
 
-  get screen(){
+  get screen() {
     return this._screen;
   }
 
@@ -97,15 +97,15 @@ class ObjectCore {
   set x(xVal: number) {
     this._x = Number(xVal);
     this.objectHandler.setX(this._data, this._x);
-   // this._updateXY();
-   // this.updateOrigin();
+    // this._updateXY();
+    // this.updateOrigin();
   }
 
   set y(yVal: number) {
     this._y = Number(yVal);
     this.objectHandler.setY(this._data, this.y);
-  //  this._updateXY();
-  //  this.updateOrigin();
+    //  this._updateXY();
+    //  this.updateOrigin();
   }
 
   set width(width: number) {
@@ -138,7 +138,7 @@ class ObjectCore {
     this._origin.x = origin.x;
     this._origin.y = origin.y;
     this.updateOrigin();
-   // this._objectHandler.setXy(this._data, this._x, this._y);
+    // this._objectHandler.setXy(this._data, this._x, this._y);
   }
 
   get origin() {
@@ -192,6 +192,47 @@ class ObjectCore {
     return this._input.pixelPerfect;
   }
 
+  get angle(): number {
+    return this._data.angle;
+  }
+
+  set angle(angle: number) {
+    this.objectHandler.setAngle(this.data, angle);
+  }
+
+  /**
+   * @description look at (angle towards) an object on screen. Any object with an x and y parameter is acceptible
+   * @param object the object (must have x and y properties) to angle towards 
+   */
+  public lookAt(object: { x: number, y: number }) {
+    this.angle = this.angleBetween(this, object);
+  }
+
+  /**
+   * @description find the angle (in degrees) between two objects.
+   * @param object the first object.
+   * @param object2 the second object.
+   */
+  public angleBetween(object: { x: number, y: number }, object2: { x: number, y: number }): number {
+    let xDist = Math.abs(this.x - object.x); 
+    let yDist = Math.abs(this.y - object.y);
+    let radians = this.radiansBetween(yDist, xDist);
+    return this.radiansToDegrees(radians);
+  }
+
+  /**
+   * @description find the angle in radians between two points, based on the y and x distances between them
+   * @param yDist the distance on the y axis between the objects
+   * @param xDist the distance on the x axis between the objects
+   */
+  public radiansBetween(yDist: number, xDist: number): number {
+    return Math.atan2(yDist, xDist);
+  }
+
+  public radiansToDegrees(radians: number): number {
+    return Math.PI * 180 * radians;
+  }
+
   public enableMask(x: number, y: number, width: number, height: number) {
     this._mask.init(x, y, width, height);
 
@@ -213,7 +254,10 @@ class ObjectCore {
     this._objectHandler.destroy(this._data);
   }
 
-  public getGameUnitBounds() : {x: number, y: number, width: number, height: number} {
+  /**
+   * @description returns the bounds of the object in game units
+   */
+  public getGameUnitBounds(): { x: number, y: number, width: number, height: number } {
     let pxBounds = this._objectHandler.getBounds(this.data);
     let bounds = pxBounds;
     bounds.x /= this._scaleHandler.scaleFactor;
@@ -284,9 +328,9 @@ class ObjectCore {
     this.origin = this._pointFactory.createNew(xVal, yVal);
   }
 
-  updateOrigin(){
-   // let scaleX = this._scaleHandler.getScale(this._scaleHandler.scaleX);
-  //  let scaleY = this._scaleHandler.getScale(this._scaleHandler.scaleY);
+  updateOrigin() {
+    // let scaleX = this._scaleHandler.getScale(this._scaleHandler.scaleX);
+    //  let scaleY = this._scaleHandler.getScale(this._scaleHandler.scaleY);
 
     let p = this._pointFactory.createNew(this._origin.x * this._scaleHandler.scaleX, this._origin.y * this._scaleHandler.scaleY);
     this._objectHandler.setPivot(this._data, p);
@@ -297,23 +341,23 @@ class ObjectCore {
   }
 
   public createNew(): ObjectCore {
-  //  let am = this._animationManager.createNew();
+    //  let am = this._animationManager.createNew();
     //  console.log('new am: ', am);
     return new ObjectCore(this._screen, this._objectHandler, this._input.createNew(), this._mask.createNew(), this._math, this._events, this._pointFactory, this._loop);
   }
 
   public changeTexture(texture: string | any) {
-      if (this._atlas != null) {
-        this._screen.changeTexture(this._data, this._atlas, texture);
-      } else {
-        this._screen.changeTexture(this._data, texture);
-      }
+    if (this._atlas != null) {
+      this._screen.changeTexture(this._data, this._atlas, texture);
+    } else {
+      this._screen.changeTexture(this._data, texture);
+    }
   }
 
   // ALWAYS listen for this update, because it calls the gameObjects update. 
   public update(time: number) {
     // console.log('update called in ObjectCore');
-    if(this._updateCallback !== undefined && this._updateCallback !== null){
+    if (this._updateCallback !== undefined && this._updateCallback !== null) {
       this._updateCallback.bind(this._go)(time);
     }
   }
@@ -332,25 +376,25 @@ class ObjectCore {
   }
 
   private _updateXY() {
-    let target = {x: this._x, y: this._y};
-   /*  if(this._go.pcHandler.parent !== null && this._go.pcHandler.parent !== undefined){
-
-      target = this._scaleHandler.getXY(this._x, this._y);
-   } */
+    let target = { x: this._x, y: this._y };
+    /*  if(this._go.pcHandler.parent !== null && this._go.pcHandler.parent !== undefined){
+ 
+       target = this._scaleHandler.getXY(this._x, this._y);
+    } */
     this._objectHandler.setXy(this._data, target.x, target.y);
   }
- 
+
   private _importSize() {
     this._width = this._objectHandler.getSize(this._data).width / this._scaleHandler.scaleX;
     this._height = this._objectHandler.getSize(this._data).height / this._scaleHandler.scaleY;
-  } 
+  }
 
   private _updateSize() {
-   // let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
-  //  let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
+    // let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
+    //  let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
 
     this._objectHandler.setSize(this._data, this._width * this._go.scaleHandler.scaleX, this._height * this._go.scaleHandler.scaleY);
- //   this._objectHandler.setSize(this._data, this._width * scaleX, this._height * scaleY);
+    //   this._objectHandler.setSize(this._data, this._width * scaleX, this._height * scaleY);
   }
 
   private _setListners() {

@@ -112,12 +112,15 @@ class Tween {
     }
   }
 
-  init(name: string, easing: string, object: any) {
+  init(name: string, easing: string, object: any, repeat: number = 0, delay: number = 0) {
     this._name = name;
     this._easing = easing;
     this._object = object;
 
     this._data = new TWEEN.Tween(this._object);
+    if(repeat !== 0) this._data.repeat(repeat);
+    if(delay !== 0) this._data.delay(delay);
+    
     this._data.onComplete(()=>{this._callOnComplete()});
     this._data.onRepeat(()=>{this._callOnRepeat()});
     this._data.onStart(()=>{this._callOnStart()});

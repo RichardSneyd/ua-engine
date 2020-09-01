@@ -53,6 +53,14 @@ class SpriteObject implements IFramedGameObject {
         this._core.changeTexture(textureName);
     }
 
+    get angle() {
+        return this._core.angle;
+    }
+
+    set angle(angle: number) {
+        this._core.angle = angle;
+    }
+
     get tweens() {
         return this._tweenManager;
     }
@@ -97,9 +105,9 @@ class SpriteObject implements IFramedGameObject {
         this._core.x = x;
     }
 
- /*    get core() {
-        return this._core;
-    } */
+    /*    get core() {
+           return this._core;
+       } */
 
     get events() {
         return this._core.events;
@@ -117,7 +125,7 @@ class SpriteObject implements IFramedGameObject {
         return this._core.visible;
     }
 
-    set visible(visible: boolean){
+    set visible(visible: boolean) {
         this._core.visible = visible;
     }
 
@@ -134,19 +142,19 @@ class SpriteObject implements IFramedGameObject {
         return this._core.origin;
     }
 
-    get relativeMove() : (xDiff: number, yDiff: number) => void {
+    get relativeMove(): (xDiff: number, yDiff: number) => void {
         return this._core.relativeMove.bind(this._core);
     }
 
-    get enableMask() : (x: number, y: number, width: number, height: number) => void {
+    get enableMask(): (x: number, y: number, width: number, height: number) => void {
         return this._core.enableMask.bind(this._core);
     }
 
-    get alpha(){
+    get alpha() {
         return this._core.alpha;
     }
 
-    set alpha(alpha: number){
+    set alpha(alpha: number) {
         this._core.alpha = alpha;
     }
 
@@ -169,11 +177,11 @@ class SpriteObject implements IFramedGameObject {
     addChild(child: IGameObject): void {
         this._pcHandler.addChild(child);
     }
-    
+
     removeChild(child: IGameObject): void {
         this._pcHandler.removeChild(child);
     }
-    
+
     hasChild(child: IGameObject): boolean {
         return this._pcHandler.hasChild(child);
     }
@@ -190,11 +198,46 @@ class SpriteObject implements IFramedGameObject {
         return this._pcHandler.children;
     }
 
-    moveToMouse(evt: any) {
+
+    /**
+    * @description look at (angle towards) an object on screen. Any object with an x and y parameter is acceptible
+    * @param object the object (must have x and y properties) to angle towards 
+    */
+    public lookAt(object: { x: number, y: number }) {
+        this._core.lookAt(object);
+    }
+
+    /**
+     * @description find the angle (in degrees) between two objects.
+     * @param object the first object.
+     * @param object2 the second object.
+     */
+    public angleBetween(object: { x: number, y: number }, object2: { x: number, y: number }): number {
+        return this._core.angleBetween(object, object2);
+    }
+
+    /**
+     * @description find the angle in radians between two points, based on the y and x distances between them
+     * @param yDist the distance on the y axis between the objects
+     * @param xDist the distance on the x axis between the objects
+     */
+    public radiansBetween(yDist: number, xDist: number): number {
+        return this._core.radiansBetween(yDist, xDist);
+    }
+
+    /**
+     * @description convert radians to degrees
+     * @param radians the radians value to convert to degrees
+     */
+    public radiansToDegrees(radians: number): number {
+        return this._core.radiansToDegrees(radians);
+    }
+
+    public moveToMouse(evt: any) {
         this._core.moveToMouse(evt);
     }
 
-     // ALWAYS listen for core.update in events, never this one directly, as it is called from core.update.
+    // ALWAYS listen for core.update in events, never this one directly, as it is called from core.update.
     private _update(time: number) {
         this._tweenManager.update(time);
         this._animationManager.update();

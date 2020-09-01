@@ -19,14 +19,14 @@ class TweenManager {
      * @param easing The easing Algorithm to use.
      * @param object The GameObject to apply the tween to
      */
-    public add(tweenName: string, easing: string, object: any): Tween {
+    public add(tweenName: string, easing: string, object: any, repeat: number = 0, delay: number = 0): Tween {
         let tween = this._getTween(tweenName);
         if (tween != null) {
             console.warn('cannot create 2 tweens with same name; original will be returned'); 
             return tween;
         }
         tween = this._tween.createNew();
-        tween.init(tweenName, easing, object);
+        tween.init(tweenName, easing, object, repeat, delay);
 
         this._tweens.push(tween);
 

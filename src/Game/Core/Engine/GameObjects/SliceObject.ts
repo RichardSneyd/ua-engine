@@ -58,6 +58,14 @@ class SliceObject implements IGameObject {
         this._core.changeTexture(textureName);
     }
 
+    get angle(){
+        return this._core.angle;
+    }
+
+    set angle(angle: number){
+        this._core.angle = angle;
+    }
+
     get tweens() {
         return this._tweenManager;
     }
@@ -188,6 +196,37 @@ class SliceObject implements IGameObject {
 
     get children() {
         return this._pcHandler.children;
+    }
+
+    
+    /**
+    * @description look at (angle towards) an object on screen. Any object with an x and y parameter is acceptible
+    * @param object the object (must have x and y properties) to angle towards 
+    */
+    public lookAt(object: { x: number, y: number }) {
+        this._core.lookAt(object);
+    }
+
+    /**
+     * @description find the angle (in degrees) between two objects.
+     * @param object the first object.
+     * @param object2 the second object.
+     */
+    public angleBetween(object: { x: number, y: number }, object2: { x: number, y: number }): number {
+        return this._core.angleBetween(object, object2);
+    }
+
+    /**
+     * @description find the angle in radians between two points, based on the y and x distances between them
+     * @param yDist the distance on the y axis between the objects
+     * @param xDist the distance on the x axis between the objects
+     */
+    public radiansBetween(yDist: number, xDist: number): number {
+        return this._core.radiansBetween(yDist, xDist);
+    }
+
+    public radiansToDegrees(radians: number): number {
+        return this._core.radiansToDegrees(radians);
     }
 
     destroy() {
