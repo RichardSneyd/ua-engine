@@ -205,8 +205,9 @@ class ObjectCore {
    * @param object the object (must have x and y properties) to angle towards 
    */
   public lookAt(object: { x: number, y: number }) {
-    console.log('lookAt: ', object);
+  //  console.log('lookAt: ', object);
     let angle  = this._math.angleBetween(this, object);
+    this.angle = angle;
   }
 
   public enableMask(x: number, y: number, width: number, height: number) {
