@@ -207,31 +207,6 @@ class SpriteObject implements IFramedGameObject {
         this._core.lookAt(object);
     }
 
-    /**
-     * @description find the angle (in degrees) between two objects.
-     * @param object the first object.
-     * @param object2 the second object.
-     */
-    public angleBetween(object: { x: number, y: number }, object2: { x: number, y: number }): number {
-        return this._core.angleBetween(object, object2);
-    }
-
-    /**
-     * @description find the angle in radians between two points, based on the y and x distances between them
-     * @param yDist the distance on the y axis between the objects
-     * @param xDist the distance on the x axis between the objects
-     */
-    public radiansBetween(yDist: number, xDist: number): number {
-        return this._core.radiansBetween(yDist, xDist);
-    }
-
-    /**
-     * @description convert radians to degrees
-     * @param radians the radians value to convert to degrees
-     */
-    public radiansToDegrees(radians: number): number {
-        return this._core.radiansToDegrees(radians);
-    }
 
     public moveToMouse(evt: any) {
         this._core.moveToMouse(evt);
