@@ -205,32 +205,9 @@ class ObjectCore {
    * @param object the object (must have x and y properties) to angle towards 
    */
   public lookAt(object: { x: number, y: number }) {
-    this.angle = this.angleBetween(this, object);
-  }
-
-  /**
-   * @description find the angle (in degrees) between two objects.
-   * @param object the first object.
-   * @param object2 the second object.
-   */
-  public angleBetween(object: { x: number, y: number }, object2: { x: number, y: number }): number {
-    let xDist = object2.x - object.x;
-    let yDist = object2.y - object.y;
-    let radians = this.radiansBetween(yDist, xDist);
-    return this.radiansToDegrees(radians);
-  }
-
-  /**
-   * @description find the angle in radians between two points, based on the y and x distances between them
-   * @param yDist the distance on the y axis between the objects
-   * @param xDist the distance on the x axis between the objects
-   */
-  public radiansBetween(yDist: number, xDist: number): number {
-    return Math.atan2(yDist, xDist);
-  }
-
-  public radiansToDegrees(radians: number): number {
-    return radians * (180 / Math.PI);
+  //  console.log('lookAt: ', object);
+    let angle  = this._math.angleBetween(this, object);
+    this.angle = angle;
   }
 
   public enableMask(x: number, y: number, width: number, height: number) {
