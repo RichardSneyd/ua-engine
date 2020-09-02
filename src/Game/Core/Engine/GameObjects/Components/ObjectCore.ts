@@ -214,8 +214,8 @@ class ObjectCore {
    * @param object2 the second object.
    */
   public angleBetween(object: { x: number, y: number }, object2: { x: number, y: number }): number {
-    let xDist = Math.abs(this.x - object.x); 
-    let yDist = Math.abs(this.y - object.y);
+    let xDist = object2.x - object.x;
+    let yDist = object2.y - object.y;
     let radians = this.radiansBetween(yDist, xDist);
     return this.radiansToDegrees(radians);
   }
@@ -230,7 +230,7 @@ class ObjectCore {
   }
 
   public radiansToDegrees(radians: number): number {
-    return Math.PI * 180 * radians;
+    return radians * (180 / Math.PI);
   }
 
   public enableMask(x: number, y: number, width: number, height: number) {
