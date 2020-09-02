@@ -103,8 +103,19 @@ class MathUtils {
    * @param object2 the second object.
    */
   public angleBetween(object: { x: number, y: number }, object2: { x: number, y: number }): number {
-    let xDist = object.x - object2.x; 
-    let yDist = object.y - object2.y;
+    return this.angle(object.x, object.y, object2.x, object2.y);
+  }
+
+  /**
+   * @description find the angle between 2 points
+   * @param x1 the x of point 1
+   * @param y1 the y of point 1
+   * @param x2 the x of point 2
+   * @param y2 the y of point 2
+   */
+  public angle(x1: number, y1: number, x2: number, y2: number){
+    let xDist = this.diff(x1, x2); 
+    let yDist = this.diff(y1, y1);
     let radians = this.radiansBetween(yDist, xDist);
     //console.log('radians: ', radians);
     let degrees = this.radiansToDegrees(radians);
@@ -121,9 +132,14 @@ class MathUtils {
     return Math.atan2(yDist, xDist);
   }
 
+  /**
+   * @description convert radians to degrees
+   * @param radians the radians to convert
+   */
   public radiansToDegrees(radians: number): number {
-    return radians * (Math.PI / 180);
+    return radians * (180 / Math.PI);
   }
+  
 }
 
 export default MathUtils;

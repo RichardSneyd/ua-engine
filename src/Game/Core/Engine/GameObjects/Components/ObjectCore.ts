@@ -207,9 +207,6 @@ class ObjectCore {
   public lookAt(object: { x: number, y: number }) {
     console.log('lookAt: ', object);
     let angle  = this._math.angleBetween(this, object);
-    console.log('target angle: ', angle);
-    this.angle = angle;
-    debugger;
   }
 
   public enableMask(x: number, y: number, width: number, height: number) {
