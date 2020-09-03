@@ -215,7 +215,6 @@ class ObjectCore {
   get bottom(): number {
     return this.top + this.height;
   }
-  
   /**
    * @description look at (angle towards) an object on screen. Any object with an x and y parameter is acceptible
    * @param object the object (must have x and y properties) to angle towards 
