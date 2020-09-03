@@ -150,7 +150,7 @@ class ContainerObject implements IGameObject {
     }
 
     get width() {
-        return this._core.width;
+        return this._width();
     }
 
     set width(width: number) {
@@ -158,11 +158,54 @@ class ContainerObject implements IGameObject {
     }
 
     get height() {
-        return this._core.height;
+        //return this._core.height;
+        return this._height();
     }
 
     set height(height: number) {
         this._core.height = height;
+    }
+
+    get left(): number {
+        return this.x;
+    }
+
+    get right(): number {
+        return this.x + this._width();
+    }
+
+    get top(): number {
+        return this.y;
+    }
+
+    get bottom() : number {
+        return this.y + this._height();
+    }
+
+    private _width(): number {
+        let right = 0;
+        let children = this._pcHandler.children;
+        for (let c = 0; c < children.length; c++) {
+            let child = children[c];
+            let childLeft = child.x - (child.width * child.origin.x);
+            let childRight = childLeft + child.width;
+            if (childRight > right) right = childRight;
+        }
+
+        return right;
+    }
+
+    private _height(): number {
+        let bottom = 0;
+        let children = this._pcHandler.children;
+        for (let c = 0; c < children.length; c++) {
+            let child = children[c];
+            let childTop = child.y - (child.height * child.origin.y);
+            let childBottom = childTop + children[c].height;
+            if (childBottom > bottom) bottom = childBottom;
+        }
+
+        return bottom;
     }
 
     // parent/child proxy methods
