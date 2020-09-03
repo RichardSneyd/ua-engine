@@ -78,7 +78,7 @@ class Camera {
     }
 
     get bottom(): number {
-        return this.y + this._gameConfig.data.DISLPAY.HEIGHT;
+        return this.y + this._gameConfig.data.DISPLAY.HEIGHT;
     }
 
     /**
