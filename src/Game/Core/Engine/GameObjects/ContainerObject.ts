@@ -191,6 +191,13 @@ class ContainerObject implements IGameObject {
         this._core.height = height;
     }
 
+     /**
+     * @description returns the calculated 'bounds' of the ContainerObject as an object, in game-units
+     */
+    get bounds(): { x: number, y: number, width: number, height: number } {
+        return { x: this.left, y: this.top, width: this.width, height: this.height }
+    }
+
     get left(): number {
         return this.x;
     }
