@@ -185,6 +185,22 @@ class VideoObject implements IGameObject {
         return this._core.height;
     }
 
+    get left(): number {
+        return this._core.left;
+    }
+
+    get right(): number {
+        return this._core.right;
+    }
+
+    get top(): number {
+        return this._core.top;
+    }
+
+    get bottom(): number {
+        return this._core.bottom;
+    }
+    
     set height(height: number) {
         this._core.height = height;
     }

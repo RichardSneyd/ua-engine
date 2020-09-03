@@ -5,6 +5,7 @@ import ParentChildHandler from './Components/ParentChildHandler';
 import TweenManager from "./Components/TweenManager";
 import IParentChild from "./IParentChild";
 import Events from "../Events";
+import Point from "../../Geom/Point";
 
 
 interface IGameObject extends IParentChild{
@@ -20,7 +21,12 @@ interface IGameObject extends IParentChild{
     height: number;
     visible: boolean;
     alpha: number;
+    origin: Point;
     setOrigin(x: number, y?: number): void;
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
     data: any;
     destroy(): void;
     tweens: TweenManager;

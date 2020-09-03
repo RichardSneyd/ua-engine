@@ -84,12 +84,12 @@ class ScaleHandler {
     let scaleX = this._scaleX;
     let scaleY = this._scaleY;
 
-    if (this._go.pcHandler.parent == null || this._go.pcHandler.parent == undefined) {
+   /*  if (this._go.pcHandler.parent == null || this._go.pcHandler.parent == undefined) {
       scaleX = this._scaleManager.getScale(this._scaleX);
       scaleY = this._scaleManager.getScale(this._scaleY);
     } else {
 
-    }
+    } */
 
     this._core.objectHandler.setScale(this._core.data, scaleX, scaleY);
   }

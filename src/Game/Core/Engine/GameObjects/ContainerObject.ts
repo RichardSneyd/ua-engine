@@ -16,11 +16,12 @@ class ContainerObject implements IGameObject {
     private _scaleHandler: ScaleHandler;
     private _pcHandler: ParentChildHandler;
     private _tweenManager: TweenManager;
+    private _pointFactory: Point;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler,
-        scaleHandler: ScaleHandler, tweenManager: TweenManager) {
+        scaleHandler: ScaleHandler, tweenManager: TweenManager, point: Point) {
         this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input;
-        this._scaleHandler = scaleHandler; this._tweenManager = tweenManager;
+        this._scaleHandler = scaleHandler; this._tweenManager = tweenManager; this._pointFactory = point;
     }
 
     public init(x: number, y: number, parent: IParentChild | null): void {
@@ -43,7 +44,7 @@ class ContainerObject implements IGameObject {
     }
 
     public createEmpty(): ContainerObject {
-        return new ContainerObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this.scaleHandler.createNew(), this._tweenManager.createNew());
+        return new ContainerObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this.scaleHandler.createNew(), this._tweenManager.createNew(), this._pointFactory);
     }
 
     public changeTexture(textureName: string) {
@@ -133,9 +134,33 @@ class ContainerObject implements IGameObject {
         this._core.visible = visible;
     }
 
-    get setOrigin(): (x: number, y?: number) => void {
-        return this._core.setOrigin.bind(this._core);
-    }
+    /**
+     * @description set the origin for the container. This is modified version of the method for use with containers, which uses a custom setPivot implementation
+     * @param x the x value
+     * @param y the y value. If no y value is provided, the x value will be used for y as well.
+     */
+    public setOrigin(x: number, y?: number) {
+        // console.log('setOrigin this: ', this);
+        let yVal: number;
+        let xVal = x;
+        if (y !== undefined) {
+          yVal = y;
+        }
+        else {
+          yVal = xVal;
+        }
+    
+        this._core.origin = this._pointFactory.createNew(xVal, yVal);
+        this._setPivot();
+      }
+
+      /**
+       * @description slightly hacky custom setPivot method, because we can't use the built in height and width properties, which are always 0,
+       * and thus useless
+       */
+      private _setPivot() {
+        this._core.data.pivot.set(Math.floor(this.origin.x * this._width()), Math.floor(this.origin.y * this._height()));
+      }
 
     get origin(): Point {
         return this._core.origin;
@@ -150,7 +175,7 @@ class ContainerObject implements IGameObject {
     }
 
     get width() {
-        return this._core.width;
+        return this._width();
     }
 
     set width(width: number) {
@@ -158,11 +183,50 @@ class ContainerObject implements IGameObject {
     }
 
     get height() {
-        return this._core.height;
+        //return this._core.height;
+        return this._height();
     }
 
     set height(height: number) {
         this._core.height = height;
+    }
+
+    get left(): number {
+        return this.x;
+    }
+
+    get right(): number {
+        return this.x + this._width();
+    }
+
+    get top(): number {
+        return this.y;
+    }
+
+    get bottom() : number {
+        return this.y + this._height();
+    }
+
+    private _width(): number {
+        let right = 0;
+        let children = this.pcHandler.children;
+        for (let c = 0; c < children.length; c++) {
+            let child = children[c];
+            if (child.right > right) right = child.right;
+        }
+
+        return right;
+    }
+
+    private _height(): number {
+        let bottom = 0;
+        let children = this.pcHandler.children;
+        for (let c = 0; c < children.length; c++) {
+            let child = children[c];
+            if (child.bottom > bottom) bottom = child.bottom;
+        }
+
+        return bottom;
     }
 
     // parent/child proxy methods

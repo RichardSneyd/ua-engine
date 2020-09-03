@@ -200,6 +200,21 @@ class ObjectCore {
     this.objectHandler.setAngle(this.data, angle);
   }
 
+  get left(): number{
+    return this.x - (this.width * this.origin.x);
+  }
+
+  get right(): number {
+    return this.left + this.width;
+  }
+
+  get top(): number {
+    return this.y - (this.height * this.origin.y)
+  }
+
+  get bottom(): number {
+    return this.top + this.height;
+  }
   /**
    * @description look at (angle towards) an object on screen. Any object with an x and y parameter is acceptible
    * @param object the object (must have x and y properties) to angle towards 

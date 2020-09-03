@@ -10,8 +10,7 @@ import ScaleManager from '../ScaleManager';
 import VideoObject from "./VideoObject";
 import IGameObject from "./IGameObject";
 import IScreen from "../../../Services/IScreen";
-
-
+import Camera from "./Camera";
 
 class GOFactory {
     private _core: ObjectCore;
@@ -24,11 +23,13 @@ class GOFactory {
     private _scaleManager: ScaleManager;
     private _video: VideoObject;
     private _screen: IScreen;
+    private _camera: Camera;
 
     constructor(core: ObjectCore, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject,
-        container: ContainerObject, scaleManager: ScaleManager, button: Button, video: VideoObject, screen: IScreen) {
+        container: ContainerObject, scaleManager: ScaleManager, button: Button, video: VideoObject, screen: IScreen, camera: Camera) {
         this._core = core; this._slice = slice; this._spine = spine; this._text = text; this._container = container;
         this._sprite = sprite; this._scaleManager = scaleManager; this._button = button; this._video = video; this._screen = screen;
+        this._camera = camera;
     }
 
     /**
@@ -158,6 +159,14 @@ class GOFactory {
         } else {
             return this._spine.createEmpty();
         }
+    }
+
+    /**
+  * @description create a new camera object
+  * @param container the container to pair the camera with
+  */
+    public camera(container: ContainerObject) {
+        return this._camera.createNew(container);
     }
 }
 

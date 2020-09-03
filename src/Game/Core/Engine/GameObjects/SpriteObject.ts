@@ -142,6 +142,22 @@ class SpriteObject implements IFramedGameObject {
         return this._core.origin;
     }
 
+    get left(): number {
+        return this._core.left;
+    }
+
+    get right(): number {
+        return this._core.right;
+    }
+
+    get top(): number {
+        return this._core.top;
+    }
+
+    get bottom(): number {
+        return this._core.bottom;
+    }
+
     get relativeMove(): (xDiff: number, yDiff: number) => void {
         return this._core.relativeMove.bind(this._core);
     }
