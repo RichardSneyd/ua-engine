@@ -34,6 +34,7 @@ interface IGameObject extends IParentChild{
     changeTexture(textureName: string): void;
     textureName: string;
     atlas: string;
+    zIndex: number;
 }
 
 export default IGameObject;

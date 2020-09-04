@@ -93,6 +93,43 @@ class ParentChildHandler implements IParentChild{
         }
         return false;
     }
+
+    public setChildIndex(child: IGameObject, index: number){
+        child.zIndex = index;
+    }
+
+    /**
+     * @description swap the z index (draw order) of 2 children
+     */
+    public swapZ(child1: IGameObject, child2: IGameObject){
+        if(this._children.indexOf(child1) == -1) console.error('child1 is not in the children array');
+        if(this._children.indexOf(child2) == -1) console.error('child2 is not in the children array');
+        let child1Index = child1.zIndex; let child2Index = child2.zIndex;
+        child1.zIndex = child2Index; child2.zIndex = child1Index;
+    }
+
+    /**
+     * @description sorts zOrder by 'bottom' value unless a different property is specified
+     * @param property The property to sort by. defaults to 'bottom'. 
+     * @param desc Sorted in ascending order by default. Set this to force descending order.
+     */
+    public sort(property: string = 'bottom', desc: boolean = false){
+        let children = <any>this._children;
+
+        if(desc){
+            children.sort((a: any, b: any)=> (a[property] > b[property]) ? 1 : -1);
+        }
+        else {
+            children.sort((a: any, b: any)=> (a[property] < b[property]) ? 1 : -1);
+        }
+
+        for(let c = 0; c < children.length; c++){
+            let child = this._children[c];
+            child.zIndex = c;
+        }
+    }
+
+    
 }
 
 export default ParentChildHandler;

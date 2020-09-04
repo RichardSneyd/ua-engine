@@ -150,6 +150,14 @@ class SpineObject implements IGameObject {
         this._core.visible = visible;
     }
 
+    get zIndex() {
+        return this._core.zIndex;
+    }
+
+    set zIndex(index: number) {
+        this._core.zIndex = index;
+    }
+
     get setOrigin(): (x: number, y?: number) => void {
         return this._core.setOrigin.bind(this._core);
     }
