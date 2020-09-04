@@ -114,7 +114,7 @@ class ParentChildHandler implements IParentChild{
      * @param desc Sorted in ascending order by default. Set this to force descending order.
      */
     public sort(property: string = 'bottom', desc: boolean = false){
-        let children = <any>this._children;
+        let children = <any>this._children.slice(0); // clone
 
         if(desc){
             children.sort((a: any, b: any)=> (a[property] > b[property]) ? 1 : -1);
