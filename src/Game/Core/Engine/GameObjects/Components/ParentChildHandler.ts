@@ -64,7 +64,7 @@ class ParentChildHandler implements IParentChild{
             }
 
             this.core.data.addChild(child);
-
+            this._go.setOrigin(this._go.origin.x, this._go.origin.y); // needed to manually update origin calculation
             return true;
         }
         console.warn('that is already a child of this object, and cannot be added again');
@@ -114,7 +114,7 @@ class ParentChildHandler implements IParentChild{
      * @param desc Sorted in ascending order by default. Set this to force descending order.
      */
     public sort(property: string = 'bottom', desc: boolean = false){
-        let children = <any>this._children.slice(0); // clone
+        let children = <any>this._children.slice(0); // slice(0) effectively clones the array
 
         if(desc){
             children.sort((a: any, b: any)=> (a[property] > b[property]) ? 1 : -1);

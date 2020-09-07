@@ -168,7 +168,7 @@ class ContainerObject implements IGameObject {
      */
     private _setPivot() {
         this._core.data.pivot.set(Math.floor(this.origin.x * this._width()), Math.floor(this.origin.y * this._height()));
-    }
+    } 
 
     get origin(): Point {
         return this._core.origin;
