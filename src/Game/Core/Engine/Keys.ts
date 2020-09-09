@@ -117,6 +117,7 @@ enum KeyCodes {
     Period = 190,
     UnderScore = Dash,
     PlusSign = Equals,
+    MinusSign = UnderScore,
     ForwardSlash = 191,
     Tilde = 192,
     GraveAccent = Tilde,

@@ -44,6 +44,7 @@ class InputManager {
         this._keyUpListeners.push(this._keyListener.createNew(callback, context, keyCode))
     }
 
+    
     public onKeyPress(keyCode: number, callback: Function, context: any) {
         this._keyPressListeners.push(this._keyListener.createNew(callback, context, keyCode))
     }
