@@ -43,9 +43,9 @@ class Camera {
      */
     set x(x: number) {
 
-        // this._container.x = x * -1;
+      //  this._container.x = (x - ((this.width * this.pivot.x) / this.zoom)) * -1;
         this._x = x;
-        this.pivot = this.pivot;
+        this._updateContOrigin();
     }
 
     get y() {
@@ -57,29 +57,70 @@ class Camera {
    * @default set the y position of the camera. clamped so that you can't scroll out of the bounds of the defining container object
    */
     set y(y: number) {
-        // this._container.y = y * -1;
-        this.y = y;
-        this.pivot = this.pivot;
+      //  this._container.y = (y - ((this.height * this.pivot.y) / this.zoom)) * -1;
+        this._y = y;
+        this._updateContOrigin();
+        //  this.pivot = this._pivot;
     }
 
+    /**
+  * @description get the left point of the camera, adjusted for zoon
+  */
     get left(): number {
-        return this.x;
+        //  return this.x;
+        return this.x - (this.width * this.pivot.x); // width is already adjusted for zoom level, don't do it twice!
     }
 
+    /**
+     * @description get the leftmost point of the camera, unadjusted for zoon
+     */
+    get absoluteLeft(): number {
+        //  return this.x;
+        return this.x - (this.pivot.x * this.absoluteWidth);
+    }
+
+    /**
+   * @description get the rightmost point of the camera, adjusted for zoon
+   */
     get right(): number {
-        return this.x + this._gameConfig.data.DISPLAY.WIDTH;
+        //  return this.x + this._gameConfig.data.DISPLAY.WIDTH;
         // todo
         // possibly offset for zoom...
-        // return this.x + this._game.width() / this._container.scaleHandler.scaleX;
+        return this.x + ((this.width * this.pivot.x)); // width is already adjusted for zoom level, don't do it twice!
     }
+
+    /**
+         * @description get the rightmost point of the camera, unadjusted for zoon
+         */
+    get absoluteRight(): number {
+        //  return this.x + this._gameConfig.data.DISPLAY.WIDTH;
+        // todo
+        // possibly offset for zoom...
+        return this.x + ((this.absoluteWidth * this.pivot.x));
+    }
+
 
     get top(): number {
-        return this.y;
+       // return this.y;
+        return this.y - (this.pivot.y * this.height); // height is already adjusted for zoom, don't do it twice!
     }
 
+    get absoluteTop(): number {
+        // return this.y;
+         return this.y - ((this.pivot.y * this.absoluteHeight)); 
+     }
+
     get bottom(): number {
-        return this.y + this._gameConfig.data.DISPLAY.HEIGHT;
+        // return this.y + this._gameConfig.data.DISPLAY.HEIGHT;
+        // todo
+        // possibly offset for zoom...
+        return this.y + (this.pivot.y * this.height);
     }
+
+    get absoluteBottom(): number {
+        // return this.y;
+         return this.y - ((this.pivot.y * this.absoluteHeight)); 
+     }
 
     /**
      * @description move the camera, with the option of clamping movement within the bounds of the controlling ContainerObject (defaults to true)
@@ -114,27 +155,45 @@ class Camera {
         this._container.angle = 360 - angle;
     }
 
+
     /**
      * @description pivot point of camera
      */
     set pivot(pivot: { x: number, y: number }) {
-
+        console.log('set pivot...');
         this._pivot = this._pivot.createNew(pivot.x, pivot.y);
-        let xVal = pivot.x * this.width;
-        let yVal = pivot.y * this.height;
-        console.log('xVal: ', xVal, ' yVal: ', yVal);
-
-        let xCenter = this.left + xVal;
-        let yCenter = this.top + yVal;
-        console.log('xCenter: ', xCenter, ' yCenter: ', yCenter);
-        let originX = xCenter / this._container.width;
-        let originY = yCenter / this._container.height;
-        console.log('x: ', originX, ' y: ', originY);
-        this._container.setOrigin(originX, originY);
+        this._updateContOrigin();
+      //  this.x = this._x;
+      //  this.y = this._y;
     }
 
-    setPivot(x: number, y: number) {
+    setPivot(x: number, y?: number) {
+        if (y == undefined) y = x;
         this.pivot = { x: x, y: y }
+    }
+
+    get center(): {x: number, y: number} {
+        return {x: this.centerX, y: this.centerY}
+    }
+
+    get centerX(): number {
+        return this.left + (this.width / 2);
+    }
+
+    get centerY(): number {
+        return this.top + (this.height / 2);
+    }
+
+    get pivotPoint(): {x: number, y: number} {
+        return {x: this.x + (this.width * this.pivot.x), y: this.y + (this.height * this.pivot.y)}
+    }
+
+    _updateContOrigin() {
+        console.log('camera.centerX: ', this.centerX, ' camera.centerY: ', this.centerY);
+        let originX = ((this.centerX / this._container.width));
+        let originY = ((this.centerY / this._container.height));
+        console.log('origin x: ', originX, ', y: ', originY);
+        this._container.setOrigin(originX, originY);
     }
 
     get pivot() {
@@ -146,6 +205,7 @@ class Camera {
     set zoom(zoom: number) {
         this._container.scaleHandler.scaleX = zoom;
         this._container.scaleHandler.scaleY = zoom;
+        this._updateContOrigin();
     }
 
     /**
@@ -156,24 +216,40 @@ class Camera {
     }
 
     /**
-     * @description returns the calculated 'bounds' of the camera, as an object
+     * @description returns the calculated 'bounds' of the camera, as an object, from left to right, top to bottom (adjusted for pivot)
      */
     get bounds(): { x: number, y: number, width: number, height: number } {
         return { x: this.left, y: this.top, width: this.width, height: this.height }
     }
 
     /**
-     * @description the width of the camera, or 'viewport'
+     * @description the width of the camera, or 'viewport', adjusted for zoom level (scale of paired container)
      */
     get width(): number {
-        return this._gameConfig.data.DISPLAY.WIDTH; // possibly factor in scale to complensate for zoom level....
+        // (experimental) factor in scale to compensate for zoom level...
+        return this._gameConfig.data.DISPLAY.WIDTH / this.zoom;
     }
 
     /**
-     * @description the height of the camera, or 'viewport'
+     * @description the height of the camera, or 'viewport', adjusted for zoom level (same as scale of paired container)
      */
     get height() {
-        return this._gameConfig.data.DISPLAY.HEIGHT; // possibly factor in scale to compensate for zoom level...
+        // (experimental) factor in scale to compensate for zoom level...
+        return this._gameConfig.data.DISPLAY.HEIGHT / this.zoom;
+    }
+
+    /**
+    * @description the absolute width of the camera, WITHOUT compensating for scale
+    */
+    get absoluteWidth(): number {
+        return this._gameConfig.data.DISPLAY.WIDTH;
+    }
+
+    /**
+     * @description the absolute height of the camera, WITHOUT compensating for scale
+     */
+    get absoluteHeight() {
+        return this._gameConfig.data.DISPLAY.HEIGHT;
     }
 
     createNew(container: ContainerObject): Camera {

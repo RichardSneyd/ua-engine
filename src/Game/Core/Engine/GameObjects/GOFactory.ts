@@ -121,11 +121,17 @@ class GOFactory {
      * @param topHeight The number of pixels to come in from the top before you reach the repeating section of the slice. This part will never stretch
      * @param rightWidth The number of pixels to come in from the right before you reach the repeating section of the slice. This part will never stretch
      * @param bottomHeight The number of pixels to come in from the bottom before you reach the repeating section of the slice. This part will never stretch
+     * @param width optionally set a total width value
+     * @param height optionally set a total height value
+     * @param parent optionally specify a parent object for this SliceObject
      */
-    public nineSlice(x?: number, y?: number, textureName?: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent: IParentChild | null = null): SliceObject {
+    public nineSlice(x?: number, y?: number, textureName?: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, width?: number, height?: number, parent: IParentChild | null = null): SliceObject {
         if (x != null && y != null && textureName != null) {
             //   let pos = this._scaleManager.getXY(x, y);
-            return this._slice.createNew(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight, parent);
+            let slice = this._slice.createNew(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight, parent);
+            if(width !== undefined) slice.width = width;
+            if(height !== undefined) slice.height = height;
+            return slice;
         } else {
             return this._slice.createEmpty();
         }

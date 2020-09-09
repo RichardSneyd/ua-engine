@@ -77,6 +77,14 @@ class ObjectHandler implements IObjectHandler {
     return object.alpha;
   }
 
+  public getZIndex(object: Container): number {
+    return object.zIndex;
+  }
+
+  public setZIndex(object: Container, index: number) {
+    object.zIndex = index;
+  }
+
   public setAlpha(object: Container, alpha: number) {
     object.alpha = Number(alpha);
   }

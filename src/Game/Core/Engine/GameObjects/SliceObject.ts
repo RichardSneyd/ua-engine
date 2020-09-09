@@ -66,6 +66,14 @@ class SliceObject implements IGameObject {
         this._core.angle = angle;
     }
 
+    get zIndex() {
+        return this._core.zIndex;
+    }
+
+    set zIndex(index: number) {
+        this._core.zIndex = index;
+    }
+
     get tweens() {
         return this._tweenManager;
     }

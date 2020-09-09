@@ -129,6 +129,14 @@ class SpriteObject implements IFramedGameObject {
         this._core.visible = visible;
     }
 
+    get zIndex() {
+        return this._core.zIndex;
+    }
+
+    set zIndex(index: number) {
+        this._core.zIndex = index;
+    }
+
     /**
      * @description set the origin of the display object
      * @param x the origin value for the x axis. A value between 0 and 1.

@@ -155,6 +155,14 @@ class TextObject implements IGameObject {
         return this._core.visible;
     }
 
+    get zIndex() {
+        return this._core.zIndex;
+    }
+
+    set zIndex(index: number) {
+        this._core.zIndex = index;
+    }
+
     set visible(visible: boolean) {
         this._core.visible = visible;
     }

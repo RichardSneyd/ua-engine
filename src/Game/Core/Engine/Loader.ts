@@ -124,6 +124,17 @@ class Loader {
     return false;
   }
 
+  public addImages(names: string[], extension: string){
+    let _ext = extension;
+    if(_ext.indexOf('.') !== 0){
+      _ext = '.' + _ext;
+    }
+    for (let x = 0; x < names.length; x++) {
+      this.addImage(names[x] + _ext);
+      
+  }
+  }
+
   /**
    * @description Creates an atlas resource and adds adds the atlas to the load queue. The data property of the resource will be
    * populated with the image once loaded; Everything in the queue is processed when the download() method is called

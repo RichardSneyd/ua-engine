@@ -2,7 +2,7 @@ import FrameAnimationManager from './FrameAnimationManager';
 import Events from '../../Events';
 import ScaleManager from './ScaleHandler';
 import IScreen from '../../../../Services/IScreen';
-import IObjectHandler from '../../../../Services/IObjectHandler';
+import ObjectHandler from '../../../../Services/ObjectHandler';
 import InputHandler from './InputHandler';
 import Utils from '../../Utils/Utils';
 import MathUtils from '../../Utils/MathUtils';
@@ -25,7 +25,7 @@ class ObjectCore {
   private _textureName: string;
   private _initialized: boolean;
 
-  private _screen: IScreen; _objectHandler: IObjectHandler;
+  private _screen: IScreen; _objectHandler: ObjectHandler;
   private _input: InputHandler; _math: MathUtils;
   private _data: any;
   private _events: Events; _scaleHandler: ScaleManager; protected _pointFactory: Point; private _loop: Loop;
@@ -35,7 +35,7 @@ class ObjectCore {
   private _mask: Mask;
   private _updateCallback: Function;
 
-  constructor(screen: IScreen, objectHandler: IObjectHandler, input: InputHandler, mask: Mask, math: MathUtils, events: Events, pointFactory: Point, loop: Loop) {
+  constructor(screen: IScreen, objectHandler: ObjectHandler, input: InputHandler, mask: Mask, math: MathUtils, events: Events, pointFactory: Point, loop: Loop) {
     this._screen = screen;
     this._objectHandler = objectHandler;
     this._input = input;
@@ -265,6 +265,18 @@ class ObjectCore {
 
   set data(data: any) {
     this._data = data;
+  }
+
+  get zIndex(){
+    return this.objectHandler.getZIndex(this._data);
+  }
+
+  set zIndex(index: number){
+    this.objectHandler.setZIndex(this._data, index);
+  }
+
+  public sort(property: string = 'bottom', desc: boolean = false){
+    this._go.pcHandler.sort(property, desc);
   }
 
   public relativeMove(xDiff: number, yDiff: number) {

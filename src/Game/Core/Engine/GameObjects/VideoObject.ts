@@ -165,6 +165,14 @@ class VideoObject implements IGameObject {
         this._core.visible = visible;
     }
 
+    get zIndex() {
+        return this._core.zIndex;
+    }
+
+    set zIndex(index: number) {
+        this._core.zIndex = index;
+    }
+
     get alpha() {
         return this._core.alpha;
     }

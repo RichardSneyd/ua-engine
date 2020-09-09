@@ -134,6 +134,14 @@ class ContainerObject implements IGameObject {
         this._core.visible = visible;
     }
 
+    get zIndex() {
+        return this._core.zIndex;
+    }
+
+    set zIndex(index: number) {
+        this._core.zIndex = index;
+    }
+
     /**
      * @description set the origin for the container. This is modified version of the method for use with containers, which uses a custom setPivot implementation
      * @param x the x value
@@ -144,23 +152,23 @@ class ContainerObject implements IGameObject {
         let yVal: number;
         let xVal = x;
         if (y !== undefined) {
-          yVal = y;
+            yVal = y;
         }
         else {
-          yVal = xVal;
+            yVal = xVal;
         }
-    
+
         this._core.origin = this._pointFactory.createNew(xVal, yVal);
         this._setPivot();
-      }
+    }
 
-      /**
-       * @description slightly hacky custom setPivot method, because we can't use the built in height and width properties, which are always 0,
-       * and thus useless
-       */
-      private _setPivot() {
+    /**
+     * @description slightly hacky custom setPivot method, because we can't use the built in height and width properties, which are always 0,
+     * and thus useless
+     */
+    private _setPivot() {
         this._core.data.pivot.set(Math.floor(this.origin.x * this._width()), Math.floor(this.origin.y * this._height()));
-      }
+    } 
 
     get origin(): Point {
         return this._core.origin;
@@ -191,9 +199,9 @@ class ContainerObject implements IGameObject {
         this._core.height = height;
     }
 
-     /**
-     * @description returns the calculated 'bounds' of the ContainerObject as an object, in game-units
-     */
+    /**
+    * @description returns the calculated 'bounds' of the ContainerObject as an object, in game-units
+    */
     get bounds(): { x: number, y: number, width: number, height: number } {
         return { x: this.left, y: this.top, width: this.width, height: this.height }
     }
@@ -210,7 +218,7 @@ class ContainerObject implements IGameObject {
         return this.y;
     }
 
-    get bottom() : number {
+    get bottom(): number {
         return this.y + this._height();
     }
 

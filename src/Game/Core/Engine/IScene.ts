@@ -1,6 +1,6 @@
 
 interface IScene {
-  init(scriptName: string): void;
+  init(scriptName?: string): void;
   preload(): void;
   start(): void;
 
