@@ -4,10 +4,11 @@ import ContainerObject from "./ContainerObject";
 import Point from "../../Geom/Point";
 import Geom from "../../Geom/Geom";
 import GameConfig from "../GameConfig";
-
+import InputManager from "../InputManager";
 
 class Camera {
     protected _math: MathUtils;
+    protected _input: InputManager;
     protected _gameConfig: GameConfig;
     protected _geom: Geom;
     protected _container: ContainerObject;
@@ -17,11 +18,16 @@ class Camera {
     protected _y: number;
     //  protected _zoom: number;
 
-    constructor(math: MathUtils, gameConfig: GameConfig, geom: Geom) {
-        this._math = math;
+    constructor(math: MathUtils, gameConfig: GameConfig, geom: Geom, input: InputManager) {
+          this._math = math;
         this._gameConfig = gameConfig;
-        this._geom = geom;
-        this._pivot = geom.point(0, 0);
+         this._geom = geom;
+         this._input = input;
+       /*  this._math = UAE.utils.math;
+        this._gameConfig = UAE.gameConfig;
+        this._input = UAE.levelManager.input;
+        this._geom = UAE.geom; */
+        this._pivot = this._geom.point(0, 0);
         this._x = 0;
         this._y = 0;
         //  this._zoom = 1;
@@ -43,7 +49,7 @@ class Camera {
      */
     set x(x: number) {
 
-      //  this._container.x = (x - ((this.width * this.pivot.x) / this.zoom)) * -1;
+        //  this._container.x = (x - ((this.width * this.pivot.x) / this.zoom)) * -1;
         this._x = x;
         this._updateContOrigin();
     }
@@ -57,7 +63,7 @@ class Camera {
    * @default set the y position of the camera. clamped so that you can't scroll out of the bounds of the defining container object
    */
     set y(y: number) {
-      //  this._container.y = (y - ((this.height * this.pivot.y) / this.zoom)) * -1;
+        //  this._container.y = (y - ((this.height * this.pivot.y) / this.zoom)) * -1;
         this._y = y;
         this._updateContOrigin();
         //  this.pivot = this._pivot;
@@ -101,14 +107,14 @@ class Camera {
 
 
     get top(): number {
-       // return this.y;
+        // return this.y;
         return this.y - (this.pivot.y * this.height); // height is already adjusted for zoom, don't do it twice!
     }
 
     get absoluteTop(): number {
         // return this.y;
-         return this.y - ((this.pivot.y * this.absoluteHeight)); 
-     }
+        return this.y - ((this.pivot.y * this.absoluteHeight));
+    }
 
     get bottom(): number {
         // return this.y + this._gameConfig.data.DISPLAY.HEIGHT;
@@ -119,8 +125,8 @@ class Camera {
 
     get absoluteBottom(): number {
         // return this.y;
-         return this.y - ((this.pivot.y * this.absoluteHeight)); 
-     }
+        return this.y - ((this.pivot.y * this.absoluteHeight));
+    }
 
     /**
      * @description move the camera, with the option of clamping movement within the bounds of the controlling ContainerObject (defaults to true)
@@ -142,7 +148,7 @@ class Camera {
     }
 
     /**
-     * @description get the angle of the camera (attained relative to the angle of the controlling container)
+     * @description get the angle of the camera (attained relative to the angle of the paired container)
      */
     get angle() {
         let contAngle = this._container.angle;
@@ -160,20 +166,21 @@ class Camera {
      * @description pivot point of camera
      */
     set pivot(pivot: { x: number, y: number }) {
-        console.log('set pivot...');
-        this._pivot = this._pivot.createNew(pivot.x, pivot.y);
+       // console.log('set pivot...');
+        this._pivot = this._pivot.createNew(this._math.clamp(pivot.x, 0, 1), this._math.clamp(pivot.y, 0, 1));
         this._updateContOrigin();
-      //  this.x = this._x;
-      //  this.y = this._y;
+        //  this.x = this._x;
+        //  this.y = this._y;
     }
 
     setPivot(x: number, y?: number) {
         if (y == undefined) y = x;
         this.pivot = { x: x, y: y }
+        console.log('pivot: ', this.pivot);
     }
 
-    get center(): {x: number, y: number} {
-        return {x: this.centerX, y: this.centerY}
+    get center(): { x: number, y: number } {
+        return { x: this.centerX, y: this.centerY }
     }
 
     get centerX(): number {
@@ -184,14 +191,14 @@ class Camera {
         return this.top + (this.height / 2);
     }
 
-    get pivotPoint(): {x: number, y: number} {
-        return {x: this.x + (this.width * this.pivot.x), y: this.y + (this.height * this.pivot.y)}
+    get pivotPoint(): { x: number, y: number } {
+        return { x: this.x - (this.width * this.pivot.x), y: this.y - (this.height * this.pivot.y) }
     }
 
     _updateContOrigin() {
         console.log('camera.centerX: ', this.centerX, ' camera.centerY: ', this.centerY);
-        let originX = ((this.centerX / this._container.width));
-        let originY = ((this.centerY / this._container.height));
+        let originX = ((this.pivotPoint.x / this._container.width));
+        let originY = ((this.pivotPoint.y / this._container.height));
         console.log('origin x: ', originX, ', y: ', originY);
         this._container.setOrigin(originX, originY);
     }
@@ -203,8 +210,9 @@ class Camera {
      * @description set the zoom level of the camera. Sets the scaleX and scaleY of the container
      */
     set zoom(zoom: number) {
-        this._container.scaleHandler.scaleX = zoom;
-        this._container.scaleHandler.scaleY = zoom;
+        let _clampZoom = this._math.clamp(zoom, 0, 10);
+        this._container.scaleHandler.scaleX = _clampZoom;
+        this._container.scaleHandler.scaleY = _clampZoom;
         this._updateContOrigin();
     }
 
@@ -258,14 +266,37 @@ class Camera {
         return camera;
     }
 
-    createEmpty(): Camera {
-        return new Camera(this._math, this._gameConfig, this._geom);
-    }
+    //local version
+   /*  createEmpty(): Camera {
+        return new Camera();
+    } */
+
+    // engine version
+     createEmpty(): Camera {
+        return new Camera(this._math, this._gameConfig, this._geom, this._input);
+    } 
 
     init(container: ContainerObject) {
         this._container = container;
         this._initialized = true;
+        this.setPivot(0.5);
     }
+
+    public addDebugControls(camera: Camera){
+        let moveSpeed = 6;
+        let inc = 0.1;
+        this._input.onKeyDown(this._input.keys.A, function(){ camera.x -= moveSpeed}, this); // move left
+        this._input.onKeyDown(this._input.keys.D, function(){ camera.x += moveSpeed}, this); // move right
+        this._input.onKeyDown(this._input.keys.W, function(){ camera.y -= moveSpeed}, this); // move up
+        this._input.onKeyDown(this._input.keys.S, function(){ camera.y += moveSpeed}, this); // move down
+        this._input.onKeyDown(this._input.keys.Z, function(){ camera.angle -= moveSpeed}, this); // rotate anitclockwise
+        this._input.onKeyDown(this._input.keys.X, function(){ camera.angle += moveSpeed}, this); // rotate clockwise
+        this._input.onKeyDown(this._input.keys.Equals, function(){ camera.zoom += inc}, this);  // zoom in
+        this._input.onKeyDown(this._input.keys.Dash, function(){ camera.zoom -= inc}, this); // zoom out
+        this._input.onKeyDown(this._input.keys.UpArrow, function(){ camera.setPivot(camera.pivot.x + inc) }, this); // set pivot + 0.1
+        this._input.onKeyDown(this._input.keys.DownArrow, function(){ camera.setPivot(camera.pivot.x - inc) }, this); // set pivot - 0.1
+      }
+    
 }
 
 export default Camera;
