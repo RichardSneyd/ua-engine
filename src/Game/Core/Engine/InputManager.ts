@@ -44,7 +44,7 @@ class InputManager {
         this._keyUpListeners.push(this._keyListener.createNew(callback, context, keyCode))
     }
 
-    
+
     public onKeyPress(keyCode: number, callback: Function, context: any) {
         this._keyPressListeners.push(this._keyListener.createNew(callback, context, keyCode))
     }
@@ -62,7 +62,7 @@ class InputManager {
     }
 
     private _callKeyListenersForAll(listeners: KeyListener[], data: {evt: any}) {
-        console.log('evt: ', data.evt);
+      // console.log('evt: ', data.evt);
         for (let l = 0; l < listeners.length; l++) {
            listeners[l].callIfMatch(data);
         }
