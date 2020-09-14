@@ -27,6 +27,14 @@ class Tween {
     return this._name;
   }
 
+  get start(): Function {
+    if(this._data){
+      return this._data.start;
+    }
+    console.error('cannot return start property for uninitialized tween object');
+    return ()=>{}
+  }
+
   get stop(): Function {
     if(this._data){
       return this._data.stop;
@@ -151,7 +159,7 @@ class Tween {
       this._onCompleteListeners[0] = ()=>{this.freeze()};
 
     } else {
-      console.error("no animation data exists");
+      console.error("this._data is null");
     }
     return this;
   }

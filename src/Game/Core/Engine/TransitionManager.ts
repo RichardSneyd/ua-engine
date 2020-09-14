@@ -112,8 +112,8 @@ class TransitionManager {
         
         this._events.emit('shutdown');
         this._oldLevel = null;
-        this._tweens.once(name + 1, this._easing, this._newLevel, newTo, this._duration).onComplete(this._onComplete);
-        this._tweens.once(name + 2, this._easing, oldLevelSprite, oldTo, this._duration).onComplete(this._onComplete);
+        this._tweens.once(name + 1, this._easing, this._newLevel, newTo, this._duration).getTween(name + 1).onComplete(this._onComplete);
+        this._tweens.once(name + 2, this._easing, oldLevelSprite, oldTo, this._duration).getTween(name + 2).onComplete(this._onComplete);
     }
 
     private _error(message: string){

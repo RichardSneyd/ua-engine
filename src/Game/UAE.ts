@@ -9,6 +9,7 @@ import GOFactory from './Core/Engine/GameObjects/GOFactory';
 import Geom from './Core/Geom/Geom';
 import Utils from './Core/Engine/Utils/Utils';
 import Transitions from './Core/Engine/Transitions';
+import TweenManager from './Core/Engine/GameObjects/Components/TweenManager';
 
 /**
  * @class the UAEngine API. 
@@ -24,6 +25,7 @@ class UAE {
   public static gameConfig: GameConfig;
   public static geom: Geom;
   public static utils: Utils;
+  public static tween: TweenManager;
   public static transitions = Transitions;
 }
 

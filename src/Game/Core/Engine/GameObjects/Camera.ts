@@ -5,6 +5,7 @@ import Point from "../../Geom/Point";
 import Geom from "../../Geom/Geom";
 import GameConfig from "../GameConfig";
 import InputManager from "../InputManager";
+import TweenManager from "./Components/TweenManager";
 
 class Camera {
     protected _math: MathUtils;
@@ -16,13 +17,15 @@ class Camera {
     protected _pivot: Point;
     protected _x: number;
     protected _y: number;
+    private _tweenManager: TweenManager;
     //  protected _zoom: number;
 
-    constructor(math: MathUtils, gameConfig: GameConfig, geom: Geom, input: InputManager) {
+    constructor(math: MathUtils, gameConfig: GameConfig, geom: Geom, input: InputManager, tweenManager: TweenManager) {
           this._math = math;
         this._gameConfig = gameConfig;
          this._geom = geom;
          this._input = input;
+         this._tweenManager = tweenManager;
        /*  this._math = UAE.utils.math;
         this._gameConfig = UAE.gameConfig;
         this._input = UAE.levelManager.input;
@@ -33,6 +36,10 @@ class Camera {
         //  this._zoom = 1;
         this._initialized = false;
         (<any>window).camera = this;
+    }
+
+    get tween(){
+        return this._tweenManager;
     }
 
     get initialized(): boolean {
@@ -273,7 +280,7 @@ class Camera {
 
     // engine version
      createEmpty(): Camera {
-        return new Camera(this._math, this._gameConfig, this._geom, this._input);
+        return new Camera(this._math, this._gameConfig, this._geom, this._input, this._tweenManager);
     } 
 
     init(container: ContainerObject) {

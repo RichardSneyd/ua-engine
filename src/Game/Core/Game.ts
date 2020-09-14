@@ -13,7 +13,7 @@ import Utils from './Engine/Utils/Utils';
 import IScene from './Engine/IScene';
 import ILevel from './Engine/ILevel';
 import Transitions from '../Core/Engine/Transitions';
-//import ObjectCore from './Engine/GameObjects/Components/ObjectCore';
+import TweenManager from '../Core/Engine/GameObjects/Components/TweenManager';
 
 class Game {
   private _world: World; _events: Events;
@@ -26,10 +26,11 @@ class Game {
   protected _currentActivity: IActivity;
   protected _gameStarted: boolean;
   protected _transitions = Transitions;
+  protected _tween: TweenManager;
 
   constructor(world: World, loop: Loop, loader: Loader,
     events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
-    levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils) {
+    levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils, tween: TweenManager) {
 
     this._world = world;
     this._events = events;
@@ -45,6 +46,7 @@ class Game {
 
     this._geom = geom;
     this._utils = utils;
+    this._tween = tween;
 
     this._activities = [];
     this._gameStarted = false;
@@ -235,6 +237,7 @@ class Game {
     this._expose.add('geom', this._geom);
     this._expose.add('utils', this._utils);
     this._expose.add('transitions', this._transitions);
+    this._expose.add('tween', this._tween);
   }
 
   private _addListeners(): void {

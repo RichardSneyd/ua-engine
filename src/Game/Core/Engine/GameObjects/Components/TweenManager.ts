@@ -1,8 +1,10 @@
 import Tween from "../../../Data/Tween";
+import Easing from './Easing';
 
 class TweenManager {
     private _tween: Tween;
     private _tweens: Tween[];
+    private _easing = Easing;
 
     constructor(tween: Tween) {
         this._tween = tween;
@@ -13,6 +15,10 @@ class TweenManager {
         return new TweenManager(this._tween.createNew());
     }
 
+    get Easing() {
+        return this._easing;
+    }
+
     /**
      * 
      * @param tweenName the name of the tween. You will referense this when playing it in future
@@ -21,56 +27,105 @@ class TweenManager {
      * @param repeat 0 for no repeat. Infinity for infinite repeat.
      * @param delay in milliseconds. Defaults to 0.
      */
-    public add(tweenName: string, easing: string, object: any, repeat: number = 0, delay: number = 0): Tween {
+    public add(tweenName: string, easing: string, object: any, repeat: number = 0, delay: number = 0): TweenManager {
         let tween = this._getTween(tweenName);
         if (tween != null) {
-            console.warn('cannot create 2 tweens with same name; original will be returned'); 
-            return tween;
+            console.warn('cannot create 2 tweens with same name. cancel adding ', tweenName);
+            return this;
         }
         tween = this._tween.createNew();
         tween.init(tweenName, easing, object, repeat, delay);
-
+        console.log('created and initiated ', tweenName);
         this._tweens.push(tween);
 
-        return tween;
-    }   
-
-    public remove(tweenName: string){
-        let tween = this._getTween(tweenName);
-        if(tween !== null) this._remove(tween); else console.warn("cannot remove tween '%s' because it does'nt exist", tweenName);
+        return this;
     }
 
-    private _remove(tween: Tween){
+    public remove(tweenName: string) {
+        let tween = this._getTween(tweenName);
+        if (tween !== null) this._remove(tween); else console.warn("cannot remove tween '%s' because it does'nt exist", tweenName);
+    }
+
+    private _remove(tween: Tween) {
         tween.remove();
         this._tweens.splice(this._tweens.indexOf(tween), 1);
     }
 
-    public play(tweenName: string, toObject: any, duration: number, updateFunction: Function = () => { }) : Tween{
+    /**
+     * @description Play a tween (via the tweens name)
+     * @param tweenName The name of the tween to play
+     * @param toObject The toObject for the tween (values to tween to go hear)
+     * @param duration The duration in milliseconds
+     * @param updateFunction An optional update method to pause
+     */
+    public play(tweenName: string, toObject: any, duration: number, updateFunction: Function = () => { }): TweenManager {
         let tween = this._getTween(tweenName);
         if (tween != null) {
             //console.log("Tween", tween);
             tween.to(toObject, duration, updateFunction);
-            return tween;
-        } else {
-            console.error("Tween called %s not found!", tweenName);
-            tween = this._tween.createNew();
+            return this;
         }
 
-       return tween;
+        console.error("Tween called %s not found!", tweenName);
+        //  tween = this._tween.createNew();
+
+        return this;
+    }
+
+    public getTween(name: string): Tween {
+        let tween = this._getTween(name);
+        if (tween != null) return tween;
+        console.error('cannot return a nonexistant tween');
+        return this._tween.createNew();
+    }
+
+    /**
+     * @description a method that creates a tween, plays it once, and deletes it all all-in-one
+     * @param tweenName 
+     * @param easing 
+     * @param object 
+     * @param toObject 
+     * @param duration 
+     * @param delay 
+     * @param updateFunction 
+     */
+    public once(easing: string, object: any, toObject: any, duration: number, delay: number = 0, updateFunction?: Function): TweenManager {
+        let tweenName = this._tempName();
+        let tween = this.add(tweenName, easing, object, 0, delay)._getTween(tweenName);
+        if (tween !== null) {
+            this.play(tweenName, toObject, duration, updateFunction);
+            tween.onComplete(() => {
+                console.log('onComplete called through TweenManager.once, removing tween...');
+                if (tween != null) this._remove(tween);
+            });
+        }
+
+        return this;
+    }
+
+    private _tempName(): string {
+        let prefix = 'tempTween'; let index = 0; let name: string;
+        name = _tryName(this._tweens, prefix, index);
+
+        function _tryName(tweens: Tween[], prefix: string, index: number): string {
+            let unique: boolean = true;
+
+            for (let t = 0; t < tweens.length; t++) {
+                if (tweens[t].name == prefix + index) {
+                    unique = false;
+                };
+            }
+
+            if (!unique) return _tryName(tweens, prefix, index++);
+            return (prefix + index);
+        }
+
+        if (name == undefined) console.error('tempName not generated properly - is null');
+        return name;
     }
 
 
-    public once(tweenName: string, easing: string, object: any, toObject: any, duration: number, delay: number = 0, updateFunction?: Function): Tween{
-        let tween = this.add(tweenName, easing, object, 0, delay);
-        this.play(tweenName, toObject, duration, updateFunction);
-        tween.onComplete(()=>{
-            console.log('onComplete called through TweenManager.once, removing tween...');
-            this._remove(tween);
-        });
-        return tween;
-    }
-
-    public pause(tweenName: string) {
+    public pause(tweenName: string): TweenManager {
         let tween = this._getTween(tweenName);
 
         if (tween != null) {
@@ -78,9 +133,11 @@ class TweenManager {
         } else {
             console.warn("Tween named '%s' doesn't exist to be paused!", name);
         }
+
+        return this;
     }
 
-    public resume(tweenName: string) {
+    public resume(tweenName: string): TweenManager {
         let tween = this._getTween(tweenName);
 
         if (tween = this._getTween(tweenName)) {
@@ -88,14 +145,18 @@ class TweenManager {
         } else {
             console.warn("Tween named '%s' doesn't exist to be paused!", name);
         }
+
+        return this;
     }
 
-    public update(time: number) {
-     //   console.log('update called in TweenManager');
+    public update(time: number): TweenManager {
+        //   console.log('update called in TweenManager');
         for (let c = 0; c < this._tweens.length; c++) {
             let tween = this._tweens[c];
             tween.update(time);
         }
+
+        return this;
     }
 
     private _getTween(name: string): Tween | null {
@@ -105,7 +166,8 @@ class TweenManager {
             if (tween.name == name) return tween;
         }
 
-        return null;
+        console.warn('no tween found with name: ', name);
+        return null; // just to satisfy the lint
     }
 
 }
