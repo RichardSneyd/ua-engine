@@ -27,18 +27,19 @@ class TweenManager {
      * @param repeat 0 for no repeat. Infinity for infinite repeat.
      * @param delay in milliseconds. Defaults to 0.
      */
-    public add(tweenName: string, easing: string, object: any, repeat: number = 0, delay: number = 0): TweenManager {
+    public add(tweenName: string, easing: string, object: any, repeat: number = 0, delay: number = 0): Tween {
         let tween = this._getTween(tweenName);
         if (tween != null) {
-            console.warn('cannot create 2 tweens with same name. cancel adding ', tweenName);
-            return this;
+            console.error('cannot create 2 tweens with same name. cancel adding ', tweenName);
+            return tween;
         }
         tween = this._tween.createNew();
         tween.init(tweenName, easing, object, repeat, delay);
         console.log('created and initiated ', tweenName);
         this._tweens.push(tween);
+        console.log(this._tweens)
 
-        return this;
+        return tween;
     }
 
     public remove(tweenName: string) {
@@ -75,23 +76,23 @@ class TweenManager {
     public getTween(name: string): Tween {
         let tween = this._getTween(name);
         if (tween != null) return tween;
-        console.error('cannot return a nonexistant tween');
+        console.error('cannot return a nonexistant tween of name: ', name);
         return this._tween.createNew();
     }
 
     /**
      * @description a method that creates a tween, plays it once, and deletes it all all-in-one
-     * @param tweenName 
-     * @param easing 
-     * @param object 
-     * @param toObject 
-     * @param duration 
-     * @param delay 
-     * @param updateFunction 
+     * @param easing the type of easing to use
+     * @param object the object to tween
+     * @param toObject the object that specifies the tween values
+     * @param duration duration of the tween
+     * @param delay optional delay
+     * @param updateFunction optional update function
      */
     public once(easing: string, object: any, toObject: any, duration: number, delay: number = 0, updateFunction?: Function): TweenManager {
         let tweenName = this._tempName();
-        let tween = this.add(tweenName, easing, object, 0, delay)._getTween(tweenName);
+        let tween = this.add(tweenName, easing, object, 0, delay)
+        //  tween._getTween(tweenName);
         if (tween !== null) {
             this.play(tweenName, toObject, duration, updateFunction);
             tween.onComplete(() => {

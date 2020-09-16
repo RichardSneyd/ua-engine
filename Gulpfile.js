@@ -47,7 +47,8 @@ const config = {
             'ScaleManager',
             'TransitionManager',
             'InputManager',
-            'Game'
+            'Game',
+            'TweenManager'
         ],
         ignore: [
             'UAENGINE'
