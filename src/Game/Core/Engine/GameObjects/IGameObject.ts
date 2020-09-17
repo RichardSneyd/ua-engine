@@ -2,10 +2,11 @@ import ObjectCore from "./Components/ObjectCore";
 import InputHandler from "./Components/InputHandler";
 import ScaleHandler from "./Components/ScaleHandler";
 import ParentChildHandler from './Components/ParentChildHandler';
-import TweenManager from "./Components/TweenManager";
+import TweenManager from "../TweenManager";
 import IParentChild from "./IParentChild";
 import Events from "../Events";
 import Point from "../../Geom/Point";
+import TweenComponent from "./Components/TweenComponent";
 
 
 interface IGameObject extends IParentChild{
@@ -29,7 +30,7 @@ interface IGameObject extends IParentChild{
     bottom: number;
     data: any;
     destroy(): void;
-    tweens: TweenManager;
+    tweens: TweenComponent;
     events: Events;
     changeTexture(textureName: string): void;
     textureName: string;

@@ -13,7 +13,7 @@ import Utils from './Engine/Utils/Utils';
 import IScene from './Engine/IScene';
 import ILevel from './Engine/ILevel';
 import Transitions from '../Core/Engine/Transitions';
-import TweenManager from '../Core/Engine/GameObjects/Components/TweenManager';
+import TweenManager from './Engine/TweenManager';
 
 class Game {
   private _world: World; _events: Events;

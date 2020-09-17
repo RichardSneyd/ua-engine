@@ -1,5 +1,5 @@
 import { DisplayObject, Container } from "pixi.js";
-import TweenManager from "./GameObjects/Components/TweenManager";
+import TweenManager from "./TweenManager";
 import Tween from "../Data/Tween";
 import GameConfig from "./GameConfig";
 import transitions from "./Transitions";

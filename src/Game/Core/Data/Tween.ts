@@ -27,12 +27,21 @@ class Tween {
     return this._name;
   }
 
-  get start(): Function {
+ /*  get start(): Function {
     if (this._data) {
       return this._data.start.bind(this._data);
     }
     console.error('cannot return start property for uninitialized tween object');
     return () => { }
+  } */
+
+  start(): Tween{
+    if (this._data) {
+      this._data.start.bind(this._data);
+      return this;
+    }
+    console.error('cannot return start property for uninitialized tween object');
+    return this;
   }
 
   get stop(): Function {
@@ -75,7 +84,7 @@ class Tween {
     return this._onUpdate;
   }
 
-  chain(tween: Tween){
+  chain(tween: Tween): Tween{
     if(this._data !== undefined && this._data !== null && tween._data !== null){
       this._data.chain(tween._data);
       return this;
@@ -84,6 +93,7 @@ class Tween {
     if(this._data == undefined) console.error('this._data is undefined');
     if(this._data == null) console.error('this._data is null');
     if(tween == null) console.error('tween._data of tween provided for chaining is null');
+    return this;
   }
 
   private _onComplete(callback: Function): Tween {

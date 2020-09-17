@@ -1,4 +1,4 @@
-import Events from "../Events";
+import Events from "../Events"; // don't remove this import - it's needed
 import IGameObject from "./IGameObject";
 import ObjectCore from "./Components/ObjectCore";
 import IParentChild from "./IParentChild";
@@ -6,8 +6,8 @@ import ParentChildHandler from "./Components/ParentChildHandler";
 import IScreen from "../../../Services/IScreen";
 import InputHandler from "./Components/InputHandler";
 import ScaleHandler from './Components/ScaleHandler';
-import TweenManager from './Components/TweenManager';
 import Point from "../../Geom/Point";
+import TweenComponent from "./Components/TweenComponent";
 
 class ContainerObject implements IGameObject {
     private _screen: IScreen;
@@ -15,13 +15,13 @@ class ContainerObject implements IGameObject {
     private _input: InputHandler;
     private _scaleHandler: ScaleHandler;
     private _pcHandler: ParentChildHandler;
-    private _tweenManager: TweenManager;
+    private _tweenComponent: TweenComponent;
     private _pointFactory: Point;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler,
-        scaleHandler: ScaleHandler, tweenManager: TweenManager, point: Point) {
+        scaleHandler: ScaleHandler, tweenComponent: TweenComponent, point: Point) {
         this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input;
-        this._scaleHandler = scaleHandler; this._tweenManager = tweenManager; this._pointFactory = point;
+        this._scaleHandler = scaleHandler; this._tweenComponent = tweenComponent; this._pointFactory = point;
     }
 
     public init(x: number, y: number, parent: IParentChild | null): void {
@@ -30,12 +30,13 @@ class ContainerObject implements IGameObject {
         this._input.init(this, this._core);
         this._scaleHandler.init(this, this._core);
         this._pcHandler.init(this, this._core, parent);
+        this._tweenComponent.init(this);
     }
 
     // only to be called by ObjectCore
-    private _update(time: any) {
-        this._tweenManager.update(time);
-    }
+     private _update(time: any) {
+      //  this._tweenComponent.update(time);
+    } 
 
     public createNew(x: number, y: number, parent: IParentChild | null): ContainerObject {
         let cont = this.createEmpty();
@@ -44,7 +45,7 @@ class ContainerObject implements IGameObject {
     }
 
     public createEmpty(): ContainerObject {
-        return new ContainerObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this.scaleHandler.createNew(), this._tweenManager.createNew(), this._pointFactory);
+        return new ContainerObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this.scaleHandler.createNew(), this._tweenComponent.createNew(), this._pointFactory);
     }
 
     public changeTexture(textureName: string) {
@@ -60,7 +61,7 @@ class ContainerObject implements IGameObject {
     }
 
     get tweens() {
-        return this._tweenManager;
+        return this._tweenComponent;
     }
 
     get input() {
