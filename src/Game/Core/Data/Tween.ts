@@ -37,7 +37,7 @@ class Tween {
 
   start(): Tween{
     if (this._data) {
-      this._data.start.bind(this._data);
+      this._data.start.bind(this._data)();
       return this;
     }
     console.error('cannot return start property for uninitialized tween object');
@@ -84,7 +84,7 @@ class Tween {
     return this._onUpdate;
   }
 
-  chain(tween: Tween): Tween{
+  public chain(tween: Tween): Tween{
     if(this._data !== undefined && this._data !== null && tween._data !== null){
       this._data.chain(tween._data);
       return this;
