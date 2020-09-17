@@ -27,39 +27,6 @@ class Tween {
     return this._name;
   }
 
- /*  get start(): Function {
-    if (this._data) {
-      return this._data.start.bind(this._data);
-    }
-    console.error('cannot return start property for uninitialized tween object');
-    return () => { }
-  } */
-
-  start(): Tween{
-    if (this._data) {
-      this._data.start.bind(this._data)();
-      return this;
-    }
-    console.error('cannot return start property for uninitialized tween object');
-    return this;
-  }
-
-  get stop(): Function {
-    if (this._data) {
-      return this._data.stop.bind(this._data);
-    }
-    console.error('cannot return stop property for uninitialized tween object');
-    return () => { }
-  }
-
-  get end(): Function {
-    if (this._data) {
-      return this._data.end.bind(this._data);
-    }
-    console.error('cannot return end property for uninitialized tween object');
-    return () => { }
-  }
-
   get isPaused(): boolean {
     if (this._data) {
       return this._data.isPaused();
@@ -84,15 +51,42 @@ class Tween {
     return this._onUpdate;
   }
 
-  public chain(tween: Tween): Tween{
-    if(this._data !== undefined && this._data !== null && tween._data !== null){
+  start(): Tween {
+    if (this._data) {
+      this._data.start.bind(this._data)();
+      return this;
+    }
+    console.error('cannot return start property for uninitialized tween object');
+    return this;
+  }
+
+  stop(): Tween {
+    if (this._data) {
+      this._data.stop.bind(this._data)();
+      return this;
+    }
+    console.error('cannot return stop property for uninitialized tween object');
+    return this;
+  }
+
+  end(): Tween {
+    if (this._data) {
+      this._data.end.bind(this._data)();
+      return this;
+    }
+    console.error('cannot return end property for uninitialized tween object');
+    return this;
+  }
+
+  public chain(tween: Tween): Tween {
+    if (this._data !== undefined && this._data !== null && tween._data !== null) {
       this._data.chain(tween._data);
       return this;
     }
 
-    if(this._data == undefined) console.error('this._data is undefined');
-    if(this._data == null) console.error('this._data is null');
-    if(tween == null) console.error('tween._data of tween provided for chaining is null');
+    if (this._data == undefined) console.error('this._data is undefined');
+    if (this._data == null) console.error('this._data is null');
+    if (tween == null) console.error('tween._data of tween provided for chaining is null');
     return this;
   }
 
@@ -148,8 +142,10 @@ class Tween {
     this._object = object;
 
     this._data = new TWEEN.Tween(this._object);
-    if (repeat !== 0) this._data.repeat(repeat);
-    if (delay !== 0) this._data.delay(delay);
+   // if (repeat !== 0) this._data.repeat(repeat);
+    this._data.repeat(repeat);
+   // if (delay !== 0) this._data.delay(delay);
+    this._data.delay(delay);
 
     this._data.onComplete(() => { this._callOnComplete() });
     this._data.onRepeat(() => { this._callOnRepeat() });
