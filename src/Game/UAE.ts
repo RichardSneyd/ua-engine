@@ -9,7 +9,7 @@ import GOFactory from './Core/Engine/GameObjects/GOFactory';
 import Geom from './Core/Geom/Geom';
 import Utils from './Core/Engine/Utils/Utils';
 import Transitions from './Core/Engine/Transitions';
-import TweenManager from './Core/Engine/GameObjects/Components/TweenManager';
+import TweenManager from './Core/Engine/TweenManager';
 
 /**
  * @class the UAEngine API. 

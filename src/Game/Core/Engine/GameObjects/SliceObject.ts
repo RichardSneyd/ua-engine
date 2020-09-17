@@ -1,4 +1,4 @@
-import Events from "../Events";
+import Events from "../Events";  // don't remove this import - it's needed
 import IGameObject from "./IGameObject";
 import ObjectCore from "./Components/ObjectCore";
 import IParentChild from "./IParentChild";
@@ -6,8 +6,8 @@ import ParentChildHandler from "./Components/ParentChildHandler";
 import IScreen from "../../../Services/IScreen";
 import InputHandler from "./Components/InputHandler";
 import ScaleHandler from "./Components/ScaleHandler";
-import TweenManager from "./Components/TweenManager";
 import Point from "../../Geom/Point";
+import TweenComponent from "./Components/TweenComponent";
 
 class SliceObject implements IGameObject {
     private _screen: IScreen;
@@ -15,12 +15,12 @@ class SliceObject implements IGameObject {
     private _input: InputHandler;
     private _pcHandler: ParentChildHandler;
     private _scaleHandler: ScaleHandler;
-    private _tweenManager: TweenManager;
+    private _tweenComponent: TweenComponent;
 
     constructor(objectCore: ObjectCore, parentChildHandler: ParentChildHandler, screen: IScreen, inputHandler: InputHandler,
-        scaleHandler: ScaleHandler, tweenManager: TweenManager) {
+        scaleHandler: ScaleHandler, tweenComponent: TweenComponent) {
         this._core = objectCore; this._pcHandler = parentChildHandler; this._screen = screen; this._input = inputHandler;
-        this._scaleHandler = scaleHandler; this._tweenManager = tweenManager;
+        this._scaleHandler = scaleHandler; this._tweenComponent = tweenComponent;
     }
 
     public init(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent: IParentChild | null = null): void {
@@ -34,7 +34,7 @@ class SliceObject implements IGameObject {
         this._input.init(this, this._core);
         this._scaleHandler.init(this, this._core);
         this._pcHandler.init(this, this._core, parent);
-
+        this._tweenComponent.init(this);
         //  this.setOrigin(0.5);
     }
 
@@ -44,12 +44,12 @@ class SliceObject implements IGameObject {
         return slice;
     }
 
-    private _update(time: any) {
-        this._tweenManager.update(time);
-    }
+     private _update(time: any) {
+        //this._tweenComponent.update(time);
+    } 
 
     public createEmpty() {
-        let slice = new SliceObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this.input.createNew(), this.scaleHandler.createNew(), this._tweenManager.createNew());
+        let slice = new SliceObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this.input.createNew(), this.scaleHandler.createNew(), this._tweenComponent.createNew());
 
         return slice;
     }
@@ -75,7 +75,7 @@ class SliceObject implements IGameObject {
     }
 
     get tweens() {
-        return this._tweenManager;
+        return this._tweenComponent;
     }
 
     get input() {

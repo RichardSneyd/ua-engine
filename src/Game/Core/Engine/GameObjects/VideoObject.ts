@@ -4,13 +4,12 @@ import ObjectCore from "./Components/ObjectCore";
 import InputHandler from "./Components/InputHandler";
 import ParentChildHandler from "./Components/ParentChildHandler";
 import ScaleHandler from "./Components/ScaleHandler";
-import TweenManager from "./Components/TweenManager";
+import TweenManager from "../TweenManager";
 import IParentChild from "./IParentChild";
 import GameConfig from '../GameConfig';
-import Events from '../Events';
+import Events from '../Events'; // don't remove this import - it's needed
 import Point from "../../Geom/Point";
-
-
+import TweenComponent from "./Components/TweenComponent";
 
 class VideoObject implements IGameObject {
     private _screen: IScreen;
@@ -18,14 +17,14 @@ class VideoObject implements IGameObject {
     private _input: InputHandler;
     private _pcHandler: ParentChildHandler;
     private _scaleHandler: ScaleHandler;
-    private _tweenManager: TweenManager;
+    private _tweenComponent: TweenComponent;
     private _gameConfig: GameConfig;
     private _vidElement: HTMLVideoElement;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler,
-        scaleHandler: ScaleHandler, tweenManager: TweenManager, gameConfig: GameConfig) {
+        scaleHandler: ScaleHandler, tweenComponent: TweenComponent, gameConfig: GameConfig) {
         this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input;
-        this._scaleHandler = scaleHandler; this._tweenManager = tweenManager; this._gameConfig = gameConfig;
+        this._scaleHandler = scaleHandler; this._tweenComponent = tweenComponent; this._gameConfig = gameConfig;
     }
 
     public init(x: number, y: number, videoName: string, parent: IParentChild | null = null): void {
@@ -35,6 +34,7 @@ class VideoObject implements IGameObject {
         this._input.init(this, this._core);
         this._scaleHandler.init(this, this._core);
         this._pcHandler.init(this, this._core, parent);
+        this._tweenComponent.init(this);
 
         //@ts-ignore
         this._vidElement = this.data.texture.baseTexture.resource.source;
@@ -67,7 +67,7 @@ class VideoObject implements IGameObject {
     }
 
     public createEmpty(): VideoObject {
-        return new VideoObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenManager.createNew(), this._gameConfig);
+        return new VideoObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenComponent.createNew(), this._gameConfig);
     }
 
     public changeTexture(textureName: string) {
@@ -83,7 +83,7 @@ class VideoObject implements IGameObject {
     }
 
     get tweens() {
-        return this._tweenManager;
+        return this._tweenComponent;
     }
 
     get input(): InputHandler {
@@ -252,8 +252,8 @@ class VideoObject implements IGameObject {
     }
 
     private _update(time: number) {
-        this._tweenManager.update(time);
-    }
+      //  this._tweenComponent.update(time);
+    } 
 
 }
 

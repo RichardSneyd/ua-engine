@@ -27,17 +27,26 @@ class Tween {
     return this._name;
   }
 
-  get start(): Function {
+ /*  get start(): Function {
     if (this._data) {
-      return this._data.start;
+      return this._data.start.bind(this._data);
     }
     console.error('cannot return start property for uninitialized tween object');
     return () => { }
+  } */
+
+  start(): Tween{
+    if (this._data) {
+      this._data.start.bind(this._data);
+      return this;
+    }
+    console.error('cannot return start property for uninitialized tween object');
+    return this;
   }
 
   get stop(): Function {
     if (this._data) {
-      return this._data.stop;
+      return this._data.stop.bind(this._data);
     }
     console.error('cannot return stop property for uninitialized tween object');
     return () => { }
@@ -45,7 +54,7 @@ class Tween {
 
   get end(): Function {
     if (this._data) {
-      return this._data.end;
+      return this._data.end.bind(this._data);
     }
     console.error('cannot return end property for uninitialized tween object');
     return () => { }
@@ -73,6 +82,18 @@ class Tween {
 
   get onUpdate() {
     return this._onUpdate;
+  }
+
+  chain(tween: Tween): Tween{
+    if(this._data !== undefined && this._data !== null && tween._data !== null){
+      this._data.chain(tween._data);
+      return this;
+    }
+
+    if(this._data == undefined) console.error('this._data is undefined');
+    if(this._data == null) console.error('this._data is null');
+    if(tween == null) console.error('tween._data of tween provided for chaining is null');
+    return this;
   }
 
   private _onComplete(callback: Function): Tween {
@@ -156,7 +177,7 @@ class Tween {
       this._paused = false;
       console.log('paused: ', this._data.isPaused());
       this._data.to(toObject, time)
-        .easing((<any>TWEEN).Easing[easing][inOut]).start();
+        .easing((<any>TWEEN).Easing[easing][inOut]);
 
       this._onUpdateListeners[0] = updateFunction;
       this._onCompleteListeners[0] = () => { this.freeze() };
@@ -216,7 +237,7 @@ class Tween {
       let diff = this._time - this._pausedTime;
       this._pauseDiff = this._pauseDiff + diff;
     } else {
-      console.warn("Tween doesn't exist to be resumed!");
+      console.warn("Tween._data doesn't exist to be resumed!");
     }
     return this;
   }

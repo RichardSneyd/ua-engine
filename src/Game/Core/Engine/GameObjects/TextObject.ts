@@ -1,4 +1,4 @@
-import Events from "../Events";
+import Events from "../Events";  // don't remove this import - it's needed
 import IGameObject from "./IGameObject";
 import ObjectCore from "./Components/ObjectCore";
 import IParentChild from "./IParentChild";
@@ -6,8 +6,8 @@ import ParentChildHandler from "./Components/ParentChildHandler";
 import IScreen from "../../../Services/IScreen";
 import InputHandler from "./Components/InputHandler";
 import ScaleHandler from "./Components/ScaleHandler";
-import TweenManager from "./Components/TweenManager";
 import Point from "../../Geom/Point";
+import TweenComponent from "./Components/TweenComponent";
 
 class TextObject implements IGameObject {
     private _screen: IScreen;
@@ -16,12 +16,12 @@ class TextObject implements IGameObject {
     private _pcHandler: ParentChildHandler;
     private _scaleHandler: ScaleHandler;
     private _letters: string;
-    private _tweenManager: TweenManager;
+    private _tweenComponent: TweenComponent;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler,
-        scaleHandler: ScaleHandler, tweenManager: TweenManager) {
+        scaleHandler: ScaleHandler, tweenComponent: TweenComponent) {
         this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input;
-        this._scaleHandler = scaleHandler; this._tweenManager = tweenManager;
+        this._scaleHandler = scaleHandler; this._tweenComponent = tweenComponent;
         this._letters = '$$$$____$$$$'; //default uninitialized string
     }
 
@@ -33,10 +33,11 @@ class TextObject implements IGameObject {
         this._input.init(this, this._core);
         this._scaleHandler.init(this, this._core);
         this._pcHandler.init(this, this._core, parent);
+        this._tweenComponent.init(this);
     }
 
     public _update(time: any) {
-        this._tweenManager.update(time);
+      //  this._TweenComponent.update(time);
     }
 
     public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null): TextObject {
@@ -46,7 +47,7 @@ class TextObject implements IGameObject {
     }
 
     public createEmpty(): TextObject {
-        let textObj = new TextObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenManager.createNew());
+        let textObj = new TextObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenComponent.createNew());
         return textObj;
     }
 
@@ -59,7 +60,7 @@ class TextObject implements IGameObject {
     }
 
     get tweens() {
-        return this._tweenManager;
+        return this._tweenComponent;
     }
 
     get input(): InputHandler {

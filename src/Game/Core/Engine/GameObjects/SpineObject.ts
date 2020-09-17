@@ -1,4 +1,4 @@
-import Events from "../Events";
+import Events from "../Events"; // don't remove this import - it's needed
 import IGameObject from "./IGameObject";
 import ObjectCore from "./Components/ObjectCore";
 import IParentChild from "./IParentChild";
@@ -8,8 +8,8 @@ import InputHandler from "./Components/InputHandler";
 import ScaleHandler from "./Components/ScaleHandler";
 import AnimationManager from "./Components/FrameAnimationManager";
 import SpineAnimationManager from './Components/SpineAnimationManager';
-import TweenManager from "./Components/TweenManager";
 import Point from "../../Geom/Point";
+import TweenComponent from "./Components/TweenComponent";
 
 class SpineObject implements IGameObject {
     private _screen: IScreen;
@@ -18,12 +18,12 @@ class SpineObject implements IGameObject {
     private _pcHandler: ParentChildHandler;
     private _scaleHandler: ScaleHandler;
     private _animations: SpineAnimationManager;
-    private _tweenManager: TweenManager;
+    private _tweenComponent: TweenComponent;
 
     constructor(objectCore: ObjectCore, ParentChildHandler: ParentChildHandler, screen: IScreen, input: InputHandler,
-        scaleHandler: ScaleHandler, animationManager: SpineAnimationManager, tweenManager: TweenManager) {
+        scaleHandler: ScaleHandler, animationManager: SpineAnimationManager, tweenComponent: TweenComponent) {
         this._core = objectCore; this._pcHandler = ParentChildHandler; this._screen = screen; this._input = input;
-        this._scaleHandler = scaleHandler; this._animations = animationManager; this._tweenManager = tweenManager;
+        this._scaleHandler = scaleHandler; this._animations = animationManager; this._tweenComponent = tweenComponent;
     }
 
     public init(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): void {
@@ -36,12 +36,12 @@ class SpineObject implements IGameObject {
         this._input.init(this, this._core);
         this._scaleHandler.init(this, this._core);
         this._pcHandler.init(this, this._core, parent);
-
+        this._tweenComponent.init(this);
     }
 
     private _update(time: any) {
-        this._tweenManager.update(time);
-    }
+      //  this._tweenComponent.update(time);
+    } 
 
     public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): SpineObject {
         let sprite = this.createEmpty();
@@ -50,7 +50,7 @@ class SpineObject implements IGameObject {
     }
 
     public createEmpty(): SpineObject {
-        let sprite = new SpineObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this.animations.createNew(), this._tweenManager.createNew());
+        let sprite = new SpineObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this.animations.createNew(), this._tweenComponent.createNew());
         return sprite;
     }
 
@@ -72,7 +72,7 @@ class SpineObject implements IGameObject {
     }
 
     get tweens() {
-        return this._tweenManager;
+        return this._tweenComponent;
     }
 
     get input() {
