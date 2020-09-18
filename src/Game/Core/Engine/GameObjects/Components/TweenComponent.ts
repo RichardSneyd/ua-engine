@@ -71,11 +71,11 @@ class TweenComponent {
       return this._tweenManager.once(easing, object, toObject, duration, delay, updateFunction)
     }
 
-    public pause(tweenName: string): TweenManager {
+    public pause(tweenName: string | Tween): TweenManager {
         return this._tweenManager.pause(tweenName);
     }
 
-    public resume(tweenName: string): TweenManager {
+    public resume(tweenName: string | Tween): TweenManager {
       return this._tweenManager.resume(tweenName);
     }
 }

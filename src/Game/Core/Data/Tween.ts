@@ -51,7 +51,7 @@ class Tween {
     return this._onUpdate;
   }
 
-  start(): Tween {
+  start(tweenName?: string): Tween {
     if (this._data) {
       this._data.start.bind(this._data)();
       return this;
@@ -60,7 +60,7 @@ class Tween {
     return this;
   }
 
-  stop(): Tween {
+  stop(tweenName?: string): Tween {
     if (this._data) {
       this._data.stop.bind(this._data)();
       return this;
@@ -69,7 +69,7 @@ class Tween {
     return this;
   }
 
-  end(): Tween {
+  end(tweenName?: string): Tween {
     if (this._data) {
       this._data.end.bind(this._data)();
       return this;
@@ -156,7 +156,7 @@ class Tween {
     this.reset();
   }
 
-  remove() {
+  remove(tweenName?: string) {
     if (this._data) {
       TWEEN.remove(this._data);
       this._data = null;
@@ -198,7 +198,7 @@ class Tween {
     this._time = time;
   }
 
-  pause(): Tween {
+  pause(tweenName?: string): Tween {
     if (this._data != null) {
       this._paused = true;
       this._data.pause();
