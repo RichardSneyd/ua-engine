@@ -142,8 +142,9 @@ class TweenManager {
     }
 
 
-    public pause(tweenName: string): TweenManager {
-        let tween = this._getTween(tweenName);
+    public pause(tweenName: string | Tween): TweenManager {
+        let tween: any = tweenName;
+        if(typeof tweenName == 'string') tween = this._getTween(tweenName);
 
         if (tween != null) {
             tween.pause();
@@ -154,10 +155,11 @@ class TweenManager {
         return this;
     }
 
-    public resume(tweenName: string): TweenManager {
-        let tween = this._getTween(tweenName);
+    public resume(tweenName: string | Tween): TweenManager {
+        let tween: any = tweenName;
+        if(typeof tweenName == 'string') tween = this._getTween(tweenName);
 
-        if (tween = this._getTween(tweenName)) {
+        if (tween !== null) {
             tween.resume();
         } else {
             console.warn("Tween named '%s' doesn't exist to be paused!", name);
