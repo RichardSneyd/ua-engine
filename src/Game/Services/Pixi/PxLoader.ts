@@ -1,4 +1,4 @@
-import { Loader } from 'pixi.js';
+import { Loader } from 'pixi.js-legacy';
 import 'pixi-spine';
 
 import PxFactory from './PxFactory';

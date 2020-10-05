@@ -106,7 +106,7 @@ class Loader {
    * populated with the image once loaded; Everything in the queue is processed when the download() method is called
    * @param name the filename of the image to load, including file extension. This is added to the base path value to find the image URL.
    */
-  public addImage(name: string) {
+  public addImage(name: string): Loader {
     let url = this._getPath().img + name;
     // if the file has .json extension, it's an atlas, so change path. Won't be confused with spine assets - they are loaded via addSpine
     if(name.indexOf('.json') !== -1){url = this._getPath().atlas + name}
@@ -117,35 +117,39 @@ class Loader {
       this._resList.push(res);
       this._newResList.push(res);
       // console.log(this._resList);
-      return true;
+      return this;
     }
 
     console.warn('did not add %s, as it already exists', name);
-    return false;
+    return this;
   }
 
-  public addImages(names: string[], extension: string){
+  public addImages(names: string[], extension: string) : Loader{
     let _ext = extension;
     if(_ext.indexOf('.') !== 0){
       _ext = '.' + _ext;
     }
     for (let x = 0; x < names.length; x++) {
-      this.addImage(names[x] + _ext);
-      
-  }
+      this.addImage(names[x] + _ext); 
+    }
+    return this;
   }
 
   /**
-   * @description Creates an atlas resource and adds adds the atlas to the load queue. The data property of the resource will be
+   * @description Creates an atlas resource and adds adds the atlas to the load queue -- must include .json extension. The data property of the resource will be
    * populated with the image once loaded; Everything in the queue is processed when the download() method is called
    * @param name the filename of the atlas you wish to load, including '.json' extension. image is loaded internally.
    */
-  public addAtlas(name: string) {
+  public addAtlas(name: string):  Loader {
     // handles atlas at PxLoader level, added just the same as image resource, except with .json ext instead of .img ....
     this.addImage(name);
+    return this;
   }
 
-  public addSpine(name: string) {
+  /**
+   * @description add a spine file to the load queue - must include .json extension
+   */
+  public addSpine(name: string) : Loader {
     let url = this._getPath().spn + name;
     if (this._getResource(url, false) == null) {
       let res = this._createResource();
@@ -154,17 +158,17 @@ class Loader {
       this._resList.push(res);
       this._newResList.push(res);
       console.log(this._resList);
-      return false;
+      return this;
     }
     console.warn('did not add %s spine, as it already exists', name);
-    return false;
+    return this;
   }
 
   /**
    * @description create a sound resource, to be inject with data later, at download
    * @param filename the filename of the sound to be loaded, without extension.
    */
-  addSnd(name: string) {
+  addSnd(name: string) : Loader {
     let url = this._getPath().snd + name;
     if (this._getResource(url, false) == null) {
       let res = this._createResource();
@@ -173,20 +177,22 @@ class Loader {
       this._resList.push(res);
       this._newResList.push(res);
       // console.log(this._resList);
-      return true;
+      return this;
     }
     console.warn('did not add %s, as it already exists', name);
-    return false;
+    return this;
   }
 
   /**
   * @description create several sound resources, to be injected with data (howls) at download phase
   * @param filenames filenames array of the sounds to be loaded, without extension (extentions are defined in config file).
   */
-  addSnds(names: string[]) {
+  addSnds(names: string[]) : Loader {
     for (let x = 0; x < names.length; x++) {
       this.addSnd(names[x]);
     }
+
+    return this;
   }
 
   /**

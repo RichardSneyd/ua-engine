@@ -1,4 +1,4 @@
-import { Application, Sprite, Renderer, Container, DisplayObject, NineSlicePlane, BaseTexture, Graphics, RenderTexture } from 'pixi.js';
+import { Application, Sprite, Renderer, Container, DisplayObject, NineSlicePlane, BaseTexture, Graphics, RenderTexture } from 'pixi.js-legacy';
 import PxText from './PxText';
 import PxFactory from './PxFactory';
 import Loader from '../../Core/Engine/Loader';
@@ -227,6 +227,10 @@ class PxGame {
     return true;
   }
 
+   /**
+     * @description enable mouse/pointer input for the specified object
+     * @param displayObject the object to enable input for
+     */
   public enableInput(sprite: DisplayObject) {
     sprite.interactive = true;
   }

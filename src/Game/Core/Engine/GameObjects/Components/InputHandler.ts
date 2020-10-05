@@ -37,6 +37,9 @@ class InputHandler {
     return this._core.data;
   }
 
+   /**
+     * @description enable mouse/pointer input for the attached GameObject
+     */
   public enableInput() {
     if (this._core.data.data) {
       this._inputManager.enable(this._core.data.data);
