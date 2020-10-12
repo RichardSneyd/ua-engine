@@ -23,7 +23,6 @@ class Utils {
         this._math = math;
         this._Text = text;
         this._Vectors = vectors;
-
     }
 
     get script(){
