@@ -5,6 +5,7 @@ import Colors from './Colors';
 import MathUtils from './MathUtils';
 import Text from './Text';
 import Vectors from './Vectors';
+import Logger from './Logger';
 
 class Utils {
     private _scripts: ActScripts;
@@ -14,8 +15,9 @@ class Utils {
     private _math: MathUtils;
     private _Text: Text;
     private _Vectors: Vectors;
+    private _logger: Logger;
     
-    constructor(actScripts: ActScripts, collections: Collections, colors: Colors, mixins: Mixins, math: MathUtils, text: Text, vectors: Vectors){
+    constructor(actScripts: ActScripts, collections: Collections, colors: Colors, mixins: Mixins, math: MathUtils, text: Text, vectors: Vectors, logger: Logger){
         this._scripts = actScripts; 
         this._collections = collections;
         this._colors = colors;
@@ -23,7 +25,7 @@ class Utils {
         this._math = math;
         this._Text = text;
         this._Vectors = vectors;
-
+        this._logger = logger;
     }
 
     get script(){
@@ -52,6 +54,10 @@ class Utils {
 
     get vector() {
         return this._Vectors;
+    }
+
+    get log() {
+        return this._logger;
     }
 }
 
