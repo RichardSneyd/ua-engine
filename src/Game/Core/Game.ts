@@ -14,6 +14,7 @@ import IScene from './Engine/IScene';
 import ILevel from './Engine/ILevel';
 import Transitions from '../Core/Engine/Transitions';
 import TweenManager from './Engine/TweenManager';
+import Logger from './Engine/Logger';
 
 class Game {
   private _world: World; _events: Events;
@@ -27,10 +28,12 @@ class Game {
   protected _gameStarted: boolean;
   protected _transitions = Transitions;
   protected _tween: TweenManager;
+  protected _log: Logger
 
   constructor(world: World, loop: Loop, loader: Loader,
     events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
-    levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils, tween: TweenManager) {
+    levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils, tween: TweenManager,
+    log: Logger) {
 
     this._world = world;
     this._events = events;
@@ -47,6 +50,7 @@ class Game {
     this._geom = geom;
     this._utils = utils;
     this._tween = tween;
+    this._log = log;
 
     this._activities = [];
     this._gameStarted = false;
@@ -238,6 +242,7 @@ class Game {
     this._expose.add('utils', this._utils);
     this._expose.add('transitions', this._transitions);
     this._expose.add('tween', this._tween);
+    this._expose.add('log', this._log);
   }
 
   private _addListeners(): void {
