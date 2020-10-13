@@ -1,10 +1,11 @@
 {
-  "name": "tpixi",
+  "name": "uae",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docs": "typedoc --options typedoc.json"
   },
   "author": "",
   "license": "ISC",
@@ -39,7 +40,8 @@
     "shelljs": "^0.8.4",
     "strip-comments": "^2.0.1",
     "tsify": "^4.0.1",
-    "typescript": "^3.8.3",
+    "typedoc": "^0.19.2",
+    "typescript": "^3.9.7",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.11.1"
