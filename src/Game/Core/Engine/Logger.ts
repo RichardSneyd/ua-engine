@@ -6,6 +6,7 @@ export enum LogLevel {
 
 export default class Logger {
     private static _source: string = '';
+    private static _previousSource: string = '';
     private static _level: number = LogLevel.INFO;
 
     private static _identifyLogSource(): string {
@@ -44,9 +45,13 @@ export default class Logger {
     }
 
     private static _log(consoleF: Function, ...args: any[]) {
-        console.group(this._identifyLogSource())
+        let groupName = this._identifyLogSource();
+        if(groupName != this._previousSource) {
+            console.groupEnd();
+            console.group(groupName);
+            this._previousSource = groupName;
+        }
         consoleF(...args);
-        console.groupEnd();
     }
 
     /**
