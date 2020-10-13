@@ -22,6 +22,9 @@ class Events {
         this.addListener('pause', this.pause, this);
         this.addListener('resume', this.resume, this);
 
+        // listen for multiplayer messages passed down to IFrame from parent
+        this._listenMultiplayer();
+
         //log events easily for testing
         (<any>window).events = this;
         // emit events easily for testing
@@ -44,6 +47,41 @@ class Events {
      */
     get paused(): boolean {
         return this._paused;
+    }
+
+    // listen for multiplayer event messages related from RISE platform parent window
+    private _listenMultiplayer() {
+        let _this = this;
+        window.addEventListener('message', function (evt) {
+            var data = evt.data;
+            if (data && data.behavior) {
+                _this._requestCall(data.behavior, data.data);
+            }
+        });
+    }
+
+    /**
+     * @description repackages the event for posting to parent window
+     * @param event the event name
+     * @param data data to package with event
+     */
+    private _multiplayerCall(event: string, data?: any) {
+        data = { behavior: event, data: data }
+        this._postToRise(data);
+    }
+
+    /**
+     * 
+     * @param data post a message to the parent window of iFrame, for RISE API to catch and share. 'behavior' property of data should be 
+     * event name. 
+     */
+    private _postToRise(data: any) {
+        if (data && data.behavior) {
+            console.log('sending data:', data);
+            window.parent.postMessage && window.parent.postMessage(data, '*');
+            return;
+        }
+        console.warn('data not valid for transmition: ', data);
     }
 
     /**
@@ -124,7 +162,7 @@ class Events {
      * @param data (optional) data object to pass to the callbacks for the event
      */
     public fire(event: string, data?: any) {
-        this._trigger(event, data);
+        this.callLocal(event, data);
     }
 
     /**
@@ -133,6 +171,13 @@ class Events {
     * @param data (optional) data object to pass to the callbacks for the event
     */
     public emit(event: string, data?: any) {
+        this.callLocal(event, data);
+    }
+
+    private _requestCall(event: string, data?: any) {
+        // todo - implement logic to avoid double calls from RISE platform etc
+        console.log(event, data);
+       // debugger;
         this._trigger(event, data);
     }
 
@@ -142,7 +187,12 @@ class Events {
     * @param data (optional) data object to pass to the callbacks for the event
     */
     public trigger(event: string, data?: any) {
+        this.callLocal(event, data);
+    }
+
+    public callLocal(event: string, data?: any) {
         this._trigger(event, data);
+        this._multiplayerCall(event, data);
     }
 
     /**
@@ -171,7 +221,7 @@ class Events {
     }
 
     private _trigger(event: string, data: any = null) {
-       // console.log('triggering %s with data %s', event, data);
+        // console.log('triggering %s with data %s', event, data);
         if (this.eventNames().indexOf(event) !== -1) {
             let total = this._events[event].length - 1;
             if (total >= 0) {
@@ -180,7 +230,7 @@ class Events {
                 for (let x = total; x >= 0; x--) {
                     let obj = objs[x];
 
-              //      console.log('about to attempt callback for %s with context: ', event, obj.context);
+                    //      console.log('about to attempt callback for %s with context: ', event, obj.context);
 
                     obj.callback.bind(obj.context)(data);
                     if (obj.once == true) { // if 'once' is set to true, remove callback
