@@ -1,4 +1,4 @@
-import { Application, Loader, Sprite, Renderer, Container, NineSlicePlane, Point, Texture, RenderTexture, DisplayObject} from 'pixi.js';
+import { Application, Loader, Sprite, Renderer, Container, NineSlicePlane, Point, Texture, RenderTexture, DisplayObject } from 'pixi.js';
 import * as PIXI from 'pixi.js';
 import PxText from './PxText';
 

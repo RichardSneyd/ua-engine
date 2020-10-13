@@ -12,7 +12,7 @@ import Transitions from './Core/Engine/Transitions';
 import TweenManager from './Core/Engine/TweenManager';
 
 /**
- * @class the UAEngine API. 
+ * @description The UAEngine API. 
  */
 class UAE {
   public static world: World;

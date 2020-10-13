@@ -1,4 +1,4 @@
-import {Application, Sprite, DisplayObject, Texture, RenderTexture} from 'pixi.js';
+import { Application, Sprite, DisplayObject, Texture, RenderTexture } from 'pixi.js';
 
 import IScreen from '../Services/IScreen';
 import PxGame from '../Services/Pixi/PxGame';
@@ -24,7 +24,7 @@ class Screen implements IScreen {
     return this._pxGame.addSprite(x, y, texture, frame);
   }
 
-  public createVideo(x: number, y: number, videoName: string){
+  public createVideo(x: number, y: number, videoName: string) {
     return this._pxGame.addVideo(x, y, videoName);
   }
 
@@ -47,7 +47,7 @@ class Screen implements IScreen {
   public disableInput(sprite: any) {
     this._pxGame.disableInput(sprite);
   }
-  
+
   public addListener(event: string, sprite: any, callback: Function, context: any) {
     this._pxGame.addListener(event, sprite, callback, context);
   }
@@ -56,7 +56,7 @@ class Screen implements IScreen {
     this._pxGame.removeListener(event, sprite, callback);
   }
 
-  public addHitMap(obj: Sprite, threshold: number = 127){
+  public addHitMap(obj: Sprite, threshold: number = 127) {
     this._pxGame.genHitmap(obj.texture.baseTexture, threshold);
   }
 
@@ -84,7 +84,7 @@ class Screen implements IScreen {
     this._pxGame.resize(width, height);
   }
 
-  public debugScreen(){
+  public debugScreen() {
     this._pxGame.debugScreen();
   }
 
@@ -92,7 +92,7 @@ class Screen implements IScreen {
     return this._pxGame.width();
   }
 
-  public toTexture(object: DisplayObject) : any | null {
+  public toTexture(object: DisplayObject): any | null {
     return this._pxGame.toTexture(object);
   }
 
@@ -100,7 +100,7 @@ class Screen implements IScreen {
     return this._pxGame.height();
   }
 
-  public newLevel(){
+  public newLevel() {
     this._pxGame.newLevel();
   }
 }

@@ -10,7 +10,7 @@ class Loop {
   private _lastTime: number;
   private _delay: number;
   private _oldDelay: number;
-  
+
   constructor(events: Events, funObj: FunObj) {
     this._events = events;
     this._funObj = funObj;
@@ -27,7 +27,7 @@ class Loop {
   }
 
   /**
-   * @description add a function to the list of callbacks for this loop
+   * @description Add a function to the list of callbacks for this loop
    * @param f the function to add to the list of callbacks
    * @param context the context
    */
@@ -44,7 +44,7 @@ class Loop {
   }
 
   /**
-   * @description remove a callback from this loop
+   * @description Remove a callback from this loop
    * @param f the function to remove from callbacks array
    * @param context the context of the function to remove (required to find the exact function of exact objectc)
    */
@@ -68,7 +68,7 @@ class Loop {
   }
 
   private _executeAll(time: number) {
-  //  console.log('execute all.. at %s: ', new Date().getTime(), this._fList);
+    //  console.log('execute all.. at %s: ', new Date().getTime(), this._fList);
     if (this._paused == 1) {
       this._delay = this._oldDelay + (time - this._lastTime);
       //console.log("delay %s", this._delay);
@@ -78,24 +78,24 @@ class Loop {
       this._lastTime = time;
     } else if (this._paused == 0) {
 
-    //  console.log('fList length: ', this._fList.length);
+      //  console.log('fList length: ', this._fList.length);
       for (let c = 0; c < this._fList.length; c++) {
-      //  console.log('exec loop callback %s', c);
+        //  console.log('exec loop callback %s', c);
         this._fList[c].execute(time - this._delay);
       }
 
     }
- //   debugger;
+    //   debugger;
     window.requestAnimationFrame(this._boundExecuteAll);
   }
 
- /*  private _findFunction(f: Function, context: any): number | null {
-    for (let c = 0; c < this._fList.length; c++) {
-      if (f == this._fList[c].function) return c;
-    }
-
-    return null;
-  } */
+  /*  private _findFunction(f: Function, context: any): number | null {
+     for (let c = 0; c < this._fList.length; c++) {
+       if (f == this._fList[c].function) return c;
+     }
+ 
+     return null;
+   } */
 
   private _getFunObj(f: Function, context: any): FunObj | null {
     for (let c = 0; c < this._fList.length; c++) {

@@ -24,7 +24,7 @@ class TweenManager {
     }
 
     /**
-     * @description add a new tween
+     * @description Add a new tween
      * @param tweenName the name of the tween. You will referense this when playing it in future
      * @param easing The easing Algorithm to use.
      * @param object The GameObject to apply the tween to
@@ -32,7 +32,7 @@ class TweenManager {
      * @param delay in milliseconds. Defaults to 0.
      */
     public add(easing: string, object: any, repeat: number = 0, delay: number = 0, tweenName?: string): Tween {
-        if(tweenName == undefined) tweenName = this.tempName();
+        if (tweenName == undefined) tweenName = this.tempName();
         let tween = this._getTween(tweenName);
         if (tween != null) {
             console.error('cannot create 2 tweens with same name. cancel adding ', tweenName);
@@ -47,14 +47,14 @@ class TweenManager {
         return tween;
     }
 
-      /**
-     * @description remove a tween
+    /**
+     * @description Remove a tween
      * @param tween the tween to remove (name of the tween, or the actual object)
      */
     public remove(tweenName: string | Tween) {
         let tween;
-        if(typeof tweenName !== 'string') tween = tweenName;
-        if(typeof tweenName == 'string') tween = this._getTween(tweenName);
+        if (typeof tweenName !== 'string') tween = tweenName;
+        if (typeof tweenName == 'string') tween = this._getTween(tweenName);
         if (tween !== null && tween !== undefined) this._remove(tween); else console.warn("cannot remove tween '%s' because it does'nt exist", tweenName);
     }
 
@@ -92,7 +92,7 @@ class TweenManager {
     }
 
     /**
-     * @description a method that creates a tween, plays it once, and deletes it all all-in-one
+     * @description A method that creates a tween, plays it once, and deletes it all all-in-one
      * @param easing the type of easing to use
      * @param object the object to tween
      * @param toObject the object that specifies the tween values
@@ -144,7 +144,7 @@ class TweenManager {
 
     public pause(tweenName: string | Tween): TweenManager {
         let tween: any = tweenName;
-        if(typeof tweenName == 'string') tween = this._getTween(tweenName);
+        if (typeof tweenName == 'string') tween = this._getTween(tweenName);
 
         if (tween != null) {
             tween.pause();
@@ -157,7 +157,7 @@ class TweenManager {
 
     public resume(tweenName: string | Tween): TweenManager {
         let tween: any = tweenName;
-        if(typeof tweenName == 'string') tween = this._getTween(tweenName);
+        if (typeof tweenName == 'string') tween = this._getTween(tweenName);
 
         if (tween !== null) {
             tween.resume();
