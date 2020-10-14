@@ -1,6 +1,6 @@
 import Events from '../Engine/Events';
 import FunObj from '../Data/FunObj';
-import Logger from './Logger';
+import Logger from '../../Logger';
 
 class Loop {
   private _funObj: FunObj;
@@ -11,7 +11,7 @@ class Loop {
   private _lastTime: number;
   private _delay: number;
   private _oldDelay: number;
-  
+
   constructor(events: Events, funObj: FunObj) {
     this._events = events;
     this._funObj = funObj;
@@ -28,7 +28,7 @@ class Loop {
   }
 
   /**
-   * @description add a function to the list of callbacks for this loop
+   * @description Add a function to the list of callbacks for this loop
    * @param f the function to add to the list of callbacks
    * @param context the context
    */
@@ -45,7 +45,7 @@ class Loop {
   }
 
   /**
-   * @description remove a callback from this loop
+   * @description Remove a callback from this loop
    * @param f the function to remove from callbacks array
    * @param context the context of the function to remove (required to find the exact function of exact objectc)
    */
@@ -86,17 +86,17 @@ class Loop {
       }
 
     }
- //   debugger;
+    //   debugger;
     window.requestAnimationFrame(this._boundExecuteAll);
   }
 
- /*  private _findFunction(f: Function, context: any): number | null {
-    for (let c = 0; c < this._fList.length; c++) {
-      if (f == this._fList[c].function) return c;
-    }
-
-    return null;
-  } */
+  /*  private _findFunction(f: Function, context: any): number | null {
+     for (let c = 0; c < this._fList.length; c++) {
+       if (f == this._fList[c].function) return c;
+     }
+ 
+     return null;
+   } */
 
   private _getFunObj(f: Function, context: any): FunObj | null {
     for (let c = 0; c < this._fList.length; c++) {

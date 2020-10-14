@@ -16,14 +16,13 @@ class ScaleManager {
   }
 
   public init() {
-
     this._width = this._gameWidth();
     this._height = this._gameHeight();
     //Logger.info("smanager w(%s) h(%s)", this._width, this._height);
   }
 
   /**
-   * @description rescales for window resize events, adapting to both width and height changes while maintaining aspect ratio
+   * @description Rescales for window resize events, adapting to both width and height changes while maintaining aspect ratio
    * @param x width 
    * @param y 
    */
@@ -36,6 +35,10 @@ class ScaleManager {
     return { x: xPos, y: yPos };
   }
 
+  /**
+   * @description Gives the current scale value
+   * @param currentScale 
+   */
   public getScale(currentScale: number): number {
     let scale = this._scaleFactor() * currentScale;
 
@@ -51,7 +54,7 @@ class ScaleManager {
   }
 
   /**
-   * @description returns the current scaleFactor. This value will change based on window resize events etc
+   * @description Returns the current scaleFactor. This value will change based on window resize events etc
    */
   private _scaleFactor(): number {
     let width = window.innerWidth;

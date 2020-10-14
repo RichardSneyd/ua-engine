@@ -6,7 +6,6 @@ import EventNames from "./EventNames";
 import ScaleManager from "./ScaleManager";
 import KeyCodes from './Keys';
 import KeyListener from "./KeyListener";
-import Logger from "./Logger";
 
 class InputManager {
     protected _pointFactory: Point;
@@ -22,8 +21,8 @@ class InputManager {
 
     constructor(events: Events, loader: Loader, screen: IScreen, eventNames: EventNames, pointFactory: Point, scaleManager: ScaleManager, keyListener: KeyListener) {
         this._events = events; this._loader = loader; this._screen = screen; this._eventNames = eventNames; this._scaleManager = scaleManager;
-        this._pointFactory = pointFactory;  this._keyListener = keyListener;
-        
+        this._pointFactory = pointFactory; this._keyListener = keyListener;
+
         this._pointer = this._pointFactory.createNew(0, 0);
         this._pointerMovement = this._pointFactory.createNew(0, 0);
         this._events.on('pointermove', this._onPointerMove, this);
@@ -51,40 +50,40 @@ class InputManager {
     }
 
     private _onKeyDown(evt: any) {
-        this._callKeyListenersForAll(this._keyDownListeners, {evt: evt});
+        this._callKeyListenersForAll(this._keyDownListeners, { evt: evt });
     }
 
     private _onKeyUp(evt: any) {
-        this._callKeyListenersForAll(this._keyUpListeners, {evt: evt});
+        this._callKeyListenersForAll(this._keyUpListeners, { evt: evt });
     }
 
     private _onKeyPress(evt: any) {
-        this._callKeyListenersForAll(this._keyPressListeners, {evt: evt});
+        this._callKeyListenersForAll(this._keyPressListeners, { evt: evt });
     }
 
     private _callKeyListenersForAll(listeners: KeyListener[], data: {evt: any}) {
         // Logger.info('evt: ', data.evt);
         for (let l = 0; l < listeners.length; l++) {
-           listeners[l].callIfMatch(data);
+            listeners[l].callIfMatch(data);
         }
     }
 
     /**
-     * @description get the pointer position as a Point object (x, y). In game-units (auto-corrected for scale)
+     * @description Get the pointer position as a Point object (x, y). In game-units (auto-corrected for scale)
      */
     get pointer() {
         return this._pointer;
     }
 
     /**
-    * @description get the amount the pointer moved since the last tick as a Point object (x, y). In game-units (auto-corrected for scale)
+    * @description Get the amount the pointer moved since the last tick as a Point object (x, y). In game-units (auto-corrected for scale)
     */
     get pointerMovement() {
         return this._pointerMovement;
     }
 
     /**
-     * @description enable input for the specified object
+     * @description Enable input for the specified object
      * @param displayObject the object to enable input for
      */
     public enable(displayObject: any) {
@@ -92,7 +91,7 @@ class InputManager {
     }
 
     /**
-     * @description disable input for the specified object
+     * @description Disable input for the specified object
      * @param displayObject the object to disable input for
      */
     public disable(displayObject: any) {
@@ -100,7 +99,7 @@ class InputManager {
     }
 
     /**
-     * @description add listener for specified input event to specific sprite
+     * @description Add listener for specified input event to specific sprite
      * @param event the event to add the listener to; must be a valid input event
      * @param callback the callback method to register
      * @param sprite the sprite this event lisener is being associated with
@@ -114,9 +113,8 @@ class InputManager {
     }
 
     /**
-     * @description remove listener from input event
+     * @description Remove listener from input event
      * @param event 
-     * 
      * @param callback 
      * @param sprite 
      */

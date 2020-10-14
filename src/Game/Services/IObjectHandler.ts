@@ -1,5 +1,5 @@
 import Point from '../Core/Geom/Point';
-import { Container } from 'pixi.js';
+import { Container } from 'pixi.js-legacy';
 interface IObjectHandler {
   setXy(object: any, x: number, y: number): void;
   setSize(object: any, width: number, height: number): void;

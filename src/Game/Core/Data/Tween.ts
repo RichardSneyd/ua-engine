@@ -1,5 +1,5 @@
 import * as TWEEN from '@tweenjs/tween.js';
-import Logger from '../Engine/Logger';
+import Logger from '../../Logger';
 
 class Tween {
   private _name: string; _easing: string; _object: any; _data: TWEEN.Tween | null;

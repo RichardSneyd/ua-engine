@@ -6,7 +6,7 @@ import AjaxLoader from '../../Services/AjaxLoader';
 import GameConfig from './GameConfig';
 import Loop from './Loop';
 import Events from './Events';
-import Logger from './Logger';
+import Logger from '../../Logger';
 
 class Loader {
   private _resource: Resource;
@@ -20,7 +20,7 @@ class Loader {
   private _base: string;
 
   /**
-   * @description the base path to load assets from.
+   * @description The base path to load assets from.
    */
   get base(): string {
     return this._base;
@@ -31,7 +31,8 @@ class Loader {
   }
 
   /**
-   * @description load progress as a float value between 0 and 1
+   * @description Load progress as a float value between 0 and 1
+   * @returns the current progress value
    */
   get progress(): number {
     let done: number = 0;
@@ -61,7 +62,7 @@ class Loader {
   }
 
   /**
-   * @description load progress as a percentage
+   * @description Load progress as a percentage
    */
   get progressPercentage(): number {
     return Math.floor(this.progress * 100);
@@ -83,7 +84,7 @@ class Loader {
     this._loop.addFunction(this._update, this);
     this._events.on('shutdown', this._init, this);
     // expose loader globaly for testing
-    (<any>window).loader = this;
+    Logger.exposeGlobal(this, 'loader');
   }
 
   get resList() {
@@ -107,10 +108,10 @@ class Loader {
    * populated with the image once loaded; Everything in the queue is processed when the download() method is called
    * @param name the filename of the image to load, including file extension. This is added to the base path value to find the image URL.
    */
-  public addImage(name: string) {
+  public addImage(name: string): Loader {
     let url = this._getPath().img + name;
     // if the file has .json extension, it's an atlas, so change path. Won't be confused with spine assets - they are loaded via addSpine
-    if(name.indexOf('.json') !== -1){url = this._getPath().atlas + name}
+    if (name.indexOf('.json') !== -1) { url = this._getPath().atlas + name }
     if (this._getResource(url, false) == null) {
       let res = this._createResource();
       res.initImage(url, false);
@@ -118,35 +119,39 @@ class Loader {
       this._resList.push(res);
       this._newResList.push(res);
       // Logger.info(this._resList);
-      return true;
+      return this;
     }
 
     Logger.warn('did not add %s, as it already exists', name);
-    return false;
+    return this;
   }
 
-  public addImages(names: string[], extension: string){
+  public addImages(names: string[], extension: string) : Loader{
     let _ext = extension;
-    if(_ext.indexOf('.') !== 0){
+    if (_ext.indexOf('.') !== 0) {
       _ext = '.' + _ext;
     }
     for (let x = 0; x < names.length; x++) {
-      this.addImage(names[x] + _ext);
-      
-  }
+      this.addImage(names[x] + _ext); 
+    }
+    return this;
   }
 
   /**
-   * @description Creates an atlas resource and adds adds the atlas to the load queue. The data property of the resource will be
+   * @description Creates an atlas resource and adds adds the atlas to the load queue -- must include .json extension. The data property of the resource will be
    * populated with the image once loaded; Everything in the queue is processed when the download() method is called
    * @param name the filename of the atlas you wish to load, including '.json' extension. image is loaded internally.
    */
-  public addAtlas(name: string) {
+  public addAtlas(name: string):  Loader {
     // handles atlas at PxLoader level, added just the same as image resource, except with .json ext instead of .img ....
     this.addImage(name);
+    return this;
   }
 
-  public addSpine(name: string) {
+  /**
+   * @description add a spine file to the load queue - must include .json extension
+   */
+  public addSpine(name: string) : Loader {
     let url = this._getPath().spn + name;
     if (this._getResource(url, false) == null) {
       let res = this._createResource();
@@ -155,17 +160,17 @@ class Loader {
       this._resList.push(res);
       this._newResList.push(res);
       Logger.info(this._resList);
-      return false;
+      return this;
     }
     Logger.warn('did not add %s spine, as it already exists', name);
-    return false;
+    return this;
   }
 
   /**
-   * @description create a sound resource, to be inject with data later, at download
+   * @description Create a sound resource, to be inject with data later, at download
    * @param filename the filename of the sound to be loaded, without extension.
    */
-  addSnd(name: string) {
+  addSnd(name: string) : Loader {
     let url = this._getPath().snd + name;
     if (this._getResource(url, false) == null) {
       let res = this._createResource();
@@ -174,24 +179,26 @@ class Loader {
       this._resList.push(res);
       this._newResList.push(res);
       // Logger.info(this._resList);
-      return true;
+      return this;
     }
     Logger.warn('did not add %s, as it already exists', name);
-    return false;
+    return this;
   }
 
   /**
-  * @description create several sound resources, to be injected with data (howls) at download phase
+  * @description Create several sound resources, to be injected with data (howls) at download phase
   * @param filenames filenames array of the sounds to be loaded, without extension (extentions are defined in config file).
   */
-  addSnds(names: string[]) {
+  addSnds(names: string[]) : Loader {
     for (let x = 0; x < names.length; x++) {
       this.addSnd(names[x]);
     }
+
+    return this;
   }
 
   /**
-   * @description download everything in the load queue. This must be done before the activity can start.
+   * @description Download everything in the load queue. This must be done before the activity can start.
    * @param onDone (optional) called when loading is complete
    */
   public download() {
@@ -243,8 +250,7 @@ class Loader {
   }
 
   /**
-   * @description continuely updates the _downloadComplete property, by checking the loaded property of all registered resources
-   * each tick.
+   * @description Continuely updates the _downloadComplete property, by checking the loaded property of all registered resources each tick.
    */
   private _update(): void {
     let isLoaded = true;
@@ -269,7 +275,7 @@ class Loader {
   }
 
   /**
-   * @description a utility method which returns the URLs to be downloaded for resources
+   * @description Utility method which returns the URLs to be downloaded for resources
    * @param arr an array of the resources to generate the list from
    */
   private _getUrls(arr: Resource[], ignoreLoaded: boolean = false): string[] {
@@ -307,7 +313,11 @@ class Loader {
     })
   }
 
-  // data is BS from PIXI, data2 is the actual PIXI resource object. Handles spine resource downloads/injections too
+  /**
+   * @description "data" is BS from PIXI, "data2" is the actual PIXI resource object. Handles spine resource downloads/injections too
+   * @param data 
+   * @param data2 
+   */
   private _imgLoaded(data: any, data2: any) {
     if (data2.texture != null) {
       //  Logger.info('image loaded and returned: ', data2, 'attemping injection....');
@@ -378,9 +388,9 @@ class Loader {
   }
 
   getSndResource(url: string, byName: boolean = true): Resource | null {
-   // return this._getResource(url.split('.')[0], byName, this._getSndArray());
+    // return this._getResource(url.split('.')[0], byName, this._getSndArray());
     return this._getResource(url, byName, this._getSndArray());
-  } 
+  }
 
   getImgResource(url: string, byName: boolean = false): Resource | null {
     return this._getResource(url, byName, this._getImgArray());
@@ -390,7 +400,9 @@ class Loader {
     return this._getResource(url, byName, this._getSpnArray());
   }
 
-  //Foreign dependencies
+  /**
+   * @description Foreign dependencies
+   */
   private _createResource(): Resource {
     return this._resource.createNew();
   }
@@ -478,7 +490,11 @@ class Loader {
     }
   }
 
-  // retrieve texture object from resource
+  /**
+   * @description Retrieve texture object from resource
+   * @param data 
+   * @param frame 
+   */
   private _extractTexture(data: any, frame: any = null) {
     return this._imgLoader.getTexture(data, frame);
   }

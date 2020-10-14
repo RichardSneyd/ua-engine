@@ -150,7 +150,7 @@ class Resource {
       }
     }
 
-    //console.log("name: %s", name);
+    //Logger.info("name: %s", name);
 
     return name;
   } */

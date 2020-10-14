@@ -1,6 +1,6 @@
 import IObjectHandler from './IObjectHandler';
 import Point from '../Core/Geom/Point';
-import { Container, DisplayObject } from 'pixi.js';
+import { Container, DisplayObject } from 'pixi.js-legacy';
 
 class ObjectHandler implements IObjectHandler {
   constructor() {

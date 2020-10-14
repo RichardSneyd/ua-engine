@@ -1,5 +1,5 @@
-import { Application, Loader, Sprite, Renderer, Container, NineSlicePlane, Point, Texture, RenderTexture, DisplayObject} from 'pixi.js';
-import * as PIXI from 'pixi.js';
+import { Application, Loader, Sprite, Renderer, Container, NineSlicePlane, Point, Texture, RenderTexture, DisplayObject } from 'pixi.js-legacy';
+import * as PIXI from 'pixi.js-legacy';
 import PxText from './PxText';
 import Logger from '../../Core/Engine/Logger';
 
@@ -12,10 +12,13 @@ class PxFactory {
   }
 
   public createGame(w: number, h: number, container: string, renderer: string = "null"): Application {
-    return new Application({
+    let _renderer = PIXI.autoDetectRenderer();
+    let app = new Application({
       width: w,
-      height: h
+      height: h,
     });
+    app.renderer = _renderer;
+    return app;
   }
   public createSprite(texture: any): Sprite {
 
@@ -30,7 +33,7 @@ class PxFactory {
     return new NineSlicePlane(texture, leftWidth, topHeight, rightWidth, bottomHeight);
   }
 
-  public createText(text: string, renderer: Renderer, style: any = undefined): PxText {
+  public createText(text: string, renderer: any, style: any = undefined): PxText {
     let pxt = this._pxText.createNew();
     pxt.init(text, renderer, style);
 

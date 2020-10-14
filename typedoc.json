@@ -1,0 +1,7 @@
+{
+    "mode": "modules",
+    "out": "./uae-docs",
+    "inputFiles": [
+        "./src/"
+    ]
+}
