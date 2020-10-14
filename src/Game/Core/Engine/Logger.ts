@@ -26,7 +26,7 @@ export default class Logger {
     }
 
     /**
-     * @description set a group text instead of the default one
+     * @description Set a group text instead of the default one
      * @param source string to set as message group
      * @returns Logger, to allow chain a print method after
      */
@@ -37,7 +37,7 @@ export default class Logger {
     }
 
     /**
-     * @description change the highest log level that can be printed.
+     * @description Change the highest log level that can be printed.
      * @param level from the LogLevel enum, ERROR, WARNING or INFO
      */
     public static setLevel(level: number) {
@@ -55,7 +55,7 @@ export default class Logger {
     }
 
     /**
-     * @description logs a message in the browser console using console.log
+     * @description Logs a message in the browser console using console.log
      * @param args one or more arguments, any type
      */
     public static info(...args: any[]) {
@@ -65,7 +65,7 @@ export default class Logger {
     }
 
     /**
-     * @description logs a message in the browser console using console.error
+     * @description Logs a message in the browser console using console.error
      * @param args one or more arguments, any type
      */
     public static error(...args: any[]) {
@@ -75,7 +75,7 @@ export default class Logger {
     }
 
     /**
-     * @description logs a message in the browser console using console.warn
+     * @description Logs a message in the browser console using console.warn
      * @param args one or more arguments, any type
      */
     public static warn(...args: any[]) {
@@ -85,20 +85,20 @@ export default class Logger {
     }
 
     /**
-     * @description we assume we are in development environment if we can print warnings and info messages
+     * @description The environment is development if the loglevel is higher that ERROR
      * @returns boolean, true if log level is greater than error
      */
-    public static get inDevEnvironment() {
+    public static get devEnvironment() {
         return (Logger._level > LogLevel.ERROR);
     }
 
     /**
-     * @description expose object on the window, for debugging purposes
-     * @param object object we want to expose
-     * @param label key for the object
+     * @description Expose object on the window, for debugging purposes
+     * @param object object to expose
+     * @param label key to locate the object on the window
      */
     public static exposeGlobal(object: any, label: string) {
-        if(this.inDevEnvironment) {
+        if(this.devEnvironment) {
             (<any>window)[label] = object;
         }
     }
@@ -107,7 +107,7 @@ export default class Logger {
     // This is to allow its use in other projects by doing UAE.log...
 
     /**
-     * @description set a group text instead of the default one
+     * @description Set a group text instead of the default one
      * @param source string to set as message group
      * @returns Logger, to allow chain a print method after
      */
@@ -118,7 +118,7 @@ export default class Logger {
     }
 
     /**
-     * @description change the highest log level that can be printed.
+     * @description Change the highest log level that can be printed.
      * @param level from the LogLevel enum, ERROR, WARNING or INFO
      */
     public setLevel(level: number) {
@@ -126,7 +126,7 @@ export default class Logger {
     }
 
     /**
-     * @description logs a message in the browser console using console.log
+     * @description Logs a message in the browser console using console.log
      * @param args one or more arguments, any type
      */
     public info(...args: any[]) {
@@ -134,7 +134,7 @@ export default class Logger {
     }
 
     /**
-     * @description logs a message in the browser console using console.error
+     * @description Logs a message in the browser console using console.error
      * @param args one or more arguments, any type
      */
     public error(...args: any[]) {
@@ -142,7 +142,7 @@ export default class Logger {
     }
 
     /**
-     * @description logs a message in the browser console using console.warn
+     * @description Logs a message in the browser console using console.warn
      * @param args one or more arguments, any type
      */
     public warn(...args: any[]) {
@@ -150,17 +150,17 @@ export default class Logger {
     }
 
     /**
-     * @description we assume we are in development environment if we can print warnings and info messages
+     * @description The environment is development if the loglevel is higher that ERROR
      * @returns boolean, true if log level is greater than error
      */
-    public get inDevEnvironment() {
-        return Logger.inDevEnvironment;
+    public get devEnvironment() {
+        return Logger.devEnvironment;
     }
 
     /**
-     * @description expose object on the window, for debugging purposes
-     * @param object object we want to expose
-     * @param label key for the object
+     * @description Expose object on the window, for debugging purposes
+     * @param object object to expose
+     * @param label key for the object on the window
      */
     public exposeGlobal(object: any, label: string) {
         Logger.exposeGlobal(object, label);
