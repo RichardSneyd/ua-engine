@@ -13,7 +13,7 @@ import ContainerObject from '../ContainerObject';
 import Mask from '../Mask';
 import SpineObject from '../SpineObject';
 import Loop from '../../Loop';
-import { RenderTexture } from 'pixi.js';
+import { RenderTexture } from 'pixi.js-legacy';
 
 
 class ObjectCore {

@@ -26,7 +26,7 @@ class ScriptHandler {
       * @description Initialize the level manager.
       * @param scriptName the name of the script to initialize the script handler with
       * @param scriptRaw the raw script data for the script handler
-      * @param parseCols the names of the columns to be parsed into arrays of names (i.e 'horse,dog,cat' => [horse, dog, cat])
+      * @param parseCols the names of the columns to be parsed into arrays of names (i.e 'horse,dog,cat' => ['horse,' 'dog', 'cat'])
       * @param objectifyCols the names of the columns to be converted into objects with key-value pairs. For example:
       * 'bgd: bgd_1\noverlay: overlay_1'
       * => {bgd: 'bgd_1', overlay: 'overlay_1'}
@@ -69,6 +69,7 @@ class ScriptHandler {
     set active(row: any) {
         this._last = this.active;
         this._active = row;
+        this._events.fire('newRow'); // this event can be listened for anywhere you need to respond to a row change (goTo)
     }
 
     /**
@@ -83,8 +84,10 @@ class ScriptHandler {
      * @param row the row object to switch to
      */
     public goTo(row: any) {
+        if (row == null) {
+            console.error('cannot goTo a null row argument: ', row);
+        }
         this.active = row;
-        this._events.fire('newRow'); // this event can be listened for anywhere you need to respond to a newRow
     }
 
     /**

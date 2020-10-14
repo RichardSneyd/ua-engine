@@ -1,6 +1,6 @@
 import PxPoint from './PxPoint';
 
-import {Text, Sprite, Renderer, SCALE_MODES} from 'pixi.js';
+import {Text, Sprite, Renderer, SCALE_MODES} from 'pixi.js-legacy';
 
 class PxText {
   private _pxPoint: PxPoint;

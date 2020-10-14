@@ -1,4 +1,4 @@
-import { DisplayObject, Container } from "pixi.js";
+import { DisplayObject, Container } from "pixi.js-legacy";
 import TweenManager from "./TweenManager";
 import Tween from "../Data/Tween";
 import GameConfig from "./GameConfig";

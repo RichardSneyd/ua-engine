@@ -1,4 +1,4 @@
-import { Application, Sprite, DisplayObject, Texture, RenderTexture } from 'pixi.js';
+import { Application, Sprite, DisplayObject, Texture, RenderTexture } from 'pixi.js-legacy';
 
 import IScreen from '../Services/IScreen';
 import PxGame from '../Services/Pixi/PxGame';
@@ -40,6 +40,10 @@ class Screen implements IScreen {
     return this._pxGame.addGraphic(x, y, width, height);
   }
 
+   /**
+     * @description enable mouse/pointer input for the specified object
+     * @param sprite the object to enable input for
+     */
   public enableInput(sprite: any) {
     this._pxGame.enableInput(sprite);
   }
