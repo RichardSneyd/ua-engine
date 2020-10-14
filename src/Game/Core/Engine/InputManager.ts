@@ -6,6 +6,7 @@ import EventNames from "./EventNames";
 import ScaleManager from "./ScaleManager";
 import KeyCodes from './Keys';
 import KeyListener from "./KeyListener";
+import Logger from "../../Logger";
 
 class InputManager {
     protected _pointFactory: Point;
