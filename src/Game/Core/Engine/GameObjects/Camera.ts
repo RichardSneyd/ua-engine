@@ -6,6 +6,7 @@ import Geom from "../../Geom/Geom";
 import GameConfig from "../GameConfig";
 import InputManager from "../InputManager";
 import TweenComponent from "./Components/TweenComponent";
+import Logger from "../../../Logger";
 
 class Camera {
     protected _math: MathUtils;
@@ -35,7 +36,7 @@ class Camera {
         this._y = 0;
         //  this._zoom = 1;
         this._initialized = false;
-        (<any>window).camera = this;
+        Logger.exposeGlobal(this, 'camera');
     }
 
     get tween() {
