@@ -1,5 +1,6 @@
 import ISndLoader from './ISndLoader';
 import HwLoader from './Howler/HwLoader';
+import Logger from '../Core/Engine/Logger';
 
 class SndLoader implements ISndLoader {
     private _loader: HwLoader;
@@ -22,7 +23,7 @@ class SndLoader implements ISndLoader {
             let result = this._loader.loadSound(url, extensions, onProgress, onDone, context);
             resolve(result);
         }).then((value: any) => {
-            console.log(value, 'color:blue');
+            Logger.info(value, 'color:blue');
         }
         );
     }

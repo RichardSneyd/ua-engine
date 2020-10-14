@@ -118,7 +118,7 @@ class MathUtils {
         let xDist = x2 - x1;
         let yDist = y2 - y1;
         let radians = this.radiansBetween(yDist, xDist);
-        //console.log('radians: ', radians);
+        // Logger.info('radians: ', radians);
         let degrees = this.radiansToDegrees(radians);
 
         return degrees;

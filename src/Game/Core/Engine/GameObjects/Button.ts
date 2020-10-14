@@ -1,5 +1,6 @@
 import SpriteObject from "./SpriteObject";
 import IParentChild from "./IParentChild";
+import Logger from "../../../Logger";
 
 
 
@@ -129,7 +130,7 @@ class Button {
     }
 
     playAnimation(name: string, loop: boolean = true) {
-        // console.log(`%c play ${name}  for ${this.sprite.textureName}?`, 'color: orange;');
+       // Logger.info(`%c play ${name}  for ${this.sprite.textureName}?`, 'color: orange;');
         this.sprite.animations.play(name, loop);
     }
 
@@ -138,10 +139,10 @@ class Button {
     }
 
     private _onDown() {
-        console.log('onDown called for: ', this);
+        Logger.info('onDown called for: ', this);
         this.playAnimation(this.animNames.down);
-        if (this._onDownCallback !== null) {
-            console.log('onDownCallback not null');
+        if(this._onDownCallback !== null) {
+            Logger.info('onDownCallback not null');
             this._onDownCallback.bind(this._context)();
         }
     }
@@ -149,22 +150,22 @@ class Button {
 
 
     private _onUp() {
-        // console.log('onUp called for: ', this);
+        // Logger.info('onUp called for: ', this);
 
         this.playAnimation(this.animNames.up);
         if (this._onUpCallback !== null) {
-            //  console.log('onUpCallback not null');
+            //  Logger.info('onUpCallback not null');
             this._onUpCallback.bind(this._context)();
         }
     }
 
     private _onOver() {
-        // console.log('onOver called for: ', this);
+        // Logger.info('onOver called for: ', this);
         this.playAnimation(this.animNames.over);
     }
 
     private _onOut() {
-        //  console.log('onOut called for: ', this);
+        // Logger.info('onOut called for: ', this);
         this.playAnimation(this.animNames.out);
     }
 }

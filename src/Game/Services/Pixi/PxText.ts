@@ -1,6 +1,7 @@
 import PxPoint from './PxPoint';
 
 import {Text, Sprite, Renderer, SCALE_MODES} from 'pixi.js-legacy';
+import Logger from '../../Logger';
 
 class PxText {
   private _pxPoint: PxPoint;
@@ -116,11 +117,11 @@ class PxText {
     this._scale = this._pxPoint.createNew(1, 1, (xVal: number)=> {
       if (this._data != null) this._data.scale.x = xVal;
       //this._updateTexture();
-      console.log("updated X Val!");
+      Logger.info("updated X Val!");
     }, (yVal: number) => {
       if (this._data != null) this._data.scale.y = yVal;
       //this._updateTexture();
-      console.log("updated Y Val!");
+      Logger.info("updated Y Val!");
     });
 
     this._anchor = this._pxPoint.createNew(1, 1, (xVal: number)=> {
@@ -136,7 +137,7 @@ class PxText {
     if (this._data != null) {
       return this._data;
     } else {
-      console.error("Can not access data before initializing text!");
+      Logger.error("Can not access data before initializing text!");
 
       return <Sprite> dummy;
     }
@@ -150,7 +151,7 @@ class PxText {
     if(this._data){
       return this._data.alpha;
     }
-    console.warn('cannot return alpha for object that is not initialized!');
+    Logger.warn('cannot return alpha for object that is not initialized!');
     return -1;
   }
 
@@ -164,7 +165,7 @@ class PxText {
     if (this._data != null) {
       return this._data.x;
     } else {
-      console.error("Can not access data before initializing text!");
+      Logger.error("Can not access data before initializing text!");
 
       return 0;
     }
@@ -174,7 +175,7 @@ class PxText {
     if (this._data != null) {
       return this._data.y;
     } else {
-      console.error("Can not access data before initializing text!");
+      Logger.error("Can not access data before initializing text!");
 
       return 0;
     }
@@ -184,7 +185,7 @@ class PxText {
     if (this._data != null) {
       this._data.x = xval;
     } else {
-      console.error("Can not access data before initializing text!");
+      Logger.error("Can not access data before initializing text!");
     }
   }
 
@@ -192,7 +193,7 @@ class PxText {
     if (this._data != null) {
       this._data.y = yval;
     } else {
-      console.error("Can not access data before initializing text!");
+      Logger.error("Can not access data before initializing text!");
     }
   }
 
@@ -212,7 +213,7 @@ class PxText {
     if (this._data != null && this._renderer != null && this._rawText != null) {
       this._data.texture = this._renderer.generateTexture(this._rawText, SCALE_MODES.LINEAR, 1);
     } else {
-      console.error("Can not update text texture before init!");
+      Logger.error("Can not update text texture before init!");
     }
   }
 

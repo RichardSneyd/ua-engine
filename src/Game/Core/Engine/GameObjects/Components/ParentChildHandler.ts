@@ -2,6 +2,7 @@ import IParentChild from "../IParentChild";
 import IGameObject from '../IGameObject';
 import ObjectCore from './ObjectCore';
 import TextObject from "../TextObject";
+import Logger from "../../Logger";
 
 class ParentChildHandler implements IParentChild{
     private _parent: IGameObject | null = null;
@@ -67,14 +68,14 @@ class ParentChildHandler implements IParentChild{
             this._go.setOrigin(this._go.origin.x, this._go.origin.y); // needed to manually update origin calculation
             return true;
         }
-        console.warn('that is already a child of this object, and cannot be added again');
+        Logger.warn('that is already a child of this object, and cannot be added again');
         return false;
     }
 
     removeChild(object: IGameObject): void {
         if (this.hasChild(object)) {
             if(object.data.data){
-             //   console.log('removing child TextObject, deal with it appropriately...')
+                // Logger.info('removing child TextObject, deal with it appropriately...')
                 this.core.data.removeChild(object.data.data);
             }
             else {
@@ -84,7 +85,7 @@ class ParentChildHandler implements IParentChild{
             this._children.splice(this._children.indexOf(object), 1);
             return;
         }
-        console.warn('could not remove, no such entity found in children array');
+        Logger.warn('could not remove, no such entity found in children array');
     }
 
     hasChild(object: IGameObject): boolean {
@@ -102,8 +103,8 @@ class ParentChildHandler implements IParentChild{
      * @description swap the z index (draw order) of 2 children
      */
     public swapZ(child1: IGameObject, child2: IGameObject){
-        if(this._children.indexOf(child1) == -1) console.error('child1 is not in the children array');
-        if(this._children.indexOf(child2) == -1) console.error('child2 is not in the children array');
+        if(this._children.indexOf(child1) == -1) Logger.error('child1 is not in the children array');
+        if(this._children.indexOf(child2) == -1) Logger.error('child2 is not in the children array');
         let child1Index = child1.zIndex; let child2Index = child2.zIndex;
         child1.zIndex = child2Index; child2.zIndex = child1Index;
     }

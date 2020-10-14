@@ -44,7 +44,7 @@ class ScaleHandler {
     this._scaleX = 1;
     this._scaleY = 1;
 
-  //  console.log("{debug3} scale manager allocated!");
+    // Logger.info("{debug3} scale manager allocated!");
   }
 
   public init(go: IGameObject, core: ObjectCore) {
@@ -55,7 +55,7 @@ class ScaleHandler {
 
     this.onResize();
     this._addListeners();
-    //console.log("smanager w(%s) h(%s)", this._width, this._height);
+    // Logger.info("smanager w(%s) h(%s)", this._width, this._height);
   }
 
   public createNew(): ScaleHandler {
@@ -99,7 +99,7 @@ class ScaleHandler {
   }
 
   private _onResize() {
-  //  console.log("{debug3} scale manager resize!", this._scaleManager.getScale(this._scaleX), this._scaleManager.getScale(this._scaleY), this._go);
+    // Logger.info("{debug3} scale manager resize!", this._scaleManager.getScale(this._scaleX), this._scaleManager.getScale(this._scaleY), this._go);
     
     if (this._go instanceof ContainerObject) {
       

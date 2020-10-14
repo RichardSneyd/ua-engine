@@ -126,7 +126,7 @@ class AudioManager {
         this._instPlaying = _name;
         this.play(_name, () => {
             _i++;
-            //  console.log('playing %s, at position %s, time: %s', _name, _i, new Date().getMilliseconds());
+            //  Logger.log('playing %s, at position %s, time: %s', _name, _i, new Date().getMilliseconds());
             if (_i < this._instArr.length) {
                 this._playInstruction(_i, onDone);
 

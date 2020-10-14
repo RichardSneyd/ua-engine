@@ -1,6 +1,7 @@
 import { Application, Loader, Sprite, Renderer, Container, NineSlicePlane, Point, Texture, RenderTexture, DisplayObject } from 'pixi.js-legacy';
 import * as PIXI from 'pixi.js-legacy';
 import PxText from './PxText';
+import Logger from '../../Core/Engine/Logger';
 
 class PxFactory {
   private _pxText: PxText;
@@ -49,15 +50,15 @@ class PxFactory {
   }
 
   private _hitmapHack() {
-    console.log('applying hitmap hack...');
+    Logger.info('applying hitmap hack...');
     //  debugger;
     const tempPoint = new PIXI.Point();
     /* Sprite.prototype.containsPoint = function (point: Point) : boolean {
-      console.log('containsPoint hack');
+      Logger.info('containsPoint hack');
       return false;
     } */
     Sprite.prototype.containsPoint = function (point: Point): boolean {
-      // console.log('in overridden containsPoint hack method...');
+      // Logger.info('in overridden containsPoint hack method...');
       //  debugger;
       this.worldTransform.applyInverse(point, tempPoint);
 

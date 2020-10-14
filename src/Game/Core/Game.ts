@@ -37,8 +37,7 @@ class Game {
 
     this._world = world;
     this._events = events;
-    //  Logger.info("TARGET: ", events);
-
+    // Logger.info("TARGET: ", events);
     this._scaleManager = scaleManager;
     this._expose = expose;
 

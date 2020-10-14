@@ -2,6 +2,7 @@ import { Loader } from 'pixi.js-legacy';
 import 'pixi-spine';
 
 import PxFactory from './PxFactory';
+import Logger from '../../Core/Engine/Logger';
 
 class PxLoader {
   private _pxFactory: PxFactory;;
@@ -32,10 +33,10 @@ class PxLoader {
       let image = images[i];
       if (!this._resExists(image)) {
         this._loader.add(image);
-      //  console.log('added %s to queue', image);
+        // Logger.info('added %s to queue', image);
       }
     }
-   // console.log(this._loader.resources);
+   // Logger.info(this._loader.resources);
   }
 
   /**
@@ -44,7 +45,7 @@ class PxLoader {
    * @param jsonUrl ...
    */
   public addSpine(name: string, jsonUrl: string) {
-    console.log("adding spine(%s): %s", name, jsonUrl);
+    Logger.info("adding spine(%s): %s", name, jsonUrl);
     if (!this._resExists(name)) {
       this._loader.add(name, jsonUrl);
     }
@@ -56,7 +57,7 @@ class PxLoader {
    */
   private _resExists(url: string): boolean {
     if (this._loader.resources[url]) {
-      console.warn(url + ' already exists');
+      Logger.warn(url + ' already exists');
       return true;
     }
     else {
@@ -91,7 +92,7 @@ class PxLoader {
   }
 
   public getTexture(resource: any, frame: any) {
-    //console.log('frame: %s', frame);
+    // Logger.info('frame: %s', frame);
     if (frame != null) {
       return resource.frameCustomList[frame];
     } else {
