@@ -8,7 +8,7 @@ class Rect {
     _width: number;
     _height: number;
 
-    constructor(pointFactory: Point){
+    constructor(pointFactory: Point) {
         this._pointFactory = pointFactory;
     }
 
@@ -92,7 +92,14 @@ class Rect {
         return this._pointFactory.createNew(this.x, this.y + this.halfHeight());
     }
 
-    createNew(x: number, y: number, width: number, height: number): Rect{
+    /**
+     * @description Creates a new Rect object based on coordinates and height then returns the object
+     * @param x 
+     * @param y 
+     * @param width 
+     * @param height 
+     */
+    createNew(x: number, y: number, width: number, height: number): Rect {
         let rect = new Rect(this._pointFactory);
         rect.init(x, y, width, height);
         return rect;

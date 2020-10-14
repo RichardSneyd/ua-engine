@@ -25,7 +25,7 @@ class PxLoader {
   }
 
   /**
-   * @description add images to the load queue (before download is called to process it)
+   * @description Add images to the load queue (before download is called to process it)
    * @param images the images to add to the load queue
    */
   public addImages(images: string[]) {
@@ -40,7 +40,7 @@ class PxLoader {
   }
 
   /**
-   * @description add spine file to the load queue (use before download is called)
+   * @description Add spine file to the load queue (use before download is called)
    * @param name ...
    * @param jsonUrl ...
    */
@@ -52,7 +52,7 @@ class PxLoader {
   }
 
   /**
-   * @description check if resource exists in PIXI loader
+   * @description Check if resource exists in PIXI loader
    * @param url the url of the resource to check
    */
   private _resExists(url: string): boolean {
@@ -66,7 +66,7 @@ class PxLoader {
   }
 
   /**
-   * @description start processing the load queue (calls PIXI.Loader.load internally)
+   * @description Start processing the load queue (calls PIXI.Loader.load internally)
    */
   public download() {
     this._loader.load();

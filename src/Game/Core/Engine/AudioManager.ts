@@ -26,7 +26,7 @@ class AudioManager {
     }
 
     /**
-     * @description play the specified audio file
+     * @description Play the specified audio file
      * @param name the name of the file to play
      * @param onStop called when the file has stopped playing
      * @param loop should the file loop?
@@ -45,7 +45,7 @@ class AudioManager {
     }
 
     /**
-     * @description for playing instructional audio arrays, one after the other. Mostly used for playing contents of audio_id in scripts
+     * @description For playing instructional audio arrays, one after the other. Mostly used for playing contents of audio_id in scripts
      * @param arr the array of audio ids to play
      * @param onDone Called when the entire array has been played.
      */
@@ -70,7 +70,7 @@ class AudioManager {
     }
 
     /**
-     * @description stop music playback
+     * @description Stop music playback
      */
     public stopMusic() {
         this._stop(this._music);

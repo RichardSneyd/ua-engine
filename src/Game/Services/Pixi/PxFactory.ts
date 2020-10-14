@@ -1,4 +1,4 @@
-import { Application, Loader, Sprite, Renderer, Container, NineSlicePlane, Point, Texture, RenderTexture, DisplayObject} from 'pixi.js-legacy';
+import { Application, Loader, Sprite, Renderer, Container, NineSlicePlane, Point, Texture, RenderTexture, DisplayObject } from 'pixi.js-legacy';
 import * as PIXI from 'pixi.js-legacy';
 import PxText from './PxText';
 
