@@ -125,25 +125,15 @@ class Loader {
     return this;
   }
 
-<<<<<<< HEAD
   public addImages(names: string[], extension: string) : Loader{
-=======
-  public addImages(names: string[], extension: string) {
->>>>>>> 5e680952ae302a24a4ca4100472837d8dc775b80
     let _ext = extension;
     if (_ext.indexOf('.') !== 0) {
       _ext = '.' + _ext;
     }
     for (let x = 0; x < names.length; x++) {
-<<<<<<< HEAD
       this.addImage(names[x] + _ext); 
     }
     return this;
-=======
-      this.addImage(names[x] + _ext);
-
-    }
->>>>>>> 5e680952ae302a24a4ca4100472837d8dc775b80
   }
 
   /**
