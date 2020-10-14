@@ -5,6 +5,7 @@ import Loader from '../../Core/Engine/Loader';
 import 'pixi-spine';
 import Events from '../../Core/Engine/Events';
 import GameConfig from '../../Core/Engine/GameConfig';
+import Logger from '../../Logger';
 
 class PxGame {
   private _pxFactory: PxFactory; _loader: Loader; _events: Events;
@@ -40,7 +41,7 @@ class PxGame {
       document.body.appendChild(this._game.view);
     }
 
-    (<any>window).pixiGame = this._game;
+    Logger.exposeGlobal(this._game, 'game');
 
 
   }

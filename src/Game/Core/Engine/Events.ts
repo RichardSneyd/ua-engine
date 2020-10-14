@@ -1,3 +1,4 @@
+import Logger from "../../Logger";
 
 class Events {
     private _events: any;
@@ -26,9 +27,9 @@ class Events {
         this._listenMultiplayer();
 
         //log events easily for testing
-        (<any>window).events = this;
+        Logger.exposeGlobal(this, 'events');
         // emit events easily for testing
-        (<any>window).emit = this._trigger;
+        Logger.exposeGlobal(this._trigger, 'emit');
     }
 
     get events() {

@@ -6,6 +6,7 @@ import AjaxLoader from '../../Services/AjaxLoader';
 import GameConfig from './GameConfig';
 import Loop from './Loop';
 import Events from './Events';
+import Logger from '../../Logger';
 
 class Loader {
   private _resource: Resource;
@@ -83,7 +84,7 @@ class Loader {
     this._loop.addFunction(this._update, this);
     this._events.on('shutdown', this._init, this);
     // expose loader globaly for testing
-    (<any>window).loader = this;
+    Logger.exposeGlobal(this, 'loader');
   }
 
   get resList() {

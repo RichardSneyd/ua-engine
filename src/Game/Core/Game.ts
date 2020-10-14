@@ -14,7 +14,7 @@ import IScene from './Engine/IScene';
 import ILevel from './Engine/ILevel';
 import Transitions from '../Core/Engine/Transitions';
 import TweenManager from './Engine/TweenManager';
-import Logger from './Engine/Logger';
+import Logger from '../Logger';
 
 class Game {
   private _world: World; _events: Events;
@@ -37,7 +37,8 @@ class Game {
 
     this._world = world;
     this._events = events;
-    //  console.log("TARGET: ", events);
+    //  Logger.info("TARGET: ", events);
+
     this._scaleManager = scaleManager;
     this._expose = expose;
 
@@ -104,7 +105,7 @@ class Game {
       this.activities.splice(this.activities.indexOf(act), 1);
       return true;
     }
-    console.warn('cannot remove an activity that has not been installed: ', act.name);
+    Logger.warn('cannot remove an activity that has not been installed: ', act.name);
     return false;
   }
 
@@ -121,7 +122,7 @@ class Game {
       let activity: IActivity | undefined;
       activity = this._getActByName(name);
       if (activity == undefined) {
-        console.error('no activity found by name: ', name);
+        Logger.error('no activity found by name: ', name);
       }
       else {
         this._startActivity(activity, scriptName);
@@ -144,7 +145,7 @@ class Game {
   * @description say hi!
   */
   public sayHi() {
-    console.log("Hi from UA-Engine");
+    Logger.info("Hi from UA-Engine");
   }
 
   /**
@@ -217,7 +218,7 @@ class Game {
       }
     }
 
-    console.warn('could not find an installed activity with %s: %s', property, value);
+    Logger.warn('could not find an installed activity with %s: %s', property, value);
     return undefined;
   }
 
