@@ -32,7 +32,7 @@ class World {
   }
 
   /**
-   * @description initialize the game world. This generates an empty screen
+   * @description Initialize the game world. This generates an empty screen
    * @param w The width value to initialize the world with. Defines the width of the game screen.
    * @param h The height value to initialze the world with. Defintes the height of the game screen.
    */
@@ -47,7 +47,7 @@ class World {
   }
 
   /**
-   * @description launches the specified level/scene (could be an activity or a menu). Will automatically shutdown the currentLevel, if there is one.
+   * @description Launches the specified level/scene (could be an activity or a menu). Will automatically shutdown the currentLevel, if there is one.
    * @param level the scene/level object to launch. 
    */
   public startScene(level: IScene, scriptName: string) {
@@ -55,14 +55,14 @@ class World {
       this._currentLevel.shutdown();
     }
 
-   // this._screen.clearScreen();
+    // this._screen.clearScreen();
     this._screen.newLevel();
     this._currentLevel = level;
     this._currentLevel.init(scriptName);
   }
 
   /**
-   * @description resize the game screen
+   * @description Resize the game screen
    * @param width the new width of the game screen
    * @param height the new height of the game screen
    */
@@ -75,14 +75,14 @@ class World {
   }
 
   /**
-   * @description returns literal width value from PxGame. NOT suitable for positioning objects on screen; use game.width instead.
+   * @description Returns literal width value from PxGame. NOT suitable for positioning objects on screen; use game.width instead.
    */
   public pixelWidth(): number {
     return <number>this._screen.width();
   }
 
   /**
-   * @description returns literal height value from PxGame. NOT suitable for positioning objects on screen; use game.height instead.
+   * @description Returns literal height value from PxGame. NOT suitable for positioning objects on screen; use game.height instead.
    */
   public pixelHeight(): number {
     return <number>this._screen.height();
@@ -92,7 +92,12 @@ class World {
     return 'gameBox';
   }
 
-  //Foreign Dependencies
+  /**
+   * @description Foreign Dependencies
+   * @param w 
+   * @param h 
+   * @param elmId 
+   */
   private _createScreen(w: number, h: number, elmId: string): void {
     this._screen.createScreen(w, h, elmId);
   }

@@ -6,3 +6,4 @@ js/*
 dist/
 src/Dep/ControlContainer.ts
 ControlContainer.ts
+uae-docs/

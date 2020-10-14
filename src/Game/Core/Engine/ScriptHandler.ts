@@ -23,7 +23,7 @@ class ScriptHandler {
     }
 
     /**
-      * @description initialize the level manager.
+      * @description Initialize the level manager.
       * @param scriptName the name of the script to initialize the script handler with
       * @param scriptRaw the raw script data for the script handler
       * @param parseCols the names of the columns to be parsed into arrays of names (i.e 'horse,dog,cat' => [horse, dog, cat])
@@ -57,14 +57,14 @@ class ScriptHandler {
     }
 
     /**
-     * @description get the active row.
+     * @description Get the active row.
      */
     get active(): any {
         return this._active;
     }
 
     /**
-     * @description set the active row. 
+     * @description Set the active row. 
      */
     set active(row: any) {
         this._last = this.active;
@@ -72,7 +72,7 @@ class ScriptHandler {
     }
 
     /**
-     * @description get the last row (the previous value of active)
+     * @description Get the last row (the previous value of active)
      */
     get last(): any {
         return this._last;
@@ -88,7 +88,7 @@ class ScriptHandler {
     }
 
     /**
-     * @description switches the active row to the one with the id the auto_next field points to
+     * @description Switches the active row to the one with the id the auto_next field points to
      */
     public goToAutoNext() {
         let row = this.getFromAutoNext();
@@ -98,7 +98,7 @@ class ScriptHandler {
     }
 
     /**
-     * @description will return the row which the auto_next field for the current row points to. If falsy, logs warning. 
+     * @description Will return the row which the auto_next field for the current row points to. If falsy, logs warning. 
      */
     public getFromAutoNext(): any {
         let row = this.rowByCellVals(['id'], [this.active.auto_next]);
@@ -109,7 +109,7 @@ class ScriptHandler {
     }
 
     /**
-     * @description searches through all arrays in the specified columns, and returns every unique value. Duplicates
+     * @description Searches through all arrays in the specified columns, and returns every unique value. Duplicates
      * are removed.
      * @param cols the columns to search for files in i.e ['images', 'correct_image']; you may also specify a property within an 'object' 
      * cell with dot syntax; i.e ['config.bgd'] will find all values of the bgd field for all pre-converted config cells.
@@ -124,7 +124,7 @@ class ScriptHandler {
     }
 
     /**
-     * @description find the first row whose cells contain the specified vals
+     * @description Find the first row whose cells contain the specified vals
      * @param colname the columns (properties) to search for the respective vals in
      * @param val the vals to search for. The order of this array must match colname.
      */
@@ -136,10 +136,10 @@ class ScriptHandler {
         if (val !== null && val !== undefined && val !== '') return false; else return true;
     }
 
-   
+
 
     /**
-   * @description to be used at init, to convert raw json data into a more functional script, with arrays and objects 
+   * @description To be used at init, to convert raw json data into a more functional script, with arrays and objects 
    * instead of stringified lists and cells with 'stringified' key-value pairs into objects. The converted data is stored in the 
    * rows[] array. rows, rather than raw, should be accessed for almost every subsequent task involving the activity script. 
    * @param parseCols the columns which contain 'stringified' lists which should be converted into arrays of text vals
@@ -153,7 +153,7 @@ class ScriptHandler {
             for (let y = 0; y < parseCols.length; y++) {
                 if (this._rows[x][parseCols[y]] !== undefined) {
                     let rawVal: string = this.rows[x][parseCols[y]];
-                    if(rawVal !== ''){
+                    if (rawVal !== '') {
                         let lines = rawVal.split('\n');
                         if (lines.length > 1) {
                             let arrs = [];
@@ -172,7 +172,7 @@ class ScriptHandler {
                 }
             }
             for (let z = 0; z < objectifyCols.length; z++) {
-                if(this._rows[x][objectifyCols[z]] !== undefined){
+                if (this._rows[x][objectifyCols[z]] !== undefined) {
                     if (this._rows[x][objectifyCols[z]] !== '') {
                         this._rows[x][objectifyCols[z]] = this._getKeyValPairs(this._raw[x][objectifyCols[z]]);
                     }
@@ -184,12 +184,12 @@ class ScriptHandler {
 
             if (processText !== undefined) {
                 for (let s = 0; s < processText.length; s++) {
-                    if(this._rows[x][processText[s]] !== undefined){
+                    if (this._rows[x][processText[s]] !== undefined) {
                         if (this._rows[x][processText[s]] !== '') {
                             let lines = this._processText(this._raw[x][processText[s]]);
                             //  this._rows[x][processText[s]]['lines'] = lines;
                             this._rows[x][processText[s]] = [];
-    
+
                             for (let u = 0; u < lines.length; u++) {
                                 let obj = {};
                                 let line = lines[u];

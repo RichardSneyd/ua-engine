@@ -17,7 +17,7 @@ class Button {
         this.sprite = sprite;
     }
 
-    public init(x: number, y: number, atlas: string, frame: string, animNames: {up: string, down: string, over: string, out: string}, onDown: Function | null = null, context: any, onUp: Function | null = null, parent?: IParentChild) {
+    public init(x: number, y: number, atlas: string, frame: string, animNames: { up: string, down: string, over: string, out: string }, onDown: Function | null = null, context: any, onUp: Function | null = null, parent?: IParentChild) {
         this.sprite = this.sprite.createNew(x, y, atlas, frame);
         this.animNames = animNames;
 
@@ -35,53 +35,53 @@ class Button {
         this.addInputListener('pointerup', this._onUp, this);
         this.addInputListener('pointerover', this._onOver, this);
         this.addInputListener('pointerout', this._onOut, this);
-        this.sprite.events.timer(()=>{
-          
+        this.sprite.events.timer(() => {
+
         }, 5000, this, -1);
-        (<any> window)[atlas] = this;
+        (<any>window)[atlas] = this;
     }
 
-    get x(){
+    get x() {
         return this.sprite.x;
     }
 
-    get alpha(){
+    get alpha() {
         return this.sprite.alpha;
     }
 
-    set alpha(alpha: number){
+    set alpha(alpha: number) {
         this.sprite.alpha = alpha;
     }
 
-    set x(x: number){
+    set x(x: number) {
         this.sprite.x = x;
     }
 
-    get y(){
+    get y() {
         return this.sprite.y;
     }
 
-    set y(y: number){
+    set y(y: number) {
         this.sprite.y = y;
     }
 
-    get width(){
+    get width() {
         return this.sprite.width;
     }
 
-    get height(){
+    get height() {
         return this.sprite.height;
     }
 
-    get visible(){
+    get visible() {
         return this.sprite.visible;
     }
 
-    set visible(visible: boolean){
+    set visible(visible: boolean) {
         this.sprite.visible = visible;
     }
 
-    addInputListener(event: string, callback: Function, context: any){
+    addInputListener(event: string, callback: Function, context: any) {
         this.sprite.input.addInputListener(event, callback, context);
     }
 
@@ -101,8 +101,8 @@ class Button {
         button.init(x, y, atlas, frame, animNames, onDown, context, onUp, parent);
         return button;
     }
-    
-    public createEmpty(){
+
+    public createEmpty() {
         return new Button(this.sprite.createEmpty());
     }
 
@@ -114,12 +114,12 @@ class Button {
         this.sprite.input.disableInput();
     }
 
-    public hide(){
+    public hide() {
         this.alpha = 0;
         this.disableInput();
     }
 
-    public show(){
+    public show() {
         this.alpha = 1;
         this.enableInput();
     }
@@ -129,42 +129,42 @@ class Button {
     }
 
     playAnimation(name: string, loop: boolean = true) {
-       // console.log(`%c play ${name}  for ${this.sprite.textureName}?`, 'color: orange;');
+        // console.log(`%c play ${name}  for ${this.sprite.textureName}?`, 'color: orange;');
         this.sprite.animations.play(name, loop);
     }
 
-    public destroy(){
+    public destroy() {
         this.sprite.destroy();
     }
 
     private _onDown() {
         console.log('onDown called for: ', this);
         this.playAnimation(this.animNames.down);
-        if(this._onDownCallback !== null){
+        if (this._onDownCallback !== null) {
             console.log('onDownCallback not null');
             this._onDownCallback.bind(this._context)();
         }
     }
 
 
-    
+
     private _onUp() {
-       // console.log('onUp called for: ', this);
-        
+        // console.log('onUp called for: ', this);
+
         this.playAnimation(this.animNames.up);
-        if(this._onUpCallback !== null){
-          //  console.log('onUpCallback not null');
+        if (this._onUpCallback !== null) {
+            //  console.log('onUpCallback not null');
             this._onUpCallback.bind(this._context)();
         }
     }
 
     private _onOver() {
-       // console.log('onOver called for: ', this);
+        // console.log('onOver called for: ', this);
         this.playAnimation(this.animNames.over);
     }
 
     private _onOut() {
-      //  console.log('onOut called for: ', this);
+        //  console.log('onOut called for: ', this);
         this.playAnimation(this.animNames.out);
     }
 }

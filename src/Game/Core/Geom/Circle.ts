@@ -6,16 +6,16 @@ class Circle {
     protected _center: Point;
     protected _radius: number;
 
-    constructor(pointFactory: Point){
+    constructor(pointFactory: Point) {
         this._pointFactory = pointFactory;
     }
 
-    init(x: number, y: number, r: number){
+    init(x: number, y: number, r: number) {
         this._center = this._pointFactory.createNew(x, y);
         this._radius = r;
     }
 
-    set center(center: Point){
+    set center(center: Point) {
         this._center = center;
     }
 
@@ -23,7 +23,7 @@ class Circle {
         return this._center;
     }
 
-    set radius(radius: number){
+    set radius(radius: number) {
         this._radius = radius;
     }
 
@@ -31,7 +31,13 @@ class Circle {
         return this._radius;
     }
 
-    createNew(x: number, y: number, r: number): Circle{
+    /**
+     * @description Creates a new Circle object based on coordinates and radius
+     * @param x 
+     * @param y 
+     * @param r 
+     */
+    createNew(x: number, y: number, r: number): Circle {
         let circle = new Circle(this._pointFactory);
         circle.init(x, y, r);
         return circle;

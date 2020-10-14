@@ -13,7 +13,7 @@ import TweenManager from './Core/Engine/TweenManager';
 import Logger from 'UAE/Core/Engine/Logger';
 
 /**
- * @class the UAEngine API. 
+ * @description The UAEngine API. 
  */
 class UAE {
   public static world: World;
