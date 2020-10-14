@@ -19,7 +19,7 @@ class ScaleManager {
 
     this._width = this._gameWidth();
     this._height = this._gameHeight();
-    //console.log("smanager w(%s) h(%s)", this._width, this._height);
+    //Logger.info("smanager w(%s) h(%s)", this._width, this._height);
   }
 
   /**

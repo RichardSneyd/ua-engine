@@ -1,4 +1,5 @@
 import * as TWEEN from '@tweenjs/tween.js';
+import Logger from '../Engine/Logger';
 
 class Tween {
   private _name: string; _easing: string; _object: any; _data: TWEEN.Tween | null;
@@ -31,7 +32,7 @@ class Tween {
     if (this._data) {
       return this._data.isPaused();
     }
-    console.error('cannot return isPaused for uninitialized tween object');
+    Logger.error('cannot return isPaused for uninitialized tween object');
     return false;
   }
 
@@ -56,7 +57,7 @@ class Tween {
       this._data.start.bind(this._data)();
       return this;
     }
-    console.error('cannot return start property for uninitialized tween object');
+    Logger.error('cannot return start property for uninitialized tween object');
     return this;
   }
 
@@ -65,7 +66,7 @@ class Tween {
       this._data.stop.bind(this._data)();
       return this;
     }
-    console.error('cannot return stop property for uninitialized tween object');
+    Logger.error('cannot return stop property for uninitialized tween object');
     return this;
   }
 
@@ -74,7 +75,7 @@ class Tween {
       this._data.end.bind(this._data)();
       return this;
     }
-    console.error('cannot return end property for uninitialized tween object');
+    Logger.error('cannot return end property for uninitialized tween object');
     return this;
   }
 
@@ -84,9 +85,9 @@ class Tween {
       return this;
     }
 
-    if (this._data == undefined) console.error('this._data is undefined');
-    if (this._data == null) console.error('this._data is null');
-    if (tween == null) console.error('tween._data of tween provided for chaining is null');
+    if (this._data == undefined) Logger.error('this._data is undefined');
+    if (this._data == null) Logger.error('this._data is null');
+    if (tween == null) Logger.error('tween._data of tween provided for chaining is null');
     return this;
   }
 
@@ -126,7 +127,7 @@ class Tween {
   }
 
   private _callOnUpdate() {
-    console.log('tween _callOnUpdate');
+    Logger.info('tween _callOnUpdate');
     this._callAll(this._onUpdateListeners);
   }
 
@@ -152,7 +153,7 @@ class Tween {
     this._data.onStart(() => { this._callOnStart() });
     this._data.onUpdate(this._callOnUpdate.bind(this));
 
-    if (this._easing.split('.').length != 2) console.error("invalid easing: %s", easing);
+    if (this._easing.split('.').length != 2) Logger.error("invalid easing: %s", easing);
     this.reset();
   }
 
@@ -165,13 +166,13 @@ class Tween {
 
   to(toObject: any, time: number, updateFunction: Function = () => { }): Tween {
     this.freeze();
-    console.log('tween.to...');
+    Logger.info('tween.to...');
     if (this._data != null) {
       let easing = this._easing.split('.')[0];
       let inOut = this._easing.split('.')[1];
-      console.log('easing: ', easing, inOut);
+      Logger.info('easing: ', easing, inOut);
       this._paused = false;
-      console.log('paused: ', this._data.isPaused());
+      Logger.info('paused: ', this._data.isPaused());
       this._data.to(toObject, time)
         .easing((<any>TWEEN).Easing[easing][inOut]);
 
@@ -179,7 +180,7 @@ class Tween {
       this._onCompleteListeners[0] = () => { this.freeze() };
 
     } else {
-      console.error("this._data is null");
+      Logger.error("this._data is null");
     }
     return this;
   }
@@ -204,7 +205,7 @@ class Tween {
       this._data.pause();
       this._pausedTime = this._time;
     } else {
-      console.warn("Tween doesn't exist to be paused!");
+      Logger.warn("Tween doesn't exist to be paused!");
     }
 
     return this;
@@ -233,7 +234,7 @@ class Tween {
       let diff = this._time - this._pausedTime;
       this._pauseDiff = this._pauseDiff + diff;
     } else {
-      console.warn("Tween._data doesn't exist to be resumed!");
+      Logger.warn("Tween._data doesn't exist to be resumed!");
     }
     return this;
   }

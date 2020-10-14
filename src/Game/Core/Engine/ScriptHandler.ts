@@ -1,5 +1,6 @@
 import ActScripts from './Utils/ActScripts';
 import Events from './Events';
+import Logger from './Logger';
 
 class ScriptHandler {
     private _utils: ActScripts;
@@ -103,7 +104,7 @@ class ScriptHandler {
     public getFromAutoNext(): any {
         let row = this.rowByCellVals(['id'], [this.active.auto_next]);
         if (row == null) {
-            console.warn('auto_next has no value for active row %s', this.active.id);
+            Logger.warn('auto_next has no value for active row %s', this.active.id);
         }
         return row;
     }
@@ -168,7 +169,7 @@ class ScriptHandler {
                     }
                 }
                 else {
-                    console.error('script has no column with name: ', parseCols[y]);
+                    Logger.error('script has no column with name: ', parseCols[y]);
                 }
             }
             for (let z = 0; z < objectifyCols.length; z++) {
@@ -178,7 +179,7 @@ class ScriptHandler {
                     }
                 }
                 else {
-                    console.error('script has no column with name: ', objectifyCols[z]);
+                    Logger.error('script has no column with name: ', objectifyCols[z]);
                 }
             }
 
@@ -202,7 +203,7 @@ class ScriptHandler {
                         }
                     }
                     else {
-                        console.error('script has no column called: ', processText[s]);
+                        Logger.error('script has no column called: ', processText[s]);
                     }
                 }
             }
@@ -240,7 +241,7 @@ class ScriptHandler {
             let row = this.rows[x];
 
             for (let y = 0; y < cols.length; y++) {
-                //    console.log('files in %s of row %s: ', cols[y], x, Array(this.rows[x][cols[y]]));
+                // Logger.info('files in %s of row %s: ', cols[y], x, Array(this.rows[x][cols[y]]));
                 let col = cols[y];
                 let split = col.split('.');
                 if (split.length > 1) {
@@ -257,7 +258,7 @@ class ScriptHandler {
                 }
             }
         }
-        //  console.log('files found: ', files);
+        // Logger.info('files found: ', files);
         return this._utils.getUniq(files);
     }
 

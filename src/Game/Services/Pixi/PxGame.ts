@@ -5,6 +5,7 @@ import Loader from '../../Core/Engine/Loader';
 import 'pixi-spine';
 import Events from '../../Core/Engine/Events';
 import GameConfig from '../../Core/Engine/GameConfig';
+import Logger from '../../Core/Engine/Logger';
 
 class PxGame {
   private _pxFactory: PxFactory; _loader: Loader; _events: Events;
@@ -36,7 +37,7 @@ class PxGame {
       //  this._game.view.addEventListener('mousemove', this._onMouseMove.bind(this));
       this._game.view.addEventListener('pointermove', this._onMouseMove.bind(this));
     } else {
-      console.warn("No element by id: '%s', appending to the body.", container);
+      Logger.warn("No element by id: '%s', appending to the body.", container);
       document.body.appendChild(this._game.view);
     }
 
@@ -65,7 +66,7 @@ class PxGame {
     args.mouseY = evt.clientY - rect.top;
     args.moveX = evt.movementX;
     args.moveY = evt.movementY;
-    //console.warn(evt);
+    // Logger.warn(evt);
     this._events.fire('pointermove', args);
 
   }
@@ -73,9 +74,9 @@ class PxGame {
   public resize(width: number, height: number) {
     if (this._game != null) {
       this._game.renderer.resize(width, height)
-     // console.warn('width provided: ', width);
+      // Logger.warn('width provided: ', width);
       let scale = (width / this._gameConfig.data.DISPLAY.WIDTH);
-  //    console.warn('scale::: ', scale);
+      // Logger.warn('scale::: ', scale);
       this._game.stage.scale.set(scale);
     }
 
@@ -92,7 +93,7 @@ class PxGame {
 
       return txt;
     } else {
-      console.error("Can't add text before starting game!");
+      Logger.error("Can't add text before starting game!");
 
       let t: any;
 
@@ -150,11 +151,11 @@ class PxGame {
     let slice = this._createNineSlice(textureName, leftWidth, topHeight, rightWidth, bottomHeight);
     slice.x = x;
     slice.y = y;
-    console.warn('slice object: ', slice);
+    Logger.warn('slice object: ', slice);
 
     this._addChild(slice);
     if(this._game){
-      console.log(this._game.stage.children);
+      Logger.info(this._game.stage.children);
     }
     // debugger;
     return slice;
@@ -162,7 +163,7 @@ class PxGame {
 
   public debugScreen(){
     if(this._game){
-      console.log(this._game.stage.children);
+      Logger.info(this._game.stage.children);
     }
   }
 
@@ -171,7 +172,7 @@ class PxGame {
       //this._game.stage.addChild(child);
       this.levelCont.addChild(child);
     } else {
-      console.error("Can not add sprite before initializing the game!");
+      Logger.error("Can not add sprite before initializing the game!");
     }
   }
 
@@ -183,17 +184,17 @@ class PxGame {
     // resource = <ImageResource>baseTex.resource;
 
     const imgSource = baseTex.resource.source;
-    console.log(imgSource);
+    Logger.info(imgSource);
     let canvas = null;
     if (!imgSource) {
-      console.warn('no imgSource for resource: ', baseTex.resource)
+      Logger.warn('no imgSource for resource: ', baseTex.resource)
       return false;
     }
     let context = null;
     if (imgSource.getContext) {
       canvas = imgSource;
       context = canvas.getContext('2d');
-      console.log(context);
+      Logger.info(context);
     }
     else if (imgSource instanceof Image) {
       canvas = document.createElement('canvas');
@@ -212,7 +213,7 @@ class PxGame {
     const w = canvas.width, h = canvas.height;
     let imageData = context.getImageData(0, 0, w, h);
 
-    console.warn('building hitmap from context.getImageData, which yields: ', imageData);
+    Logger.warn('building hitmap from context.getImageData, which yields: ', imageData);
     let hitmap = baseTex.hitmap = new Uint32Array(Math.ceil(w * h / 32));
     for (let i = 0; i < w * h; i++) {
       let ind1 = i % 32;
@@ -221,8 +222,8 @@ class PxGame {
         hitmap[ind2] = hitmap[ind2] | (1 << ind1);
       }
     }
-    console.log('hitmap is: ', hitmap);
-    console.log('baseTex.hitmap is: ', baseTex.hitmap);
+    Logger.info('hitmap is: ', hitmap);
+    Logger.info('baseTex.hitmap is: ', baseTex.hitmap);
    // debugger;
     return true;
   }
@@ -253,7 +254,7 @@ class PxGame {
       sprite = new PIXI.spine.Spine(spineResource.data.spineData);
       this._addChild(sprite);
     } else {
-      console.log('spine resource named "%s" not found', name);
+      Logger.info('spine resource named "%s" not found', name);
     }
 
 
@@ -275,7 +276,7 @@ class PxGame {
   }
 
   public clearScreen() {
-    console.log('clearing screen (todo)');
+    Logger.info('clearing screen (todo)');
   }
 
   public width(): number | null{

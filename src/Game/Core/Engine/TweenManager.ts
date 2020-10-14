@@ -1,5 +1,6 @@
 import Tween from "../Data/Tween";
 import Easing from './GameObjects/Components/Easing';
+import Logger from "./Logger";
 import Loop from "./Loop";
 
 class TweenManager {
@@ -35,14 +36,14 @@ class TweenManager {
         if(tweenName == undefined) tweenName = this.tempName();
         let tween = this._getTween(tweenName);
         if (tween != null) {
-            console.error('cannot create 2 tweens with same name. cancel adding ', tweenName);
+            Logger.error('cannot create 2 tweens with same name. cancel adding ', tweenName);
             return tween;
         }
         tween = this._tween.createNew();
         tween.init(tweenName, easing, object, repeat, delay);
-        console.log('created and initiated ', tweenName);
+        Logger.info('created and initiated ', tweenName);
         this._tweens.push(tween);
-        console.log(this._tweens)
+        Logger.info(this._tweens)
 
         return tween;
     }
@@ -55,7 +56,7 @@ class TweenManager {
         let tween;
         if(typeof tweenName !== 'string') tween = tweenName;
         if(typeof tweenName == 'string') tween = this._getTween(tweenName);
-        if (tween !== null && tween !== undefined) this._remove(tween); else console.warn("cannot remove tween '%s' because it does'nt exist", tweenName);
+        if (tween !== null && tween !== undefined) this._remove(tween); else Logger.warn("cannot remove tween '%s' because it does'nt exist", tweenName);
     }
 
     private _remove(tween: Tween) {
@@ -73,12 +74,12 @@ class TweenManager {
     public play(tweenName: string, toObject: any, duration: number, updateFunction: Function = () => { }): TweenManager {
         let tween = this._getTween(tweenName);
         if (tween != null) {
-            //console.log("Tween", tween);
+            // Logger.info("Tween", tween);
             tween.to(toObject, duration, updateFunction);
             return this;
         }
 
-        console.error("Tween called %s not found!", tweenName);
+        Logger.error("Tween called %s not found!", tweenName);
         //  tween = this._tween.createNew();
 
         return this;
@@ -87,7 +88,7 @@ class TweenManager {
     public getTween(name: string): Tween {
         let tween = this._getTween(name);
         if (tween != null) return tween;
-        console.error('cannot return a nonexistant tween of name: ', name);
+        Logger.error('cannot return a nonexistant tween of name: ', name);
         return this._tween.createNew();
     }
 
@@ -107,7 +108,7 @@ class TweenManager {
         if (tween !== null) {
             this.play(tweenName, toObject, duration, updateFunction);
             tween.onComplete(() => {
-                console.log('onComplete called through TweenManager.once, removing tween...');
+                Logger.info('onComplete called through TweenManager.once, removing tween...');
                 if (tween != null) this._remove(tween);
             });
         }
@@ -137,7 +138,7 @@ class TweenManager {
             return (prefix + index);
         }
 
-        if (name == undefined) console.error('tempName not generated properly - is null');
+        if (name == undefined) Logger.error('tempName not generated properly - is null');
         return name;
     }
 
@@ -149,7 +150,7 @@ class TweenManager {
         if (tween != null) {
             tween.pause();
         } else {
-            console.warn("Tween named '%s' doesn't exist to be paused!", name);
+            Logger.warn("Tween named '%s' doesn't exist to be paused!", name);
         }
 
         return this;
@@ -162,14 +163,14 @@ class TweenManager {
         if (tween !== null) {
             tween.resume();
         } else {
-            console.warn("Tween named '%s' doesn't exist to be paused!", name);
+            Logger.warn("Tween named '%s' doesn't exist to be paused!", name);
         }
 
         return this;
     }
 
     public update(time: number): TweenManager {
-        //   console.log('update called in TweenManager');
+        // Logger.info('update called in TweenManager');
         for (let c = 0; c < this._tweens.length; c++) {
             let tween = this._tweens[c];
             tween.update(time);
@@ -181,11 +182,11 @@ class TweenManager {
     private _getTween(name: string): Tween | null {
         for (let c = 0; c < this._tweens.length; c++) {
             let tween = this._tweens[c];
-            //console.log("tween.name(%s) == name(%s)", tween.name, name);
+            // Logger.info("tween.name(%s) == name(%s)", tween.name, name);
             if (tween.name == name) return tween;
         }
 
-        console.warn('no tween found with name: ', name);
+        Logger.warn('no tween found with name: ', name);
         return null; // just to satisfy the lint
     }
 

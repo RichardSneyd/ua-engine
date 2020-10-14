@@ -4,6 +4,7 @@ import IGameObject from '../IGameObject';
 import IFrameAnimatedGameObject from '../IFrameAnimatedGameObject';
 import Loader from '../../Loader';
 import ObjectCore from './ObjectCore';
+import Logger from '../../Logger';
 
 
 class FrameAnimationManager implements IAnimationManager {
@@ -33,10 +34,10 @@ class FrameAnimationManager implements IAnimationManager {
     let anim = this._getAnim(name);
 
     if (anim != null) {
-     // console.log(`%c calling play on ${name}  for ${this._go.textureName}?`, 'color: purple;');
+     // Logger.info(`%c calling play on ${name}  for ${this._go.textureName}?`, 'color: purple;');
       this._play(anim);
     } else {
-      console.error("Could not find animation named: %s", name);
+      Logger.error("Could not find animation named: %s", name);
     }
   }
 
@@ -67,7 +68,7 @@ class FrameAnimationManager implements IAnimationManager {
       anim.init(name, frames, fps);
       this._animations.push(anim);
     } else {
-      console.warn(`Animation "${name}" already added to ${this._go.textureName}, not adding again!`);
+      Logger.warn(`Animation "${name}" already added to ${this._go.textureName}, not adding again!`);
     }
   }
 
@@ -88,12 +89,12 @@ class FrameAnimationManager implements IAnimationManager {
   }
 
   public autoGenFrames(name: string): string[] {
-   // console.log('trying to gen frames for %s on %s', name, this._go.textureName);
+   // Logger.info('trying to gen frames for %s on %s', name, this._go.textureName);
     let atlasName = this._core.atlas;
     let res = this._loader.getResource(atlasName, true);
     if (res !== null) {
       let json = res.data.data;
-      // console.log('json: ', res);
+      // Logger.info('json: ', res);
       let frames = json.frames;
       let frameNames: string[] = [];
 
@@ -108,10 +109,10 @@ class FrameAnimationManager implements IAnimationManager {
           frameNames.push(fname);
         }
       }
-      //  console.log('frames: ', frameNames);
+      // Logger.info('frames: ', frameNames);
       return frameNames;
     }
-    console.error('no resource in resList with name ', atlasName);
+    Logger.error('no resource in resList with name ', atlasName);
     return [];
   }
 
@@ -145,14 +146,14 @@ class FrameAnimationManager implements IAnimationManager {
     let updatedFrame = this.getUpdatedFrame();
     // monitor if update is called
    /*  if (this._core.atlas == 'continue_button') {
-      console.log('AnimManager.update called for %s at %s', this._core.atlas, new Date().getTime());
+      Logger.info('AnimManager.update called for %s at %s', this._core.atlas, new Date().getTime());
     } */
     if (updatedFrame != null) {
       if (this._core.atlas != null) {
         this._core.screen.changeTexture(this._core.data, this._core.atlas, updatedFrame);
         // monitor if the texture is being updated
        /*  if (this._core.atlas == 'continue_button') {
-          console.log('changeTexture called for', this._core.atlas);
+          Logger.info('changeTexture called for', this._core.atlas);
         } */
       } else {
         this._core.screen.changeTexture(this._core.data, updatedFrame);
@@ -171,7 +172,7 @@ class FrameAnimationManager implements IAnimationManager {
   }
 
   private _play(anim: Anim) {
-  //  console.log('frames: ', anim.frames)
+    // Logger.info('frames: ', anim.frames)
     this._activeAnimation = anim;
   }
 
