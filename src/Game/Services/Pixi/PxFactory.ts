@@ -1,7 +1,7 @@
 import { Application, Loader, Sprite, Renderer, Container, NineSlicePlane, Point, Texture, RenderTexture, DisplayObject } from 'pixi.js-legacy';
 import * as PIXI from 'pixi.js-legacy';
 import PxText from './PxText';
-import Logger from '../../Core/Engine/Logger';
+import Logger from '../../Logger';
 
 class PxFactory {
   private _pxText: PxText;

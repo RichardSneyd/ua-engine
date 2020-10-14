@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import Logger from '../Logger';
+import Logger from '../../../Logger';
 
 class Text {
 
