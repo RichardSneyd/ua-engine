@@ -103,6 +103,15 @@ export default class Logger {
         }
     }
 
+    /**
+     * @description Call the debugging function (if available)
+     */
+    public static breakpoint() {
+        if(this.devEnvironment) {
+            debugger;
+        }
+    }
+
     // From here onward all static methods are repeated as non-static ones.
     // This is to allow its use in other projects by doing UAE.log...
 
@@ -164,5 +173,14 @@ export default class Logger {
      */
     public exposeGlobal(object: any, label: string) {
         Logger.exposeGlobal(object, label);
+    }
+
+    /**
+     * @description Call the debugging function (if available)
+     */
+    public breakpoint() {
+        if(this.devEnvironment) {
+            debugger;
+        }
     }
 }
