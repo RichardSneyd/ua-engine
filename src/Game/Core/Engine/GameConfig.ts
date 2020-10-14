@@ -17,7 +17,7 @@ class GameConfig {
   }
 
   /**
-   * @desecription load a config.json file from the specified path
+   * @description Load a config.json file from the specified path
    * @param path the path to load the config json data from
    */
   public loadConfig(path: string) {

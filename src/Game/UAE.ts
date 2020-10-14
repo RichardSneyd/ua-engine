@@ -10,9 +10,10 @@ import Geom from './Core/Geom/Geom';
 import Utils from './Core/Engine/Utils/Utils';
 import Transitions from './Core/Engine/Transitions';
 import TweenManager from './Core/Engine/TweenManager';
+import Logger from 'UAE/Core/Engine/Logger';
 
 /**
- * @class the UAEngine API. 
+ * @description The UAEngine API. 
  */
 class UAE {
   public static world: World;
@@ -27,6 +28,7 @@ class UAE {
   public static utils: Utils;
   public static tween: TweenManager;
   public static transitions = Transitions;
+  public static log: Logger;
 }
 
 export default UAE;

@@ -4,10 +4,10 @@ class Point {
     private _onUpdate: Function;
 
     constructor() {
-        this._onUpdate = () => {};
+        this._onUpdate = () => { };
     }
 
-    init(x: number, y: number){
+    init(x: number, y: number) {
         this._x = x; this._y = y;
     }
 
@@ -33,6 +33,11 @@ class Point {
         this._onUpdate = update;
     }
 
+    /**
+     * @description Creates a new Point object based on coordinates and returns it
+     * @param x 
+     * @param y 
+     */
     public createNew(x: number, y: number): Point {
         let point = new Point();
         point.init(x, y);

@@ -14,6 +14,7 @@ import IScene from './Engine/IScene';
 import ILevel from './Engine/ILevel';
 import Transitions from '../Core/Engine/Transitions';
 import TweenManager from './Engine/TweenManager';
+import Logger from './Engine/Logger';
 
 class Game {
   private _world: World; _events: Events;
@@ -27,14 +28,16 @@ class Game {
   protected _gameStarted: boolean;
   protected _transitions = Transitions;
   protected _tween: TweenManager;
+  protected _log: Logger
 
   constructor(world: World, loop: Loop, loader: Loader,
     events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
-    levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils, tween: TweenManager) {
+    levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils, tween: TweenManager,
+    log: Logger) {
 
     this._world = world;
     this._events = events;
-  //  console.log("TARGET: ", events);
+    //  console.log("TARGET: ", events);
     this._scaleManager = scaleManager;
     this._expose = expose;
 
@@ -47,6 +50,7 @@ class Game {
     this._geom = geom;
     this._utils = utils;
     this._tween = tween;
+    this._log = log;
 
     this._activities = [];
     this._gameStarted = false;
@@ -54,27 +58,27 @@ class Game {
   }
 
   /**
-   * @description returns a list of all installed activity plugins
+   * @description Returns a list of all installed activity plugins
    */
   public get activities(): IActivity[] {
     return this._activities;
   }
 
- /*  public get transitions() {
-    return this._transitions;
-  } */
+  /*  public get transitions() {
+     return this._transitions;
+   } */
 
   /**
-   * @description has the game already started (screen initialized on webpage)? 
-   */
+  * @description has the game already started (screen initialized on webpage)? 
+  */
   public get gameStarted(): boolean {
     return this._gameStarted;
   }
 
   /**
-     * @description finds and returns an activity type by its code
-     * @param name find the activity type by this code
-     */
+  * @description Finds and returns an activity type by its code
+  * @param name find the activity type by this code
+  */
   public get getActivityByName(): Function {
     return this._getActByName;
   }
@@ -84,7 +88,7 @@ class Game {
   }
 
   /**
-   * @description adds an activity to the game/engine, as a plugin
+   * @description Adds an activity to the game/engine, as a plugin
    * @param act the activity type (object) to add.
    */
   public addActivity(act: IActivity) {
@@ -96,7 +100,7 @@ class Game {
    * @param act The activity type (object) to remove.
    */
   public removeActivity(act: IActivity): boolean {
-    if(this.activities.indexOf(act) != -1){
+    if (this.activities.indexOf(act) != -1) {
       this.activities.splice(this.activities.indexOf(act), 1);
       return true;
     }
@@ -106,7 +110,7 @@ class Game {
 
   /**
    * @description Starts the specified activity. Calls 'shutdown' event first.
-   * @param act The activity type (object) to start. Takes the object itself, or it's name in the form of a string
+   * @param the activity type (object) to start. Takes the object itself, or it's name in the form of a string
    */
   public startActivity(act: IActivity | string, scriptName: any) {
     if (typeof act !== 'string') {
@@ -125,28 +129,28 @@ class Game {
     }
   }
 
-  public loadLevel(level: ILevel, scriptName: string){
+  public loadLevel(level: ILevel, scriptName: string) {
     this.loadScene(level, scriptName)
   }
-  
-  private _startActivity(act: IActivity, scriptName: string){
+
+  private _startActivity(act: IActivity, scriptName: string) {
     // call shutdown, to give the current activity a chance to tidy up before the transition
-   // setTimeout(()=>{debugger}, 1000); 
+    // setTimeout(()=>{debugger}, 1000); 
     // start the new activity, with the assumption that the shutdown has been handled
     act.startActivity(scriptName);
   }
 
   /**
-   * @description say hi!
-   */
+  * @description say hi!
+  */
   public sayHi() {
     console.log("Hi from UA-Engine");
   }
 
   /**
-   * @description start the game. Calls game.init internally, to create the game screen.
-   * @param configPath the path to the config.json file, which specified Display widht, height, file paths etc
-   */
+  * @description Start the game. Calls game.init internally, to create the game screen.
+  * @param configPath the path to the config.json file, which specified Display widht, height, file paths etc
+  */
   public startGame(configPath: string) {
     return new Promise((resolve, reject) => {
 
@@ -174,7 +178,7 @@ class Game {
   }
 
   /**
-   * @description returns the preset width of the game, as specified in config.json. Suitable for positioning objects relative 
+   * @description Returns the preset width of the game, as specified in config.json. Suitable for positioning objects relative 
    * to the screen.
    */
   public width() {
@@ -182,7 +186,7 @@ class Game {
   }
 
   /**
-   * @description returns the preset height value of the game, as specified in config.json. Suitable for positioning objects relative
+   * @description Returns the preset height value of the game, as specified in config.json. Suitable for positioning objects relative
    * to the screen.
    */
   public height() {
@@ -190,7 +194,7 @@ class Game {
   }
 
   /**
-   * @description finds and returns an activity type by its code
+   * @description Finds and returns an activity type by its code
    * @param name find the activity type by this code
    */
   private _getActByName(name: string): IActivity | undefined {
@@ -198,7 +202,7 @@ class Game {
   }
 
   /**
-  * @description finds and returns an activity type by its name
+  * @description Finds and returns an activity type by its name
   * @param code find the activity type by this name
   */
   private _getActByCode(code: string): IActivity | undefined {
@@ -238,6 +242,7 @@ class Game {
     this._expose.add('utils', this._utils);
     this._expose.add('transitions', this._transitions);
     this._expose.add('tween', this._tween);
+    this._expose.add('log', this._log);
   }
 
   private _addListeners(): void {

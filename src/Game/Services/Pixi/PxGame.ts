@@ -20,7 +20,7 @@ class PxGame {
     //  Object.defineProperty(Resource, 'source', any);
   }
 
-  get levelCont(){
+  get levelCont() {
     return this._levelCont;
   }
 
@@ -29,7 +29,7 @@ class PxGame {
 
     this._game = this._createGame(w, h, container);
     this._game.renderer.backgroundColor = 0xfafad2;
-    
+
 
     if (elm != null) {
       elm.appendChild(this._game.view);
@@ -40,14 +40,14 @@ class PxGame {
       document.body.appendChild(this._game.view);
     }
 
-    (<any> window).pixiGame = this._game;
+    (<any>window).pixiGame = this._game;
 
-    
+
   }
 
-  public newLevel(){
-    if(this._game !== null){
-      if(this.levelCont !== null && this.levelCont !== undefined){
+  public newLevel() {
+    if (this._game !== null) {
+      if (this.levelCont !== null && this.levelCont !== undefined) {
         this._lastLevelCont = this.levelCont;
         this._lastLevelCont.destroy();
       }
@@ -73,9 +73,9 @@ class PxGame {
   public resize(width: number, height: number) {
     if (this._game != null) {
       this._game.renderer.resize(width, height)
-     // console.warn('width provided: ', width);
+      // console.warn('width provided: ', width);
       let scale = (width / this._gameConfig.data.DISPLAY.WIDTH);
-  //    console.warn('scale::: ', scale);
+      //    console.warn('scale::: ', scale);
       this._game.stage.scale.set(scale);
     }
 
@@ -138,7 +138,7 @@ class PxGame {
     return sprite;
   }
 
-  public addVideo(x: number, y: number, videoName: string): Sprite{
+  public addVideo(x: number, y: number, videoName: string): Sprite {
     let video = this._createVideo(x, y, videoName);
 
     this._addChild(video);
@@ -153,15 +153,15 @@ class PxGame {
     console.warn('slice object: ', slice);
 
     this._addChild(slice);
-    if(this._game){
+    if (this._game) {
       console.log(this._game.stage.children);
     }
     // debugger;
     return slice;
   }
 
-  public debugScreen(){
-    if(this._game){
+  public debugScreen() {
+    if (this._game) {
       console.log(this._game.stage.children);
     }
   }
@@ -223,7 +223,7 @@ class PxGame {
     }
     console.log('hitmap is: ', hitmap);
     console.log('baseTex.hitmap is: ', baseTex.hitmap);
-   // debugger;
+    // debugger;
     return true;
   }
 
@@ -265,7 +265,7 @@ class PxGame {
   }
 
   public updateTexture(sprite: Sprite, texture: string | any, frame: string | null = null): void {
-    if(typeof texture == 'string'){
+    if (typeof texture == 'string') {
       let tex = this._loader.getTexture(texture, frame);
       sprite.texture = tex;
       return;
@@ -274,26 +274,26 @@ class PxGame {
     sprite.texture = texture;
   }
 
-  public toTexture(object: DisplayObject) : PIXI.RenderTexture | null {
-   if (this._game !== null ) return this._game.renderer.generateTexture(object, PIXI.SCALE_MODES.LINEAR, 1); return null;
+  public toTexture(object: DisplayObject): PIXI.RenderTexture | null {
+    if (this._game !== null) return this._game.renderer.generateTexture(object, PIXI.SCALE_MODES.LINEAR, 1); return null;
   }
 
   public clearScreen() {
     console.log('clearing screen (todo)');
   }
 
-  public width(): number | null{
-    if(this._game) return this._game.stage.width; return null;
+  public width(): number | null {
+    if (this._game) return this._game.stage.width; return null;
   }
 
-  public height(): number | null{
-    if(this._game) return this._game.stage.height; return null;
+  public height(): number | null {
+    if (this._game) return this._game.stage.height; return null;
   }
 
   private _createSprite(x: number, y: number, texture: string | any, frame: string | null = null) {
     let textureObj = texture;
-    if(typeof texture == 'string'){textureObj = this._loader.getTexture(texture, frame);}
-   
+    if (typeof texture == 'string') { textureObj = this._loader.getTexture(texture, frame); }
+
     let sprite = this._pxFactory.createSprite(textureObj);
     sprite.x = x;
     sprite.y = y;
@@ -301,7 +301,7 @@ class PxGame {
     return sprite;
   }
 
-  private _createVideo(x: number, y: number, videoName: string): Sprite{
+  private _createVideo(x: number, y: number, videoName: string): Sprite {
     let vSprite = this._pxFactory.createVideo(this._gameConfig.data.PATHS.VIDEO + videoName);
     vSprite.x = x;
     vSprite.y = y;

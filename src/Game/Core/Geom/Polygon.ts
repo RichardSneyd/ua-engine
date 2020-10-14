@@ -35,6 +35,11 @@ class Polygon {
         this._points = points;
     }
 
+    /**
+     * @description Creates a new Polygon object based on center Point and Point arrays
+     * @param center 
+     * @param points 
+     */
     createNew(center: Point, points: Point[]): Polygon{
         let poly = new Polygon(this._pointFactory);
         poly.init(center, points);

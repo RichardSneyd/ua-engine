@@ -11,7 +11,7 @@ class Geom {
     protected _rect: Rect;
     protected _polygon: Polygon;
 
-    constructor(circle: Circle, lineSegment: LineSegment, point: Point, rect: Rect, polygon: Polygon){
+    constructor(circle: Circle, lineSegment: LineSegment, point: Point, rect: Rect, polygon: Polygon) {
         this._circle = circle, this._lineSegment = lineSegment, this._point = point, this._rect = rect, this._polygon = polygon;
     }
 
@@ -23,15 +23,15 @@ class Geom {
         return this._lineSegment.createNew(pnt1, pnt2);
     }
 
-    point(x: number, y: number): Point{
+    point(x: number, y: number): Point {
         return this._point.createNew(x, y);
     }
 
-    rect(x: number, y:number, width:number, height: number): Rect {
+    rect(x: number, y: number, width: number, height: number): Rect {
         return this._rect.createNew(x, y, width, height)
     }
 
-    polygon(center: Point, points: Point[]): Polygon{
+    polygon(center: Point, points: Point[]): Polygon {
         return this._polygon.createNew(center, points);
     }
 }

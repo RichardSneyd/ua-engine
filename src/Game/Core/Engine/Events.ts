@@ -36,14 +36,14 @@ class Events {
     }
 
     /**
-     * @description returns an array of all timers
+     * @description Returns an array of all timers
      */
     get timers() {
         return this._timers;
     }
 
     /**
-     * @description is the timer system paused?
+     * @description Is the timer system paused?
      */
     get paused(): boolean {
         return this._paused;
@@ -85,7 +85,7 @@ class Events {
     }
 
     /**
-     * @description returns a string array of the names of all registered events
+     * @description Returns a string array of the names of all registered events
      */
     public eventNames(): string[] {
         return this._eventNames();
@@ -118,7 +118,7 @@ class Events {
     }
 
     /**
-     * @description remove a listener (callback) from an event
+     * @description Remove a listener (callback) from an event
      * @param event the event
      * @param callback the callback to remove
      */
@@ -128,7 +128,7 @@ class Events {
     }
 
     /**
-     * @description add a listener to an event. 
+     * @description Add a listener to an event. 
      * @param event name of the event. If it doesn't exist, it will be created.
      * @param callback the callback function to fire when the event emits.
      * @param context the context for the callback
@@ -138,7 +138,7 @@ class Events {
     }
 
     /**
-    * @description add a listener to an event, to be called only one time, then removed from the list of callbacks.
+    * @description Add a listener to an event, to be called only one time, then removed from the list of callbacks.
     * @param event name of the event. If it doesn't exist, it will be created.
     * @param callback the callback function to fire when the event emits.
     * @param context the context for the callback
@@ -148,7 +148,7 @@ class Events {
     }
 
     /**
-    * @description remove a listener (callback) from an event
+    * @description Remove a listener (callback) from an event
     * @param event the event
     * @param callback the callback to remove
     */
@@ -157,7 +157,7 @@ class Events {
     }
 
     /**
-     * @description emit an event
+     * @description Emit an event
      * @param event the event to emit
      * @param data (optional) data object to pass to the callbacks for the event
      */
@@ -166,7 +166,7 @@ class Events {
     }
 
     /**
-    * @description emit an event
+    * @description Emit an event
     * @param event the event to emit
     * @param data (optional) data object to pass to the callbacks for the event
     */
@@ -182,7 +182,7 @@ class Events {
     }
 
     /**
-    * @description emit an event
+    * @description Emit an event
     * @param event the event to emit
     * @param data (optional) data object to pass to the callbacks for the event
     */
@@ -196,7 +196,7 @@ class Events {
     }
 
     /**
-     * @description creates a timed callback, which is pausable via events.pause and events.resume. Optional repeat is 0 by default, 
+     * @description Creates a timed callback, which is pausable via events.pause and events.resume. Optional repeat is 0 by default, 
      * meaning method executes once. Setting this to -1 will repeat continuosly.
      * @param callback the function to call after the delay has elapsed.
      * @param delay the amound of (unpaused) milliseconds to wait before execution. 
@@ -208,7 +208,7 @@ class Events {
     }
 
     /**
-     * @description find and remove a timer object based via the callback it contains
+     * @description Find and remove a timer object based via the callback it contains
      * @param callback the callback of the timer object to be removed
      */
     public removeTimer(callback: Function) {
@@ -307,13 +307,15 @@ class Events {
             console.warn('timer to remove is null: ', timer);
         }
     }
-
+    /**
+     * @description Removes the array of timers
+     */
     public clearTimers() {
         this._timers = [];
     }
 
     /**
-     * @description find the timer object from the _timers array which contains the specified callback mathod 
+     * @description Find the timer object from the _timers array which contains the specified callback mathod 
      * @param callback the callback of the timer object to be retrieved
      */
     public getTimer(callback: Function): any {
@@ -329,7 +331,7 @@ class Events {
     }
 
     /**
-     * @description suspends the ticker for all timer objects
+     * @description Suspends the ticker for all timer objects
      */
     public pause() {
         this._paused = true;
@@ -337,7 +339,7 @@ class Events {
     }
 
     /**
-     * @description resumes the ticker for all timer objects
+     * @description Resumes the ticker for all timer objects
      */
     public resume() {
         this._paused = false;
