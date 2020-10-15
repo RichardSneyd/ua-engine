@@ -5,7 +5,7 @@ enum LogLevel {
 }
 
 class Logger {
-    static LEVELS = LogLevel;
+    private static _LEVELS = LogLevel;
     private static _source: string = '';
     private static _previousSource: string = '';
     private static _level: number = LogLevel.INFO;
@@ -24,6 +24,13 @@ class Logger {
         let source = this._source;
         this._source = '';
         return source;
+    }
+
+    /**
+     * @description Returns all levels this Logger can be set to
+     */
+    public static get LEVELS(){
+        return this._LEVELS;
     }
 
     /**
@@ -115,6 +122,14 @@ class Logger {
 
     // From here onward all static methods are repeated as non-static ones.
     // This is to allow its use in other projects by doing UAE.log...
+
+
+    /**
+     * @description Returns all levels this Logger can be set to
+     */
+    public get LEVELS(){
+        return Logger.LEVELS;
+    }
 
     /**
      * @description Set a group text instead of the default one
