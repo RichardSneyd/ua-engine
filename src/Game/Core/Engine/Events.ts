@@ -1,4 +1,6 @@
-import Logger from "../../Logger";
+import Logger from "./Logger";
+import EventObject from "./EventObject";
+
 
 class Events {
     private _events: any;
@@ -9,8 +11,11 @@ class Events {
     private _paused: boolean;
     private _timer: any; // ID of the timer (integer), passed to clearInterval for deletion
     private _step: number;
+    private _eventObject: EventObject;
 
-    constructor() {
+    constructor(eventObject: EventObject) {
+        this._eventObject = eventObject;
+
         this._events = {};
         this._timers = [];
         this._paused = false;
@@ -224,9 +229,9 @@ class Events {
     private _trigger(event: string, data: any = null) {
         // console.log('triggering %s with data %s', event, data);
         if (this.eventNames().indexOf(event) !== -1) {
-            let total = this._events[event].length - 1;
+            let total = this._events[event].listeners.length - 1;
             if (total >= 0) {
-                let objs = this.events[event];
+                let objs = this.events[event].listeners;
                 //console.log('callbacks for %s: ', event, objs);
                 for (let x = total; x >= 0; x--) {
                     let obj = objs[x];
@@ -235,8 +240,8 @@ class Events {
 
                     obj.callback.bind(obj.context)(data);
                     if (obj.once == true) { // if 'once' is set to true, remove callback
-                        let i = this._events[event].indexOf(this.events[event][x]);
-                        this._events[event].splice(i, 1);
+                        let i = this._events[event].listeners.indexOf(this.events[event].listeners[x]);
+                        this._events[event].listeners.splice(i, 1);
                     }
                 }
             }
@@ -249,12 +254,13 @@ class Events {
         }
     }
 
-    private _addListener(event: string, callback: Function, context: any, once: boolean = false) {
+    private _addListener(event: string, callback: Function, context: any, once: boolean = false, multiplayer: boolean = true) {
         if (this.eventNames().indexOf(event) == -1) {
-            this._events[event] = [];
+
+            this._events[event] = this._eventObject.createNew([], multiplayer);
         }
 
-        this._events[event].push({ callback: callback, context: context, once: once });
+        this._events[event].listeners.push({ callback: callback, context: context, once: once });
     }
 
     private _removeListener(eventName: string, callback: Function, context: any) {
@@ -267,7 +273,7 @@ class Events {
             // let index = event.indexOf(callback);
             if (listener) {
                 //   console.log('found a match!! now REMOVING IT with splice..');
-                event.splice(event.indexOf(listener), 1);
+                event.listeners.splice(event.listeners.indexOf(listener), 1);
                 return;
             }
             else {
@@ -284,7 +290,7 @@ class Events {
         //  console.log('looking for callback %s of event %s for object: ', callback, event, context);
         for (let x = 0; x < event.length; x++) {
             //   console.warn('checking if it matches: ', event[x]);
-            if (event[x].callback == callback && event[x].context == context) {
+            if (event[x].listeners.callback == callback && event[x].listeners.context == context) {
                 //   console.log('it matches!!');
                 // debugger;
                 return event[x];
@@ -354,9 +360,9 @@ class Events {
         //  return timer;
     }
 
-    private _addEvent(event: string) {
+    private _addEvent(event: string, multiplayer: boolean = true) {
         if (this._eventNames().indexOf(event) == -1) {
-            this._events[event] = [];
+            this._events[event] = {listeners: [], multiplayer: multiplayer};
         }
         else {
             console.warn('event %s already exists, so cannot be added', event);

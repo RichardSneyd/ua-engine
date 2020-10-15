@@ -5,7 +5,7 @@ import Loader from '../../Core/Engine/Loader';
 import 'pixi-spine';
 import Events from '../../Core/Engine/Events';
 import GameConfig from '../../Core/Engine/GameConfig';
-import Logger from '../../Logger';
+import Logger from '../../Core/Engine/Logger';
 
 class PxGame {
   private _pxFactory: PxFactory; _loader: Loader; _events: Events;

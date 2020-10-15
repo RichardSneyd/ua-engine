@@ -1,7 +1,7 @@
 import Loader from './Loader';
 import HwPlayer from '../../Services/Howler/HwPlayer';
 import Events from './Events';
-import Logger from '../../Logger';
+import Logger from './Logger';
 
 class AudioManager {
 
