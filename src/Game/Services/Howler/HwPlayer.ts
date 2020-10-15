@@ -1,6 +1,7 @@
 import Loader from '../../Core/Engine/Loader';
 import { Howl } from 'howler';
 import Resource from '../../Core/Data/Resource';
+import Logger from '../../Logger';
 
 class HwPlayer {
     private _loader: Loader;
@@ -32,13 +33,13 @@ class HwPlayer {
             howl.off('end');
             howl.on('end', () => {
                 //   this._playing.splice(this._playing.indexOf(url, 1));
-            //    console.log('%s finished playing', res.basename);
+            // Logger.info('%s finished playing', res.basename);
               //  debugger;
                 onStop();
             });
         }
         else {
-            console.log('howl was null');
+            Logger.info('howl was null');
         }
     }
 

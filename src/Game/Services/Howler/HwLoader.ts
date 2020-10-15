@@ -48,7 +48,7 @@ class HwLoader {
                 return `skipping ${url}, already loaded`;
               }
         //  }).then((value: any)=>{
-           //   console.log(value, 'color:blue');
+           // Logger.info(value, 'color:blue');
         //  })
     
     }

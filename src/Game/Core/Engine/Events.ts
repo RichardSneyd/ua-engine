@@ -227,7 +227,7 @@ class Events {
     }
 
     private _trigger(event: string, data: any = null) {
-        // console.log('triggering %s with data %s', event, data);
+        // Logger.info('triggering %s with data %s', event, data);
         if (this.eventNames().indexOf(event) !== -1) {
             let total = this._events[event].listeners.length - 1;
             if (total >= 0) {
@@ -236,7 +236,7 @@ class Events {
                 for (let x = total; x >= 0; x--) {
                     let obj = objs[x];
 
-                    //      console.log('about to attempt callback for %s with context: ', event, obj.context);
+              //      Logger.info('about to attempt callback for %s with context: ', event, obj.context);
 
                     obj.callback.bind(obj.context)(data);
                     if (obj.once == true) { // if 'once' is set to true, remove callback
@@ -246,11 +246,11 @@ class Events {
                 }
             }
             else {
-                console.warn('event %s exists, but has no callbacks', event);
+                Logger.warn('event %s exists, but has no callbacks', event);
             }
         }
         else {
-            console.warn('event %s does not exist, so cannot be triggered', event);
+            Logger.warn('event %s does not exist, so cannot be triggered', event);
         }
     }
 
@@ -264,12 +264,12 @@ class Events {
     }
 
     private _removeListener(eventName: string, callback: Function, context: any) {
-        //  console.log('requesting remove listener from %s: ', eventName, callback);
+        //  Logger.info('requesting remove listener from %s: ', eventName, callback);
         //    debugger;
         if (this.eventNames().indexOf(eventName) !== -1) {
             let listener = this._findListener(eventName, callback, context);
             let event = this._events[eventName];
-            //  console.log('event exists: ', event);
+            //  Logger.info('event exists: ', event);
             // let index = event.indexOf(callback);
             if (listener) {
                 //   console.log('found a match!! now REMOVING IT with splice..');
@@ -277,17 +277,17 @@ class Events {
                 return;
             }
             else {
-                console.warn("cannot remove a listener for %s with context of %s that doesn't exist: %s", eventName, context, callback);
+                Logger.warn("cannot remove a listener for %s with context of %s that doesn't exist: %s", eventName, context, callback);
             }
         }
         else {
-            console.warn('event %s does not exist, cannot remove callback', eventName);
+            Logger.warn('event %s does not exist, cannot remove callback', eventName);
         }
     }
 
     private _findListener(eventName: string, callback: Function, context: any): { callback: Function, context: any, once: boolean } | undefined {
         let event = this._events[eventName];
-        //  console.log('looking for callback %s of event %s for object: ', callback, event, context);
+        //  Logger.info('looking for callback %s of event %s for object: ', callback, event, context);
         for (let x = 0; x < event.length; x++) {
             //   console.warn('checking if it matches: ', event[x]);
             if (event[x].listeners.callback == callback && event[x].listeners.context == context) {
@@ -297,8 +297,8 @@ class Events {
             }
         }
 
-        console.warn("cannot find a listener for %s with context of %s that looks like: %s", eventName, context, callback);
-        console.log(`${eventName} listeners: `, event);
+        Logger.warn("cannot find a listener for %s with context of %s that looks like: %s", eventName, context, callback);
+        Logger.info(`${eventName} listeners: `, event);
         // debugger;
     }
 
@@ -311,7 +311,7 @@ class Events {
             this._timers.splice(this._timers.indexOf(timer), 1);
         }
         else {
-            console.warn('timer to remove is null: ', timer);
+            Logger.warn('timer to remove is null: ', timer);
         }
     }
     /**
@@ -333,7 +333,7 @@ class Events {
             }
         }
 
-        console.warn('no timer found for: ', callback);
+        Logger.warn('no timer found for: ', callback);
         return null;
     }
 
@@ -365,7 +365,7 @@ class Events {
             this._events[event] = {listeners: [], multiplayer: multiplayer};
         }
         else {
-            console.warn('event %s already exists, so cannot be added', event);
+            Logger.warn('event %s already exists, so cannot be added', event);
         }
     }
 

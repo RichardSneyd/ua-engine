@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import Logger from '../../../Logger';
 
 class Collections {
 
@@ -8,12 +9,12 @@ class Collections {
     public findArrElWithPropVal(array: any[], properties: string[], values: string | number[]): any {
         let row: any = null;
         if (Array.isArray(array)) {
-            //  console.trace('isArray');
+            // Logger.warn('isArray');
             elements: for (let x = 0; x < array.length; x++) {
                 props: for (let y = 0; y < properties.length; y++) {
-                    // console.trace(array[x][properties[y]] + ', ' + values[y]);
+                    // Logger.warn(array[x][properties[y]] + ', ' + values[y]);
                     if (array[x][properties[y]] === values[y]) {
-                        //   console.trace('matching pair at ' + y);
+                        // Logger.warn('matching pair at ' + y);
                         if (y == properties.length - 1) {
                             row = array[x];
                             break elements;
@@ -31,9 +32,9 @@ class Collections {
                 for (let y = 0; y < properties.length; y++) {
     
                     if (array[x][properties[y]] == values[y]) {
-                        //   console.trace('matching pair at ' + y);
+                        // Logger.warn('matching pair at ' + y);
                         if (y == properties.length - 1) {
-                            //   console.trace('found FULL match!');
+                            // Logger.warn('found FULL match!');
                             row = array[x];
                             break elements;
                         }
@@ -43,7 +44,7 @@ class Collections {
         }
 
         if (row == null) {
-            console.warn('no match found for ' + properties.toString() + " & " + values.toString());
+            Logger.warn('no match found for ' + properties.toString() + " & " + values.toString());
         }
 
         return row;
@@ -56,9 +57,9 @@ class Collections {
             for (let y = 0; y < properties.length; y++) {
 
                 if (array[x][properties[y]] == values[y]) {
-                    //   console.trace('matching pair at ' + y);
+                    // Logger.warn('matching pair at ' + y);
                     if (y == properties.length - 1) {
-                        //   console.trace('found FULL match!');
+                        // Logger.warn('found FULL match!');
                         row = array[x];
                         break elements;
                     }
@@ -68,7 +69,7 @@ class Collections {
         }
 
         if (row == null) {
-            console.trace('no match found for ' + properties.toString() + " & " + values.toString());
+            Logger.warn('no match found for ' + properties.toString() + " & " + values.toString());
         }
 
         return row;
@@ -103,7 +104,7 @@ class Collections {
                 }
             }
         } else {
-            console.error('wrong type provided; array or object required');
+            Logger.error('wrong type provided; array or object required');
         }
         return count;
     }
@@ -111,10 +112,10 @@ class Collections {
     public allElementsWithPropVal(array: any[], properties: string[], values: any[]): any[] {
         let all: any[] = [];
         if (Array.isArray(array)) {
-            // console.log('isArray');
+            // Logger.info('isArray');
             elements: for (let x = 0; x < array.length; x++) {
                 props: for (let y = 0; y < properties.length; y++) {
-                    // console.log(array[x][properties[y]] + ', ' + values[y]);
+                    // Logger.info(array[x][properties[y]] + ', ' + values[y]);
                     if (array[x][properties[y]] === values[y]) {
                         if (y == properties.length - 1) {
                             all.push(array[x]);
@@ -138,7 +139,7 @@ class Collections {
                 }
             }
         } else {
-            console.error('wrong type provided; array or object required');
+            Logger.error('wrong type provided; array or object required');
         }
         return all;
     }
@@ -152,7 +153,7 @@ class Collections {
                 }
             }
             else {
-                console.warn('no col with name ' + arrs[x]);
+                Logger.warn('no col with name ' + arrs[x]);
             }
         }
 

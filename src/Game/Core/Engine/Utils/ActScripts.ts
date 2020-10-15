@@ -36,7 +36,7 @@ class ActScripts {
      * @param text the string value from the 'cell', to be parsed.
      */
     public getValsFromCell(text: string): string[] {
-        //  console.log(text);
+        // Logger.info(text);
         return this._text.unstringifyArray(text, ',');
     }
 
@@ -117,7 +117,7 @@ class ActScripts {
 
     public toLines(text: string): string[] {
         let result = text.split('\n');
-        //    console.log(result);
+        // Logger.info(result);
         //  debugger;
         return result;
     }
@@ -129,7 +129,7 @@ class ActScripts {
            }, this);
            let result = [chuncks, words];
            return result;
-           console.log(result);
+           Logger.info(result);
        } */
 
     public words(text: string): string[] {

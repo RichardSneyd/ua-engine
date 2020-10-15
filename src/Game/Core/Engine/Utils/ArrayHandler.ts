@@ -1,3 +1,5 @@
+import Logger from "../../../Logger";
+
 class ArrayHandler {
   constructor() {
 
@@ -22,7 +24,7 @@ class ArrayHandler {
   }
 
   public removeEq(array: any[], key: string, data: any) {
-    console.error("removeEq is still not implemented");
+    Logger.error("removeEq is still not implemented");
   }
 }
 
