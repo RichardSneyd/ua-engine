@@ -112,7 +112,7 @@ class Logger {
     }
 
     /**
-     * @description Call the debugging function (if available)
+     * @description Call the 'debugger' keyword/function (if available. effectively a breakpoint)
      */
     public static breakpoint() {
         if(this.devEnvironment) {

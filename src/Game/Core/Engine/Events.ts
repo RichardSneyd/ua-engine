@@ -31,7 +31,7 @@ class Events {
         // listen for multiplayer messages passed down to IFrame from parent
         this._listenMultiplayer();
 
-        //log events easily for testing
+        //expose EventEmitter on window for testing purposes
         Logger.exposeGlobal(this, 'events');
         // emit events easily for testing
         Logger.exposeGlobal(this._trigger, 'emit');
@@ -83,7 +83,7 @@ class Events {
      */
     private _postToRise(data: any) {
         if (data && data.behavior) {
-            console.log('sending data:', data);
+            Logger.info('sending data:', data);
             window.parent.postMessage && window.parent.postMessage(data, '*');
             return;
         }
@@ -182,7 +182,7 @@ class Events {
 
     private _requestCall(event: string, data?: any) {
         // todo - implement logic to avoid double calls from RISE platform etc
-        console.log(event, data);
+        Logger.info(event, data);
        // debugger;
         this._trigger(event, data);
     }
@@ -227,12 +227,13 @@ class Events {
     }
 
     private _trigger(event: string, data: any = null) {
-        // Logger.info('triggering %s with data %s', event, data);
+         Logger.info('triggering %s with data %s', event, data);
+         Logger.breakpoint();
         if (this.eventNames().indexOf(event) !== -1) {
             let total = this._events[event].listeners.length - 1;
             if (total >= 0) {
                 let objs = this.events[event].listeners;
-                //console.log('callbacks for %s: ', event, objs);
+                //Logger.info('callbacks for %s: ', event, objs);
                 for (let x = total; x >= 0; x--) {
                     let obj = objs[x];
 
@@ -272,7 +273,7 @@ class Events {
             //  Logger.info('event exists: ', event);
             // let index = event.indexOf(callback);
             if (listener) {
-                //   console.log('found a match!! now REMOVING IT with splice..');
+                //   Logger.info('found a match!! now REMOVING IT with splice..');
                 event.listeners.splice(event.listeners.indexOf(listener), 1);
                 return;
             }
@@ -291,7 +292,7 @@ class Events {
         for (let x = 0; x < event.length; x++) {
             //   console.warn('checking if it matches: ', event[x]);
             if (event[x].listeners.callback == callback && event[x].listeners.context == context) {
-                //   console.log('it matches!!');
+                //   Logger.info('it matches!!');
                 // debugger;
                 return event[x];
             }
