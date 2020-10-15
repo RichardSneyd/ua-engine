@@ -1,10 +1,11 @@
-export enum LogLevel {
+enum LogLevel {
     ERROR,
     WARNING,
     INFO
 }
 
-export default class Logger {
+class Logger {
+    static LEVELS = LogLevel;
     private static _source: string = '';
     private static _previousSource: string = '';
     private static _level: number = LogLevel.INFO;
@@ -184,3 +185,5 @@ export default class Logger {
         }
     }
 }
+
+export default Logger;
