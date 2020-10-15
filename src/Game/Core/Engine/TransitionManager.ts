@@ -6,7 +6,7 @@ import transitions from "./Transitions";
 import IScreen from "../../Services/IScreen";
 import Events from "./Events";
 import GOFactory from "./GameObjects/GOFactory";
-import Logger from "../../Logger";
+import Logger from "./Logger";
 
 class TransitionManager {
     private _tweens: TweenManager; private _screen: IScreen; private _events: Events; private _goFactory: GOFactory;

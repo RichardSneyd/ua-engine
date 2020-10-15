@@ -1,6 +1,6 @@
 import Tween from "../Data/Tween";
 import Easing from './GameObjects/Components/Easing';
-import Logger from "../../Logger";
+import Logger from "./Logger";
 import Loop from "./Loop";
 
 class TweenManager {

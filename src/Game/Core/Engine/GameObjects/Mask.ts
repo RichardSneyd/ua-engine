@@ -1,7 +1,6 @@
 import IObjectHandler from '../../../Services/IObjectHandler';
 import IScreen from '../../../Services/IScreen';
-import Logger from '../../../Logger';
-
+import Logger from '../Logger';
 
 class Mask {
   private _objectHandler: IObjectHandler; _screen: IScreen;

@@ -1,9 +1,6 @@
 import SpriteObject from "./SpriteObject";
 import IParentChild from "./IParentChild";
-import Logger from "../../../Logger";
-
-
-
+import Logger from "../Logger";
 
 class Button {
 

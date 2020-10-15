@@ -2,7 +2,7 @@ import { Loader } from 'pixi.js-legacy';
 import 'pixi-spine';
 
 import PxFactory from './PxFactory';
-import Logger from '../../Logger';
+import Logger from '../../Core/Engine/Logger';
 
 class PxLoader {
   private _pxFactory: PxFactory;;
