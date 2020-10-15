@@ -1,6 +1,6 @@
 import ActScripts from './Utils/ActScripts';
 import Events from './Events';
-import Logger from './Logger';
+import Logger from '../../Logger';
 
 class ScriptHandler {
     private _utils: ActScripts;

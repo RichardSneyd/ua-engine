@@ -2,7 +2,7 @@ import IParentChild from "../IParentChild";
 import IGameObject from '../IGameObject';
 import ObjectCore from './ObjectCore';
 import TextObject from "../TextObject";
-import Logger from "../../Logger";
+import Logger from "../../../../Logger";
 
 class ParentChildHandler implements IParentChild{
     private _parent: IGameObject | null = null;
