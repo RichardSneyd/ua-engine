@@ -6,7 +6,7 @@ import AjaxLoader from '../../Services/AjaxLoader';
 import GameConfig from './GameConfig';
 import Loop from './Loop';
 import Events from './Events';
-import Logger from '../../Logger';
+import Logger from './Logger';
 
 class Loader {
   private _resource: Resource;

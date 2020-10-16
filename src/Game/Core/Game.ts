@@ -14,7 +14,7 @@ import IScene from './Engine/IScene';
 import ILevel from './Engine/ILevel';
 import Transitions from '../Core/Engine/Transitions';
 import TweenManager from './Engine/TweenManager';
-import Logger from '../Logger';
+import Logger from './Engine/Logger';
 
 class Game {
   private _world: World; _events: Events;

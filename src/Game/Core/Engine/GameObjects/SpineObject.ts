@@ -10,7 +10,7 @@ import AnimationManager from "./Components/FrameAnimationManager";
 import SpineAnimationManager from './Components/SpineAnimationManager';
 import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
-import Logger from "../../../Logger";
+import Logger from "../Logger";
 
 class SpineObject implements IGameObject {
     private _screen: IScreen;

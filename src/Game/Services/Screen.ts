@@ -1,5 +1,5 @@
 import { Application, Sprite, DisplayObject, Texture, RenderTexture } from 'pixi.js-legacy';
-import Logger from '../Logger';
+import Logger from '../Core/Engine/Logger';
 
 import IScreen from '../Services/IScreen';
 import PxGame from '../Services/Pixi/PxGame';
