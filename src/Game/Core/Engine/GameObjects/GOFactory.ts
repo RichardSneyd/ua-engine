@@ -58,7 +58,7 @@ class GOFactory {
     public sprite(x?: number, y?: number, textureName?: string, frame: string | null = null, parent: IParentChild | null = null): SpriteObject {
         if (x != null && y != null && textureName != null) {
             //  let pos = this._scaleManager.getXY(x, y);
-            //  Logger.info('pos: ', pos);
+            //  Debug.info('pos: ', pos);
             return this._sprite.createNew(x, y, textureName, frame, parent);
         } else {
             return this._sprite.createEmpty();
@@ -105,7 +105,7 @@ class GOFactory {
     public button(x?: number, y?: number, atlas?: string, frame?: string, anims?: { up: string, down: string, over: string, out: string }, onDown?: Function, context?: any, onUp?: Function, parent?: IParentChild): Button {
         if (x != null && y != null && atlas != null && frame && onDown) {
             // let pos = this._scaleManager.getXY(x, y);
-            // Logger.info('pos: ', pos);
+            // Debug.info('pos: ', pos);
             return this._button.createNew(x, y, atlas, frame, anims, onDown, context, onUp, parent);
         } else {
             return this._button.createEmpty();

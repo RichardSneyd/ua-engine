@@ -10,7 +10,7 @@ import AnimationManager from "./Components/FrameAnimationManager";
 import SpineAnimationManager from './Components/SpineAnimationManager';
 import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
-import Logger from "../../../Logger";
+import Debug from "../Debug";
 
 class SpineObject implements IGameObject {
     private _screen: IScreen;
@@ -60,7 +60,7 @@ class SpineObject implements IGameObject {
     }
 
     moveToMouse(evt: any) {
-        Logger.info(evt);
+        Debug.info(evt);
         this._core.moveToMouse(evt);
     }
 

@@ -1,4 +1,4 @@
-import Logger from "../../../Logger";
+import Debug from "../Debug";
 
 class ArrayHandler {
   constructor() {
@@ -24,7 +24,7 @@ class ArrayHandler {
   }
 
   public removeEq(array: any[], key: string, data: any) {
-    Logger.error("removeEq is still not implemented");
+    Debug.error("removeEq is still not implemented");
   }
 }
 

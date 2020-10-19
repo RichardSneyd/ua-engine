@@ -14,7 +14,7 @@ import IScene from './Engine/IScene';
 import ILevel from './Engine/ILevel';
 import Transitions from '../Core/Engine/Transitions';
 import TweenManager from './Engine/TweenManager';
-import Logger from '../Logger';
+import Debug from './Engine/Debug';
 
 class Game {
   private _world: World; _events: Events;
@@ -28,16 +28,16 @@ class Game {
   protected _gameStarted: boolean;
   protected _transitions = Transitions;
   protected _tween: TweenManager;
-  protected _log: Logger
+  protected _debug: Debug;
 
   constructor(world: World, loop: Loop, loader: Loader,
     events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
     levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils, tween: TweenManager,
-    log: Logger) {
+    debug: Debug) {
 
     this._world = world;
     this._events = events;
-    // Logger.info("TARGET: ", events);
+    // Debug.info("TARGET: ", events);
     this._scaleManager = scaleManager;
     this._expose = expose;
 
@@ -50,7 +50,7 @@ class Game {
     this._geom = geom;
     this._utils = utils;
     this._tween = tween;
-    this._log = log;
+    this._debug = debug;
 
     this._activities = [];
     this._gameStarted = false;
@@ -104,7 +104,7 @@ class Game {
       this.activities.splice(this.activities.indexOf(act), 1);
       return true;
     }
-    Logger.warn('cannot remove an activity that has not been installed: ', act.name);
+    Debug.warn('cannot remove an activity that has not been installed: ', act.name);
     return false;
   }
 
@@ -121,7 +121,7 @@ class Game {
       let activity: IActivity | undefined;
       activity = this._getActByName(name);
       if (activity == undefined) {
-        Logger.error('no activity found by name: ', name);
+        Debug.error('no activity found by name: ', name);
       }
       else {
         this._startActivity(activity, scriptName);
@@ -144,7 +144,7 @@ class Game {
   * @description say hi!
   */
   public sayHi() {
-    Logger.info("Hi from UA-Engine");
+    Debug.info("Hi from UA-Engine");
   }
 
   /**
@@ -217,7 +217,7 @@ class Game {
       }
     }
 
-    Logger.warn('could not find an installed activity with %s: %s', property, value);
+    Debug.warn('could not find an installed activity with %s: %s', property, value);
     return undefined;
   }
 
@@ -242,7 +242,7 @@ class Game {
     this._expose.add('utils', this._utils);
     this._expose.add('transitions', this._transitions);
     this._expose.add('tween', this._tween);
-    this._expose.add('log', this._log);
+    this._expose.add('debug', this._debug);
   }
 
   private _addListeners(): void {

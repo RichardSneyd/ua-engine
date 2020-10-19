@@ -1,47 +1,43 @@
-enum LogLevel {
-    ERROR,
-    WARNING,
-    INFO
-}
+import LogLevel from "./LogLevel";
 
-class Logger {
+class Debug {
     private static _LEVELS = LogLevel;
     private static _source: string = '';
     private static _previousSource: string = '';
     private static _level: number = LogLevel.INFO;
 
     private static _identifyLogSource(): string {
-        if (!this._source) {
+        if (!Debug._source) {
             let stack = Error().stack + '';
             let files = stack.match(/\w+\.ts|\w+\.js/g);
             files = (files) ? files : [];
 
-            if (files.length > 3) {
-                this._source = files[3];
+            if (files.length > 4) {
+                Debug._source = files[4];
             }
         }
 
-        let source = this._source;
-        this._source = '';
+        let source = Debug._source;
+        Debug._source = '';
         return source;
     }
 
     /**
-     * @description Returns all levels this Logger can be set to
+     * @description Returns all levels this Debug can be set to
      */
-    public static get LEVELS(){
-        return this._LEVELS;
+    public static get LEVELS() {
+        return Debug._LEVELS;
     }
 
     /**
      * @description Set a group text instead of the default one
      * @param source string to set as message group
-     * @returns Logger, to allow chain a print method after
+     * @returns Debug, to allow chain a print method after
      */
-    public static source(source: string): Logger {
-        this._source = source;
+    public static source(source: string): Debug {
+        Debug._source = source;
 
-        return this;
+        return Debug;
     }
 
     /**
@@ -49,55 +45,74 @@ class Logger {
      * @param level from the LogLevel enum, ERROR, WARNING or INFO
      */
     public static setLevel(level: number) {
-        this._level = level;
+        Debug._level = level;
+
+        Debug.info
     }
 
-    private static _log(consoleF: Function, ...args: any[]) {
-        let groupName = this._identifyLogSource();
-        if(groupName != this._previousSource) {
+    private static _setGroup() {
+        let groupName = Debug._identifyLogSource();
+        if (groupName != Debug._previousSource) {
             console.groupEnd();
             console.group(groupName);
-            this._previousSource = groupName;
+            Debug._previousSource = groupName;
         }
-        consoleF(...args);
     }
 
     /**
      * @description Logs a message in the browser console using console.log
      * @param args one or more arguments, any type
      */
-    public static info(...args: any[]) {
-        if (this._level >= LogLevel.INFO) {
-            this._log(console.log, ...args);
+    static get info() {
+        if (Debug._level >= LogLevel.INFO) {
+            Debug._setGroup();
+            return console.log.bind(console);
         }
+        return () => {};
     }
 
     /**
      * @description Logs a message in the browser console using console.error
      * @param args one or more arguments, any type
      */
-    public static error(...args: any[]) {
-        if (this._level >= LogLevel.ERROR) {
-            this._log(console.error, ...args);
+    static get error() {
+        if (Debug._level >= LogLevel.ERROR) {
+            Debug._setGroup();
+            return console.error.bind(console);
         }
-    }
+        return () => {};
+    };
 
     /**
      * @description Logs a message in the browser console using console.warn
      * @param args one or more arguments, any type
      */
-    public static warn(...args: any[]) {
-        if (this._level >= LogLevel.WARNING) {
-            this._log(console.warn, ...args);
+    static get warn() {
+        if (Debug._level >= LogLevel.WARNING) {
+            Debug._setGroup();
+            return console.warn.bind(console);
         }
-    }
+        return () => {};
+    };
+
+    /**
+     * @description Logs a message in the browser console using console.trace
+     * @param args one or more arguments, any type
+     */
+    static get trace() {
+        if (Debug._level >= LogLevel.INFO) {
+            Debug._setGroup();
+            return console.trace.bind(console);
+        }
+        return () => {};
+    };
 
     /**
      * @description The environment is development if the loglevel is higher that ERROR
      * @returns boolean, true if log level is greater than error
      */
     public static get devEnvironment() {
-        return (Logger._level > LogLevel.ERROR);
+        return (Debug._level > LogLevel.ERROR);
     }
 
     /**
@@ -106,38 +121,38 @@ class Logger {
      * @param label key to locate the object on the window
      */
     public static exposeGlobal(object: any, label: string) {
-        if(this.devEnvironment) {
+        if (Debug.devEnvironment) {
             (<any>window)[label] = object;
         }
     }
 
     /**
-     * @description Call the debugging function (if available)
+     * @description Call the 'debugger' keyword/function (if available. effectively a breakpoint)
      */
     public static breakpoint() {
-        if(this.devEnvironment) {
+        if (Debug.devEnvironment) {
             debugger;
         }
     }
 
-    // From here onward all static methods are repeated as non-static ones.
-    // This is to allow its use in other projects by doing UAE.log...
+    // From here onward all static methods are repeated as non-static.
+    // This is to allow instantiation in the UAE API.
 
 
     /**
-     * @description Returns all levels this Logger can be set to
+     * @description Returns all levels this Debug can be set to
      */
-    public get LEVELS(){
-        return Logger.LEVELS;
+    public get LEVELS() {
+        return Debug.LEVELS;
     }
 
     /**
      * @description Set a group text instead of the default one
      * @param source string to set as message group
-     * @returns Logger, to allow chain a print method after
+     * @returns Debug, to allow chain a print method after
      */
-    public source(source: string): Logger {
-        Logger.source(source);
+    public source(source: string): Debug {
+        Debug.source(source);
 
         return this;
     }
@@ -147,31 +162,39 @@ class Logger {
      * @param level from the LogLevel enum, ERROR, WARNING or INFO
      */
     public setLevel(level: number) {
-        Logger.setLevel(level);
+        Debug.setLevel(level);
     }
 
     /**
      * @description Logs a message in the browser console using console.log
      * @param args one or more arguments, any type
      */
-    public info(...args: any[]) {
-        Logger.info(...args);
-    }
+    get info() {
+        return Debug.info;
+    };
 
     /**
      * @description Logs a message in the browser console using console.error
      * @param args one or more arguments, any type
      */
-    public error(...args: any[]) {
-        Logger.error(...args);
-    }
+    get error() {
+        return Debug.error;
+    };
 
     /**
      * @description Logs a message in the browser console using console.warn
      * @param args one or more arguments, any type
      */
-    public warn(...args: any[]) {
-        Logger.warn(...args);
+    get warn() {
+        return Debug.warn;
+    };
+
+    /**
+     * @description Logs a message in the browser console using console.trace
+     * @param args one or more arguments, any type
+     */
+    get trace() {
+        return Debug.trace;
     }
 
     /**
@@ -179,7 +202,7 @@ class Logger {
      * @returns boolean, true if log level is greater than error
      */
     public get devEnvironment() {
-        return Logger.devEnvironment;
+        return Debug.devEnvironment;
     }
 
     /**
@@ -188,17 +211,15 @@ class Logger {
      * @param label key for the object on the window
      */
     public exposeGlobal(object: any, label: string) {
-        Logger.exposeGlobal(object, label);
+        Debug.exposeGlobal(object, label);
     }
 
     /**
      * @description Call the debugging function (if available)
      */
     public breakpoint() {
-        if(this.devEnvironment) {
-            debugger;
-        }
+        Debug.breakpoint();
     }
 }
 
-export default Logger;
+export default Debug;

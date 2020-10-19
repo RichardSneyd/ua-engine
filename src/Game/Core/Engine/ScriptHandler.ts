@@ -1,6 +1,6 @@
 import ActScripts from './Utils/ActScripts';
 import Events from './Events';
-import Logger from '../../Logger';
+import Debug from './Debug';
 
 class ScriptHandler {
     private _utils: ActScripts;
@@ -107,7 +107,7 @@ class ScriptHandler {
     public getFromAutoNext(): any {
         let row = this.rowByCellVals(['id'], [this.active.auto_next]);
         if (row == null) {
-            Logger.warn('auto_next has no value for active row %s', this.active.id);
+            Debug.warn('auto_next has no value for active row %s', this.active.id);
         }
         return row;
     }
@@ -172,7 +172,7 @@ class ScriptHandler {
                     }
                 }
                 else {
-                    Logger.error('script has no column with name: ', parseCols[y]);
+                    Debug.error('script has no column with name: ', parseCols[y]);
                 }
             }
             for (let z = 0; z < objectifyCols.length; z++) {
@@ -182,7 +182,7 @@ class ScriptHandler {
                     }
                 }
                 else {
-                    Logger.error('script has no column with name: ', objectifyCols[z]);
+                    Debug.error('script has no column with name: ', objectifyCols[z]);
                 }
             }
 
@@ -206,7 +206,7 @@ class ScriptHandler {
                         }
                     }
                     else {
-                        Logger.error('script has no column called: ', processText[s]);
+                        Debug.error('script has no column called: ', processText[s]);
                     }
                 }
             }
@@ -244,7 +244,7 @@ class ScriptHandler {
             let row = this.rows[x];
 
             for (let y = 0; y < cols.length; y++) {
-                // Logger.info('files in %s of row %s: ', cols[y], x, Array(this.rows[x][cols[y]]));
+                // Debug.info('files in %s of row %s: ', cols[y], x, Array(this.rows[x][cols[y]]));
                 let col = cols[y];
                 let split = col.split('.');
                 if (split.length > 1) {
@@ -261,7 +261,7 @@ class ScriptHandler {
                 }
             }
         }
-        // Logger.info('files found: ', files);
+        // Debug.info('files found: ', files);
         return this._utils.getUniq(files);
     }
 

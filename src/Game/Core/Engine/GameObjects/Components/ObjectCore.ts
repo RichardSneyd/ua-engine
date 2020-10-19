@@ -14,7 +14,7 @@ import Mask from '../Mask';
 import SpineObject from '../SpineObject';
 import Loop from '../../Loop';
 import { RenderTexture } from 'pixi.js-legacy';
-import Logger from '../../../../Logger';
+import Debug from '../../Debug';
 
 
 class ObjectCore {
@@ -221,7 +221,7 @@ class ObjectCore {
    * @param object the object (must have x and y properties) to angle towards 
    */
   public lookAt(object: { x: number, y: number }) {
-    // Logger.info('lookAt: ', object);
+    // Debug.info('lookAt: ', object);
     let angle  = this._math.angleBetween(this, object);
     this.angle = angle;
   }
@@ -284,8 +284,8 @@ class ObjectCore {
     let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
     let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
 
-    Logger.info(scaleX);
-    Logger.info(scaleY);
+    Debug.info(scaleX);
+    Debug.info(scaleY);
 
     this.x += xDiff;
     this.y += yDiff;
@@ -320,7 +320,7 @@ class ObjectCore {
   }
 
   public setOrigin(x: number, y?: number) {
-    // Logger.info('setOrigin this: ', this);
+    // Debug.info('setOrigin this: ', this);
     let yVal: number;
     let xVal = x;
     if (y !== undefined) {
@@ -347,7 +347,7 @@ class ObjectCore {
 
   public createNew(): ObjectCore {
     //  let am = this._animationManager.createNew();
-    //  Logger.info('new am: ', am);
+    //  Debug.info('new am: ', am);
     return new ObjectCore(this._screen, this._objectHandler, this._input.createNew(), this._mask.createNew(), this._math, this._events, this._pointFactory, this._loop);
   }
 
@@ -361,7 +361,7 @@ class ObjectCore {
 
   // ALWAYS listen for this update, because it calls the gameObjects update. 
   public update(time: number) {
-    // Logger.info('update called in ObjectCore');
+    // Debug.info('update called in ObjectCore');
     if (this._updateCallback !== undefined && this._updateCallback !== null) {
       this._updateCallback.bind(this._go)(time);
     }

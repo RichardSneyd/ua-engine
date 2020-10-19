@@ -38,10 +38,10 @@ class KeyListener {
     }
 
     public callIfMatch(data: { evt: any }) {
-        /* Logger.info('KeyListener.callIfMatch...');
-        Logger.info('match: ', this.match(data));
-        Logger.info('evt.keyCode: ', data.evt.keyCode);
-        Logger.info('this.keyCode: ', this.keyCode); */
+        /* Debug.info('KeyListener.callIfMatch...');
+        Debug.info('match: ', this.match(data));
+        Debug.info('evt.keyCode: ', data.evt.keyCode);
+        Debug.info('this.keyCode: ', this.keyCode); */
         if (this.match(data)) this.call(data);
     }
 

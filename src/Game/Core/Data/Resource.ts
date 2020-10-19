@@ -150,7 +150,7 @@ class Resource {
       }
     }
 
-    //Logger.info("name: %s", name);
+    //Debug.info("name: %s", name);
 
     return name;
   } */

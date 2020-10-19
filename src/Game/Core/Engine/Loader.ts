@@ -6,7 +6,7 @@ import AjaxLoader from '../../Services/AjaxLoader';
 import GameConfig from './GameConfig';
 import Loop from './Loop';
 import Events from './Events';
-import Logger from '../../Logger';
+import Debug from './Debug';
 
 class Loader {
   private _resource: Resource;
@@ -84,7 +84,7 @@ class Loader {
     this._loop.addFunction(this._update, this);
     this._events.on('shutdown', this._init, this);
     // expose loader globaly for testing
-    Logger.exposeGlobal(this, 'loader');
+    Debug.exposeGlobal(this, 'loader');
   }
 
   get resList() {
@@ -96,7 +96,7 @@ class Loader {
     this._downloadComplete = false;
     this._startedLoading = false;
     this._newResList = [];
-    Logger.info('%cLoader initialized', 'color: green;');
+    Debug.info('%cLoader initialized', 'color: green;');
   }
 
   get downloadComplete(): boolean {
@@ -118,11 +118,11 @@ class Loader {
 
       this._resList.push(res);
       this._newResList.push(res);
-      // Logger.info(this._resList);
+      // Debug.info(this._resList);
       return this;
     }
 
-    Logger.warn('did not add %s, as it already exists', name);
+    Debug.warn('did not add %s, as it already exists', name);
     return this;
   }
 
@@ -144,14 +144,33 @@ class Loader {
    */
   public addAtlas(name: string):  Loader {
     // handles atlas at PxLoader level, added just the same as image resource, except with .json ext instead of .img ....
+    if(name.indexOf('.jpg') != -1) Debug.error('addAtlas requires .json file extension, not .jpg');
+    if(name.indexOf('.png') != -1) Debug.error('addAtlas requires .json file extension, not .png');
+    if(name.indexOf('.json') == -1) name = name + '.json';
     this.addImage(name);
     return this;
   }
 
   /**
+   * @description a loop which adds an array of Atlas files by name.
+   * @param names an array of the names of the atlas files to load. If the name does not include '.json' at the end, this will be appended automatically.
+   */
+  public addAtlases(names: string[]) : Loader {
+    for(let x = 0; x < names.length; x++){
+      let _name = names[x];
+      this.addAtlas(_name);
+    }
+
+    return this;
+  }
+
+
+  /**
    * @description add a spine file to the load queue - must include .json extension
+   * @param name if name does not include '.json' at the end, this will be automatically appended
    */
   public addSpine(name: string) : Loader {
+    if(name.indexOf('.json') == -1) name = name + '.json';
     let url = this._getPath().spn + name;
     if (this._getResource(url, false) == null) {
       let res = this._createResource();
@@ -159,10 +178,23 @@ class Loader {
 
       this._resList.push(res);
       this._newResList.push(res);
-      Logger.info(this._resList);
+      Debug.info(this._resList);
       return this;
     }
-    Logger.warn('did not add %s spine, as it already exists', name);
+    Debug.warn('did not add %s spine, as it already exists', name);
+    return this;
+  }
+
+  /**
+   * @description a loop which adds an array of spine files by name.
+   * @param names an array of the names of the spine files to load. If the name does not include '.json' at the end, this will be appended automatically.
+   */
+  public addSpines(names: string[]) : Loader {
+    for(let x = 0; x < names.length; x++){
+      let _name = names[x];
+      this.addSpine(_name);
+    }
+
     return this;
   }
 
@@ -178,10 +210,10 @@ class Loader {
 
       this._resList.push(res);
       this._newResList.push(res);
-      // Logger.info(this._resList);
+      // Debug.info(this._resList);
       return this;
     }
-    Logger.warn('did not add %s, as it already exists', name);
+    Debug.warn('did not add %s, as it already exists', name);
     return this;
   }
 
@@ -206,8 +238,8 @@ class Loader {
       let _imgsDone: boolean = false, _sndsDone: boolean = false;
 
       // if no new resource being loaded for this activity, just resolve, as there is nothing to wait for
-      Logger.info('%ctotal new resources: ' + this._newResList.length, 'color: green;');
-      //  Logger.info(this._newResList);
+      Debug.info('%ctotal new resources: ' + this._newResList.length, 'color: green;');
+      //  Debug.info(this._newResList);
       if (this._newResList.length == 0) {
         resolve('loading completed');
         return;
@@ -225,10 +257,10 @@ class Loader {
   }
 
   private _sendAllDone(resolve: Function, reject: Function) {
-    Logger.info('progress: ', this.progressPercentage, '%');
+    Debug.info('progress: ', this.progressPercentage, '%');
     if (this._downloadComplete) {
       resolve({ status: true });
-      Logger.info('%cdownload complete, promise RESOLVED', 'color: green;')
+      Debug.info('%cdownload complete, promise RESOLVED', 'color: green;')
     } else {
       setTimeout(() => {
         this._sendAllDone(resolve, reject);
@@ -245,7 +277,7 @@ class Loader {
     if (res != null) {
       return this._extractTexture(res.data, frame);
     } else {
-      Logger.warn("Resource '%s' doesn't exist.", sprite);
+      Debug.warn("Resource '%s' doesn't exist.", sprite);
     }
   }
 
@@ -256,19 +288,19 @@ class Loader {
     let isLoaded = true;
 
     if (this._downloadComplete == false && this._startedLoading == true) {
-      //  Logger.info('downloading');
+      //  Debug.info('downloading');
       for (let c = 0; c < this._resList.length; c++) {
         let res = this._resList[c];
 
         // !res.loaded && res.name.length > 0
         if (!res.loaded) {
           isLoaded = false;
-          // Logger.info("%s is loaded(%s)", res.name.length, res.loaded);
+          // Debug.info("%s is loaded(%s)", res.name.length, res.loaded);
         }
       }
       this._downloadComplete = isLoaded;
       if (this._downloadComplete) {
-        Logger.info('%cdownload complete!', 'color: green');
+        Debug.info('%cdownload complete!', 'color: green');
         this._startedLoading = false;
       }
     }
@@ -280,23 +312,23 @@ class Loader {
    */
   private _getUrls(arr: Resource[], ignoreLoaded: boolean = false): string[] {
     let urlList: string[] = [];
-    //  Logger.info(arr);
+    //  Debug.info(arr);
     //debugger;
     for (let c = 0; c < arr.length; c++) {
       // only return a URL for download if the resource hasn't already been loaded
       if (!ignoreLoaded) {
         let url = arr[c].url;
         urlList.push(url);
-        // Logger.info('added ' + arr[c].url + ' to URL list');
+        // Debug.info('added ' + arr[c].url + ' to URL list');
       }
       else {
         if (!arr[c].loaded) {
           let url = arr[c].url;
           urlList.push(url);
-          //  Logger.info('added ' + arr[c].url + ' to URL list');
+          //  Debug.info('added ' + arr[c].url + ' to URL list');
         }
         else {
-          Logger.info(arr[c].url + ' already loaded, will not load again');
+          Debug.info(arr[c].url + ' already loaded, will not load again');
         }
       }
     }
@@ -305,9 +337,9 @@ class Loader {
   }
 
   private _imgDone() {
-    //Logger.info('all images loaded');
+    //Debug.info('all images loaded');
     this._imgLoader.getResources((blob: any) => {
-      // Logger.info(blob.url, blob.data);
+      // Debug.info(blob.url, blob.data);
 
       this._downloadedResource(blob.url, blob.data);
     })
@@ -320,16 +352,16 @@ class Loader {
    */
   private _imgLoaded(data: any, data2: any) {
     if (data2.texture != null) {
-      //  Logger.info('image loaded and returned: ', data2, 'attemping injection....');
+      //  Debug.info('image loaded and returned: ', data2, 'attemping injection....');
       if (data2.name.indexOf('.json_image') !== -1) {
         // ignore irrelavent returns from PxLoader
-        Logger.warn('will not inject a .json_image, no resource in resList for that, is internal PIXI Loader child image resource mapped to atlas json resource');
+        Debug.warn('will not inject a .json_image, no resource in resList for that, is internal PIXI Loader child image resource mapped to atlas json resource');
       }
       else {
         this._downloadedResource(data2.url, data2.texture);
       }
     } else {
-      // Logger.info('spine loaded and returned: ', data2, 'attempting injection...');
+      // Debug.info('spine loaded and returned: ', data2, 'attempting injection...');
       this._downloadedResource(data2.url, data2); //Spine!
 
     }
@@ -337,23 +369,23 @@ class Loader {
 
   private _sndDone() {
     // WIP
-    Logger.info('all sounds loaded')
+    Debug.info('all sounds loaded')
   }
 
   private _sndLoaded(data: any) {
-    // Logger.info('sound loaded and returned: ', data);
+    // Debug.info('sound loaded and returned: ', data);
     this._downloadedResource(data.url, data.data);
   }
 
   private _downloadedResource(url: string, data: any) {
-    Logger.info(url + ': ', data);
+    Debug.info(url + ': ', data);
     // don't load json_image resources, which PIXI uses internally as child-resources of the json resources (atlas, spine etc)
     if (data.hasOwnProperty('name') && data.name.indexOf('.json_image') !== -1) {
-      Logger.warn('will not inject a json_image resource, used by PIXI Loader internally as children of json resources like atlases');
+      Debug.warn('will not inject a json_image resource, used by PIXI Loader internally as children of json resources like atlases');
       return;
     }
     else if (data.hasOwnProperty('name') && data.name.indexOf('.json_atlas') !== -1) {
-      Logger.warn('will not inject a json_atlas resource, used by PIXI Loader internally as children of json resources like atlases');
+      Debug.warn('will not inject a json_atlas resource, used by PIXI Loader internally as children of json resources like atlases');
       return;
     }
     let res = this._getResource(url);
@@ -363,7 +395,7 @@ class Loader {
       res.data = data;
     } else {
       //   let res = this._createResource()
-      Logger.warn("Injection failed: no resource exists in Loader.resList with name %s & url %s:", data.name, url, data);
+      Debug.warn("Injection failed: no resource exists in Loader.resList with name %s & url %s:", data.name, url, data);
     }
 
   }
@@ -380,7 +412,7 @@ class Loader {
       if (!byName) {
         if (currentUrl.indexOf(_url) !== -1) return resArr[c];
       } else {
-        // Logger.info("currentName(%s) == name(%s)", currentName, url)
+        // Debug.info("currentName(%s) == name(%s)", currentName, url)
         if (currentName == _url) return resArr[c];
       }
     }
@@ -481,8 +513,8 @@ class Loader {
 
   private _downloadSpines() {
     let spineList = this._getSpnArray(this._newResList);
-    Logger.info('spines to load:');
-    Logger.info(spineList);
+    Debug.info('spines to load:');
+    Debug.info(spineList);
     for (let c = 0; c < spineList.length; c++) {
       let res = spineList[c];
       // the resources were already created in resList at the downloadImages phase, this is service level

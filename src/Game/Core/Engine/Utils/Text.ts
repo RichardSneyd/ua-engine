@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import Logger from '../../../Logger';
+import Debug from '../Debug';
 
 class Text {
 
@@ -16,7 +16,7 @@ class Text {
         for (let x = 1; x < array.length; x++) {
             result = result + seperator + array[x];
         }
-        // Logger.info(result);
+        // Debug.info(result);
 
         return result;
     }
@@ -41,7 +41,7 @@ class Text {
         for (let x = 0; x < lines.length; x++) {
             let sublines : string[] = lines[x].split(valueAssigner);
 
-            if (sublines.length < 2) Logger.error("error in assigning key value in line: %s", lines[x]);
+            if (sublines.length < 2) Debug.error("error in assigning key value in line: %s", lines[x]);
 
             let vals = sublines[1].trim().split(valueSeperator);
             if (vals.length <= 1) {

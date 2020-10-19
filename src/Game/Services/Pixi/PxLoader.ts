@@ -2,7 +2,7 @@ import { Loader } from 'pixi.js-legacy';
 import 'pixi-spine';
 
 import PxFactory from './PxFactory';
-import Logger from '../../Logger';
+import Debug from '../../Core/Engine/Debug';
 
 class PxLoader {
   private _pxFactory: PxFactory;;
@@ -33,10 +33,10 @@ class PxLoader {
       let image = images[i];
       if (!this._resExists(image)) {
         this._loader.add(image);
-        // Logger.info('added %s to queue', image);
+        // Debug.info('added %s to queue', image);
       }
     }
-   // Logger.info(this._loader.resources);
+   // Debug.info(this._loader.resources);
   }
 
   /**
@@ -45,7 +45,7 @@ class PxLoader {
    * @param jsonUrl ...
    */
   public addSpine(name: string, jsonUrl: string) {
-    Logger.info("adding spine(%s): %s", name, jsonUrl);
+    Debug.info("adding spine(%s): %s", name, jsonUrl);
     if (!this._resExists(name)) {
       this._loader.add(name, jsonUrl);
     }
@@ -57,7 +57,7 @@ class PxLoader {
    */
   private _resExists(url: string): boolean {
     if (this._loader.resources[url]) {
-      Logger.warn(url + ' already exists');
+      Debug.warn(url + ' already exists');
       return true;
     }
     else {
@@ -92,7 +92,7 @@ class PxLoader {
   }
 
   public getTexture(resource: any, frame: any) {
-    // Logger.info('frame: %s', frame);
+    // Debug.info('frame: %s', frame);
     if (frame != null) {
       return resource.frameCustomList[frame];
     } else {

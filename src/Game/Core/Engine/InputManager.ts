@@ -6,7 +6,7 @@ import EventNames from "./EventNames";
 import ScaleManager from "./ScaleManager";
 import KeyCodes from './Keys';
 import KeyListener from "./KeyListener";
-import Logger from "../../Logger";
+import Debug from "./Debug";
 
 class InputManager {
     protected _pointFactory: Point;
@@ -63,7 +63,7 @@ class InputManager {
     }
 
     private _callKeyListenersForAll(listeners: KeyListener[], data: {evt: any}) {
-        // Logger.info('evt: ', data.evt);
+        // Debug.info('evt: ', data.evt);
         for (let l = 0; l < listeners.length; l++) {
             listeners[l].callIfMatch(data);
         }
@@ -124,13 +124,13 @@ class InputManager {
     }
 
     private _onPointerMove(data: any) {
-        //  Logger.info('this: ', this);
+        //  Debug.info('this: ', this);
         this._pointer.x = data.mouseX / this._scaleManager.scaleFactor();
         this._pointer.y = data.mouseY / this._scaleManager.scaleFactor();
         this._pointerMovement.x = data.moveX / this._scaleManager.scaleFactor();
         this._pointerMovement.y = data.moveY / this._scaleManager.scaleFactor();
-        // Logger.info('pointer moved: ', this._pointer);
-        //  Logger.info('data: ', data);
+        // Debug.info('pointer moved: ', this._pointer);
+        //  Debug.info('data: ', data);
     }
 
     private _call(data: any, arr: any[]) {
@@ -149,7 +149,7 @@ class InputManager {
             }
         }
 
-        Logger.error('%s has no listener', data.sprite);
+        Debug.error('%s has no listener', data.sprite);
         return null;
     }
 }
