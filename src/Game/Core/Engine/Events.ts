@@ -1,5 +1,4 @@
 import Logger from "./Logger";
-import EventObject from "./EventObject";
 
 
 class Events {
@@ -11,11 +10,8 @@ class Events {
     private _paused: boolean;
     private _timer: any; // ID of the timer (integer), passed to clearInterval for deletion
     private _step: number;
-    private _eventObject: EventObject;
 
-    constructor(eventObject: EventObject) {
-        this._eventObject = eventObject;
-
+    constructor() {
         this._events = {};
         this._timers = [];
         this._paused = false;
@@ -31,7 +27,7 @@ class Events {
         // listen for multiplayer messages passed down to IFrame from parent
         this._listenMultiplayer();
 
-        //expose EventEmitter on window for testing purposes
+        //log events easily for testing
         Logger.exposeGlobal(this, 'events');
         // emit events easily for testing
         Logger.exposeGlobal(this._trigger, 'emit');
@@ -87,7 +83,7 @@ class Events {
             window.parent.postMessage && window.parent.postMessage(data, '*');
             return;
         }
-        console.warn('data not valid for transmition: ', data);
+        Logger.warn('data not valid for transmition: ', data);
     }
 
     /**
@@ -167,8 +163,8 @@ class Events {
      * @param event the event to emit
      * @param data (optional) data object to pass to the callbacks for the event
      */
-    public fire(event: string, data?: any) {
-        this.callLocal(event, data);
+    public fire(event: string, data: any = {}, multiplayer: boolean = false) {
+        this.callLocal(event, data, multiplayer);
     }
 
     /**
@@ -176,11 +172,12 @@ class Events {
     * @param event the event to emit
     * @param data (optional) data object to pass to the callbacks for the event
     */
-    public emit(event: string, data?: any) {
-        this.callLocal(event, data);
+    public emit(event: string, data: any = {}, multiplayer: boolean = false) {
+        this.callLocal(event, data, multiplayer);
     }
 
-    private _requestCall(event: string, data?: any) {
+    // only for handling call requests from the server/parent window
+    private _requestCall(event: string, data: any = {}) {
         // todo - implement logic to avoid double calls from RISE platform etc
         Logger.info(event, data);
        // debugger;
@@ -192,13 +189,13 @@ class Events {
     * @param event the event to emit
     * @param data (optional) data object to pass to the callbacks for the event
     */
-    public trigger(event: string, data?: any) {
-        this.callLocal(event, data);
+    public trigger(event: string, data: any = {}, multiplayer: boolean = false) {
+        this.callLocal(event, data, multiplayer);
     }
 
-    public callLocal(event: string, data?: any) {
+    public callLocal(event: string, data: any = {}, multiplayer: boolean = false) {
         this._trigger(event, data);
-        this._multiplayerCall(event, data);
+        if(multiplayer) this._multiplayerCall(event, data);
     }
 
     /**
@@ -227,13 +224,12 @@ class Events {
     }
 
     private _trigger(event: string, data: any = null) {
-         Logger.info('triggering %s with data %s', event, data);
-         Logger.breakpoint();
+        // Logger.info('triggering %s with data %s', event, data);
         if (this.eventNames().indexOf(event) !== -1) {
-            let total = this._events[event].listeners.length - 1;
+            let total = this._events[event].length - 1;
             if (total >= 0) {
-                let objs = this.events[event].listeners;
-                //Logger.info('callbacks for %s: ', event, objs);
+                let objs = this.events[event];
+                // Logger.info('callbacks for %s: ', event, objs);
                 for (let x = total; x >= 0; x--) {
                     let obj = objs[x];
 
@@ -241,8 +237,8 @@ class Events {
 
                     obj.callback.bind(obj.context)(data);
                     if (obj.once == true) { // if 'once' is set to true, remove callback
-                        let i = this._events[event].listeners.indexOf(this.events[event].listeners[x]);
-                        this._events[event].listeners.splice(i, 1);
+                        let i = this._events[event].indexOf(this.events[event][x]);
+                        this._events[event].splice(i, 1);
                     }
                 }
             }
@@ -255,13 +251,12 @@ class Events {
         }
     }
 
-    private _addListener(event: string, callback: Function, context: any, once: boolean = false, multiplayer: boolean = true) {
+    private _addListener(event: string, callback: Function, context: any, once: boolean = false) {
         if (this.eventNames().indexOf(event) == -1) {
-
-            this._events[event] = this._eventObject.createNew([], multiplayer);
+            this._events[event] = [];
         }
 
-        this._events[event].listeners.push({ callback: callback, context: context, once: once });
+        this._events[event].push({ callback: callback, context: context, once: once });
     }
 
     private _removeListener(eventName: string, callback: Function, context: any) {
@@ -274,7 +269,7 @@ class Events {
             // let index = event.indexOf(callback);
             if (listener) {
                 //   Logger.info('found a match!! now REMOVING IT with splice..');
-                event.listeners.splice(event.listeners.indexOf(listener), 1);
+                event.splice(event.indexOf(listener), 1);
                 return;
             }
             else {
@@ -290,8 +285,8 @@ class Events {
         let event = this._events[eventName];
         //  Logger.info('looking for callback %s of event %s for object: ', callback, event, context);
         for (let x = 0; x < event.length; x++) {
-            //   console.warn('checking if it matches: ', event[x]);
-            if (event[x].listeners.callback == callback && event[x].listeners.context == context) {
+            //   Logger.warn('checking if it matches: ', event[x]);
+            if (event[x].callback == callback && event[x].context == context) {
                 //   Logger.info('it matches!!');
                 // debugger;
                 return event[x];
@@ -361,9 +356,9 @@ class Events {
         //  return timer;
     }
 
-    private _addEvent(event: string, multiplayer: boolean = true) {
+    private _addEvent(event: string) {
         if (this._eventNames().indexOf(event) == -1) {
-            this._events[event] = {listeners: [], multiplayer: multiplayer};
+            this._events[event] = [];
         }
         else {
             Logger.warn('event %s already exists, so cannot be added', event);
