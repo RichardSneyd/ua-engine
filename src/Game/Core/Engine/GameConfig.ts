@@ -1,4 +1,4 @@
-import Logger from "./Logger";
+import Debug from "./Debug";
 
 class GameConfig {
   private _data: any;
@@ -10,7 +10,7 @@ class GameConfig {
 
   get data(): any {
     if (!this._initialized) {
-      Logger.error("Can not access config before initializing it!");
+      Debug.error("Can not access config before initializing it!");
       return null;
     } else {
       return this._data;

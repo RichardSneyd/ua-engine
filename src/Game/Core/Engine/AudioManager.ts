@@ -1,7 +1,7 @@
 import Loader from './Loader';
 import HwPlayer from '../../Services/Howler/HwPlayer';
 import Events from './Events';
-import Logger from './Logger';
+import Debug from './Debug';
 
 class AudioManager {
 
@@ -37,11 +37,11 @@ class AudioManager {
         let res = this._loader.getResource(name, true);
         if (res !== null) {
             this._hwPlayer.play(name, res, () => {
-                //   Logger.info('callback received for %s in AudioManager', _name)
+                //   Debug.info('callback received for %s in AudioManager', _name)
                 this._playing.splice(this._playing.indexOf(name), 1);
                 onStop();
             }, loop);
-        } else Logger.error("no resource named ", name);
+        } else Debug.error("no resource named ", name);
 
     }
 
@@ -53,7 +53,7 @@ class AudioManager {
     public playInstructionArr(arr: string[], onDone: Function) {
         this._stopInstPlaying(); // clean the palette
         this._instArr = arr; // new instructional array
-        //   Logger.info('playInstructionalArr called..');
+        //   Debug.info('playInstructionalArr called..');
         //   debugger;
         
         this._playInstruction(0, onDone);
@@ -126,7 +126,7 @@ class AudioManager {
         this._instPlaying = _name;
         this.play(_name, () => {
             _i++;
-            //  Logger.log('playing %s, at position %s, time: %s', _name, _i, new Date().getMilliseconds());
+            //  Debug.log('playing %s, at position %s, time: %s', _name, _i, new Date().getMilliseconds());
             if (_i < this._instArr.length) {
                 this._playInstruction(_i, onDone);
 

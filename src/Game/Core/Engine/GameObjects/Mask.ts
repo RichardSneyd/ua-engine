@@ -1,6 +1,6 @@
 import IObjectHandler from '../../../Services/IObjectHandler';
 import IScreen from '../../../Services/IScreen';
-import Logger from '../Logger';
+import Debug from '../Debug';
 
 class Mask {
   private _objectHandler: IObjectHandler; _screen: IScreen;
@@ -69,7 +69,7 @@ class Mask {
     this._width = width;
     this._height = height;
 
-    Logger.info("addin mask ", x, y, width, height);
+    Debug.info("addin mask ", x, y, width, height);
 
     this._data = this._screen.createGraphics(x, y, width, height);
     this._initialized = true;

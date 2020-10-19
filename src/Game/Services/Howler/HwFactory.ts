@@ -6,13 +6,13 @@ class HwFactory {
   }
 
   createHowl(url: string, extensions: string[], onLoad: Function): Howl {
-    // Logger.info('in HwFactory.createHowl....')
+    // Debug.info('in HwFactory.createHowl....')
     let _src = [];
-    // Logger.info(extensions);
+    // Debug.info(extensions);
     for(let x = 0; x < extensions.length; x++){
       _src.push(url + '.' + extensions[x]);
     }
-    // Logger.info(_src);
+    // Debug.info(_src);
     return new Howl({
       src: _src,
       autoplay: false,

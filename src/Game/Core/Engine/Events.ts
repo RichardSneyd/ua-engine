@@ -1,4 +1,4 @@
-import Logger from "./Logger";
+import Debug from "./Debug";
 
 class Events {
     private _events: any;
@@ -27,9 +27,9 @@ class Events {
         this._listenMultiplayer();
 
         //log events easily for testing
-        Logger.exposeGlobal(this, 'events');
+        Debug.exposeGlobal(this, 'events');
         // emit events easily for testing
-        Logger.exposeGlobal(this._trigger, 'emit');
+        Debug.exposeGlobal(this._trigger, 'emit');
     }
 
     get events() {
@@ -78,11 +78,11 @@ class Events {
      */
     private _postToRise(data: any) {
         if (data && data.behavior) {
-            Logger.info('sending data:', data);
+            Debug.info('sending data:', data);
             window.parent.postMessage && window.parent.postMessage(data, '*');
             return;
         }
-        Logger.warn('data not valid for transmition: ', data);
+        Debug.warn('data not valid for transmition: ', data);
     }
 
     /**
@@ -178,7 +178,7 @@ class Events {
     // only for handling call requests from the server/parent window
     private _requestCall(event: string, data: any = {}) {
         // todo - implement logic to avoid double calls from RISE platform etc
-        Logger.info(event, data);
+        Debug.info(event, data);
        // debugger;
         this._trigger(event, data);
     }
@@ -223,16 +223,16 @@ class Events {
     }
 
     private _trigger(event: string, data: any = null) {
-        // Logger.info('triggering %s with data %s', event, data);
+        // Debug.info('triggering %s with data %s', event, data);
         if (this.eventNames().indexOf(event) !== -1) {
             let total = this._events[event].length - 1;
             if (total >= 0) {
                 let objs = this.events[event];
-                // Logger.info('callbacks for %s: ', event, objs);
+                // Debug.info('callbacks for %s: ', event, objs);
                 for (let x = total; x >= 0; x--) {
                     let obj = objs[x];
 
-              //      Logger.info('about to attempt callback for %s with context: ', event, obj.context);
+              //      Debug.info('about to attempt callback for %s with context: ', event, obj.context);
 
                     obj.callback.bind(obj.context)(data);
                     if (obj.once == true) { // if 'once' is set to true, remove callback
@@ -242,11 +242,11 @@ class Events {
                 }
             }
             else {
-                Logger.warn('event %s exists, but has no callbacks', event);
+                Debug.warn('event %s exists, but has no callbacks', event);
             }
         }
         else {
-            Logger.warn('event %s does not exist, so cannot be triggered', event);
+            Debug.warn('event %s does not exist, so cannot be triggered', event);
         }
     }
 
@@ -259,41 +259,41 @@ class Events {
     }
 
     private _removeListener(eventName: string, callback: Function, context: any) {
-        //  Logger.info('requesting remove listener from %s: ', eventName, callback);
+        //  Debug.info('requesting remove listener from %s: ', eventName, callback);
         //    debugger;
         if (this.eventNames().indexOf(eventName) !== -1) {
             let listener = this._findListener(eventName, callback, context);
             let event = this._events[eventName];
-            //  Logger.info('event exists: ', event);
+            //  Debug.info('event exists: ', event);
             // let index = event.indexOf(callback);
             if (listener) {
-                //   Logger.info('found a match!! now REMOVING IT with splice..');
+                //   Debug.info('found a match!! now REMOVING IT with splice..');
                 event.splice(event.indexOf(listener), 1);
                 return;
             }
             else {
-                Logger.warn("cannot remove a listener for %s with context of %s that doesn't exist: %s", eventName, context, callback);
+                Debug.warn("cannot remove a listener for %s with context of %s that doesn't exist: %s", eventName, context, callback);
             }
         }
         else {
-            Logger.warn('event %s does not exist, cannot remove callback', eventName);
+            Debug.warn('event %s does not exist, cannot remove callback', eventName);
         }
     }
 
     private _findListener(eventName: string, callback: Function, context: any): { callback: Function, context: any, once: boolean } | undefined {
         let event = this._events[eventName];
-        //  Logger.info('looking for callback %s of event %s for object: ', callback, event, context);
+        //  Debug.info('looking for callback %s of event %s for object: ', callback, event, context);
         for (let x = 0; x < event.length; x++) {
-            //   Logger.warn('checking if it matches: ', event[x]);
+            //   Debug.warn('checking if it matches: ', event[x]);
             if (event[x].callback == callback && event[x].context == context) {
-                //   Logger.info('it matches!!');
+                //   Debug.info('it matches!!');
                 // debugger;
                 return event[x];
             }
         }
 
-        Logger.warn("cannot find a listener for %s with context of %s that looks like: %s", eventName, context, callback);
-        Logger.info(`${eventName} listeners: `, event);
+        Debug.warn("cannot find a listener for %s with context of %s that looks like: %s", eventName, context, callback);
+        Debug.info(`${eventName} listeners: `, event);
         // debugger;
     }
 
@@ -306,7 +306,7 @@ class Events {
             this._timers.splice(this._timers.indexOf(timer), 1);
         }
         else {
-            Logger.warn('timer to remove is null: ', timer);
+            Debug.warn('timer to remove is null: ', timer);
         }
     }
     /**
@@ -328,7 +328,7 @@ class Events {
             }
         }
 
-        Logger.warn('no timer found for: ', callback);
+        Debug.warn('no timer found for: ', callback);
         return null;
     }
 
@@ -360,7 +360,7 @@ class Events {
             this._events[event] = [];
         }
         else {
-            Logger.warn('event %s already exists, so cannot be added', event);
+            Debug.warn('event %s already exists, so cannot be added', event);
         }
     }
 

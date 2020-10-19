@@ -149,7 +149,7 @@ class ContainerObject implements IGameObject {
      * @param y the y value. If no y value is provided, the x value will be used for y as well.
      */
     public setOrigin(x: number, y?: number) {
-        // Logger.info('setOrigin this: ', this);
+        // Debug.info('setOrigin this: ', this);
         let yVal: number;
         let xVal = x;
         if (y !== undefined) {

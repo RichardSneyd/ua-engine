@@ -1,6 +1,6 @@
 import Events from '../Engine/Events';
 import FunObj from '../Data/FunObj';
-import Logger from './Logger';
+import Debug from './Debug';
 
 class Loop {
   private _funObj: FunObj;
@@ -38,9 +38,9 @@ class Loop {
     if (fObj == null) {
       let o = this._newFunObj(f, context);
       this._fList.push(o);
-      Logger.info(`%csuccessfully added listener with context %s to Loop`, 'color:green', context);
+      Debug.info(`%csuccessfully added listener with context %s to Loop`, 'color:green', context);
     } else {
-      Logger.error("trying to add function %s twice with identical context: ", f, context);
+      Debug.error("trying to add function %s twice with identical context: ", f, context);
     }
   }
 
@@ -50,14 +50,14 @@ class Loop {
    * @param context the context of the function to remove (required to find the exact function of exact objectc)
    */
   public removeFunction(f: Function, context: any) {
-    Logger.info(this._fList);
+    Debug.info(this._fList);
     let i = this._getFunObj(f, context);
 
     if (i != null) {
       this._fList.splice(this._fList.indexOf(i), 1);
-      Logger.info(`%cremoved listener with context %s`, 'color:green', context);
+      Debug.info(`%cremoved listener with context %s`, 'color:green', context);
     } else {
-      Logger.warn("Did not find loop listener with context %s, so cannot remove", context);
+      Debug.warn("Did not find loop listener with context %s, so cannot remove", context);
     }
   }
 
@@ -69,19 +69,19 @@ class Loop {
   }
 
   private _executeAll(time: number) {
-    // Logger.info('execute all.. at %s: ', new Date().getTime(), this._fList);
+    // Debug.info('execute all.. at %s: ', new Date().getTime(), this._fList);
     if (this._paused == 1) {
       this._delay = this._oldDelay + (time - this._lastTime);
-      // Logger.info("delay %s", this._delay);
+      // Debug.info("delay %s", this._delay);
     } else if (this._paused == 2) {
       this._paused = 1;
       this._oldDelay = this._delay;
       this._lastTime = time;
     } else if (this._paused == 0) {
 
-      // Logger.info('fList length: ', this._fList.length);
+      // Debug.info('fList length: ', this._fList.length);
       for (let c = 0; c < this._fList.length; c++) {
-        // Logger.info('exec loop callback %s', c);
+        // Debug.info('exec loop callback %s', c);
         this._fList[c].execute(time - this._delay);
       }
 
@@ -103,7 +103,7 @@ class Loop {
       if (f == this._fList[c].function && this._fList[c].context == context) return this._fList[c];
     }
 
-    Logger.warn("Did not find loop listener with context %", context);
+    Debug.warn("Did not find loop listener with context %", context);
     return null;
   }
 

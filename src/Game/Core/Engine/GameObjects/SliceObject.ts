@@ -27,7 +27,7 @@ class SliceObject implements IGameObject {
         this._core.data = this._screen.createNineSlice(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight);
         /*  this.data.x = x;
          this.data.y = y; */
-        // Logger.info('boudns before calc', this._data.getBounds());
+        // Debug.info('boudns before calc', this._data.getBounds());
         this.data.calculateBounds();
 
         this._core.init(this, x, y, textureName, this._update);

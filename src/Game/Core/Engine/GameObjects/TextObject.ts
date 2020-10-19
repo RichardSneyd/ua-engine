@@ -8,7 +8,7 @@ import InputHandler from "./Components/InputHandler";
 import ScaleHandler from "./Components/ScaleHandler";
 import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
-import Logger from "../Logger";
+import Debug from "../Debug";
 
 class TextObject implements IGameObject {
     private _screen: IScreen;
@@ -78,7 +78,7 @@ class TextObject implements IGameObject {
 
     set text(lett: string) {
         if (this._letters == '$$$$____$$$$') {
-            Logger.error("this is not a text ObjectCore, can't change letters!");
+            Debug.error("this is not a text ObjectCore, can't change letters!");
         } else {
             this._letters = lett;
         }
@@ -94,7 +94,7 @@ class TextObject implements IGameObject {
 
     get text(): string {
         if (this._letters == '$$$$____$$$$') {
-            Logger.error("this is not a text ObjectCore, can't change letters!");
+            Debug.error("this is not a text ObjectCore, can't change letters!");
             return '';
         } else {
             return this._letters;
