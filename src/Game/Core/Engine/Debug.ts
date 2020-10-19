@@ -12,8 +12,8 @@ class Debug {
             let files = stack.match(/\w+\.ts|\w+\.js/g);
             files = (files) ? files : [];
 
-            if (files.length > 2) {
-                Debug._source = files[2];
+            if (files.length > 4) {
+                Debug._source = files[4];
             }
         }
 
