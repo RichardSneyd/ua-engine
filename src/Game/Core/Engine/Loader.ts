@@ -144,14 +144,33 @@ class Loader {
    */
   public addAtlas(name: string):  Loader {
     // handles atlas at PxLoader level, added just the same as image resource, except with .json ext instead of .img ....
+    if(name.indexOf('.jpg') != -1) Debug.error('addAtlas requires .json file extension, not .jpg');
+    if(name.indexOf('.png') != -1) Debug.error('addAtlas requires .json file extension, not .png');
+    if(name.indexOf('.json') == -1) name = name + '.json';
     this.addImage(name);
     return this;
   }
 
   /**
+   * @description a loop which adds an array of Atlas files by name.
+   * @param names an array of the names of the atlas files to load. If the name does not include '.json' at the end, this will be appended automatically.
+   */
+  public addAtlases(names: string[]) : Loader {
+    for(let x = 0; x < names.length; x++){
+      let _name = names[x];
+      this.addAtlas(_name);
+    }
+
+    return this;
+  }
+
+
+  /**
    * @description add a spine file to the load queue - must include .json extension
+   * @param name if name does not include '.json' at the end, this will be automatically appended
    */
   public addSpine(name: string) : Loader {
+    if(name.indexOf('.json') == -1) name = name + '.json';
     let url = this._getPath().spn + name;
     if (this._getResource(url, false) == null) {
       let res = this._createResource();
@@ -163,6 +182,19 @@ class Loader {
       return this;
     }
     Debug.warn('did not add %s spine, as it already exists', name);
+    return this;
+  }
+
+  /**
+   * @description a loop which adds an array of spine files by name.
+   * @param names an array of the names of the spine files to load. If the name does not include '.json' at the end, this will be appended automatically.
+   */
+  public addSpines(names: string[]) : Loader {
+    for(let x = 0; x < names.length; x++){
+      let _name = names[x];
+      this.addSpine(_name);
+    }
+
     return this;
   }
 
