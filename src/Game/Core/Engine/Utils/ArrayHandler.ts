@@ -1,6 +1,5 @@
 import Logger from "../Logger";
 
-
 class ArrayHandler {
   constructor() {
 

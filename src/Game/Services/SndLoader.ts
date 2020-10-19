@@ -2,7 +2,6 @@ import ISndLoader from './ISndLoader';
 import HwLoader from './Howler/HwLoader';
 import Logger from '../Core/Engine/Logger';
 
-
 class SndLoader implements ISndLoader {
     private _loader: HwLoader;
     private _baseURL: string;

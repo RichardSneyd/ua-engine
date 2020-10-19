@@ -1,6 +1,5 @@
 import Logger from "./Logger";
 
-
 class GameConfig {
   private _data: any;
   private _initialized: boolean;

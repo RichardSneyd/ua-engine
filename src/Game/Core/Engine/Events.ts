@@ -1,6 +1,5 @@
 import Logger from "./Logger";
 
-
 class Events {
     private _events: any;
     private _timers: any;
