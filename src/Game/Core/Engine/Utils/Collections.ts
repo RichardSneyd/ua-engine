@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import Logger from '../Logger';
+import Debug from '../Debug';
 
 class Collections {
 
@@ -9,12 +9,12 @@ class Collections {
     public findArrElWithPropVal(array: any[], properties: string[], values: string | number[]): any {
         let row: any = null;
         if (Array.isArray(array)) {
-            // Logger.warn('isArray');
+            // Debug.warn('isArray');
             elements: for (let x = 0; x < array.length; x++) {
                 props: for (let y = 0; y < properties.length; y++) {
-                    // Logger.warn(array[x][properties[y]] + ', ' + values[y]);
+                    // Debug.warn(array[x][properties[y]] + ', ' + values[y]);
                     if (array[x][properties[y]] === values[y]) {
-                        // Logger.warn('matching pair at ' + y);
+                        // Debug.warn('matching pair at ' + y);
                         if (y == properties.length - 1) {
                             row = array[x];
                             break elements;
@@ -32,9 +32,9 @@ class Collections {
                 for (let y = 0; y < properties.length; y++) {
     
                     if (array[x][properties[y]] == values[y]) {
-                        // Logger.warn('matching pair at ' + y);
+                        // Debug.warn('matching pair at ' + y);
                         if (y == properties.length - 1) {
-                            // Logger.warn('found FULL match!');
+                            // Debug.warn('found FULL match!');
                             row = array[x];
                             break elements;
                         }
@@ -44,7 +44,7 @@ class Collections {
         }
 
         if (row == null) {
-            Logger.warn('no match found for ' + properties.toString() + " & " + values.toString());
+            Debug.warn('no match found for ' + properties.toString() + " & " + values.toString());
         }
 
         return row;
@@ -57,9 +57,9 @@ class Collections {
             for (let y = 0; y < properties.length; y++) {
 
                 if (array[x][properties[y]] == values[y]) {
-                    // Logger.warn('matching pair at ' + y);
+                    // Debug.warn('matching pair at ' + y);
                     if (y == properties.length - 1) {
-                        // Logger.warn('found FULL match!');
+                        // Debug.warn('found FULL match!');
                         row = array[x];
                         break elements;
                     }
@@ -69,7 +69,7 @@ class Collections {
         }
 
         if (row == null) {
-            Logger.warn('no match found for ' + properties.toString() + " & " + values.toString());
+            Debug.warn('no match found for ' + properties.toString() + " & " + values.toString());
         }
 
         return row;
@@ -104,7 +104,7 @@ class Collections {
                 }
             }
         } else {
-            Logger.error('wrong type provided; array or object required');
+            Debug.error('wrong type provided; array or object required');
         }
         return count;
     }
@@ -112,10 +112,10 @@ class Collections {
     public allElementsWithPropVal(array: any[], properties: string[], values: any[]): any[] {
         let all: any[] = [];
         if (Array.isArray(array)) {
-            // Logger.info('isArray');
+            // Debug.info('isArray');
             elements: for (let x = 0; x < array.length; x++) {
                 props: for (let y = 0; y < properties.length; y++) {
-                    // Logger.info(array[x][properties[y]] + ', ' + values[y]);
+                    // Debug.info(array[x][properties[y]] + ', ' + values[y]);
                     if (array[x][properties[y]] === values[y]) {
                         if (y == properties.length - 1) {
                             all.push(array[x]);
@@ -139,7 +139,7 @@ class Collections {
                 }
             }
         } else {
-            Logger.error('wrong type provided; array or object required');
+            Debug.error('wrong type provided; array or object required');
         }
         return all;
     }
@@ -153,7 +153,7 @@ class Collections {
                 }
             }
             else {
-                Logger.warn('no col with name ' + arrs[x]);
+                Debug.warn('no col with name ' + arrs[x]);
             }
         }
 

@@ -53,7 +53,7 @@ class CalculateDeps {
         let path3 = "../../" + path2.substr(path2.indexOf('src'), path2.length);
         path3 = path3.replace(/\\/g, "/");
 
-        //console.log(path3);
+        //Debug.info(path3);
 
         importstatement += "import " + mod.name + " from '" + path3 + "';\n";
       }
@@ -209,7 +209,7 @@ class CalculateDeps {
     for (let c = 0; c < this._singles.length; c++) {
       let single = this._singles[c];
 
-      //console.log("lhs(%s) == rhs(%s)", name, single);
+      //Debug.info("lhs(%s) == rhs(%s)", name, single);
 
       if (name == single) return true;
     }

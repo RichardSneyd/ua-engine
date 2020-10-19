@@ -1,5 +1,5 @@
 import { Application, Sprite, DisplayObject, Texture, RenderTexture } from 'pixi.js-legacy';
-import Logger from '../Core/Engine/Logger';
+import Debug from '../Core/Engine/Debug';
 
 import IScreen from '../Services/IScreen';
 import PxGame from '../Services/Pixi/PxGame';
@@ -10,7 +10,7 @@ class Screen implements IScreen {
   constructor(pxGame: PxGame) {
     this._pxGame = pxGame;
 
-    Logger.info("a screen has been createed!");
+    Debug.info("a screen has been createed!");
   }
 
   public createScreen(width: number, height: number, elementId: string): void {

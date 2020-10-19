@@ -6,7 +6,7 @@ import Geom from "../../Geom/Geom";
 import GameConfig from "../GameConfig";
 import InputManager from "../InputManager";
 import TweenComponent from "./Components/TweenComponent";
-import Logger from "../Logger";
+import Debug from "../Debug";
 
 class Camera {
     protected _math: MathUtils;
@@ -36,7 +36,7 @@ class Camera {
         this._y = 0;
         //  this._zoom = 1;
         this._initialized = false;
-        Logger.exposeGlobal(this, 'camera');
+        Debug.exposeGlobal(this, 'camera');
     }
 
     get tween() {
@@ -174,7 +174,7 @@ class Camera {
      * @description Pivot point of camera
      */
     set pivot(pivot: { x: number, y: number }) {
-        // Logger.info('set pivot...');
+        // Debug.info('set pivot...');
         this._pivot = this._pivot.createNew(this._math.clamp(pivot.x, 0, 1), this._math.clamp(pivot.y, 0, 1));
         this._updateContOrigin();
         // this.x = this._x;
@@ -184,7 +184,7 @@ class Camera {
     setPivot(x: number, y?: number) {
         if (y == undefined) y = x;
         this.pivot = { x: x, y: y }
-        Logger.info('pivot: ', this.pivot);
+        Debug.info('pivot: ', this.pivot);
     }
 
     get center(): { x: number, y: number } {
@@ -204,10 +204,10 @@ class Camera {
     }
 
     _updateContOrigin() {
-        Logger.info('camera.centerX: ', this.centerX, ' camera.centerY: ', this.centerY);
+        Debug.info('camera.centerX: ', this.centerX, ' camera.centerY: ', this.centerY);
         let originX = ((this.pivotPoint.x / this._container.width));
         let originY = ((this.pivotPoint.y / this._container.height));
-        Logger.info('origin x: ', originX, ', y: ', originY);
+        Debug.info('origin x: ', originX, ', y: ', originY);
         this._container.setOrigin(originX, originY);
     }
 

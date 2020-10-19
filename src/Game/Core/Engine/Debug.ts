@@ -1,43 +1,43 @@
 import LogLevel from "./LogLevel";
 
-class Logger {
+class Debug {
     private static _LEVELS = LogLevel;
     private static _source: string = '';
     private static _previousSource: string = '';
     private static _level: number = LogLevel.INFO;
 
     private static _identifyLogSource(): string {
-        if (!Logger._source) {
+        if (!Debug._source) {
             let stack = Error().stack + '';
             let files = stack.match(/\w+\.ts|\w+\.js/g);
             files = (files) ? files : [];
 
             if (files.length > 2) {
-                Logger._source = files[2];
+                Debug._source = files[2];
             }
         }
 
-        let source = Logger._source;
-        Logger._source = '';
+        let source = Debug._source;
+        Debug._source = '';
         return source;
     }
 
     /**
-     * @description Returns all levels this Logger can be set to
+     * @description Returns all levels this Debug can be set to
      */
     public static get LEVELS() {
-        return Logger._LEVELS;
+        return Debug._LEVELS;
     }
 
     /**
      * @description Set a group text instead of the default one
      * @param source string to set as message group
-     * @returns Logger, to allow chain a print method after
+     * @returns Debug, to allow chain a print method after
      */
-    public static source(source: string): Logger {
-        Logger._source = source;
+    public static source(source: string): Debug {
+        Debug._source = source;
 
-        return Logger;
+        return Debug;
     }
 
     /**
@@ -45,17 +45,17 @@ class Logger {
      * @param level from the LogLevel enum, ERROR, WARNING or INFO
      */
     public static setLevel(level: number) {
-        Logger._level = level;
+        Debug._level = level;
 
-        Logger.info
+        Debug.info
     }
 
     private static _setGroup() {
-        let groupName = Logger._identifyLogSource();
-        if (groupName != Logger._previousSource) {
+        let groupName = Debug._identifyLogSource();
+        if (groupName != Debug._previousSource) {
             console.groupEnd();
             console.group(groupName);
-            Logger._previousSource = groupName;
+            Debug._previousSource = groupName;
         }
     }
 
@@ -64,8 +64,8 @@ class Logger {
      * @param args one or more arguments, any type
      */
     static get info() {
-        if (Logger._level >= LogLevel.INFO) {
-            Logger._setGroup();
+        if (Debug._level >= LogLevel.INFO) {
+            Debug._setGroup();
             return console.log.bind(console);
         }
         return () => {};
@@ -76,8 +76,8 @@ class Logger {
      * @param args one or more arguments, any type
      */
     static get error() {
-        if (Logger._level >= LogLevel.ERROR) {
-            Logger._setGroup();
+        if (Debug._level >= LogLevel.ERROR) {
+            Debug._setGroup();
             return console.error.bind(console);
         }
         return () => {};
@@ -88,8 +88,8 @@ class Logger {
      * @param args one or more arguments, any type
      */
     static get warn() {
-        if (Logger._level >= LogLevel.WARNING) {
-            Logger._setGroup();
+        if (Debug._level >= LogLevel.WARNING) {
+            Debug._setGroup();
             return console.warn.bind(console);
         }
         return () => {};
@@ -100,8 +100,8 @@ class Logger {
      * @param args one or more arguments, any type
      */
     static get trace() {
-        if (Logger._level >= LogLevel.INFO) {
-            Logger._setGroup();
+        if (Debug._level >= LogLevel.INFO) {
+            Debug._setGroup();
             return console.trace.bind(console);
         }
         return () => {};
@@ -112,7 +112,7 @@ class Logger {
      * @returns boolean, true if log level is greater than error
      */
     public static get devEnvironment() {
-        return (Logger._level > LogLevel.ERROR);
+        return (Debug._level > LogLevel.ERROR);
     }
 
     /**
@@ -121,16 +121,16 @@ class Logger {
      * @param label key to locate the object on the window
      */
     public static exposeGlobal(object: any, label: string) {
-        if (Logger.devEnvironment) {
+        if (Debug.devEnvironment) {
             (<any>window)[label] = object;
         }
     }
 
     /**
-     * @description Call the debugging function (if available)
+     * @description Call the 'debugger' keyword/function (if available. effectively a breakpoint)
      */
     public static breakpoint() {
-        if (Logger.devEnvironment) {
+        if (Debug.devEnvironment) {
             debugger;
         }
     }
@@ -140,19 +140,19 @@ class Logger {
 
 
     /**
-     * @description Returns all levels this Logger can be set to
+     * @description Returns all levels this Debug can be set to
      */
     public get LEVELS() {
-        return Logger.LEVELS;
+        return Debug.LEVELS;
     }
 
     /**
      * @description Set a group text instead of the default one
      * @param source string to set as message group
-     * @returns Logger, to allow chain a print method after
+     * @returns Debug, to allow chain a print method after
      */
-    public source(source: string): Logger {
-        Logger.source(source);
+    public source(source: string): Debug {
+        Debug.source(source);
 
         return this;
     }
@@ -162,7 +162,7 @@ class Logger {
      * @param level from the LogLevel enum, ERROR, WARNING or INFO
      */
     public setLevel(level: number) {
-        Logger.setLevel(level);
+        Debug.setLevel(level);
     }
 
     /**
@@ -170,7 +170,7 @@ class Logger {
      * @param args one or more arguments, any type
      */
     get info() {
-        return Logger.info;
+        return Debug.info;
     };
 
     /**
@@ -178,7 +178,7 @@ class Logger {
      * @param args one or more arguments, any type
      */
     get error() {
-        return Logger.error;
+        return Debug.error;
     };
 
     /**
@@ -186,7 +186,7 @@ class Logger {
      * @param args one or more arguments, any type
      */
     get warn() {
-        return Logger.warn;
+        return Debug.warn;
     };
 
     /**
@@ -194,7 +194,7 @@ class Logger {
      * @param args one or more arguments, any type
      */
     get trace() {
-        return Logger.trace;
+        return Debug.trace;
     }
 
     /**
@@ -202,7 +202,7 @@ class Logger {
      * @returns boolean, true if log level is greater than error
      */
     public get devEnvironment() {
-        return Logger.devEnvironment;
+        return Debug.devEnvironment;
     }
 
     /**
@@ -211,15 +211,15 @@ class Logger {
      * @param label key for the object on the window
      */
     public exposeGlobal(object: any, label: string) {
-        Logger.exposeGlobal(object, label);
+        Debug.exposeGlobal(object, label);
     }
 
     /**
      * @description Call the debugging function (if available)
      */
     public breakpoint() {
-        Logger.breakpoint();
+        Debug.breakpoint();
     }
 }
 
-export default Logger;
+export default Debug;
