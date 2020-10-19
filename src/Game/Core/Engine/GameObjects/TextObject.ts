@@ -8,7 +8,7 @@ import InputHandler from "./Components/InputHandler";
 import ScaleHandler from "./Components/ScaleHandler";
 import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
-import Logger from "../../../Logger";
+import Logger from "../Logger";
 
 class TextObject implements IGameObject {
     private _screen: IScreen;

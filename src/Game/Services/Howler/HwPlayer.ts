@@ -1,7 +1,7 @@
 import Loader from '../../Core/Engine/Loader';
 import { Howl } from 'howler';
 import Resource from '../../Core/Data/Resource';
-import Logger from '../../Logger';
+import Logger from '../../Core/Engine/Logger';
 
 class HwPlayer {
     private _loader: Loader;

@@ -4,7 +4,7 @@ import IGameObject from '../IGameObject';
 import IFrameAnimatedGameObject from '../IFrameAnimatedGameObject';
 import Loader from '../../Loader';
 import ObjectCore from './ObjectCore';
-import Logger from '../../../../Logger';
+import Logger from '../../Logger';
 
 
 class FrameAnimationManager implements IAnimationManager {

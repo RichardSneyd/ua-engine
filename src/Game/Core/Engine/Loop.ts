@@ -1,6 +1,6 @@
 import Events from '../Engine/Events';
 import FunObj from '../Data/FunObj';
-import Logger from '../../Logger';
+import Logger from './Logger';
 
 class Loop {
   private _funObj: FunObj;

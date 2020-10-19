@@ -1,4 +1,4 @@
-import Logger from "../../Logger";
+import Logger from "./Logger";
 
 class GameConfig {
   private _data: any;

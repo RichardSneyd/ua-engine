@@ -6,7 +6,7 @@ import Geom from "../../Geom/Geom";
 import GameConfig from "../GameConfig";
 import InputManager from "../InputManager";
 import TweenComponent from "./Components/TweenComponent";
-import Logger from "../../../Logger";
+import Logger from "../Logger";
 
 class Camera {
     protected _math: MathUtils;
