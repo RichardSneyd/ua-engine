@@ -30,12 +30,12 @@ class Editor implements IActivity {
     }
     
     startActivity(scriptName: string): void {
-        this._game.loadLevel(this._scene, 'placeholder_text');
+        this._game.loadLevel(this._scene, scriptName);
     }
 
     public launch(){
         // launch editor...
-        this._game.startActivity(this, null); // call the activity (engine will call Editor.startActivity in return, which will call game.loadLevel)
+        this._game.startActivity(this, 'no_script'); // call the activity (engine will call Editor.startActivity in return, which will call game.loadLevel)
     }
 }
 
