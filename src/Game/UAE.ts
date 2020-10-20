@@ -11,6 +11,7 @@ import Utils from './Core/Engine/Utils/Utils';
 import Transitions from './Core/Engine/Transitions';
 import TweenManager from './Core/Engine/TweenManager';
 import Debug from './Core/Engine/Debug';
+import Editor from './Core/Engine/Editor/Editor';
 
 /**
  * @description The UAEngine API. 
@@ -29,6 +30,7 @@ class UAE {
   public static tween: TweenManager;
   public static transitions = Transitions;
   public static debug: Debug;
+  public static editor: Editor;
 }
 
 export default UAE;
