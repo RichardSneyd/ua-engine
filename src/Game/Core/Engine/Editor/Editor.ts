@@ -28,7 +28,6 @@ class Editor implements IActivity {
     get code() {
         return this._code;
     }
-
     
     startActivity(scriptName: string): void {
         this._game.loadLevel(this._scene, 'placeholder_text');
