@@ -27,8 +27,14 @@ class ParentChildHandler implements IParentChild{
     }
 
     set parent(parent: IGameObject | null) {
-        this._parent = parent;
-      //  this._go.scaleHandler.onResize();
+        if(parent !== null){
+            if(this._parent){this._parent.removeChild(this._go)}
+            this._parent = parent;
+            if(this._parent){
+                if(!this._parent.hasChild(this._go)) this._parent.addChild(this._go); // addChild if it isn't already one
+            }
+          //  this._go.scaleHandler.onResize();
+        }
     }
 
     get children() {
@@ -52,6 +58,7 @@ class ParentChildHandler implements IParentChild{
 
     addChild(object: IGameObject): boolean {
         if (!this.hasChild(object)) {
+            if(object.parent && object.parent !== this._go) object.parent.removeChild(object);
             this._children.push(object);
             object.parent = this._go;
 
