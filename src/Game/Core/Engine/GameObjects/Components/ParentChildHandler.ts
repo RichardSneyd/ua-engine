@@ -58,9 +58,11 @@ class ParentChildHandler implements IParentChild{
 
     addChild(object: IGameObject): boolean {
         if (!this.hasChild(object)) {
-            if(object.parent && object.parent !== this._go) object.parent.removeChild(object);
-            this._children.push(object);
-            object.parent = this._go;
+            if(object.parent && object.parent !== this._go) {
+                object.parent.removeChild(object);
+                object.parent = this._go;
+                this._children.push(object);
+            }
 
             // added this condition because text objects hold their Px data 1 level deeper, due to custom PxText class
             let child;
@@ -88,7 +90,7 @@ class ParentChildHandler implements IParentChild{
             else {
                 this.core.data.removeChild(object.data);
             }
-            object.parent = null;
+            if(object.parent !== null) object.parent = null;
             this._children.splice(this._children.indexOf(object), 1);
             return;
         }
