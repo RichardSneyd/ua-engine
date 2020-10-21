@@ -14,6 +14,11 @@ class Expose {
    // (<any>window).UAE = (<any> window).UAE_1['default'];
   }
 
+  /**
+   * @description add an object to UAE (accessible through API at UAE.myObjectName)
+   * @param key 
+   * @param object 
+   */
   add(key: string, object: any) {
     (<any>window).UAE["default"][key] = object;
   }

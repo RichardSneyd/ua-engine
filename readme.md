@@ -308,6 +308,20 @@ UAE.debug.info('log to console');
 UAE.debug.exposeGlobal('myObjectName', myObject);
 // etc....
 ```
-
-
-
+## Code Documentation
+Remember to document all classes and public methods that are added to the engine, including the @description and @param tags where appropriate. Type of parameters is inferred, and does not need to be defined in the tag. For example:
+```typescript
+/**
+ * @description always provide a description tag for the class itself
+ */
+class SomeClass {
+  /**
+   * @description and provide a description tag for all public methods, also.
+   * @param par1 provide a param tag for each unique parameter. Type is infered by compiler.
+   * @param par2 provide a param tag for each unique parameter. Type is infered by compiler.
+   */
+  someMethod(par1: any, par2: any) {
+    // do something...
+  }
+}
+```
