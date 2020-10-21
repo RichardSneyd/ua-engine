@@ -300,4 +300,25 @@ class Background {
 export default Background;
 ```
 
+## Debugging
+Within engine classes, all debugging should be handled through the Debug static members (that means NO direct calls to console at all)
+```typescript
+Debug.info('log to console'); // does the exact same thing as console.log(), and even gives correct file name and line from source map
+Debug.warn('warn about something');
+Debug.error('throw an error message');
+Debug.trace('trace a call');
+```
+Debug should also be used to expose an object on the window for debugging purposes (as this can be easily switched off for production)
+```typescript
+  (<any>window).myObjectName = myObject; // this will expose your object on the window, but it's messy down the line, when plugging memory leaks etc
+  Debug.exposeGlobal('myObjectName', myObject) // this works exactly the same, gives you window.myObjectName access in console, but easy to switch off at production
+```
+All of the above methods can also be used in Activities through the API via UAE.debug
+```typescript
+UAE.debug.info('log to console');
+UAE.debug.exposeGlobal('myObjectName', myObject);
+// etc....
+```
+
+
 
