@@ -12,6 +12,9 @@ import IGameObject from "./IGameObject";
 import IScreen from "../../../Services/IScreen";
 import Camera from "./Camera";
 
+/**
+ * @description A factory for creating game objects of various types
+ */
 class GOFactory {
     private _core: ObjectCore;
     private _sprite: SpriteObject;

@@ -8,6 +8,9 @@ import KeyCodes from './Keys';
 import KeyListener from "./KeyListener";
 import Debug from "./Debug";
 
+/**
+ * @description The InputManager is responsible for all keyboard and mouse event handling
+ */
 class InputManager {
     protected _pointFactory: Point;
     private _eventNames: EventNames;

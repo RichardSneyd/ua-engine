@@ -12,6 +12,9 @@ import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
 import Debug from "../Debug";
 
+/**
+ * @description A spine game object class. 
+ */
 class SpineObject implements IGameObject {
     private _screen: IScreen;
     private _core: ObjectCore;

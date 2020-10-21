@@ -5,7 +5,9 @@ import Events from '../../../Engine/Events';
 import ScaleManager from '../../ScaleManager';
 import ObjectCore from './ObjectCore';
 
-
+/**
+ * @description Handles the scale of the attached IGameObject.
+ */
 class ScaleHandler {
   private _go: IGameObject;
   private _core: ObjectCore;

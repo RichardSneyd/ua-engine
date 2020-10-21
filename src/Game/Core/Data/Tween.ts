@@ -1,6 +1,10 @@
 import * as TWEEN from '@tweenjs/tween.js';
 import Debug from '../Engine/Debug';
 
+/**
+ * @description A wrapper for a Tween.tween, essentially -- enables encapsulation, so in theory, it would be easier to implement a different tweening
+ * library down the line if we had to. Not to be confused with TweenManager, which is used to create and manage tweens.
+ */
 class Tween {
   private _name: string; _easing: string; _object: any; _data: TWEEN.Tween | null;
   private _paused: boolean; _pausedTime: number; _time: number; _pauseDiff: number;

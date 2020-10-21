@@ -1,4 +1,6 @@
-// Function Object
+/**
+ * @description A Function Object class. allows you to store a reference to the function and it's context (for callbacks etc)
+ */
 class FunObj {
   private _f: any;
   private _context: any;

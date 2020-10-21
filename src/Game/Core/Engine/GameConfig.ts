@@ -1,5 +1,8 @@
 import Debug from "./Debug";
 
+/**
+ * @description a wrapper class for the config.json file -- loads it and stores it in the _data property. Accessible via data getter.
+ */
 class GameConfig {
   private _data: any;
   private _initialized: boolean;

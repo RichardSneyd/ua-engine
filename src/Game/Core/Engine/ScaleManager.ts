@@ -2,6 +2,9 @@ import GameConfig from './GameConfig';
 import ContainerObject from './GameObjects/ContainerObject';
 import Events from './Events';
 
+/**
+ * @description responsible for determining scale factor. ScaleHandler GO component uses it to calculate scale for game objects.
+ */
 class ScaleManager {
   private _gameConfig: GameConfig;
 

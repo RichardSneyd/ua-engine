@@ -10,6 +10,9 @@ import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
 import Debug from "../Debug";
 
+/**
+ * @description A text game object class. Converts text to sprite object under the hood.
+ */
 class TextObject implements IGameObject {
     private _screen: IScreen;
     private _core: ObjectCore;

@@ -4,6 +4,9 @@ import ObjectCore from './ObjectCore';
 import TextObject from "../TextObject";
 import Debug from "../../Debug";
 
+/**
+ * @description Handles all parent-child relationships of the attached IGameObject.
+ */
 class ParentChildHandler implements IParentChild{
     private _parent: IGameObject | null = null;
     _children: IGameObject[];
@@ -27,8 +30,14 @@ class ParentChildHandler implements IParentChild{
     }
 
     set parent(parent: IGameObject | null) {
-        this._parent = parent;
-      //  this._go.scaleHandler.onResize();
+        if(parent !== null){
+            if(this._parent){this._parent.removeChild(this._go)}
+            this._parent = parent;
+            if(this._parent){
+                if(!this._parent.hasChild(this._go)) this._parent.addChild(this._go); // addChild if it isn't already one
+            }
+          //  this._go.scaleHandler.onResize();
+        }
     }
 
     get children() {
@@ -52,8 +61,11 @@ class ParentChildHandler implements IParentChild{
 
     addChild(object: IGameObject): boolean {
         if (!this.hasChild(object)) {
-            this._children.push(object);
-            object.parent = this._go;
+            if(object.parent && object.parent !== this._go) {
+                object.parent.removeChild(object);
+                object.parent = this._go;
+                this._children.push(object);
+            }
 
             // added this condition because text objects hold their Px data 1 level deeper, due to custom PxText class
             let child;
@@ -81,7 +93,7 @@ class ParentChildHandler implements IParentChild{
             else {
                 this.core.data.removeChild(object.data);
             }
-            object.parent = null;
+            if(object.parent !== null) object.parent = null;
             this._children.splice(this._children.indexOf(object), 1);
             return;
         }

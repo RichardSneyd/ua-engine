@@ -1,3 +1,7 @@
+/**
+ * @description used by InputManager to listen for key events.
+ */
+
 class KeyListener {
     protected _callback: Function;
     protected _context: any;

@@ -8,6 +8,9 @@ import Loop from './Loop';
 import Events from './Events';
 import Debug from './Debug';
 
+/**
+ * @description Responsible for the loading of all resources. Accessible via UAE.loader
+ */
 class Loader {
   private _resource: Resource;
   private _gameConfig: GameConfig; private _loop: Loop; private _events: Events;

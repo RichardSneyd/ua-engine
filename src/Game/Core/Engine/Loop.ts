@@ -2,6 +2,9 @@ import Events from '../Engine/Events';
 import FunObj from '../Data/FunObj';
 import Debug from './Debug';
 
+/**
+ * @description responsible for managing the core game loop (based on requestAnimationFrame)
+ */
 class Loop {
   private _funObj: FunObj;
   private _fList: FunObj[];

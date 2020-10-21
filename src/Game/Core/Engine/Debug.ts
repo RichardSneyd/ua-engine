@@ -1,5 +1,10 @@
 import LogLevel from "./LogLevel";
 
+/**
+ * @description The Debug class is used for all console debugging, as a wrapper for console.log, console.warn etc. It also allows the exposing of objects
+ * on the window (globally) in a controlled way when in development mode, via exposeGlobal(). Can be accessed via static members within the engine, or via
+ * UAE.debug in the API.
+ */
 class Debug {
     private static _LEVELS = LogLevel;
     private static _source: string = '';

@@ -16,7 +16,9 @@ import Loop from '../../Loop';
 import { RenderTexture } from 'pixi.js-legacy';
 import Debug from '../../Debug';
 
-
+/**
+ * @description a core component on all IGameObjects.
+ */
 class ObjectCore {
   private _x: number;
   private _y: number;
