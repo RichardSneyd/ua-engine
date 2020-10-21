@@ -2,6 +2,9 @@ import IObjectHandler from '../../../Services/IObjectHandler';
 import IScreen from '../../../Services/IScreen';
 import Debug from '../Debug';
 
+/**
+ * @description A mask (needs refactoring and redign)
+ */
 class Mask {
   private _objectHandler: IObjectHandler; _screen: IScreen;
 

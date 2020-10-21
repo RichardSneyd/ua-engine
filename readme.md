@@ -283,18 +283,7 @@ class Background {
   public addAnimation(name: string, frames: string[], fps: number) {
     this._sprite.animations.addAnimation(name, frames, fps);
   }
-
-  public startAnimation(name: string, repeatAnim?: boolean) {
-    this._sprite.animations.play(name, repeatAnim);
-  }
-
-  public changeTexture(texture: string) {
-    this._sprite.changeTexture(texture)
-  }
-
-  public enableMask(x: number, y: number, width: number, height: number) {
-    this._sprite.enableMask(x, y, width, height);
-  }
+  // ....
 }
 
 export default Background;

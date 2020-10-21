@@ -12,6 +12,9 @@ import FrameAnimationManager from './Components/FrameAnimationManager';
 import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
 
+/**
+ * @description A sprite game object class. 
+ */
 class SpriteObject implements IFramedGameObject {
     private _screen: IScreen;
     private _core: ObjectCore;

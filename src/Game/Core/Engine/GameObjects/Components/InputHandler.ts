@@ -3,6 +3,9 @@ import InputManager from '../../InputManager';
 import IGameObject from "../IGameObject";
 import IScreen from "../../../../Services/IScreen";
 
+/**
+ * @description handles mouse and touch input for the attached IGameObject.
+ */
 class InputHandler {
   private _inputManager: InputManager;
   private _go: IGameObject; private _core: ObjectCore;

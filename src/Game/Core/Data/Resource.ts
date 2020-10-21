@@ -1,5 +1,9 @@
 import ResType from './ResType';
 
+/**
+ * @description A resource class. All resources (images, sound files, json etc) are stored as a resource object. The data itself is stored in the 
+ * private member _data, accessible via the data getter
+ */
 class Resource {
   private _type: string;
   private _url: string;

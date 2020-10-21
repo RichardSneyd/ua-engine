@@ -2,6 +2,9 @@ import IGameObject from "../IGameObject";
 import SpineObject from "../SpineObject";
 import ObjectCore from "./ObjectCore";
 
+/**
+ * @description Handles spine animation for the SpineGameObject.
+ */
 class SpineAnimationManager implements IAnimationManager{
     protected _go: SpineObject; protected _core: ObjectCore;
 

@@ -3,6 +3,9 @@ import Easing from './GameObjects/Components/Easing';
 import Debug from "./Debug";
 import Loop from "./Loop";
 
+/**
+ * @description responsible for managing tweens.
+ */
 class TweenManager {
     private _tween: Tween;
     private _tweens: Tween[];

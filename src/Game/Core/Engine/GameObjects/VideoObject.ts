@@ -11,6 +11,9 @@ import Events from '../Events'; // don't remove this import - it's needed
 import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
 
+/**
+ * @description A video game object class. 
+ */
 class VideoObject implements IGameObject {
     private _screen: IScreen;
     private _core: ObjectCore;

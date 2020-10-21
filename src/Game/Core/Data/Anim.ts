@@ -1,5 +1,8 @@
 import Events from '../Engine/Events';
 
+/**
+ * @description an Animation class.
+ */
 class Anim {
   private _events: Events;
 

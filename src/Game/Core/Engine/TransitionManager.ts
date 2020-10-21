@@ -8,6 +8,9 @@ import Events from "./Events";
 import GOFactory from "./GameObjects/GOFactory";
 import Debug from "./Debug";
 
+/**
+ * @description handles transitions between scenes.
+ */
 class TransitionManager {
     private _tweens: TweenManager; private _screen: IScreen; private _events: Events; private _goFactory: GOFactory;
     private _gameConfig: GameConfig;

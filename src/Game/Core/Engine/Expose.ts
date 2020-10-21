@@ -1,3 +1,7 @@
+/**
+ * @description used to expose an object on the engine API via the add method -- as in UAE.myObject... In practice, this should only be used in src/Game/Core/Game.ts
+ * to expose key engine components.
+ */
 class Expose {
   constructor() {
 

@@ -8,6 +8,9 @@ import InputManager from "../InputManager";
 import TweenComponent from "./Components/TweenComponent";
 import Debug from "../Debug";
 
+/**
+ * @description Camera basically provides inversion controls for a paired ContainerObject, allowing you to control it like a camera.
+ */
 class Camera {
     protected _math: MathUtils;
     protected _input: InputManager;

@@ -9,6 +9,9 @@ import ScaleHandler from "./Components/ScaleHandler";
 import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
 
+/**
+ * @description A nine-slice game object.
+ */
 class SliceObject implements IGameObject {
     private _screen: IScreen;
     private _core: ObjectCore;
