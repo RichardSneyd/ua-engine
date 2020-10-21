@@ -9,6 +9,9 @@ import ScaleHandler from './Components/ScaleHandler';
 import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
 
+/**
+ * @description A container object. Useful for grouping other GameObjects.
+ */
 class ContainerObject implements IGameObject {
     private _screen: IScreen;
     private _core: ObjectCore;

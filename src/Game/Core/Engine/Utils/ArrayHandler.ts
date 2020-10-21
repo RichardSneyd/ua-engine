@@ -1,5 +1,8 @@
 import Debug from "../Debug";
 
+/**
+ * @description A utlity class for dealing with arrays 
+ */
 class ArrayHandler {
   constructor() {
 

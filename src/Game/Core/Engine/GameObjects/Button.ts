@@ -2,6 +2,9 @@ import SpriteObject from "./SpriteObject";
 import IParentChild from "./IParentChild";
 import Debug from "../Debug";
 
+/**
+ * @description a wrapper for SpriteObject which defines the basic functionality of a button
+ */
 class Button {
 
     public sprite: SpriteObject;

@@ -6,6 +6,9 @@ import MathUtils from './MathUtils';
 import Text from './Text';
 import Vectors from './Vectors';
 
+/**
+ * @description The utils class. It is a wrapper for all of the utils components, which can be accessed through it in the API via UAE.utils.scripts
+ */
 class Utils {
     private _scripts: ActScripts;
     private _collections: Collections;

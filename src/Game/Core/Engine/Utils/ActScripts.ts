@@ -2,6 +2,9 @@ import Text from './Text';
 import * as _ from 'lodash';
 import Collections from './Collections';
 
+/**
+ * @description utility methods for interfacing with raw activity script json files. Mainly used in ScriptHandler.
+ */
 class ActScripts {
     private _text: Text;
     private _collections: Collections;

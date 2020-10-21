@@ -2,6 +2,9 @@ import ActScripts from './Utils/ActScripts';
 import Events from './Events';
 import Debug from './Debug';
 
+/**
+ * @description An activity script preprocessor and wrapper. 
+ */
 class ScriptHandler {
     private _utils: ActScripts;
     private _events: Events;

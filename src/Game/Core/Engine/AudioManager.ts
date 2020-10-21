@@ -3,6 +3,9 @@ import HwPlayer from '../../Services/Howler/HwPlayer';
 import Events from './Events';
 import Debug from './Debug';
 
+/**
+ * @description The audio manager. Used to manage all things audio. Accessible in API via UAE.manager.audio.
+ */
 class AudioManager {
 
     private _loader: Loader; _hwPlayer: HwPlayer; _events: Events;

@@ -1,3 +1,6 @@
+/**
+ * @description A wrapper for utility math methods.
+ */
 class MathUtils {
     private constructor() { }
 

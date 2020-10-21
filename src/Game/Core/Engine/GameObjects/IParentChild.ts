@@ -1,6 +1,9 @@
 import ObjectCore from "./Components/ObjectCore";
 import IGameObject from "./IGameObject";
 
+/**
+ * @description a key interface for handling parent-child relationships
+ */
 interface IParentChild {
   //  core: ObjectCore;
     parent: IGameObject | null;

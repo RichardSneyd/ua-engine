@@ -1,6 +1,8 @@
 import Point from "../../Geom/Point";
 
-
+/**
+ * @description a utility clas for dealing with point arrays etc.
+ */
 class Vectors {
     protected _pointFactory: Point;
     // generate a grid, or matrix, of phaser points based on horizontal and vertical data

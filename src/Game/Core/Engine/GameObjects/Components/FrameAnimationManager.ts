@@ -6,7 +6,9 @@ import Loader from '../../Loader';
 import ObjectCore from './ObjectCore';
 import Debug from '../../Debug';
 
-
+/**
+ * @description A frame based animation manager (for use with SpriteObject mainly, with atlas animations). 
+ */
 class FrameAnimationManager implements IAnimationManager {
   private _go: IFrameAnimatedGameObject; private _anim: Anim; _activeAnimation: Anim | null; _tween: Tween;
   private _animations: Anim[]; private _loader: Loader;

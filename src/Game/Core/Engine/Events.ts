@@ -1,5 +1,9 @@
 import Debug from "./Debug";
 
+/**
+ * An EventEmitter which implements the pub/sub design pattern. Listen for events, emit them, pass data, and even optionally trigger a 'multiplayer' event
+ * which will communicate with the parent window (if in an Iframe)
+ */
 class Events {
     private _events: any;
     private _timers: any;

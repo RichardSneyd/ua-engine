@@ -16,6 +16,9 @@ import Transitions from '../Core/Engine/Transitions';
 import TweenManager from './Engine/TweenManager';
 import Debug from './Engine/Debug';
 
+/**
+ * @description the game class. There should only ever be one of these.
+ */
 class Game {
   private _world: World; _events: Events;
   private _scaleManager: ScaleManager; _expose: Expose;
@@ -40,7 +43,6 @@ class Game {
     // Debug.info("TARGET: ", events);
     this._scaleManager = scaleManager;
     this._expose = expose;
-
     this._loop = loop;
     this._loader = loader;
     this._gameConfig = gameConfig;

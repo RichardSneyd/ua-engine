@@ -4,6 +4,9 @@ import ObjectCore from './ObjectCore';
 import TextObject from "../TextObject";
 import Debug from "../../Debug";
 
+/**
+ * @description Handles all parent-child relationships of the attached IGameObject.
+ */
 class ParentChildHandler implements IParentChild{
     private _parent: IGameObject | null = null;
     _children: IGameObject[];

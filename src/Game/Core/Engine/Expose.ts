@@ -1,3 +1,7 @@
+/**
+ * @description used to expose an object on the engine API via the add method -- as in UAE.myObject... In practice, this should only be used in src/Game/Core/Game.ts
+ * to expose key engine components.
+ */
 class Expose {
   constructor() {
 
@@ -10,6 +14,11 @@ class Expose {
    // (<any>window).UAE = (<any> window).UAE_1['default'];
   }
 
+  /**
+   * @description add an object to UAE (accessible through API at UAE.myObjectName)
+   * @param key 
+   * @param object 
+   */
   add(key: string, object: any) {
     (<any>window).UAE["default"][key] = object;
   }

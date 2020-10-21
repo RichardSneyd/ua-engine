@@ -4,6 +4,9 @@ import IScene from './IScene';
 import LevelManager from './LevelManager';
 import Events from './Events';
 
+/**
+ * @description the world class
+ */
 class World {
   private _width: number;
   private _height: number;
