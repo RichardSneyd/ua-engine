@@ -221,8 +221,8 @@ class TypeFactory {
 
 export default TypeFactory;
 ```
-## Game Object Structre
-It is best to have a GO directory in your src/Game/GO folder for game object classes, which function as wrappers for basic UAE gameObject types.
+## Game Object Wrapper Structure
+It is best to have a src/Game/GO directory for game object wrapper classes, which function as wrappers for basic UAE gameObject types (in some very basic cases, this may not be necessary, but it is best practice and preferred).
 
 ```typescript
 import SpriteObject from "UAE/Core/Engine/GameObjects/SpriteObject";
