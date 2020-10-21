@@ -1,6 +1,9 @@
 import * as _ from 'lodash';
 import Debug from '../Debug';
 
+/**
+ * @description a wrapper for string (text) utility functions
+ */
 class Text {
 
     private constructor() { }

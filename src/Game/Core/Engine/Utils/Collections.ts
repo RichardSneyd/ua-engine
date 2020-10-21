@@ -1,6 +1,9 @@
 import * as _ from 'lodash';
 import Debug from '../Debug';
 
+/**
+ * @description A utility method for dealing with collections, such as arrays 
+ */
 class Collections {
 
     private constructor() { } // make it instantiatable
