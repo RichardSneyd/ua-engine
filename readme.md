@@ -18,7 +18,7 @@ private _exposeGlobal() {
     this._expose.add('game', this);
     this._expose.add('world', this._world);
     // ... others will also be there...
-    this._expose.add('myClass, this._myClass'); // add a line for your class (you will need to inject it as a dependency, and save it in a local private property)
+    this._expose.add('myClass', this._myClass); // add a line for your class (you will need to inject it as a dependency, and save it in a local private property)
 }
 ```
 
