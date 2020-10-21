@@ -146,6 +146,158 @@ class MainLevel implements ILevel {
 export default MainLevel;
 
 ```
+## Conventions
 
+when working with frame animations, prefer importing the frames automatically using FrameAnimationManager.autoGenFrames();
+```typescript
+sprite.animations.autoGenFrames('idle'); // will find all frames with the prefix 'idle', in order
+```
+using protected instead of private avoids the 'not initialized' issue with typescript linting
+```typescript
+private _myProperty: string; // possibly annoying warnings or even errors, depending on version of typescript
+protected _myProperty2: string; // no warnings or errors
+```
+import the engine as UAE, rather thant UAENGINE (easier to type, more ergonomic)
+```typescript
+import UAE from 'UAE';
+```
+declare boilerplate local DI components first (such as _factory), common UAE components next (those which refer to UAE properties, like world, goFactory, manager, loop etc), and activity specific (non boilerplate) members last
+```typescript
+class MainLevel implements ILevel {
+  // Boilerplate members first
+  protected _factory: TypeFactory;
+  protected _aFiles: string[] = [];
+  protected _pngFiles: string[] = [];
+  protected _jpgFiles: string[] = [];
+  // UAE Components
+  protected _manager: LevelManager; _loop: Loop; _loader: Loader;
+
+  // Containers (used as layers to keep game objects visually organised)
+  protected _background: ContainerObject;
+  protected _playground: ContainerObject;
+  protected _foreground: ContainerObject;
+  protected _HUD: ContainerObject;
+
+  //type-specific members
+  protected _highlightManager: HighlightManager;
+
+  protected _leftArrow: ArrowButton;
+  protected _rightArrow: ArrowButton;
+  protected _audioButton: Button;
+
+  protected _bottomBar: BottomBar;
+
+  protected _promptButton: PromptButton;
+
+  protected _bgd: SpriteObject;
+  protected _paragraphs: Paragraph[] = [];
+  protected _paraPos: Point;
+  // .....
+```
+
+Always include 3 properties for audio, jpegs and pngs to be loaded (unless there are no pngs, in which case the _pngFiles property can be omitted), with these exact names (for consistency accross types): 
+```typescript
+  protected _aFiles: string[] = [];
+  protected _pngFiles: string[] = [];
+  protected _jpgFiles: string[] = [];
+```
+Have a local factory for creating activity specific objects, called TypeFactory.ts (for example, the passage type has a TypeFactory, which access the createNew method of all locally defined objects, and calls the init method for the factory. This simplifies the process of creating new objects to a 1 line call). 
+
+Example:
+
+```typescript
+class TypeFactory {
+    protected _promptButton: PromptButton;
+
+    constructor(promptButton: PromptButton){
+        this._promptButton = promptButton;
+    }
+
+    promptButton(x: number, y: number, atlas: string, frame: string, container: Entity): PromptButton{
+        let prompt = this._promptButton.createNew(x, y, atlas, frame, container);
+        return prompt;
+    }
+}
+
+export default TypeFactory;
+```
+## Game Object Structre
+It is best to have a GO directory in your src/Game/GO folder for game object classes, which function as wrappers for basic UAE gameObject types.
+
+```typescript
+import SpriteObject from "UAE/Core/Engine/GameObjects/SpriteObject";
+import ContainerObject from "UAE/Core/Engine/GameObjects/ContainerObject";
+import GOFactory from 'UAE/Core/Engine/GameObjects/GOFactory';
+import UAE from 'UAE';
+
+class Background {
+  private _goFactory: GOFactory;
+  protected _sprite: SpriteObject;
+
+  constructor() {
+    this._goFactory = UAE.goFactory;
+  }
+
+  get x() {
+    return this._sprite.x;
+  }
+
+  get y() {
+    return this._sprite.y;
+  }
+
+  set x(num: number) {
+    this._sprite.x = num;
+  }
+
+  set y(num: number) {
+    this._sprite.y = num;
+  }
+
+  public scale(x: number, y: number) {
+    this._sprite.scaleHandler.scaleX = x;
+    this._sprite.scaleHandler.scaleY = y;
+  }
+
+  public anchor(x: number, y: number) {
+    this._sprite.origin.x = x;
+    this._sprite.origin.y = y;
+  }
+
+  public init(frame: string, container?: ContainerObject){
+    this._sprite = this._goFactory.sprite(0, 0, frame);
+
+    if(container){
+      container.addChild(this._sprite);
+    }
+  }
+
+  public initDynamic(atlas: string, frame: string, container?: ContainerObject) {
+    this._sprite = this._goFactory.sprite(0, 0, atlas, frame);
+
+    if(container){
+      container.addChild(this._sprite);
+    }
+  }
+
+  public addAnimation(name: string, frames: string[], fps: number) {
+    this._sprite.animations.addAnimation(name, frames, fps);
+  }
+
+  public startAnimation(name: string, repeatAnim?: boolean) {
+    this._sprite.animations.play(name, repeatAnim);
+  }
+
+  public changeTexture(texture: string) {
+    this._sprite.changeTexture(texture)
+  }
+
+  public enableMask(x: number, y: number, width: number, height: number) {
+    this._sprite.enableMask(x, y, width, height);
+  }
+}
+
+export default Background;
+```
 
 
