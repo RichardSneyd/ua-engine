@@ -221,8 +221,8 @@ class TypeFactory {
 
 export default TypeFactory;
 ```
-## Game Object Structre
-It is best to have a GO directory in your src/Game/GO folder for game object classes, which function as wrappers for basic UAE gameObject types.
+## Game Object Wrapper Structure
+It is best to have a src/Game/GO directory for game object wrapper classes, which function as wrappers for basic UAE gameObject types (in some very basic cases, this may not be necessary, but it is best practice and preferred).
 
 ```typescript
 import SpriteObject from "UAE/Core/Engine/GameObjects/SpriteObject";
@@ -299,5 +299,26 @@ class Background {
 
 export default Background;
 ```
+
+## Debugging
+Within engine classes, all debugging should be handled through the Debug static members (that means NO direct calls to console at all)
+```typescript
+Debug.info('log to console'); // does the exact same thing as console.log(), and even gives correct file name and line from source map
+Debug.warn('warn about something');
+Debug.error('throw an error message');
+Debug.trace('trace a call');
+```
+Debug should also be used to expose an object on the window for debugging purposes (as this can be easily switched off for production)
+```typescript
+  (<any>window).myObjectName = myObject; // this will expose your object on the window, but it's messy down the line, when plugging memory leaks etc
+  Debug.exposeGlobal('myObjectName', myObject) // this works exactly the same, gives you window.myObjectName access in console, but easy to switch off at production
+```
+All of the above methods can also be used in Activities through the API via UAE.debug
+```typescript
+UAE.debug.info('log to console');
+UAE.debug.exposeGlobal('myObjectName', myObject);
+// etc....
+```
+
 
 
