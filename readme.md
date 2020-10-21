@@ -7,6 +7,82 @@ git clone https://github.com/RichardSneyd/ua-engine
 npm install
 gulp
 ```
+## Engine Structure
+Inside the src folder, there are 2 subfolder - Dep and Game. Dep contains the DI framework, which auto-generates an IoC container and saves it ad src/Dep/ControlContainer.ts. All other source files, including core engine files, and services, are in src/Game.
+
+## API Exposure
+to add a class to the API root, you must do 2 things - expose it in the _exposeGlobal() method of src/Game/Core/Game.ts
+```typescript
+private _exposeGlobal() {
+    this._expose.init();
+    this._expose.add('game', this);
+    this._expose.add('world', this._world);
+    // ... others will also be there...
+    this._expose.add('myClass, this._myClass'); // add a line for your class (you will need to inject it as a dependency, and save it in a local private property)
+}
+```
+
+and to generate the appropriate type definitions, add it as a static to src/Game/UAE.ts
+```typescript
+public static myClass: MyClass;
+```
+## Coding Style Guide
+The purpose of this document is to establish a common coding style for the entire team to follow. It will incorporate common conventions, establish our own as needed.
+Variables and Properties
+Private variables should begin with an underscore:
+```typescript
+private _age: number;
+```
+When dealing with object properties, generally these should be made private, as above – standard OOP practice. Getters and setters should be used to access them. In many languages, such as Java, this involves creating methods like ```typescript getAge()  ```and ```typescript setAge(newAge: number) ```; however, in typescript, we have special keywords, specifically accessors, get and set, for defining getters and setters, which we will use:
+
+```typescript
+class Animal{
+    private _age: number;
+
+    constructor(){
+        // todo   
+    }
+
+    // the getter method for age
+    get age(){
+        return this._age;
+    }
+
+    // the setter method for age
+    set age(newAge: number){
+        this._age = newAge;
+    }
+}
+
+```
+These accessors are compliant with ES2015 on, when classes began to be supported. When this is converted to older JS (specifically, ES5), it will be converted to the following, since it uses ES5 modules and the Object.defineProperty method under the hood (this is for reference only, so you understand what they do when transpiled):
+```javascript
+"use strict";
+var Animal = /** @class */ (function () {
+    function Animal() {
+        // todo   
+    }
+    Object.defineProperty(Animal.prototype, "age", {
+        get: function () {
+            return this._age;
+        },
+        set: function (newAge) {
+            this._age = newAge;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return Animal;
+}());
+```
+
+After declaring getters and setters this way, we can interact with them as though we were accessing normal JS properties, using standard dot syntax, but with all the benefits of getters and setters, since it is really the getter and setter methods we defined which are being accessed, not the private _age property itself. It is good OOP: 
+
+```typescript
+let animal = new Animal();
+console.log(animal.age); // this calls the getter we defined, and prints the value it returns.
+animal.age = 32; // this calls the setter method. 
+```
 
 ## Examples
 ### Activity
