@@ -15,7 +15,7 @@ import ILevel from './Engine/ILevel';
 import Transitions from '../Core/Engine/Transitions';
 import TweenManager from './Engine/TweenManager';
 import Debug from './Engine/Debug';
-import Editor from './Engine/Editor/Editor';
+import LevelEditor from './Engine/LevelEditor/LevelEditor';
 
 /**
  * @description the game class. There should only ever be one of these.
@@ -33,12 +33,12 @@ class Game {
   protected _transitions = Transitions;
   protected _tween: TweenManager;
   protected _debug: Debug;
-  protected _editor: Editor;
+  protected _editor: LevelEditor;
 
   constructor(world: World, loop: Loop, loader: Loader,
     events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
     levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils, tween: TweenManager,
-    debug: Debug, editor: Editor) {
+    debug: Debug, editor: LevelEditor) {
 
     this._world = world;
     this._events = events;

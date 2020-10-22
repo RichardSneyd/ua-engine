@@ -48,7 +48,9 @@ const config = {
             'TransitionManager',
             'InputManager',
             'Game',
-            'TweenManager'
+            'TweenManager',
+            'LevelEditor',
+            'EditorScene'
         ],
         ignore: [
             'UAENGINE'
@@ -219,7 +221,7 @@ exports.uglify = uglifyT;
 exports.browserify = browserifyT;
 exports.webserver = webserverT;
 exports.watchConcat = watchConcatT;
-exports. c = calculateDeps;
+exports.calc = calculateDeps;
 exports.genDecs = genDecs;
 exports.watchDecs = watchDecs;
 exports.watch = watchT;
