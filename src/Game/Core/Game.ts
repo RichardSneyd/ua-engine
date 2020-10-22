@@ -139,8 +139,6 @@ class Game {
   }
 
   private _startActivity(act: IActivity, scriptName: string) {
-    // call shutdown, to give the current activity a chance to tidy up before the transition
-    // setTimeout(()=>{debugger}, 1000); 
     // start the new activity, with the assumption that the shutdown has been handled
     act.startActivity(scriptName);
   }
