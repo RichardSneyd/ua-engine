@@ -41,8 +41,12 @@ class LevelEditor implements IActivity {
     }
     
     startActivity(scriptName: string): void {
-        Debug.info('Editor.startActivity()');
-        this._game.loadLevel(this._scene, scriptName);
+        if(this._initialized){
+            Debug.info('Editor.startActivity()');
+            this._game.loadLevel(this._scene, scriptName);
+            return;
+        }
+        Debug.error('LevelEditor not initialized, so cant call startActivity because _game is undefined');
     }
 
     /**
