@@ -24,6 +24,8 @@ class LevelEditor implements IActivity {
         this._game = game;
         this._game.addActivity(this); // register the editor as an 'activity' that can be called by the engine
         this._initialized = true;
+
+        this._scene.start();
     }
 
 /*     createNew() {
