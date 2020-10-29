@@ -113,8 +113,49 @@ class Activity implements IActivity {
 export default Activity;
 
 ```
-Every activity must also contain a Level class of some description (typically called MainLevel if there's only one, but this is just a convention), which implements ILevel.
+Every activity must also contain a Level class of some description (typically called MainLevel if there's only one, but this is just a convention). Each level must either extend UAE.activities.BaseLevel (prefered, as it implements many of the coding conventions established in here, and it cuts down on a lot of biolerplate and repetition), or implement ILevel.
 
+#### Extending BaseLevel (prefered)
+```typescript
+import UAE from 'UAE';
+
+class ExtendBaseLevel extends UAE.activities.BaseLevel {
+    
+    // constructor must initialize the super with UAE core objects
+    constructor(){
+        super(UAE.levelManager, UAE.events, UAE.loop, UAE.goFactory, UAE.loader);
+    }
+
+    init(scriptName: string){
+        super.init(scriptName, ['audio_id'], ['config']);
+    }
+
+    preload(){
+        this._aFiles = this._manager.script.fileList(['audio_id']);
+        this._jpgFiles = this._manager.script.fileList(['config.bgd']);
+        this._pngFiles = ['star'];
+        // add resources here. super.preload will then use promise to load assets, then call start
+        this._loader.addSnds(this._aFiles);
+        this._loader.addImages(this._jpgFiles, '.jpg');
+        this._loader.addImages(this._pngFiles, '.png');
+        super.preload();
+    }
+
+    start(){
+        // build the scene here. super.start will then call _waitForFirstInput to avoid starting without audio due to Chrome audio
+        // playback restrictions. _waitForFirstInput automatically calls the first row of the activityScript
+        this._goFactory.sprite(500, 500, 'star', null, this._playground);
+        super.start();
+    }
+
+    onNewRow(){
+        super.onNewRow();
+    }
+}
+
+export default ExtendBaseLevel;
+```
+#### Implementing ILevel (not prefered)
 ```typescript 
 import ILevel from "UAE/Core/Engine/ILevel";
 

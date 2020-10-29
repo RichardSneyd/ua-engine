@@ -1,3 +1,4 @@
+
 import { Application, Sprite, Renderer, Container, DisplayObject, NineSlicePlane, BaseTexture, Graphics, RenderTexture } from 'pixi.js-legacy';
 import PxText from './PxText';
 import PxFactory from './PxFactory';
@@ -18,9 +19,11 @@ class PxGame {
     this._events = events;
     this._game = null;
     this._gameConfig = gameConfig;
-    //  Object.defineProperty(Resource, 'source', any);
   }
 
+  /**
+   * @description the container in which the active level sits
+   */
   get levelCont() {
     return this._levelCont;
   }
@@ -41,9 +44,8 @@ class PxGame {
       document.body.appendChild(this._game.view);
     }
 
+    this._pxFactory.init(); // init factory to apply hitmap hacks
     Debug.exposeGlobal(this._game, 'game');
-
-
   }
 
   public newLevel() {
@@ -139,6 +141,22 @@ class PxGame {
     return sprite;
   }
 
+  public addSpine(name: string): PIXI.spine.Spine | null {
+    let spineResource = this._loader.getResource(name, true);
+    let spine = null;
+
+    if (spineResource != null) {
+      spine = new PIXI.spine.Spine(spineResource.data.spineData);
+
+      // spine.spineData.imagesPath;
+      this._addChild(spine);
+    } else {
+      Debug.warn('spine resource named "%s" not found', name);
+    }
+
+    return spine;
+  }
+
   public addVideo(x: number, y: number, videoName: string): Sprite {
     let video = this._createVideo(x, y, videoName);
 
@@ -176,18 +194,34 @@ class PxGame {
     }
   }
 
-  public genHitmap(baseTex: any, threshold: number) {
-    if (!baseTex.resource) {
-      //renderTexture
-      return false;
+  public toTexture(object: any): PIXI.RenderTexture | null {
+    if (this._game !== null) {
+      let texture = this._game.renderer.generateTexture(object, PIXI.SCALE_MODES.LINEAR, 1);
+      Debug.info(texture);
+    //  Debug.breakpoint();
+      return texture;
     }
+    return null;
+  }
+
+  /**
+   * 
+   * @param baseTex the texture.baseTexture to generate the hitmap data from (does not have to be connected to the target object)
+   * @param object the target object of the hitmap
+   * @param threshold 
+   */
+  public genHitmap(baseTex: BaseTexture, object: any, threshold: number) {
+    let resource: any = baseTex.resource;
+    if (!baseTex.hasOwnProperty('resource')) console.error('cannot generate hitmap for %s, no baseTexture.resource property', object);
+    if (resource.source == undefined) console.error('cannot generate hitmap for %s, no baseTexture.resource.source property', object);
     // resource = <ImageResource>baseTex.resource;
 
-    const imgSource = baseTex.resource.source;
-    Debug.info(imgSource);
+    const imgSource = resource.source;
+    Debug.info('hitmap image resourc.source: ', imgSource);
+   // Debug.breakpoint();
     let canvas = null;
     if (!imgSource) {
-      Debug.warn('no imgSource for resource: ', baseTex.resource)
+      Debug.warn('no imgSource for resource: ', resource)
       return false;
     }
     let context = null;
@@ -202,6 +236,7 @@ class PxGame {
       canvas.height = imgSource.height;
       context = canvas.getContext('2d');
       if (context) {
+        // accepts an ImageBitmap object also -- try to generate and pass, so it works for all GameObject types
         context.drawImage(imgSource, 0, 0);
       }
     }
@@ -214,7 +249,7 @@ class PxGame {
     let imageData = context.getImageData(0, 0, w, h);
 
     Debug.warn('building hitmap from context.getImageData, which yields: ', imageData);
-    let hitmap = baseTex.hitmap = new Uint32Array(Math.ceil(w * h / 32));
+    let hitmap = new Uint32Array(Math.ceil(w * h / 32));
     for (let i = 0; i < w * h; i++) {
       let ind1 = i % 32;
       let ind2 = i / 32 | 0;
@@ -223,15 +258,72 @@ class PxGame {
       }
     }
     Debug.info('hitmap is: ', hitmap);
-    Debug.info('baseTex.hitmap is: ', baseTex.hitmap);
+    if (object.hasOwnProperty('skeleton')) {
+      object.hitmap = hitmap; // Spine object have no texture or baseTexture property, so hitmap must be stored on the spine object itself
+    }
+    else {
+      object.texture.baseTexure.hitmap = hitmap;
+    }
     // debugger;
     return true;
   }
-
-   /**
-     * @description enable mouse/pointer input for the specified object
-     * @param displayObject the object to enable input for
-     */
+  /* 
+    public genHitmap(baseTex: any, threshold: number) {
+      if (!baseTex.resource) {
+        //renderTexture
+        return false;
+      }
+      // resource = <ImageResource>baseTex.resource;
+  
+      const imgSource = baseTex.resource.source;
+      Debug.info(imgSource);
+      let canvas = null;
+      if (!imgSource) {
+        Debug.warn('no imgSource for resource: ', baseTex.resource)
+        return false;
+      }
+      let context = null;
+      if (imgSource.getContext) {
+        canvas = imgSource;
+        context = canvas.getContext('2d');
+        Debug.info(context);
+      }
+      else if (imgSource instanceof Image) {
+        canvas = document.createElement('canvas');
+        canvas.width = imgSource.width;
+        canvas.height = imgSource.height;
+        context = canvas.getContext('2d');
+        if (context) {
+          // accepts an ImageBitmap object also -- try to generate and pass, so it works for all GameObject types
+          context.drawImage(imgSource, 0, 0);
+        }
+      }
+      else {
+        //unknown source;
+        return false;
+      }
+  
+      const w = canvas.width, h = canvas.height;
+      let imageData = context.getImageData(0, 0, w, h);
+  
+      Debug.warn('building hitmap from context.getImageData, which yields: ', imageData);
+      let hitmap = baseTex.hitmap = new Uint32Array(Math.ceil(w * h / 32));
+      for (let i = 0; i < w * h; i++) {
+        let ind1 = i % 32;
+        let ind2 = i / 32 | 0;
+        if (imageData.data[i * 4 + 3] >= threshold) {
+          hitmap[ind2] = hitmap[ind2] | (1 << ind1);
+        }
+      }
+      Debug.info('hitmap is: ', hitmap);
+      Debug.info('baseTex.hitmap is: ', baseTex.hitmap);
+      // debugger;
+      return true;
+    } */
+  /**
+    * @description enable mouse/pointer input for the specified object
+    * @param displayObject the object to enable input for
+    */
   public enableInput(sprite: DisplayObject) {
     sprite.interactive = true;
   }
@@ -250,21 +342,6 @@ class PxGame {
     //  sprite.on('touchend', callback, context);
   }
 
-  public addSpine(name: string): PIXI.spine.Spine | null {
-    let spineResource = this._loader.getResource(name, true);
-    let sprite = null;
-
-    if (spineResource != null) {
-      sprite = new PIXI.spine.Spine(spineResource.data.spineData);
-      this._addChild(sprite);
-    } else {
-      Debug.info('spine resource named "%s" not found', name);
-    }
-
-
-    return sprite;
-  }
-
   public updateTexture(sprite: Sprite, texture: string | any, frame: string | null = null): void {
     if (typeof texture == 'string') {
       let tex = this._loader.getTexture(texture, frame);
@@ -273,10 +350,6 @@ class PxGame {
     }
     // if texture is not a string, it must be a Texture object; assign directly
     sprite.texture = texture;
-  }
-
-  public toTexture(object: DisplayObject): PIXI.RenderTexture | null {
-    if (this._game !== null) return this._game.renderer.generateTexture(object, PIXI.SCALE_MODES.LINEAR, 1); return null;
   }
 
   public clearScreen() {

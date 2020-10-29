@@ -41,6 +41,21 @@ class Screen implements IScreen {
     return this._pxGame.addGraphic(x, y, width, height);
   }
 
+  public addHitMap(obj: DisplayObject, threshold: number = 127): boolean {
+    // requires baseTexture -- generate from 'screengrab'??
+    let texture = this._pxGame.toTexture(obj);
+    Debug.info(texture);
+    // try to generate ImageBitmap
+    if (texture == null) return false;
+    
+    this._pxGame.genHitmap(texture.baseTexture, obj, threshold);
+    return true;
+  }
+
+  /* public addHitMap(obj: Sprite, threshold: number = 127) {
+    this._pxGame.genHitmap(obj.texture.baseTexture, threshold);
+  } */
+
    /**
      * @description enable mouse/pointer input for the specified object
      * @param sprite the object to enable input for
@@ -61,10 +76,9 @@ class Screen implements IScreen {
     this._pxGame.removeListener(event, sprite, callback);
   }
 
-  public addHitMap(obj: Sprite, threshold: number = 127) {
+ /*  public addHitMap(obj: Sprite, threshold: number = 127) {    
     this._pxGame.genHitmap(obj.texture.baseTexture, threshold);
-  }
-
+  } */
   /* public removeDownListener(sprite: any) {
     this._pxGame.removeDownListeners(sprite);
   }

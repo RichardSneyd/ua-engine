@@ -3,7 +3,7 @@
  * @description Defines the barebones methods all scenes must have.
  */
 interface IScene {
-  init(scriptName?: string): void;
+  init(scriptName?: string, ...args: any): void;
   preload(): void;
   start(): void;
 

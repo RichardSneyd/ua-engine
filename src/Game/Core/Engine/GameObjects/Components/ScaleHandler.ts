@@ -17,6 +17,25 @@ class ScaleHandler {
   private _scaleX: number;
   private _scaleY: number;
 
+  constructor(scaleManager: ScaleManager) {
+    this._scaleManager = scaleManager;
+    this._scaleX = 1;
+    this._scaleY = 1;
+
+    // Debug.info("{debug3} scale manager allocated!");
+  }
+
+  public init(go: IGameObject, core: ObjectCore) {
+    this._go = go;
+    this._core = core;
+    this._events = this._go.events;
+    this._scaleManager.init();
+
+    this.onResize();
+    this._addListeners();
+    // Debug.info("smanager w(%s) h(%s)", this._width, this._height);
+  }
+
   get scaleX(): number {
     return this._scaleX;
   }
@@ -41,23 +60,24 @@ class ScaleHandler {
     this.updateScale();
   }
 
-  constructor(scaleManager: ScaleManager) {
-    this._scaleManager = scaleManager;
-    this._scaleX = 1;
-    this._scaleY = 1;
-
-    // Debug.info("{debug3} scale manager allocated!");
+  /**
+   * @description set the scale for both the x and y axis
+   */
+  set scale(scale: number){
+    this._scaleX = scale; this._scaleY = scale;
+    this.updateScale();
   }
 
-  public init(go: IGameObject, core: ObjectCore) {
-    this._go = go;
-    this._core = core;
-    this._events = this._go.events;
-    this._scaleManager.init();
-
-    this.onResize();
-    this._addListeners();
-    // Debug.info("smanager w(%s) h(%s)", this._width, this._height);
+  /**
+   * @ method for setting scale. If only 1 value is provided, it will be used for both scaleX and scaleY
+   * @param x 
+   * @param y 
+   */
+  setScale(x: number, y?: number){
+    if(!y) y = x;
+    this._scaleX = x;
+    this._scaleY = y;
+    this.updateScale();
   }
 
   public createNew(): ScaleHandler {
@@ -66,7 +86,6 @@ class ScaleHandler {
   }
 
   public onResize() {
-
     this._onResize();
   }
 

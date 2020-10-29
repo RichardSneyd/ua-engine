@@ -1,6 +1,6 @@
 //import ObjectCore from './GameObjects/Components/ObjectCore';
 import IScreen from '../../Services/IScreen';
-import IScene from './IScene';
+import IScene from './Activities/IScene';
 import LevelManager from './LevelManager';
 import Events from './Events';
 
