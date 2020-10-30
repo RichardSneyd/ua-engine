@@ -7,17 +7,8 @@ class UIAccordion {
     protected _labels: HTMLButtonElement[] = [];
     protected _panels: HTMLDivElement[] = [];
 
-
     init(): void {
         this.createPanel();
-    }
-
-    show(): void {
-
-    }
-
-    hide(): void {
-
     }
 
     /**
@@ -34,16 +25,27 @@ class UIAccordion {
         if (document.readyState === "complete") {
             Debug.info("Editor.Accordion panel created.");
             this.createContainer();
+            
+            // 1. row
             this.addLabel('Images');
             this.addPanelContent();
             this.addImg('https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/SpongeBob_SquarePants_character.svg/1200px-SpongeBob_SquarePants_character.svg.png', this._panels[0]);
+            this.addImg('https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/SpongeBob_SquarePants_character.svg/1200px-SpongeBob_SquarePants_character.svg.png', this._panels[0]);
+            this.addImg('https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/SpongeBob_SquarePants_character.svg/1200px-SpongeBob_SquarePants_character.svg.png', this._panels[0]);
 
+            // 2. row
+            this.addLabel('Spines');
+            this.addPanelContent();
+            this.addImg('https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/SpongeBob_SquarePants_character.svg/1200px-SpongeBob_SquarePants_character.svg.png', this._panels[1]);
+
+            this.removeAllSelections();
             this.uncollapseAll();
         }
     }
 
     /**
      * @description Adds a button label for each panel row
+     * @param name Label shown as panel text
      */
     addLabel(name: string): void {
         let label = document.createElement('button');
@@ -69,12 +71,11 @@ class UIAccordion {
     }
 
     uncollapseAll(): void {
+        Debug.info('Editor.uncollapsed');
         const acc = document.getElementsByClassName("accordion");
-        const img = document.getElementsByClassName("panel-img");
 
-        // opening all as uncollapsed
+        // uncollapsing all panels as default
         for (let i = 0; i < acc.length; i++) {
-
             acc[i].classList.toggle("active");
             let panel = acc[i].nextElementSibling as HTMLElement;
 
@@ -83,25 +84,44 @@ class UIAccordion {
             } else {
                 panel.style.maxHeight = panel.scrollHeight + "px";
             }
-
         }
 
-
-        // click events
+        // add click events for toggling
         for (let i = 0; i < acc.length; i++) {
             acc[i].addEventListener("click", function () {
                 acc[i].classList.toggle("active");
                 let panel = acc[i].nextElementSibling as HTMLElement;
 
                 if (panel.style.maxHeight) {
-                    panel.style.maxHeight = null as any;
+                    panel.style.maxHeight = null || '';
+
                 } else {
-                    panel.style.maxHeight = panel.scrollHeight + "px";
+                    panel.style.maxHeight = `${panel.scrollHeight}px`;
                 }
             });
         }
 
 
+    }
+
+    /**
+     * @description Removes all selected game objects
+     */
+    removeAllSelections(): void {
+        const img = document.getElementsByClassName("panel-img");
+
+        let removeAllFirst = () => {
+            for (let i = 0; i < img.length; i++) {
+                img[i].classList.remove("selected");
+            }
+        };
+
+        for (let i = 0; i < img.length; i++) {
+            img[i].addEventListener("click", function () {
+                removeAllFirst();
+                img[i].classList.toggle("selected");
+            });
+        }
     }
 
 }
