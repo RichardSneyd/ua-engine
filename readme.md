@@ -87,7 +87,7 @@ animal.age = 32; // this calls the setter method.
 ## Examples
 ### Activity
 Every activity must contain 3 build files from the UAE repo: UAE.d.ts, uae.js, and uae.js.map. These can be copied from the dist directory, where they are saved after a build has completed. Every activity, in turn, must have an Activity class which implements IActivity, or extends BaseActivity.
-#### Implementing IActivity (prefered)
+#### Implementing IActivity (not prefered)
 ```typescript
 import UAE from 'UAE';
 import IActivity from 'UAE/Core/Engine/IActivity';
