@@ -51,7 +51,10 @@ const config = {
             'TweenManager'
         ],
         ignore: [
-            'UAENGINE'
+            'UAENGINE',
+            'BaseActivity',
+            'BaseLevel',
+            'BaseScene'
         ],
     },
     replaceAll: {
