@@ -7,16 +7,14 @@ import SpriteObject from "../GameObjects/SpriteObject";
 import LevelManager from "../LevelManager";
 import Loader from "../Loader";
 import Loop from "../Loop";
+import BaseScene from "./BaseScene";
 import ILevel from "./ILevel";
 
-abstract class BaseLevel implements ILevel {
+/**
+ * @description Extending the BaseLevel class is the quickes, cleanest and easiest way of creaing a barebones Highwood level
+ */
+abstract class BaseLevel extends BaseScene implements ILevel {
     protected _manager: LevelManager;
-    protected _events: Events;
-    protected _loop: Loop;
-    protected _goFactory: GOFactory;
-    protected _loader: Loader;
-    protected _game: Game;
-
     protected _bgd: SpriteObject;
 
     protected _background: ContainerObject;
@@ -29,12 +27,9 @@ abstract class BaseLevel implements ILevel {
     protected _jpgFiles: string[] = [];
 
     constructor(manager: LevelManager, events: Events, loop: Loop, goFactory: GOFactory, loader: Loader, game: Game) {
+        super(events, loop, goFactory, loader, game);
         this._manager = manager;
-        this._events = events;
-        this._loop = loop;
-        this._goFactory = goFactory;
-        this._loader = loader;
-        this._game = game;
+
         Debug.exposeGlobal(this, 'level'); // expose all levels globally as 'level' for debugging convenience
     }
 
@@ -53,19 +48,13 @@ abstract class BaseLevel implements ILevel {
      * @param processText the colums to convert into lines and words (mostly just for working with text in passage types)
      */
     init(scriptName: string, parseCols: string[], objectifyCols: string[], processText?: string[] | undefined): void {
-        Debug.info('init called');
-        Debug.info(this);
-        this._loop.addFunction(this.update, this);
-        this._loop.start();
-
+        super.init();
         // create 4 basic layers for positioning objects on. More can be added in the subclass where needed
         this._background = this._goFactory.container(0, 0);
         this._playground = this._goFactory.container(0, 0);
         this._foreground = this._goFactory.container(0, 0);
         this._HUD = this._goFactory.container(0, 0);
-
         // cookie-cutter event listeners (necessary for the functioning of activities and levels, and for avoiding memory leaks etc)
-        this.manager.events.on('shutdown', this.shutdown, this);
         this.manager.events.on('newRow', this.onNewRow, this);
 
         // load activity script, then call manager.init to preprocess the activity script, then call preload
@@ -80,23 +69,21 @@ abstract class BaseLevel implements ILevel {
      * @description adds resources to the load queue, then uses a promise to download those resource, then call the start method
      */
     preload(): void {
-        // preload
-        this._loader.download().then(() => {
-            this.start();
-        });
+       super.preload();
     }
 
     /**
      * @description the start method is used to setup the scene, then call waitForFirstInput, so that nothing kicks off until audio has been
      * enabled (Chrome disables audio until the first user gesture, and Highwood activities are highly audio-dependant/audio-driven)
+     * @param configRow optionally pass a config row. If not passed, it will be read from the first row of the script
      */
-    start(): void {
+    start(configRow?: any): void {
         Debug.info('start executed');
 
         // add anything that should be done by all levels on start
-        let firstRow = this._manager.script.rows[0];
-        if (firstRow.config.hasOwnProperty('bgd')) {
-            this._bgd = this._goFactory.sprite(0, 0, firstRow.config.bgd, null, this._background);
+        if(!configRow) configRow = this._manager.script.rows[0];
+        if (configRow.config.hasOwnProperty('bgd')) {
+            this._bgd = this._goFactory.sprite(0, 0, configRow.config.bgd, null, this._background);
         }
         else {
             Debug.error('no bgd property in config cell of first row');
@@ -141,7 +128,7 @@ abstract class BaseLevel implements ILevel {
     protected prevAct() {
         Debug.info('prevAct!');
         let config = this._manager.script.rows[0].config;
-        if(config.hasOwnProperty('prev_act')) this._game.startActivity(null, config.prev_act);   
+        if (config.hasOwnProperty('prev_act')) this._game.startActivity(config.prev_act);
     }
 
     /**
@@ -150,24 +137,8 @@ abstract class BaseLevel implements ILevel {
     protected nextAct() {
         Debug.info('nextAct!');
         let config = this._manager.script.rows[0].config;
-        if(config.hasOwnProperty('next_act')) this._game.startActivity(null, config.prev_act);   
+        if (config.hasOwnProperty('next_act')) this._game.startActivity(config.prev_act);
     }
-
-    /**
-     * @description per-tick operations go here. The update method is called via a callback which is passed to UAE.Loop, which is our RAF loop.
-     */
-    update(...args: any) {
-        // per tick
-    }
-
-    /**
-     * @description shutdown the level before loading another one. By default, it removes the UAE.Loop listener, and turns of fthe shutdown listener
-     */
-    shutdown(): void {
-        this._loop.removeFunction(this.update, this);
-        this._events.off('shutdown', this.shutdown, this);
-    }
-
 }
 
 export default BaseLevel;

@@ -5,7 +5,7 @@
 interface IActivity {
   name: string;
   code: string;
-  startActivity(scriptName: string): void;
+  startActivity(scriptName: string, ...args: any): void;
 }
 
 export default IActivity;

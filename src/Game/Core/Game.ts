@@ -117,7 +117,7 @@ class Game {
    * @description Starts the specified activity. Calls 'shutdown' event first.
    * @param the activity type (object) to start. Takes the object itself, or it's name in the form of a string
    */
-  public startActivity(act: IActivity | string | null, scriptName: any) {
+  public startActivity(scriptName: string, act: IActivity | string | null = null) {
     if(act == null) act = this.getActivityByCode(this.extractCode(scriptName));
 
     if (typeof act !== 'string' && act !== null) {
