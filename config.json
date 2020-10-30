@@ -1,11 +1,11 @@
 {
     "PATHS": {
         "IMG": "assets/img/",
-        "JSN": "assets/json/",
+        "JSN": "assets/scripts/",
         "SND": "assets/snd/",
         "SPN": "assets/spine/",
         "VIDEO": "assets/video",
-        "SCRIPT": "assets/script"
+        "ATLAS": "assets/atlas"
     },
     "SND": {
         "EXT": ["ogg", "mp3"]
