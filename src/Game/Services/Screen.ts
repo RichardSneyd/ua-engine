@@ -41,14 +41,14 @@ class Screen implements IScreen {
     return this._pxGame.addGraphic(x, y, width, height);
   }
 
-  public addHitMap(obj: DisplayObject, threshold: number = 127): boolean {
+  public addHitMap(obj: any, threshold: number = 127): boolean {
     // requires baseTexture -- generate from 'screengrab'??
-    let texture = this._pxGame.toTexture(obj);
-    Debug.info(texture);
+   // let texture = this._pxGame.toTexture(obj);
+   // Debug.info(texture);
     // try to generate ImageBitmap
-    if (texture == null) return false;
+   // if (texture == null) return false;
     
-    this._pxGame.genHitmap(texture.baseTexture, obj, threshold);
+    this._pxGame.genHitmap(obj.texture.baseTexture, obj, threshold);
     return true;
   }
 

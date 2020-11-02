@@ -132,11 +132,11 @@ class ScriptHandler {
 
     /**
      * @description Find the first row whose cells contain the specified vals
-     * @param colname the columns (properties) to search for the respective vals in
-     * @param val the vals to search for. The order of this array must match colname.
+     * @param colnames the columns (properties) to search for the respective vals in
+     * @param vals the vals to search for. The order of this array must match colname.
      */
-    public rowByCellVals(colname: string[], val: any[]): any | null {
-        return this._rowByCellVals(colname, val);
+    public rowByCellVals(colnames: string[], vals: any[]): any | null {
+        return this._rowByCellVals(colnames, vals);
     }
 
     public isFalsy(val: any): boolean {
@@ -227,9 +227,9 @@ class ScriptHandler {
         }
     }
 
-    private _rowByCellVals(colname: string[], val: any[]): any[] | null {
+    private _rowByCellVals(colnames: string[], vals: any[]): any[] | null {
 
-        let result = this._utils.rowByColsWithVals(this.rows, colname, val);
+        let result = this._utils.rowByColsWithVals(this.rows, colnames, vals);
         return result;
     }
 
@@ -237,8 +237,9 @@ class ScriptHandler {
         return this._utils.objectifyCell(text);
     }
 
-    private _parseList(text: string): string[] {
-        return this._utils.getValsFromCell(text);
+    private _parseList(text: string): string[] | string{
+        if(this._utils.getValsFromCell(text).length > 1)  return this._utils.getValsFromCell(text);
+        return text; // if there is only one element, skip this step and just return the original value
     }
 
     private _fileList(cols: string[]): any[] {
