@@ -413,7 +413,7 @@ class Loader {
       let currentName = resArr[c].name;
 
       if (!byName) {
-        if (currentUrl.indexOf(_url) !== -1) return resArr[c];
+        if (currentUrl == _url) return resArr[c];
       } else {
         // Debug.info("currentName(%s) == name(%s)", currentName, url)
         if (currentName == _url) return resArr[c];
