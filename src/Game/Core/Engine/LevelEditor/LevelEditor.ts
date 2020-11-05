@@ -12,34 +12,34 @@ class LevelEditor implements IActivity {
     protected _scene: EditorScene;
     protected _initialized: boolean;
 
-    constructor(events: Events, scene: EditorScene){
+    constructor(events: Events, scene: EditorScene) {
         this._name = 'editor';
         this._code = 'editor';
         this._events = events;
         this._scene = scene;
         this._initialized = false;
     }
-    
-    init(game: Game){
+
+    init(game: Game) {
         this._game = game;
         this._game.addActivity(this); // register the editor as an 'activity' that can be called by the engine
         this._initialized = true;
     }
 
-/*     createNew() {
+    /*createNew() {
         return new Editor(this._events, this._game, this._scene);
     } */
 
-    get name(){
+    get name() {
         return this._name;
     }
 
     get code() {
         return this._code;
     }
-    
+
     startActivity(scriptName: string): void {
-        if(this._initialized){
+        if (this._initialized) {
             Debug.info('Editor.startActivity()');
             this._game.loadLevel(this._scene, scriptName);
             return;
@@ -51,7 +51,7 @@ class LevelEditor implements IActivity {
      * @description will simultaneously initialize the the editor, and launch it
      * @param game must provide a reference to the current game object, accessed from UAE.game in the API
      */
-    public launch(game: Game){
+    public launch(game: Game) {
         // launch editor...
         Debug.info('Editor.launch()');
         this.init(game);

@@ -1,4 +1,6 @@
 import Debug from "../Debug";
+import SpriteObject from "../GameObjects/SpriteObject";
+import Loader from '../Loader';
 
 class UIAccordion {
 
@@ -7,40 +9,37 @@ class UIAccordion {
     protected _labels: HTMLButtonElement[] = [];
     protected _panels: HTMLDivElement[] = [];
 
-    init(): void {
-        this.createPanel();
+    protected _loader: Loader;
+
+    constructor(loader: Loader) {
+        this._loader = loader;
     }
 
     /**
      * @description Creates a container as a div element with a specific id to not confuse with other UI elements(if any)
      */
     createContainer(): void {
-        this._container = document.createElement('div');
-        this._container.setAttribute('id', 'accordion-container');
-        this._container.style.display = 'inline-block'; // this is used to display panel on top of any other element. ex: canvas
-        document.body.appendChild(this._container);
+        if (document.readyState === "complete") {
+            Debug.info("Editor.Accordion container created.");
+            this._container = document.createElement('div');
+            this._container.setAttribute('id', 'accordion-container');
+            this._container.style.display = 'inline-block'; // this is used to display panel on top of any other element. ex: canvas
+            document.body.appendChild(this._container);
+        }
     }
 
-    createPanel(): void {
-        if (document.readyState === "complete") {
-            Debug.info("Editor.Accordion panel created.");
-            this.createContainer();
-            
-            // 1. row
-            this.addLabel('Images');
-            this.addPanelContent();
-            this.addImg('https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/SpongeBob_SquarePants_character.svg/1200px-SpongeBob_SquarePants_character.svg.png', this._panels[0]);
-            this.addImg('https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/SpongeBob_SquarePants_character.svg/1200px-SpongeBob_SquarePants_character.svg.png', this._panels[0]);
-            this.addImg('https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/SpongeBob_SquarePants_character.svg/1200px-SpongeBob_SquarePants_character.svg.png', this._panels[0]);
-
-            // 2. row
-            this.addLabel('Spines');
-            this.addPanelContent();
-            this.addImg('https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/SpongeBob_SquarePants_character.svg/1200px-SpongeBob_SquarePants_character.svg.png', this._panels[1]);
-
-            this.removeAllSelections();
-            this.uncollapseAll();
+    /**
+     * @description Adds a new panel row inside of the its main container
+     * @param label Name of the panel header
+     * @param imageUrls Array of sprites/spines
+     */
+    addRow(label: string, ...imageUrls: string[]): void {
+        this.addLabel(label);
+        this.addPanelContent();
+        for (let i = 0; i < imageUrls.length; i++) {
+            this.addImg(imageUrls[i], this._panels[this._panels.length - 1]);
         }
+        Debug.info("Editor.Accordion row created.");
     }
 
     /**

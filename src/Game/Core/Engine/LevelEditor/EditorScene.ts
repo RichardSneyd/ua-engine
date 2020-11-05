@@ -37,7 +37,21 @@ class EditorScene implements ILevel {
         this._waitForFirstInput();
 
         // TODO: build editor UI and populate GameObject panels
-        this._accordion.init();
+        this._accordion.createContainer();
+        // Create rows here
+        this._accordion.addRow('Images', ...[
+            `${this._loader.resList[37].url}`,
+            `${this._loader.resList[38].url}`,
+            `${this._loader.resList[39].url}`
+        ]);
+
+        this._accordion.addRow('Spines', ...[
+            `${this._loader.resList[37].url}`
+        ]);
+
+        // This is needed for the first time creation of panels
+        this._accordion.removeAllSelections();
+        this._accordion.uncollapseAll();
     }
 
     shutdown(): void {
