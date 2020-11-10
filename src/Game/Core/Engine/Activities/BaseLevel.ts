@@ -94,7 +94,9 @@ abstract class BaseLevel extends BaseScene implements ILevel {
             Debug.error('no bgd property in config cell of first row');
         }
 
-        this._character = this._goFactory.spine(0, 0, configRow.config.char, this._playground);
+        if(configRow.config.hasOwnProperty('char')){
+            this._character = this._goFactory.spine(0, 0, configRow.config.char, this._playground);
+        }
 
         this._waitForFirstInput();
     }
@@ -107,10 +109,12 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         Debug.info('onNewRow called for row %s: ', this.manager.script.active.id, this.manager.script.active);
         this.loadConfig();
         
-        let activeRow = this.manager.script.active;
-        let loop = (activeRow.char_loop == 'y');
-        let animation = activeRow.char;
-        if (animation !== '') this._character.animations.play(animation, loop);
+        if(this._character) {
+            let activeRow = this.manager.script.active;
+            let loop = (activeRow.char_loop == 'y');
+            let animation = activeRow.char;
+            if (animation !== '') this._character.animations.play(animation, loop);
+        }
     }
 
     /**
