@@ -3,6 +3,7 @@ import Debug from "../Debug";
 import Events from "../Events";
 import ContainerObject from "../GameObjects/ContainerObject";
 import GOFactory from "../GameObjects/GOFactory";
+import SpineObject from "../GameObjects/SpineObject";
 import SpriteObject from "../GameObjects/SpriteObject";
 import LevelManager from "../LevelManager";
 import Loader from "../Loader";
@@ -27,6 +28,8 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     protected _jpgFiles: string[] = [];
 
     protected _ready: boolean = false;
+
+    protected _character: SpineObject;
 
     constructor(manager: LevelManager, events: Events, loop: Loop, goFactory: GOFactory, loader: Loader, game: Game) {
         super(events, loop, goFactory, loader, game);
@@ -90,6 +93,9 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         else {
             Debug.error('no bgd property in config cell of first row');
         }
+
+        this._character = this._goFactory.spine(0, 0, configRow.config.char, this._playground);
+
         this._waitForFirstInput();
     }
 
@@ -100,6 +106,11 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     onNewRow(): void {
         Debug.info('onNewRow called for row %s: ', this.manager.script.active.id, this.manager.script.active);
         this.loadConfig();
+        
+        let activeRow = this.manager.script.active;
+        let loop = (activeRow.char_loop == 'y');
+        let animation = activeRow.char;
+        if (animation !== '') this._character.animations.play(animation, loop);
     }
 
     /**
