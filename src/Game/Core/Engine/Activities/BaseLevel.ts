@@ -26,6 +26,8 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     protected _pngFiles: string[] = [];
     protected _jpgFiles: string[] = [];
 
+    protected _ready: boolean = false;
+
     constructor(manager: LevelManager, events: Events, loop: Loop, goFactory: GOFactory, loader: Loader, game: Game) {
         super(events, loop, goFactory, loader, game);
         this._manager = manager;
@@ -69,7 +71,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @description adds resources to the load queue, then uses a promise to download those resource, then call the start method
      */
     preload(): void {
-       super.preload();
+        super.preload();
     }
 
     /**
@@ -81,7 +83,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         Debug.info('start executed');
 
         // add anything that should be done by all levels on start
-        if(!configRow) configRow = this._manager.script.rows[0];
+        if (!configRow) configRow = this._manager.script.rows[0];
         if (configRow.config.hasOwnProperty('bgd')) {
             this._bgd = this._goFactory.sprite(0, 0, configRow.config.bgd, null, this._background);
         }
@@ -117,8 +119,8 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     _waitForFirstInput(): void {
         let canvas = document.getElementsByTagName('canvas')[0];
         canvas.addEventListener('click', () => {
-            this._events.emit('ready', { test: 'test', content: 'tap to begin' });
             this.manager.script.goTo(this.manager.script.rows[0]);
+            this.ready = true;
         }, { once: true });
     }
 
@@ -138,6 +140,21 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         Debug.info('nextAct!');
         let config = this._manager.script.rows[0].config;
         if (config.hasOwnProperty('next_act')) this._game.startActivity(config.prev_act);
+    }
+
+    /**
+     * @description Returns if the first input happened already
+     */
+    get ready(): boolean {
+        return this._ready;
+    }
+
+    /**
+     * @description Sets the readiness of the level. Overwrite this setter to also set this value to other interactable objects in cascade.
+     * @param ready If the Level is ready
+     */
+    set ready(ready: boolean) {
+        this._ready = ready;
     }
 }
 
