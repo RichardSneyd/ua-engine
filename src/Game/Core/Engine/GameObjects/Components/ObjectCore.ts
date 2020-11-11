@@ -282,31 +282,9 @@ class ObjectCore {
     this._go.pcHandler.sort(property, desc);
   }
 
-  public relativeMove(xDiff: number, yDiff: number) {
-    let scaleX = this._scaleHandler.getTrueScale(this._go.scaleHandler.scaleX);
-    let scaleY = this._scaleHandler.getTrueScale(this._go.scaleHandler.scaleY);
-
-    Debug.info(scaleX);
-    Debug.info(scaleY);
-
-    this.x += xDiff;
-    this.y += yDiff;
-  }
-
-  public moveToMouse(mouseEvt: any) {
-    let scaleX = this._scaleHandler.getTrueScale(this._go.scaleHandler.scaleX);
-    let scaleY = this._scaleHandler.getTrueScale(this._go.scaleHandler.scaleY);
-
-    let c = document.getElementsByTagName('canvas')[0];
-    let rect = c.getBoundingClientRect();
-
-    let xPos = ((mouseEvt.clientX) / scaleX);
-    let yPos = ((mouseEvt.clientY) / scaleY);
-
-    this.x = xPos - (xPos * 0.13);
-    if (yPos > 300) {
-      this.y = yPos - (yPos * 0.16);
-    }
+  public moveToMouse() {
+    this.x = this._input.manager.pointer.x;
+    this.y = this._input.manager.pointer.y;
   }
 
   public moveBy(x: number, y: number) {

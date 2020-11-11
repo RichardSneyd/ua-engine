@@ -16,6 +16,10 @@ class InputHandler {
     return this._pixelPerfect;
   }
 
+  get manager(){
+    return this._inputManager;
+  }
+
   constructor(inputManager: InputManager) {
     this._inputManager = inputManager;
   }

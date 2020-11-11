@@ -196,8 +196,16 @@ class TextObject implements IGameObject {
         return this._core.bottom;
     }
 
-    get relativeMove(): (xDiff: number, yDiff: number) => void {
-        return this._core.relativeMove.bind(this._core);
+    get moveBy() : (x: number, y: number) => void {
+        return this._core.moveBy.bind(this._core);
+    }
+
+    get moveTo() : (x: number, y: number) => void {
+        return this._core.moveTo.bind(this._core);
+    }
+
+    get moveToMouse(){
+        return this._core.moveToMouse.bind(this._core);
     }
 
     get enableMask(): (x: number, y: number, width: number, height: number) => void {
