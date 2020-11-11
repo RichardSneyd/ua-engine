@@ -15,7 +15,8 @@
     "howler": "^2.1.3",
     "lodash": "^4.17.15",
     "pixi-spine": "^2.1.7",
-    "pixi.js-legacy": "^5.3.3"
+    "pixi.js-legacy": "^5.3.3",
+    "rise-h5-sdk": "^1.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

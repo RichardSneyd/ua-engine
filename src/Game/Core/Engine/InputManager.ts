@@ -38,6 +38,7 @@ class InputManager {
         window.addEventListener('keydown', this._onKeyDown.bind(this));
         window.addEventListener('keyup', this._onKeyUp.bind(this));
         window.addEventListener('keypress', this._onKeyPress.bind(this));
+        Debug.exposeGlobal(this._pointer, 'mouse');
     }
 
     public onKeyDown(keyCode: number, callback: Function, context: any) {
@@ -132,7 +133,7 @@ class InputManager {
         this._pointer.y = data.mouseY / this._scaleManager.scaleFactor();
         this._pointerMovement.x = data.moveX / this._scaleManager.scaleFactor();
         this._pointerMovement.y = data.moveY / this._scaleManager.scaleFactor();
-        // Debug.info('pointer moved: ', this._pointer);
+     //   Debug.info('pointer moved: ', this._pointer);
         //  Debug.info('data: ', data);
     }
 
