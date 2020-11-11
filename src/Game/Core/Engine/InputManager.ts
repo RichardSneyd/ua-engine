@@ -129,10 +129,11 @@ class InputManager {
 
     private _onPointerMove(data: any) {
         //  Debug.info('this: ', this);
-        this._pointer.x = data.mouseX / this._scaleManager.scaleFactor();
-        this._pointer.y = data.mouseY / this._scaleManager.scaleFactor();
-        this._pointerMovement.x = data.moveX / this._scaleManager.scaleFactor();
-        this._pointerMovement.y = data.moveY / this._scaleManager.scaleFactor();
+        let scaleF = this._scaleManager.scaleFactor();
+        this._pointer.x = data.mouseX / scaleF;
+        this._pointer.y = data.mouseY / scaleF;
+        this._pointerMovement.x = data.moveX / scaleF;
+        this._pointerMovement.y = data.moveY / scaleF;
      //   Debug.info('pointer moved: ', this._pointer);
         //  Debug.info('data: ', data);
     }
