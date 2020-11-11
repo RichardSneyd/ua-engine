@@ -283,8 +283,8 @@ class ObjectCore {
   }
 
   public relativeMove(xDiff: number, yDiff: number) {
-    let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
-    let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
+    let scaleX = this._scaleHandler.getTrueScale(this._go.scaleHandler.scaleX);
+    let scaleY = this._scaleHandler.getTrueScale(this._go.scaleHandler.scaleY);
 
     Debug.info(scaleX);
     Debug.info(scaleY);
@@ -294,8 +294,8 @@ class ObjectCore {
   }
 
   public moveToMouse(mouseEvt: any) {
-    let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
-    let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
+    let scaleX = this._scaleHandler.getTrueScale(this._go.scaleHandler.scaleX);
+    let scaleY = this._scaleHandler.getTrueScale(this._go.scaleHandler.scaleY);
 
     let c = document.getElementsByTagName('canvas')[0];
     let rect = c.getBoundingClientRect();
@@ -375,8 +375,8 @@ class ObjectCore {
 
   public scaleMask() {
     if (this._mask.initialized) {
-      let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
-      let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
+      let scaleX = this._scaleHandler.getTrueScale(this._go.scaleHandler.scaleX);
+      let scaleY = this._scaleHandler.getTrueScale(this._go.scaleHandler.scaleY);
 
       this._mask.scale(scaleX, scaleY);
     }
