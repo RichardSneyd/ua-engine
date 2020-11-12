@@ -170,8 +170,16 @@ class SpriteObject implements IFramedGameObject {
         return this._core.bottom;
     }
 
-    get relativeMove(): (xDiff: number, yDiff: number) => void {
-        return this._core.relativeMove.bind(this._core);
+    get moveBy() : (x: number, y: number) => void {
+        return this._core.moveBy.bind(this._core);
+    }
+
+    get moveTo() : (x: number, y: number) => void {
+        return this._core.moveTo.bind(this._core);
+    }
+
+    get moveToMouse(){
+        return this._core.moveToMouse.bind(this._core);
     }
 
     get enableMask(): (x: number, y: number, width: number, height: number) => void {
@@ -226,18 +234,12 @@ class SpriteObject implements IFramedGameObject {
         return this._pcHandler.children;
     }
 
-
     /**
     * @description look at (angle towards) an object on screen. Any object with an x and y parameter is acceptible
     * @param object the object (must have x and y properties) to angle towards 
     */
     public lookAt(object: { x: number, y: number }) {
         this._core.lookAt(object);
-    }
-
-
-    public moveToMouse(evt: any) {
-        this._core.moveToMouse(evt);
     }
 
     // ALWAYS listen for core.update in events, never this one directly, as it is called from core.update.
