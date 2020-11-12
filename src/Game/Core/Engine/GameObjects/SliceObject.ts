@@ -47,9 +47,9 @@ class SliceObject implements IGameObject {
         return slice;
     }
 
-     private _update(time: any) {
+    private _update(time: any) {
         //this._tweenComponent.update(time);
-    } 
+    }
 
     public createEmpty() {
         let slice = new SliceObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this.input.createNew(), this.scaleHandler.createNew(), this._tweenComponent.createNew());
@@ -61,11 +61,11 @@ class SliceObject implements IGameObject {
         this._core.changeTexture(textureName);
     }
 
-    get angle(){
+    get angle() {
         return this._core.angle;
     }
 
-    set angle(angle: number){
+    set angle(angle: number) {
         this._core.angle = angle;
     }
 
@@ -176,19 +176,19 @@ class SliceObject implements IGameObject {
         return this._core.bottom;
     }
 
-    get moveBy() : (x: number, y: number) => void {
+    get moveBy(): (x: number, y: number) => void {
         return this._core.moveBy.bind(this._core);
     }
 
-    get moveTo() : (x: number, y: number) => void {
+    get moveTo(): (x: number, y: number) => void {
         return this._core.moveTo.bind(this._core);
     }
 
-    get moveToMouse(){
+    get moveToMouse() {
         return this._core.moveToMouse.bind(this._core);
     }
 
-    get enableMask() : (x: number, y: number, width: number, height: number) => void {
+    get enableMask(): (x: number, y: number, width: number, height: number) => void {
         return this._core.enableMask.bind(this._core);
     }
 
@@ -232,15 +232,16 @@ class SliceObject implements IGameObject {
     get children() {
         return this._pcHandler.children;
     }
-    
-    /**
-    * @description look at (angle towards) an object on screen. Any object with an x and y parameter is acceptible
-    * @param object the object (must have x and y properties) to angle towards 
-    */
-    public lookAt(object: { x: number, y: number }) {
-        this._core.lookAt(object);
-    }
 
+    /**
+     * @description look at (angle towards) an object on screen. Any object with an x and y parameter is acceptible
+     * @param object the object (must have x and y properties) to angle towards 
+     * @param offset an optional offset value, in degrees
+     */
+    public lookAt(object: { x: number, y: number }, offset: number = 0) {
+        this._core.lookAt(object, offset);
+    }
+    
     destroy() {
         if (this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
         this._core.destroy();

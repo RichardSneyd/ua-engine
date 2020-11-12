@@ -257,14 +257,15 @@ class TextObject implements IGameObject {
     }
 
 
-    /**
+   /**
     * @description look at (angle towards) an object on screen. Any object with an x and y parameter is acceptible
     * @param object the object (must have x and y properties) to angle towards 
+    * @param offset an optional offset value, in degrees
     */
-    public lookAt(object: { x: number, y: number }) {
-        this._core.lookAt(object);
+    public lookAt(object: { x: number, y: number }, offset: number = 0) {
+        this._core.lookAt(object, offset);
     }
-
+    
     destroy() {
         if (this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
         this._core.destroy();

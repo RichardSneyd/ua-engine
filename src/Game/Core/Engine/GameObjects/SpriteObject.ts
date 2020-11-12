@@ -237,9 +237,10 @@ class SpriteObject implements IFramedGameObject {
     /**
     * @description look at (angle towards) an object on screen. Any object with an x and y parameter is acceptible
     * @param object the object (must have x and y properties) to angle towards 
+    * @param offset an optional offset value, in degrees
     */
-    public lookAt(object: { x: number, y: number }) {
-        this._core.lookAt(object);
+    public lookAt(object: { x: number, y: number }, offset: number = 0) {
+        this._core.lookAt(object, offset);
     }
 
     // ALWAYS listen for core.update in events, never this one directly, as it is called from core.update.

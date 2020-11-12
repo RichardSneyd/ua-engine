@@ -37,9 +37,9 @@ class ContainerObject implements IGameObject {
     }
 
     // only to be called by ObjectCore
-     private _update(time: any) {
-      //  this._tweenComponent.update(time);
-    } 
+    private _update(time: any) {
+        //  this._tweenComponent.update(time);
+    }
 
     public createNew(x: number, y: number, parent: IParentChild | null): ContainerObject {
         let cont = this.createEmpty();
@@ -172,21 +172,21 @@ class ContainerObject implements IGameObject {
      */
     private _setPivot() {
         this._core.data.pivot.set(Math.floor(this.origin.x * this._width()), Math.floor(this.origin.y * this._height()));
-    } 
+    }
 
     get origin(): Point {
         return this._core.origin;
     }
 
-    get moveBy() : (x: number, y: number) => void {
+    get moveBy(): (x: number, y: number) => void {
         return this._core.moveBy.bind(this._core);
     }
 
-    get moveTo() : (x: number, y: number) => void {
+    get moveTo(): (x: number, y: number) => void {
         return this._core.moveTo.bind(this._core);
     }
 
-    get moveToMouse(){
+    get moveToMouse() {
         return this._core.moveToMouse.bind(this._core);
     }
 
@@ -282,11 +282,12 @@ class ContainerObject implements IGameObject {
     }
 
     /**
-    * @description look at (angle towards) an object on screen. Any object with an x and y parameter is acceptible
-    * @param object the object (must have x and y properties) to angle towards 
-    */
-    public lookAt(object: { x: number, y: number }) {
-        this._core.lookAt(object);
+   * @description look at (angle towards) an object on screen. Any object with an x and y parameter is acceptible
+   * @param object the object (must have x and y properties) to angle towards 
+   * @param offset an optional offset value, in degrees
+   */
+    public lookAt(object: { x: number, y: number }, offset: number = 0) {
+        this._core.lookAt(object, offset);
     }
 
     destroy() {

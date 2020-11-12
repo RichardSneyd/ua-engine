@@ -44,8 +44,8 @@ class SpineObject implements IGameObject {
     }
 
     private _update(time: any) {
-      //  this._tweenComponent.update(time);
-    } 
+        //  this._tweenComponent.update(time);
+    }
 
     public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): SpineObject {
         let sprite = this.createEmpty();
@@ -181,15 +181,15 @@ class SpineObject implements IGameObject {
         return this._core.bottom;
     }
 
-    get moveBy() : (x: number, y: number) => void {
+    get moveBy(): (x: number, y: number) => void {
         return this._core.moveBy.bind(this._core);
     }
 
-    get moveTo() : (x: number, y: number) => void {
+    get moveTo(): (x: number, y: number) => void {
         return this._core.moveTo.bind(this._core);
     }
 
-    get moveToMouse(){
+    get moveToMouse() {
         return this._core.moveToMouse.bind(this._core);
     }
 
@@ -239,11 +239,12 @@ class SpineObject implements IGameObject {
 
 
     /**
-    * @description look at (angle towards) an object on screen. Any object with an x and y parameter is acceptible
-    * @param object the object (must have x and y properties) to angle towards 
-    */
-    public lookAt(object: { x: number, y: number }) {
-        this._core.lookAt(object);
+     * @description look at (angle towards) an object on screen. Any object with an x and y parameter is acceptible
+     * @param object the object (must have x and y properties) to angle towards 
+     * @param offset an optional offset value, in degrees
+     */
+    public lookAt(object: { x: number, y: number }, offset: number = 0) {
+        this._core.lookAt(object, offset);
     }
 
     destroy() {
