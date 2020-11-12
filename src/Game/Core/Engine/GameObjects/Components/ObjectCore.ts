@@ -282,9 +282,12 @@ class ObjectCore {
     this._go.pcHandler.sort(property, desc);
   }
 
-  public moveToMouse() {
-    this.x = this._input.manager.pointer.x;
-    this.y = this._input.manager.pointer.y;
+  public moveToMouse(xOffset?: number, yOffset?: number) {
+    let x = this._input.manager.pointer.x;
+    let y = this._input.manager.pointer.y;
+    if(xOffset) x += xOffset;
+    if(yOffset) y += yOffset;
+    this.moveTo(x, y);
   }
 
   public moveBy(x: number, y: number) {
