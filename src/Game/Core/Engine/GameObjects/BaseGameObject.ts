@@ -11,6 +11,7 @@ import IFramedGameObject from "./IFrameAnimatedGameObject";
 import FrameAnimationManager from './Components/FrameAnimationManager';
 import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
+import Debug from "../Debug";
 
 /**
  * @description A sprite game object class. 
@@ -80,6 +81,7 @@ abstract class BaseGameObject implements IGameObject {
     // override this
     get animations(): any {
         //  return this._animationManager;
+        Debug.warn('animationManager not implemented on this GameObject');
         return;
     }
 

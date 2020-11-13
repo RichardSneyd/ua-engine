@@ -22,15 +22,16 @@ class ContainerObject extends BaseGameObject {
         this._pointFactory = point;
     }
 
-    public init(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null): void {
+    public init(x: number, y: number, parent: IParentChild | null): void {
         this.data = this._screen.createContainer(x, y);
+        this._core.init(this, x, y, '', this._update)
         this._pcHandler.init(this, this._core, parent);
-        super.init(x, y, '', null, parent);
+        super.init();
     }
 
     public createNew(x: number, y: number, parent: IParentChild | null): ContainerObject {
         let cont = this.createEmpty();
-        cont.init(x, y, '', null, parent);
+        cont.init(x, y, parent);
         return cont;
     }
 
