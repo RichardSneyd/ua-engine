@@ -4,5 +4,7 @@
  */
 interface IAnimationManager {
     play(...args: any[]): void;
-    update(time: any): void;
+    update(...args: any[]): void;
+    init(...args: any[]): void;
+    createNew(...args: any[]): any;
 }
