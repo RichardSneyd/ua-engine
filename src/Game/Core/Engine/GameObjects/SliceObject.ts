@@ -23,9 +23,8 @@ class SliceObject extends BaseGameObject{
         this.data = this._screen.createNineSlice(x, y, textureName, leftWidth, topHeight, rightWidth, bottomHeight);
         this.data.calculateBounds();
         this._core.init(this, x, y, textureName, this._update);
-        this._pcHandler.init(this, this._core, parent);
-       
         super.init();
+        this._pcHandler.init(this, this._core, parent);
     }
 
     public createNew(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent: IParentChild | null = null): SliceObject {

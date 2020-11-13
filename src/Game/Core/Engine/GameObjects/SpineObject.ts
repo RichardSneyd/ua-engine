@@ -29,9 +29,9 @@ class SpineObject extends BaseGameObject {
         this.data = this._screen.createSpine(textureName);
         if (frame != null) this._core.atlas = textureName;
         this._core.init(this, x, y, textureName, this._update);
-        this._pcHandler.init(this, this._core, parent);
-        this._animationManager.init(this, this._core);
         super.init();
+        this._animationManager.init(this, this._core);
+        this._pcHandler.init(this, this._core, parent);
     }
 
     public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): SpineObject {

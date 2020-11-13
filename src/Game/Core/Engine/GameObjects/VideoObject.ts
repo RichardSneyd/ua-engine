@@ -28,9 +28,9 @@ class VideoObject extends BaseGameObject {
     public init(x: number, y: number, videoName: string, frame: string | null = null, parent: IParentChild | null = null): void {
         this.data = this._screen.createVideo(x, y, videoName);
         this._core.atlas = videoName;
-        this._pcHandler.init(this, this._core, parent);
         this._core.init(this, x, y, videoName, this._update);
         super.init();
+        this._pcHandler.init(this, this._core, parent);
 
         //@ts-ignore
         this._vidElement = this.data.texture.baseTexture.resource.source;

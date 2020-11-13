@@ -28,8 +28,8 @@ class TextObject extends BaseGameObject {
         this._letters = text;
         this.data = this._screen.createText(x, y, text, style);
         this._core.init(this, x, y, '', this._update);
-        this._pcHandler.init(this, this._core, parent);
         super.init();
+        this._pcHandler.init(this, this._core, parent);
     }
 
     public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null): TextObject {

@@ -21,17 +21,17 @@ class SpriteObject extends BaseGameObject {
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler,
         scaleHandler: ScaleHandler, animationManager: FrameAnimationManager, tweenComponent: TweenComponent) {
-            super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent);
-            this._animationManager = animationManager;    
-        }
-        
-        public init(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): void {
-            this.data = this._screen.createSprite(x, y, textureName, frame);
-            if (frame != null) this._core.atlas = textureName;
-            this._core.init(this, x, y, textureName, this._update);
-            this._animationManager.init(this, this._core);
-            this._pcHandler.init(this, this._core, parent);
-            super.init();
+        super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent);
+        this._animationManager = animationManager;
+    }
+
+    public init(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): void {
+        this.data = this._screen.createSprite(x, y, textureName, frame);
+        if (frame != null) this._core.atlas = textureName;
+        this._core.init(this, x, y, textureName, this._update);
+        super.init();
+        this._animationManager.init(this, this._core);
+        this._pcHandler.init(this, this._core, parent);
     }
 
     public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): SpriteObject {
@@ -44,7 +44,7 @@ class SpriteObject extends BaseGameObject {
         return new SpriteObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._animationManager.createNew(), this._tweenComponent.createNew());
     }
 
-    get animations() : FrameAnimationManager {
+    get animations(): FrameAnimationManager {
         return this._animationManager;
     }
 

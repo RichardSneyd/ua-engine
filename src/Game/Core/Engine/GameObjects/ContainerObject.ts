@@ -24,9 +24,9 @@ class ContainerObject extends BaseGameObject {
 
     public init(x: number, y: number, parent: IParentChild | null): void {
         this.data = this._screen.createContainer(x, y);
-        this._core.init(this, x, y, '', this._update)
-        this._pcHandler.init(this, this._core, parent);
+        this._core.init(this, x, y, '', this._update);
         super.init();
+        this._pcHandler.init(this, this._core, parent);
     }
 
     public createNew(x: number, y: number, parent: IParentChild | null): ContainerObject {

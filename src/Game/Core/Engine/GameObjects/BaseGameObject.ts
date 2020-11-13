@@ -33,8 +33,8 @@ abstract class BaseGameObject implements IGameObject {
 
     public init(...args: any[]): void {
         //  this.data = this._screen.createSprite(x, y, textureName, frame);
-        this._input.init(this, this._core);
         this._scaleHandler.init(this, this._core);
+        this._input.init(this, this._core);
         this._tweenComponent.init(this);
     }
 
