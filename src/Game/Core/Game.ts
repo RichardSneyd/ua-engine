@@ -16,11 +16,8 @@ import ILevel from './Engine/Activities/ILevel';
 import Transitions from '../Core/Engine/Transitions';
 import TweenManager from './Engine/TweenManager';
 import Debug from './Engine/Debug';
-<<<<<<< HEAD
 import LevelEditor from './Engine/LevelEditor/LevelEditor';
-=======
 import Activities from './Engine/Activities/Activities';
->>>>>>> master
 
 /**
  * @description the game class. There should only ever be one of these.
@@ -43,11 +40,7 @@ class Game {
   constructor(world: World, loop: Loop, loader: Loader,
     events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
     levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils, tween: TweenManager,
-<<<<<<< HEAD
-    debug: Debug, editor: LevelEditor) {
-=======
-    debug: Debug, activityClasses: Activities) {
->>>>>>> master
+    debug: Debug, editor: LevelEditor, activityClasses: Activities) {
 
     this._world = world;
     this._events = events;
@@ -268,11 +261,8 @@ class Game {
     this._expose.add('transitions', this._transitions);
     this._expose.add('tween', this._tween);
     this._expose.add('debug', this._debug);
-<<<<<<< HEAD
     this._expose.add('editor', this._editor);
-=======
     this._expose.add('activities', this._activityClasses);
->>>>>>> master
   }
 
   private _addListeners(): void {
