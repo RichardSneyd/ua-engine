@@ -53,7 +53,10 @@ const config = {
             'EditorScene'
         ],
         ignore: [
-            'UAENGINE'
+            'UAENGINE',
+            'BaseActivity',
+            'BaseLevel',
+            'BaseScene'
         ],
     },
     replaceAll: {

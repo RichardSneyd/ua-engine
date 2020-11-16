@@ -12,6 +12,7 @@ import Transitions from './Core/Engine/Transitions';
 import TweenManager from './Core/Engine/TweenManager';
 import LevelEditor from './Core/Engine/LevelEditor/LevelEditor';
 import Debug from './Core/Engine/Debug';
+import Activities from './Core/Engine/Activities/Activities';
 
 /**
  * @description The UAEngine API. 
@@ -31,6 +32,7 @@ class UAE {
   public static editor: LevelEditor;
   public static debug: Debug;
   public static transitions = Transitions;
+  public static activities: Activities;
 }
 
 export default UAE;

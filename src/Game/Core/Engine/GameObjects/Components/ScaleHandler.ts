@@ -17,6 +17,24 @@ class ScaleHandler {
   private _scaleX: number;
   private _scaleY: number;
 
+  constructor(scaleManager: ScaleManager) {
+    this._scaleManager = scaleManager;
+    this._scaleX = 1;
+    this._scaleY = 1;
+
+  }
+
+  public init(go: IGameObject, core: ObjectCore) {
+    this._go = go;
+    this._core = core;
+    this._events = this._go.events;
+    this._scaleManager.init();
+
+    this.onResize();
+    this._addListeners();
+    // Debug.info("smanager w(%s) h(%s)", this._width, this._height);
+  }
+
   get scaleX(): number {
     return this._scaleX;
   }
@@ -41,23 +59,24 @@ class ScaleHandler {
     this.updateScale();
   }
 
-  constructor(scaleManager: ScaleManager) {
-    this._scaleManager = scaleManager;
-    this._scaleX = 1;
-    this._scaleY = 1;
-
-    // Debug.info("{debug3} scale manager allocated!");
+  /**
+   * @description set the scale for both the x and y axis
+   */
+  set scale(scale: number){
+    this._scaleX = scale; this._scaleY = scale;
+    this.updateScale();
   }
 
-  public init(go: IGameObject, core: ObjectCore) {
-    this._go = go;
-    this._core = core;
-    this._events = this._go.events;
-    this._scaleManager.init();
-
-    this.onResize();
-    this._addListeners();
-    // Debug.info("smanager w(%s) h(%s)", this._width, this._height);
+  /**
+   * @ method for setting scale. If only 1 value is provided, it will be used for both scaleX and scaleY
+   * @param x 
+   * @param y 
+   */
+  setScale(x: number, y?: number){
+    if(!y) y = x;
+    this._scaleX = x;
+    this._scaleY = y;
+    this.updateScale();
   }
 
   public createNew(): ScaleHandler {
@@ -66,7 +85,6 @@ class ScaleHandler {
   }
 
   public onResize() {
-
     this._onResize();
   }
 
@@ -78,20 +96,17 @@ class ScaleHandler {
     return this._scaleManager.getWidthHeight(x, y);
   }
 
-  public getScale(currentScale: number) {
-    return this._scaleManager.getScale(currentScale);
+   /**
+   * @description Multiplies the local scale by the scaleFactor (for the screen), to provide the true scale
+   * @param localScale 
+   */
+  public getTrueScale(localScale: number) {
+    return this._scaleManager.getTrueScale(localScale);
   }
 
   private _updateScale() {
     let scaleX = this._scaleX;
     let scaleY = this._scaleY;
-
-   /*  if (this._go.pcHandler.parent == null || this._go.pcHandler.parent == undefined) {
-      scaleX = this._scaleManager.getScale(this._scaleX);
-      scaleY = this._scaleManager.getScale(this._scaleY);
-    } else {
-
-    } */
 
     this._core.objectHandler.setScale(this._core.data, scaleX, scaleY);
   }
@@ -100,30 +115,10 @@ class ScaleHandler {
     this._events.addListener('resize', this._onResize, this);
   }
 
-  private _onResize() {
-    // Debug.info("{debug3} scale manager resize!", this._scaleManager.getScale(this._scaleX), this._scaleManager.getScale(this._scaleY), this._go);
-    
-    if (this._go instanceof ContainerObject) {
-      
-    } else {
-    }
-    
+  private _onResize() {    
    // this._updateScale();
-
-    if (this._go.pcHandler.parent == null || this._go.pcHandler.parent == undefined) {
-    }
-    //   this._core.updateXY();
   this._core.updateOrigin();
   this._core.scaleMask();
-
-
-    /*
-    if (this._go.pcHandler.parent == null || this._go instanceof ContainerObject) {
-      this._updateScale();
-      this._core.updateXY();
-      this._core.updateOrigin();
-    }
-    */
   }
 
   shutdown(){

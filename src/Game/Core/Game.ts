@@ -6,16 +6,21 @@ import Loop from './Engine/Loop';
 import Loader from './Engine/Loader';
 import GameConfig from './Engine/GameConfig';
 import LevelManager from './Engine/LevelManager';
-import IActivity from './Engine/IActivity';
+import IActivity from './Engine/Activities/IActivity';
+import BaseLevel from './Engine/Activities/BaseLevel';
 import GOFactory from './Engine/GameObjects/GOFactory';
 import Geom from './Geom/Geom';
 import Utils from './Engine/Utils/Utils';
-import IScene from './Engine/IScene';
-import ILevel from './Engine/ILevel';
+import IScene from './Engine/Activities/IScene';
+import ILevel from './Engine/Activities/ILevel';
 import Transitions from '../Core/Engine/Transitions';
 import TweenManager from './Engine/TweenManager';
 import Debug from './Engine/Debug';
+<<<<<<< HEAD
 import LevelEditor from './Engine/LevelEditor/LevelEditor';
+=======
+import Activities from './Engine/Activities/Activities';
+>>>>>>> master
 
 /**
  * @description the game class. There should only ever be one of these.
@@ -25,7 +30,7 @@ class Game {
   private _scaleManager: ScaleManager; _expose: Expose;
 
   private _loop: Loop; _loader: Loader; _gameConfig: GameConfig; _levelManager: LevelManager;
-  private _goFactory: GOFactory; _geom: Geom; _utils: Utils;
+  private _goFactory: GOFactory; _geom: Geom; _utils: Utils; private _activityClasses: Activities;
 
   protected _activities: IActivity[];
   protected _currentActivity: IActivity;
@@ -38,7 +43,11 @@ class Game {
   constructor(world: World, loop: Loop, loader: Loader,
     events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
     levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils, tween: TweenManager,
+<<<<<<< HEAD
     debug: Debug, editor: LevelEditor) {
+=======
+    debug: Debug, activityClasses: Activities) {
+>>>>>>> master
 
     this._world = world;
     this._events = events;
@@ -50,6 +59,7 @@ class Game {
     this._gameConfig = gameConfig;
     this._levelManager = levelManager;
     this._goFactory = goFactory;
+    this._activityClasses = activityClasses;
 
     this._geom = geom;
     this._utils = utils;
@@ -117,11 +127,13 @@ class Game {
    * @description Starts the specified activity. Calls 'shutdown' event first.
    * @param the activity type (object) to start. Takes the object itself, or it's name in the form of a string
    */
-  public startActivity(act: IActivity | string, scriptName: any) {
-    if (typeof act !== 'string') {
+  public startActivity(scriptName: string, act: IActivity | string | null = null) {
+    if(act == null) act = this.getActivityByCode(this.extractCode(scriptName));
+
+    if (typeof act !== 'string' && act !== null) {
       this._startActivity(act, scriptName);
     }
-    else {
+    else if(typeof act == 'string') {
       let name = act;
       let activity: IActivity | undefined;
       activity = this._getActByName(name);
@@ -132,6 +144,16 @@ class Game {
         this._startActivity(activity, scriptName);
       }
     }
+  }
+
+  /**
+   * @description extract activity code. i.e 'i11', 'i3' etc, from scriptName
+   */
+  public extractCode(scriptName: string): string {
+    let scriptCodeParts = scriptName.split('_');
+    let code = scriptCodeParts[scriptCodeParts.length - 1];
+    
+    return code;
   }
 
   public loadLevel(level: ILevel, scriptName: string) {
@@ -246,7 +268,11 @@ class Game {
     this._expose.add('transitions', this._transitions);
     this._expose.add('tween', this._tween);
     this._expose.add('debug', this._debug);
+<<<<<<< HEAD
     this._expose.add('editor', this._editor);
+=======
+    this._expose.add('activities', this._activityClasses);
+>>>>>>> master
   }
 
   private _addListeners(): void {

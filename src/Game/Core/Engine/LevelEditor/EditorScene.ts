@@ -1,5 +1,6 @@
 import Debug from "../Debug";
-import ILevel from "../ILevel";
+import ILevel from '../Activities/ILevel';
+
 import LevelManager from "../LevelManager";
 import GOFactory from "../GameObjects/GOFactory";
 import Loader from "../Loader";

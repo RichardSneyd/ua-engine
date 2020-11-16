@@ -1,7 +1,7 @@
 import Game from "../../Game";
 import Debug from "../Debug";
 import Events from "../Events";
-import IActivity from "../IActivity";
+import IActivity from "../Activities/IActivity";
 import EditorScene from './EditorScene';
 
 class LevelEditor implements IActivity {
@@ -56,7 +56,7 @@ class LevelEditor implements IActivity {
         Debug.info('Editor.launch()');
         this.init(game);
         Debug.info('Editor initialized');
-        this._game.startActivity(this, 'no_script'); // call the activity (engine will call Editor.startActivity in return, which will call game.loadLevel)
+        this._game.startActivity(this._name, 'no_script'); // call the activity (engine will call Editor.startActivity in return, which will call game.loadLevel)
     }
 }
 

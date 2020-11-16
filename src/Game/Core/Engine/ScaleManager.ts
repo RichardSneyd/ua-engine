@@ -1,6 +1,7 @@
 import GameConfig from './GameConfig';
 import ContainerObject from './GameObjects/ContainerObject';
 import Events from './Events';
+import Debug from './Debug';
 
 /**
  * @description responsible for determining scale factor. ScaleHandler GO component uses it to calculate scale for game objects.
@@ -16,12 +17,12 @@ class ScaleManager {
 
     this._width = 0;
     this._height = 0;
+    Debug.exposeGlobal(this, 'scale');
   }
 
   public init() {
     this._width = this._gameWidth();
     this._height = this._gameHeight();
-    //Debug.info("smanager w(%s) h(%s)", this._width, this._height);
   }
 
   /**
@@ -39,11 +40,11 @@ class ScaleManager {
   }
 
   /**
-   * @description Gives the current scale value
-   * @param currentScale 
+   * @description Multiplies the local scale by the scaleFactor (for the screen), to provide the true scale
+   * @param localScale 
    */
-  public getScale(currentScale: number): number {
-    let scale = this._scaleFactor() * currentScale;
+  public getTrueScale(localScale: number): number {
+    let scale = this._scaleFactor() * localScale;
 
     return scale;
   }
@@ -67,7 +68,6 @@ class ScaleManager {
     let wRatio = (width / this._width);
 
     return hRatio < wRatio ? hRatio : wRatio;
-    // devicePixelRatio
   }
 
   private _gameWidth(): number {

@@ -86,8 +86,8 @@ animal.age = 32; // this calls the setter method.
 
 ## Examples
 ### Activity
-Every activity must contain 3 build files from the UAE repo: UAE.d.ts, uae.js, and uae.js.map. These can be copied from the dist directory, where they are saved after a build has completed. Every activity, in turn, must have an Activity class which implements IActivity.
-
+Every activity must contain 3 build files from the UAE repo: UAE.d.ts, uae.js, and uae.js.map. These can be copied from the dist directory, where they are saved after a build has completed. Every activity, in turn, must have an Activity class which implements IActivity, or extends BaseActivity.
+#### Implementing IActivity (not prefered)
 ```typescript
 import UAE from 'UAE';
 import IActivity from 'UAE/Core/Engine/IActivity';
@@ -111,10 +111,81 @@ class Activity implements IActivity {
 }
 
 export default Activity;
-
 ```
-Every activity must also contain a Level class of some description (typically called MainLevel if there's only one, but this is just a convention), which implements ILevel.
+#### Extending BaseActivity (prefered)
+Extending BaseActivity keeps the IActivity implementations much cleaner and more uniform, so it is the preferred method: 
+```typescript
+import UAE from 'UAE';
+import SomeLevel from '../Levels/SomeLevel';
+import SomeOtherLevel from '../Levels/SomeOtherLevel';
+import ILevel from 'UAE/Core/Engine/Activities/ILevel';
 
+class Activity extends UAE.activities.BaseActivity {
+  protected _someLevel: SomeLevel;
+  protected _someOtherLevel: SomeOtherLevel;
+  protected _defaultLevel: ILevel; // can be handy for quickly switching between available levels during development and QA
+
+  constructor(someLevel: SomeLevel, someOtherLevel: SomeOtherLevel) {
+    super('examples', 'examples', UAE.game);
+    this._someLevel = pixelPerfect;
+    this._someOtherLevel = extendBaseLevel;
+    // set default level -- not requird, but can be handy for quick testing
+    this._defaultLevel = this._someOtherLevel;
+  }
+
+  startActivity(scriptName: string) {
+    super.startActivity(scriptName, this._defaultLevel);
+  }
+}
+
+export default Activity;
+```
+Every activity must also contain a Level class of some description (typically called MainLevel if there's only one, but this is just a convention). Each level must either extend UAE.activities.BaseLevel (prefered, as it implements many of the coding conventions established in here, and it cuts down on a lot of biolerplate and repetition), or implement ILevel.
+
+#### Extending BaseLevel (prefered)
+```typescript
+import UAE from 'UAE';
+
+class ExtendBaseLevel extends UAE.activities.BaseLevel {
+    
+    // constructor must initialize the super with UAE core objects
+    constructor(){
+        super(UAE.levelManager, UAE.events, UAE.loop, UAE.goFactory, UAE.loader, UAE.game);
+    }
+
+    init(scriptName: string){
+        // do initialization stuff...
+
+        // call super last
+        super.init(scriptName, ['audio_id'], ['config']);
+    }
+
+    preload(){
+        this._aFiles = this._manager.script.fileList(['audio_id']);
+        this._jpgFiles = this._manager.script.fileList(['config.bgd']);
+        this._pngFiles = ['star'];
+        // add resources here. super.preload will then use promise to load assets, then call start
+        this._loader.addSnds(this._aFiles);
+        this._loader.addImages(this._jpgFiles, '.jpg');
+        this._loader.addImages(this._pngFiles, '.png');
+        super.preload();
+    }
+
+    start(){
+        // build the scene here. super.start will then call _waitForFirstInput to avoid starting without audio due to Chrome audio
+        // playback restrictions. _waitForFirstInput automatically calls the first row of the activityScript
+        this._goFactory.sprite(500, 500, 'star', null, this._playground);
+        super.start();
+    }
+
+    onNewRow(){
+        super.onNewRow();
+    }
+}
+
+export default ExtendBaseLevel;
+```
+#### Implementing ILevel (not prefered)
 ```typescript 
 import ILevel from "UAE/Core/Engine/ILevel";
 
@@ -195,7 +266,7 @@ class MainLevel implements ILevel {
   // .....
 ```
 
-Always include 3 properties for audio, jpegs and pngs to be loaded (unless there are no pngs, in which case the _pngFiles property can be omitted), with these exact names (for consistency accross types): 
+Always include 3 properties for audio, jpegs and pngsto be loaded (unless there are no pngs, in which case the _pngFiles property can be omitted. BaseLevel does all of this for you), with these exact names (for consistency across types): 
 ```typescript
   protected _aFiles: string[] = [];
   protected _pngFiles: string[] = [];
