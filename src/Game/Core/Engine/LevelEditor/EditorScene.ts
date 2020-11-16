@@ -1,6 +1,7 @@
 import Debug from "../Debug";
 import ILevel from "../ILevel";
 import LevelManager from "../LevelManager";
+import GOFactory from "../GameObjects/GOFactory";
 import Loader from "../Loader";
 import UIAccordion from "./UIAccordion";
 
@@ -9,11 +10,16 @@ import UIAccordion from "./UIAccordion";
 class EditorScene implements ILevel {
     private _loader: Loader;
     private _manager: LevelManager;
+    private _goFactory: GOFactory;
     private _accordion: UIAccordion;
 
-    constructor(loader: Loader, manager: LevelManager, accordion: UIAccordion) {
+    protected imgList: string[] = [];
+    protected spineList: string[] = [];
+
+    constructor(loader: Loader, manager: LevelManager, goFactory: GOFactory, accordion: UIAccordion) {
         this._loader = loader;
         this._manager = manager;
+        this._goFactory = goFactory;
         this._accordion = accordion;
     }
 
@@ -37,21 +43,35 @@ class EditorScene implements ILevel {
         this._waitForFirstInput();
 
         // TODO: build editor UI and populate GameObject panels
-        this._accordion.createContainer();
-        // Create rows here
-        this._accordion.addRow('Images', ...[
-            `${this._loader.resList[37].url}`,
-            `${this._loader.resList[38].url}`,
-            `${this._loader.resList[39].url}`
-        ]);
+        let go = this._goFactory.sprite(200, 200, 'cat');
+        go.setOrigin(.5);
+        go.input.enableInput();
 
-        this._accordion.addRow('Spines', ...[
-            `${this._loader.resList[37].url}`
-        ]);
+        this._accordion.createContainer();
+
+        // Create rows here
+        this.addImagesRow();
+        this.addSpinesRow();
 
         // This is needed for the first time creation of panels
         this._accordion.removeAllSelections();
         this._accordion.uncollapseAll();
+    }
+
+    addImagesRow(): void {
+        let imgListFiltered = this._loader.resList.filter(res => res.type === 'img');
+        imgListFiltered.forEach(val => this.imgList.push(val.url));
+
+        this._accordion.addRow('Images', ...this.imgList);
+    }
+
+    addSpinesRow(): void {
+        let spineListFiltered = this._loader.resList.filter(res => res.type === 'spn');
+        spineListFiltered.forEach(val => this.spineList.push(val.url));
+
+        this._accordion.addRow('Spines', ...[
+            `${this._loader.resList[37].url}`
+        ]);
     }
 
     shutdown(): void {
