@@ -56,7 +56,7 @@ class LevelEditor implements IActivity {
         Debug.info('Editor.launch()');
         this.init(game);
         Debug.info('Editor initialized');
-        this._game.startActivity(this._name, 'no_script'); // call the activity (engine will call Editor.startActivity in return, which will call game.loadLevel)
+        this._game.startActivity(this._name, this._name); // call the activity (engine will call Editor.startActivity in return, which will call game.loadLevel)
     }
 }
 
