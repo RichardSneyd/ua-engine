@@ -1,5 +1,4 @@
 import Debug from "../Debug";
-import SpriteObject from "../GameObjects/SpriteObject";
 import Loader from '../Loader';
 
 class UIAccordion {
@@ -121,6 +120,20 @@ class UIAccordion {
                 img[i].classList.toggle("selected");
             });
         }
+    }
+
+    public selectGameObject(objId: number) {
+        const img = document.getElementsByClassName("panel-img");
+
+        let removeAllFirst = () => {
+            for (let i = 0; i < img.length; i++) {
+                img[i].classList.remove("selected");
+            }
+        };
+
+        removeAllFirst();
+        img[objId].classList.add("selected");
+
     }
 
 }
