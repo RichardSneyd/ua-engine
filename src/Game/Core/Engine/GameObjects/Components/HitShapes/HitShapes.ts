@@ -4,14 +4,16 @@ import IGameObject from "../../IGameObject";
 import CircleHitShape from "./CircleHitShape";
 import PolyHitShape from "./PolyHitShape";
 import RectHitShape from "./RectHitShape";
+import TriangleHitShape from "./TriangleHitShape";
 
 class HitShapes {
     private _circleFactory: CircleHitShape;
     private _rectFactory: RectHitShape;
-    private _convexPolyFactory: PolyHitShape;
+    private _polyFactory: PolyHitShape;
+    private _triangleFactory: TriangleHitShape;
 
-    constructor(circle: CircleHitShape, rect: RectHitShape, convexPoly: PolyHitShape){
-        this._circleFactory = circle; this._rectFactory = rect; this._convexPolyFactory = convexPoly;
+    constructor(circle: CircleHitShape, rect: RectHitShape, poly: PolyHitShape, triangle: TriangleHitShape){
+        this._circleFactory = circle; this._rectFactory = rect; this._polyFactory = poly; this._triangleFactory = triangle;
     }
 
     /**
@@ -41,8 +43,18 @@ class HitShapes {
      * @param go the gameObject to attach to.
      * @param points the points that make up the convex shape. (local space. 0, 0 is the top left of the gameObject).
      */
-    public convexPoly(go:IGameObject, points:IPoint[]): PolyHitShape {
-        return this._convexPolyFactory.createNew(go, points);
+    public poly(go:IGameObject, points:IPoint[]): PolyHitShape {
+        return this._polyFactory.createNew(go, points);
+    }
+
+    /**
+     * @description create a triangle hitShape
+     * @param pointA the first point in the triangle
+     * @param pointB the second point in the triangle
+     * @param pointC the third point in the triangle
+     */
+    public triangle(go: IGameObject, pointA: IPoint, pointB: IPoint, pointC: IPoint): TriangleHitShape {
+        return this._triangleFactory.createNew(go, pointA, pointB, pointC);
     }
 }
 

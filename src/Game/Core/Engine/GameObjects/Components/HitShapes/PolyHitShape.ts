@@ -3,28 +3,28 @@ import Point from "../../../../Geom/Point";
 import Polygon from "../../../../Geom/Polygon";
 import IGameObject from "../../IGameObject";
 import IHitShape from "./IHitShape";
-import SmartTriangle from "./TriangleHitShape";
+import TriangleHitShape from "./TriangleHitShape";
 
 class PolyHitShape implements IHitShape {
     protected _go: IGameObject;
     protected _pointFactory: Point;
     protected _polygonFactory: Polygon;
-    protected _smartTriFactory: SmartTriangle;
+    protected _smartTriFactory: TriangleHitShape;
     protected _polygon: Polygon;
     
-    constructor(point: Point, polygon: Polygon, smartTriangle: SmartTriangle){
+    constructor(point: Point, polygon: Polygon, TriangleHitShape: TriangleHitShape){
         this._pointFactory = point;
         this._polygonFactory = polygon;
-        this._smartTriFactory = smartTriangle;
+        this._smartTriFactory = TriangleHitShape;
     }
 
-    get triangles(): SmartTriangle[]{
+    get triangles(): TriangleHitShape[]{
         return this._calculateTriangles();
     }
     
-    protected _calculateTriangles(): SmartTriangle[]{
+    protected _calculateTriangles(): TriangleHitShape[]{
         // assumes the triangles are arranged in clockwise or counter-clockwise order
-        let triangles: SmartTriangle[] = [];
+        let triangles: TriangleHitShape[] = [];
         let points = this._polygon.points;
         for(let p = 0; p < points.length - 2; p++){
             triangles.push(this._smartTriFactory.createNew(this._go, points[0], points[p+1], points[p+2]));

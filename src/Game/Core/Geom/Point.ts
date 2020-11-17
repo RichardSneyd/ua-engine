@@ -3,10 +3,10 @@ import IPoint from "./IPoint";
 class Point implements IPoint {
     protected _x: number;
     protected _y: number;
-  //  private _onUpdate: Function;
+    private _onUpdate: Function;
 
     constructor() {
-       // this._onUpdate = () => { };
+        this._onUpdate = () => { };
     }
 
     init(x: number, y: number) {
@@ -23,17 +23,17 @@ class Point implements IPoint {
 
     set y(y: number) {
         this._y = y;
-      //  this._onUpdate();
+        this._onUpdate();
     }
 
     set x(x: number) {
         this._x = x;
-      //  this._onUpdate();
+        this._onUpdate();
     }
 
-  /*   set onUpdate(update: Function) {
+     set onUpdate(update: Function) {
         this._onUpdate = update;
-    } */
+    } 
 
     /**
      * @description Creates a new Point object based on coordinates and returns it

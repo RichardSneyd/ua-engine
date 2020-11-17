@@ -30,11 +30,8 @@ class InputHandler {
     this._screen = this._core.screen;
   }
 
+  // this method will likely be deprecated soon, as it only works for static sprites properly
   public makePixelPerfect(threshold: number = 127): boolean {
-
-    /*  if(this._data.type !== ResType.IMG){
-       return false;
-     } */
     this._screen.addHitMap(this._core.data, threshold);
     this._pixelPerfect = true;
     return true;
@@ -70,12 +67,7 @@ class InputHandler {
   }
 
   public removeInputListener(event: string, callback: Function) {
-    if (this.data.data) {
-      this._inputManager.removeListener(event, callback, this.data.data);
-    }
-    else {
-      this._inputManager.removeListener(event, callback, this.data);
-    }
+      this._inputManager.removeListener(event, callback, this._go);
   }
 
   createNew(): InputHandler {

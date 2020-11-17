@@ -13,7 +13,7 @@ import IHitShape from "./Components/HitShapes/IHitShape";
  * @description the base interface for all GameObjects
  */
 interface IGameObject extends IParentChild{
-    hitShape: IHitShape;
+    hitShape: IHitShape | null;
     input: InputHandler;
     scaleHandler: ScaleHandler;
     pcHandler: ParentChildHandler;

@@ -105,22 +105,16 @@ class InputManager {
     }
 
     /**
-     * @description Add listener for specified input event to specific sprite
+     * @description Add listener for specified input event to specific GameObject
      * @param event the event to add the listener to; must be a valid input event
      * @param callback the callback method to register
      * @param sprite the sprite this event lisener is being associated with
      * @param context the context of the callback
      */
     public addListener(event: string, callback: Function, go: IGameObject, context: any) {
-        let data;
-        if (go.data.data) {
-            data = go.data.data;
-        }
-        else {
-            data = go.data;
-        }
-
-        this._screen.addListener(event, data, (evt: any) => {
+        let pixiData: any = this._getData(go);
+       
+        this._screen.addListener(event, pixiData, (evt: any) => {
             if (go.hitShape == null) callback.bind(context)(evt);
             else if (go.hitShape.containsPoint(this._pointer)) callback.bind(context)(evt);
         }, context);
@@ -128,12 +122,20 @@ class InputManager {
 
     /**
      * @description Remove listener from input event
-     * @param event 
-     * @param callback 
+     * @param event event to remove listener from
+     * @param callback the callback on the listener
      * @param sprite 
      */
-    public removeListener(event: string, callback: Function, sprite: any) {
-        this._screen.removeListener(event, sprite, callback);
+    public removeListener(event: string, callback: Function, go: IGameObject) {
+        let data = this._getData(go);
+        this._screen.removeListener(event, data, callback);
+    }
+
+    private _getData(go: IGameObject): any {
+        if (go.data.data) {
+            return go.data.data;
+        }
+        return go.data;
     }
 
     private _onPointerMove(data: any) {
