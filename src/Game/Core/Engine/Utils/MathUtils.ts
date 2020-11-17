@@ -1,8 +1,18 @@
+import Triangles from "./Triangles";
+
 /**
  * @description A wrapper for utility math methods.
  */
 class MathUtils {
-    private constructor() { }
+    private _triangles: Triangles;
+
+    constructor(triangles: Triangles) {
+        this._triangles = triangles;
+    }
+
+    get triangles(): Triangles {
+        return this._triangles;
+    }
 
     /**
      * @description get a range of numbers in an array, from lowest to highest
@@ -132,7 +142,7 @@ class MathUtils {
      * (forces valid angle values)
      * @param angle the angle value to 'wrap'
      */
-    wrapAngle(angle: number){
+    wrapAngle(angle: number) {
         return angle % 360;
     }
 

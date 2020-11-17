@@ -11,6 +11,7 @@ import VideoObject from "./VideoObject";
 import IGameObject from "./IGameObject";
 import IScreen from "../../../Services/IScreen";
 import Camera from "./Camera";
+import HitShapes from "./Components/HitShapes/HitShapes";
 
 /**
  * @description A factory for creating game objects of various types
@@ -27,10 +28,11 @@ class GOFactory {
     private _video: VideoObject;
     private _screen: IScreen;
     private _camera: Camera;
+    private _hitShapes: HitShapes;
 
-    constructor(core: ObjectCore, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject,
-        container: ContainerObject, scaleManager: ScaleManager, button: Button, video: VideoObject, screen: IScreen, camera: Camera) {
-        this._core = core; this._slice = slice; this._spine = spine; this._text = text; this._container = container;
+    constructor(core: ObjectCore, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject, hitShapes: HitShapes,
+        container: ContainerObject, scaleManager: ScaleManager, button: Button, video: VideoObject, screen: IScreen, camera: Camera,) {
+        this._core = core; this._slice = slice; this._spine = spine; this._text = text; this._container = container; this._hitShapes = hitShapes;
         this._sprite = sprite; this._scaleManager = scaleManager; this._button = button; this._video = video; this._screen = screen;
         this._camera = camera;
     }

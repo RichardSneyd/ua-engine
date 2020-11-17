@@ -12,6 +12,7 @@ import FrameAnimationManager from './Components/FrameAnimationManager';
 import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
 import Debug from "../Debug";
+import IHitShape from "./Components/HitShapes/IHitShape";
 
 /**
  * @description A sprite game object class. 
@@ -24,6 +25,7 @@ abstract class BaseGameObject implements IGameObject {
     protected _scaleHandler: ScaleHandler;
     protected _animationManager: IAnimationManager;
     protected _tweenComponent: TweenComponent;
+    protected _hitShape: IHitShape;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler,
         scaleHandler: ScaleHandler, tweenComponent: TweenComponent) {
