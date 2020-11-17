@@ -37,6 +37,10 @@ class GOFactory {
         this._camera = camera;
     }
 
+    get hitShapes(){
+        return this._hitShapes;
+    }
+
     /**
      * @description Creates and returns a text object
      * @param x the x coordinate to initialize with
