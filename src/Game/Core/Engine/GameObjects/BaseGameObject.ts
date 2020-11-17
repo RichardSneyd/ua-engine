@@ -25,12 +25,13 @@ abstract class BaseGameObject implements IGameObject {
     protected _scaleHandler: ScaleHandler;
     protected _animationManager: IAnimationManager;
     protected _tweenComponent: TweenComponent;
-    protected _hitShape: IHitShape;
+    protected _hitShape: IHitShape | null;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler,
         scaleHandler: ScaleHandler, tweenComponent: TweenComponent) {
         this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input;
         this._scaleHandler = scaleHandler; this._tweenComponent = tweenComponent;
+        this._hitShape = null;
     }
 
     public init(...args: any[]): void {
@@ -54,6 +55,14 @@ abstract class BaseGameObject implements IGameObject {
 
     public changeTexture(textureName: string) {
         this._core.changeTexture(textureName);
+    }
+
+    get hitShape(): IHitShape | null {
+        return this._hitShape;
+    }
+
+    set hitShape(val: IHitShape | null) {
+        this._hitShape = val;
     }
 
     get angle() {

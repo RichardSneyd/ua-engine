@@ -7,11 +7,13 @@ import IParentChild from "./IParentChild";
 import Events from "../Events";
 import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
+import IHitShape from "./Components/HitShapes/IHitShape";
 
 /**
  * @description the base interface for all GameObjects
  */
 interface IGameObject extends IParentChild{
+    hitShape: IHitShape;
     input: InputHandler;
     scaleHandler: ScaleHandler;
     pcHandler: ParentChildHandler;

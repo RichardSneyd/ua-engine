@@ -7,6 +7,7 @@ import ScaleManager from "./ScaleManager";
 import KeyCodes from './Keys';
 import KeyListener from "./KeyListener";
 import Debug from "./Debug";
+import IGameObject from "./GameObjects/IGameObject";
 
 /**
  * @description The InputManager is responsible for all keyboard and mouse event handling
@@ -66,7 +67,7 @@ class InputManager {
         this._callKeyListenersForAll(this._keyPressListeners, { evt: evt });
     }
 
-    private _callKeyListenersForAll(listeners: KeyListener[], data: {evt: any}) {
+    private _callKeyListenersForAll(listeners: KeyListener[], data: { evt: any }) {
         // Debug.info('evt: ', data.evt);
         for (let l = 0; l < listeners.length; l++) {
             listeners[l].callIfMatch(data);
@@ -110,10 +111,18 @@ class InputManager {
      * @param sprite the sprite this event lisener is being associated with
      * @param context the context of the callback
      */
-    public addListener(event: string, callback: Function, sprite: any, context: any) {
-        this._screen.addListener(event, sprite, (evt: any) => {
+    public addListener(event: string, callback: Function, go: IGameObject, context: any) {
+        let data;
+        if (go.data.data) {
+            data = go.data.data;
+        }
+        else {
+            data = go.data;
+        }
 
-            callback.bind(context)(evt);
+        this._screen.addListener(event, data, (evt: any) => {
+            if (go.hitShape == null) callback.bind(context)(evt);
+            else if (go.hitShape.containsPoint(this._pointer)) callback.bind(context)(evt);
         }, context);
     }
 
@@ -134,7 +143,7 @@ class InputManager {
         this._pointer.y = data.mouseY / scaleF;
         this._pointerMovement.x = data.moveX / scaleF;
         this._pointerMovement.y = data.moveY / scaleF;
-     //   Debug.info('pointer moved: ', this._pointer);
+        //   Debug.info('pointer moved: ', this._pointer);
         //  Debug.info('data: ', data);
     }
 

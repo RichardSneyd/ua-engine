@@ -66,12 +66,7 @@ class InputHandler {
   }
 
   public addInputListener(event: string, callback: Function, context: any, once: boolean = false) {
-    if (this._core.data.data) {
-      this._inputManager.addListener(event, callback, this.data.data, context);
-    }
-    else {
-      this._inputManager.addListener(event, callback, this.data, context);
-    }
+    this._inputManager.addListener(event, callback, this._go, context)
   }
 
   public removeInputListener(event: string, callback: Function) {
