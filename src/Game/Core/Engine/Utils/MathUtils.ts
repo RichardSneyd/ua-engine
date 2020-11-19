@@ -128,6 +128,15 @@ class MathUtils {
     }
 
     /**
+     * @description if the angle value is greater than 360, it wraps it around. So, for example, '420' becomes '60', or '900' becomes '180' 
+     * (forces valid angle values)
+     * @param angle the angle value to 'wrap'
+     */
+    wrapAngle(angle: number){
+        return angle % 360;
+    }
+
+    /**
     * @description find the angle in radians between two points, based on the y and x distances between them
     * @param yDist the distance on the y axis between the objects
     * @param xDist the distance on the x axis between the objects

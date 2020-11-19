@@ -199,8 +199,11 @@ class ObjectCore {
     return this._data.angle;
   }
 
+  /**
+   * @descript set the angle. If greater than 360, modulo (%) is used via MathUtils.wrapAngle to create a valid angle value
+   */
   set angle(angle: number) {
-    this.objectHandler.setAngle(this.data, angle);
+    this.objectHandler.setAngle(this.data, this._math.wrapAngle(angle));
   }
 
   get left(): number{
@@ -222,9 +225,10 @@ class ObjectCore {
    * @description look at (angle towards) an object on screen. Any object with an x and y parameter is acceptible
    * @param object the object (must have x and y properties) to angle towards 
    */
-  public lookAt(object: { x: number, y: number }) {
+  public lookAt(object: { x: number, y: number }, offset: number = 0) {
     // Debug.info('lookAt: ', object);
     let angle  = this._math.angleBetween(this, object);
+    angle = angle + offset;
     this.angle = angle;
   }
 
