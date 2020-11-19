@@ -117,6 +117,21 @@ class PxGame {
     return gfx;
   }
 
+  public addRectangle(x: number, y: number, width: number, height: number, rectColor: number, rectAlpha: number, lineWidth: number, lineColor: number, lineAlpha: number): Graphics {
+    let gfx = new Graphics();
+    gfx.x = x;
+    gfx.y = y;
+
+    gfx.lineStyle(lineWidth, lineColor, lineAlpha); 
+    gfx.beginFill(rectColor, rectAlpha);
+    gfx.drawRect(x, y, width, height);
+    gfx.endFill();
+
+    this._addChild(gfx);
+
+    return gfx;
+  }
+
   public addContainer(x: number, y: number): Container {
     let cont = this._createContainer();
     cont.x = x;
