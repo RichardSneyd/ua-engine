@@ -1,5 +1,5 @@
 import IGameObject from "./IGameObject";
-import IScreen from "../../../Services/IScreen";
+import Screen from "../../../Services/Screen";
 import ObjectCore from "./Components/ObjectCore";
 import InputHandler from "./Components/InputHandler";
 import ParentChildHandler from "./Components/ParentChildHandler";
@@ -19,7 +19,7 @@ class VideoObject extends BaseGameObject {
     private _gameConfig: GameConfig;
     private _vidElement: HTMLVideoElement;
 
-    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler,
+    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
         scaleHandler: ScaleHandler, tweenComponent: TweenComponent, gameConfig: GameConfig) {
             super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent);
             this._gameConfig = gameConfig;

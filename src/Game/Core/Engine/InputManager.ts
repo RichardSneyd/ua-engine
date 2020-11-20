@@ -1,7 +1,7 @@
 import Events from "./Events";
 import Loader from "./Loader";
 import Point from "../Geom/Point";
-import IScreen from "../../Services/IScreen";
+import Screen from "../../Services/Screen";
 import EventNames from "./EventNames";
 import ScaleManager from "./ScaleManager";
 import KeyCodes from './Keys';
@@ -14,7 +14,7 @@ import Debug from "./Debug";
 class InputManager {
     protected _pointFactory: Point;
     private _eventNames: EventNames;
-    private _events: Events; private _loader: Loader; private _screen: IScreen; private _scaleManager: ScaleManager;
+    private _events: Events; private _loader: Loader; private _screen: Screen; private _scaleManager: ScaleManager;
     private _pointer: Point; // the mouse/pointer x, y
     private _pointerMovement: Point; // the number of pixels the mouse x and y have moved since the last mousemove/pointermove event
     private _keyDownListeners: KeyListener[];
@@ -23,7 +23,7 @@ class InputManager {
     private _keyListener: KeyListener;
     public keys = KeyCodes;
 
-    constructor(events: Events, loader: Loader, screen: IScreen, eventNames: EventNames, pointFactory: Point, scaleManager: ScaleManager, keyListener: KeyListener) {
+    constructor(events: Events, loader: Loader, screen: Screen, eventNames: EventNames, pointFactory: Point, scaleManager: ScaleManager, keyListener: KeyListener) {
         this._events = events; this._loader = loader; this._screen = screen; this._eventNames = eventNames; this._scaleManager = scaleManager;
         this._pointFactory = pointFactory; this._keyListener = keyListener;
 

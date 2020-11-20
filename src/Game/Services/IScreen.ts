@@ -36,4 +36,4 @@ interface IScreen {
   newLevel(): void;
 }
 
-export default IScreen;
+//export default IScreen;

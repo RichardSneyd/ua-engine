@@ -1,17 +1,17 @@
 import IObjectHandler from '../../../Services/IObjectHandler';
-import IScreen from '../../../Services/IScreen';
+import Screen from '../../../Services/Screen';
 import Debug from '../Debug';
 
 /**
  * @description A mask (needs refactoring and redign)
  */
 class Mask {
-  private _objectHandler: IObjectHandler; _screen: IScreen;
+  private _objectHandler: IObjectHandler; _screen: Screen;
 
   private _x: number; _y: number; _width: number; _height: number;
   private _data: any; _initialized: boolean;
 
-  constructor(objectHandler: IObjectHandler, screen: IScreen) {
+  constructor(objectHandler: IObjectHandler, screen: Screen) {
     this._objectHandler = objectHandler;
     this._screen = screen;
 

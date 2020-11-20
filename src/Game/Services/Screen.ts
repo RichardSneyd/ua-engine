@@ -1,16 +1,20 @@
 import { Application, Sprite, DisplayObject, Texture, RenderTexture } from 'pixi.js-legacy';
 import Debug from '../Core/Engine/Debug';
 
-import IScreen from '../Services/IScreen';
+//import Screen from '../Services/Screen';
 import PxGame from '../Services/Pixi/PxGame';
 
-class Screen implements IScreen {
+class Screen {
   private _pxGame: PxGame;
 
   constructor(pxGame: PxGame) {
     this._pxGame = pxGame;
 
     Debug.info("a screen has been createed!");
+  }
+
+  get renderer() {
+    return this._pxGame.renderer;
   }
 
   public createScreen(width: number, height: number, elementId: string): void {
@@ -43,11 +47,11 @@ class Screen implements IScreen {
 
   public addHitMap(obj: any, threshold: number = 127): boolean {
     // requires baseTexture -- generate from 'screengrab'??
-   // let texture = this._pxGame.toTexture(obj);
-   // Debug.info(texture);
+    // let texture = this._pxGame.toTexture(obj);
+    // Debug.info(texture);
     // try to generate ImageBitmap
-   // if (texture == null) return false;
-    
+    // if (texture == null) return false;
+
     this._pxGame.genHitmap(obj.texture.baseTexture, obj, threshold);
     return true;
   }
@@ -56,10 +60,10 @@ class Screen implements IScreen {
     this._pxGame.genHitmap(obj.texture.baseTexture, threshold);
   } */
 
-   /**
-     * @description enable mouse/pointer input for the specified object
-     * @param sprite the object to enable input for
-     */
+  /**
+    * @description enable mouse/pointer input for the specified object
+    * @param sprite the object to enable input for
+    */
   public enableInput(sprite: any) {
     this._pxGame.enableInput(sprite);
   }
@@ -76,9 +80,9 @@ class Screen implements IScreen {
     this._pxGame.removeListener(event, sprite, callback);
   }
 
- /*  public addHitMap(obj: Sprite, threshold: number = 127) {    
-    this._pxGame.genHitmap(obj.texture.baseTexture, threshold);
-  } */
+  /*  public addHitMap(obj: Sprite, threshold: number = 127) {    
+     this._pxGame.genHitmap(obj.texture.baseTexture, threshold);
+   } */
   /* public removeDownListener(sprite: any) {
     this._pxGame.removeDownListeners(sprite);
   }
@@ -122,6 +126,21 @@ class Screen implements IScreen {
   public newLevel() {
     this._pxGame.newLevel();
   }
+
+  public toImgElement(container: PIXI.Container): Promise<HTMLImageElement> | null{
+    Debug.info('renderer: ', this.renderer);
+    Debug.info(container);
+    if (this._pxGame !== undefined) {
+      //  Debug.info(this.renderer);
+      //  Debug.breakpoint();
+      // this._pxGame.renderer
+     return this._pxGame.toImgElement(container);
+    }
+
+    return null;
+  //  return new Promise();
+  }
+
 }
 
 export default Screen;

@@ -3,7 +3,7 @@ import IGameObject from "./IGameObject";
 import ObjectCore from "./Components/ObjectCore";
 import IParentChild from "./IParentChild";
 import ParentChildHandler from "./Components/ParentChildHandler";
-import IScreen from "../../../Services/IScreen";
+import Screen from "../../../Services/Screen";
 import InputHandler from "./Components/InputHandler";
 import ScaleHandler from './Components/ScaleHandler';
 import Point from "../../Geom/Point";
@@ -16,7 +16,7 @@ import BaseGameObject from "./BaseGameObject";
 class ContainerObject extends BaseGameObject {
     private _pointFactory: Point;
 
-    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler,
+    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
         scaleHandler: ScaleHandler, tweenComponent: TweenComponent, point: Point) {
         super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent);
         this._pointFactory = point;
