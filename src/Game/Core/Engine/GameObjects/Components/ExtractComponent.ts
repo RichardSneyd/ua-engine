@@ -44,7 +44,7 @@ class ExtractComponent {
     /**
      * @description generates and returns a new canvas element for the container/object
      */
-    public toCanvas(): HTMLCanvasElement {
+    public toCanvas(): Promise<HTMLCanvasElement> {
         return this._screen.toCanvas(this._go.data);
     }
 

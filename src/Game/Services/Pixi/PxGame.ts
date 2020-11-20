@@ -93,10 +93,12 @@ class PxGame {
     return new PIXI.RenderTexture(new PIXI.BaseRenderTexture()); // dummy to get around null issue
   }
 
-  public toCanvas(container: PIXI.Container): HTMLCanvasElement {
-    if(this._game) return this._game.renderer.extract.canvas(container);
-    Debug.error('this._game is not set: ', this._game);
-    return document.createElement('canvas');
+  public toCanvas(container: PIXI.Container): Promise<HTMLCanvasElement> {
+    return new Promise((resolve: Function, reject: Function) => {
+      if (this.renderer) {
+        resolve(this.renderer.extract.canvas(container));
+      }
+    });
   }
 
   public newLevel() {

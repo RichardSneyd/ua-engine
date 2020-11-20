@@ -142,7 +142,7 @@ class Screen {
     return this._pxGame.toTexture(object);
   }
 
-   public toCanvas(container: PIXI.Container): HTMLCanvasElement {
+   public toCanvas(container: PIXI.Container): Promise<HTMLCanvasElement> {
     return this._pxGame.toCanvas(container);
    }
 
