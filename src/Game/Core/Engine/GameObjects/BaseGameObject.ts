@@ -51,9 +51,9 @@ abstract class BaseGameObject implements IGameObject {
     }
 
     public toImgElement(): Promise<HTMLImageElement> | null {
-      //  let cont = this.data.data !== undefined ? this.data.data : this.data;
-        let cont = this.data;
-        Debug.info('cont: ', cont);
+        let cont = this.data.data !== undefined ? this.data.data : this.data;
+       // let cont = this.data;
+       // Debug.info('cont: ', cont);
         return this._screen.toImgElement(cont);
     }
 
