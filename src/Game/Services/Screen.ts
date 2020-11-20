@@ -142,6 +142,10 @@ class Screen {
     return this._pxGame.toTexture(object);
   }
 
+   public toCanvas(container: PIXI.Container): HTMLCanvasElement {
+    return this._pxGame.toCanvas(container);
+   }
+
 }
 
 export default Screen;
