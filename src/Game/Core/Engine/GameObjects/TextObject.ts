@@ -3,7 +3,7 @@ import IGameObject from "./IGameObject";
 import ObjectCore from "./Components/ObjectCore";
 import IParentChild from "./IParentChild";
 import ParentChildHandler from "./Components/ParentChildHandler";
-import IScreen from "../../../Services/IScreen";
+import Screen from "../../../Services/Screen";
 import InputHandler from "./Components/InputHandler";
 import ScaleHandler from "./Components/ScaleHandler";
 import Point from "../../Geom/Point";
@@ -18,7 +18,7 @@ class TextObject extends BaseGameObject {
 
     private _letters: string;
 
-    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler,
+    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
         scaleHandler: ScaleHandler, tweenComponent: TweenComponent) {
         super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent);
         this._letters = '$$$$____$$$$'; //default uninitialized string

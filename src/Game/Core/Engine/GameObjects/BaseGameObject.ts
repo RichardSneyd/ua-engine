@@ -4,7 +4,7 @@ import IGameObject from "./IGameObject";
 import ObjectCore from "./Components/ObjectCore";
 import IParentChild from "./IParentChild";
 import ParentChildHandler from "./Components/ParentChildHandler";
-import IScreen from "../../../Services/IScreen";
+import Screen from "../../../Services/Screen";
 import InputHandler from "./Components/InputHandler";
 import ScaleHandler from "./Components/ScaleHandler";
 import IFramedGameObject from "./IFrameAnimatedGameObject";
@@ -17,7 +17,7 @@ import Debug from "../Debug";
  * @description A sprite game object class. 
  */
 abstract class BaseGameObject implements IGameObject {
-    protected _screen: IScreen;
+    protected _screen: Screen;
     protected _core: ObjectCore;
     protected _input: InputHandler;
     protected _pcHandler: ParentChildHandler;
@@ -25,7 +25,7 @@ abstract class BaseGameObject implements IGameObject {
     protected _animationManager: IAnimationManager;
     protected _tweenComponent: TweenComponent;
 
-    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: IScreen, input: InputHandler,
+    constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
         scaleHandler: ScaleHandler, tweenComponent: TweenComponent) {
         this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input;
         this._scaleHandler = scaleHandler; this._tweenComponent = tweenComponent;
@@ -48,6 +48,13 @@ abstract class BaseGameObject implements IGameObject {
 
     public createEmpty(): any {
         // return new BaseGameObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._animationManager.createNew(), this._tweenComponent.createNew());
+    }
+
+    public toImgElement(): Promise<HTMLImageElement> | null {
+      //  let cont = this.data.data !== undefined ? this.data.data : this.data;
+        let cont = this.data;
+        Debug.info('cont: ', cont);
+        return this._screen.toImgElement(cont);
     }
 
     public changeTexture(textureName: string) {

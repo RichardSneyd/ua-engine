@@ -3,7 +3,7 @@ import TweenManager from "./TweenManager";
 import Tween from "../Data/Tween";
 import GameConfig from "./GameConfig";
 import transitions from "./Transitions";
-import IScreen from "../../Services/IScreen";
+import Screen from "../../Services/Screen";
 import Events from "./Events";
 import GOFactory from "./GameObjects/GOFactory";
 import Debug from "./Debug";
@@ -12,7 +12,7 @@ import Debug from "./Debug";
  * @description handles transitions between scenes.
  */
 class TransitionManager {
-    private _tweens: TweenManager; private _screen: IScreen; private _events: Events; private _goFactory: GOFactory;
+    private _tweens: TweenManager; private _screen: Screen; private _events: Events; private _goFactory: GOFactory;
     private _gameConfig: GameConfig;
     private _duration: number | null;
     private _oldLevel: Container | null;
@@ -20,7 +20,7 @@ class TransitionManager {
     private _easing: string | null;
     private _onComplete: Function | null;
 
-    constructor(tweens: TweenManager, gameConfig: GameConfig, screen: IScreen, events: Events, goFactory: GOFactory){
+    constructor(tweens: TweenManager, gameConfig: GameConfig, screen: Screen, events: Events, goFactory: GOFactory){
         this._tweens = tweens, this._screen = screen, this._events = events; this._goFactory = goFactory;
         this._gameConfig = gameConfig;
         this._duration = 2000;
