@@ -57,14 +57,11 @@ class PxGame {
     return new Promise((resolve: Function, reject: Function) => {
       if(this.renderer){
         this.renderer.extract.canvas(container).toBlob((blob) => {
-          Debug.info('blob: ', blob);
+       //   Debug.info('blob: ', blob);
           imgEl = document.createElement('img');
-          Debug.info('imgEl: ', imgEl)
           var objectURL = URL.createObjectURL(blob);
           imgEl.src = objectURL;
-          Debug.info('imgEl with src: ', imgEl);
           resolve(imgEl);
-         // return imgEl;
         }); 
       }
       });

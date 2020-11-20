@@ -128,17 +128,10 @@ class Screen {
   }
 
   public toImgElement(container: PIXI.Container): Promise<HTMLImageElement> | null{
-    Debug.info('renderer: ', this.renderer);
-    Debug.info(container);
     if (this._pxGame !== undefined) {
-      //  Debug.info(this.renderer);
-      //  Debug.breakpoint();
-      // this._pxGame.renderer
      return this._pxGame.toImgElement(container);
     }
-
     return null;
-  //  return new Promise();
   }
 
 }
