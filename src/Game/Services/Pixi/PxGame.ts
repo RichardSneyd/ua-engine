@@ -28,6 +28,11 @@ class PxGame {
     return this._levelCont;
   }
 
+  get renderer(){
+    return this._game?.renderer;
+  }
+  
+
   public init(w: number, h: number, container: string) {
     let elm = document.getElementById(container);
 
@@ -47,6 +52,23 @@ class PxGame {
     this._pxFactory.init(); // init factory to apply hitmap hacks
     Debug.exposeGlobal(this._game, 'game');
   }
+  public toImgElement(container: PIXI.Container): Promise<HTMLImageElement> {
+    let imgEl: HTMLImageElement | null;
+    return new Promise((resolve: Function, reject: Function) => {
+      if(this.renderer){
+        this.renderer.extract.canvas(container).toBlob((blob) => {
+       //   Debug.info('blob: ', blob);
+          imgEl = document.createElement('img');
+          var objectURL = URL.createObjectURL(blob);
+          imgEl.src = objectURL;
+          resolve(imgEl);
+        }); 
+      }
+      });
+
+     // return null;
+
+}
 
   public newLevel() {
     if (this._game !== null) {

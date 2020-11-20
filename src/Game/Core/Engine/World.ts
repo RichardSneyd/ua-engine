@@ -1,5 +1,5 @@
 //import ObjectCore from './GameObjects/Components/ObjectCore';
-import IScreen from '../../Services/IScreen';
+import Screen from '../../Services/Screen';
 import IScene from './Activities/IScene';
 import LevelManager from './LevelManager';
 import Events from './Events';
@@ -11,16 +11,16 @@ class World {
   private _width: number;
   private _height: number;
 
-  private _screen: IScreen;
+  private _screen: Screen;
 
   private _initialized: boolean;
 
   private _currentLevel: IScene | null;
 
-  //private _objectCore: ObjectCore; _screen: IScreen;
+  //private _objectCore: ObjectCore; _screen: Screen;
   private _events: Events;
 
-  constructor(screen: IScreen, events: Events) {
+  constructor(screen: Screen, events: Events) {
     this._width = 0;
     this._height = 0;
 

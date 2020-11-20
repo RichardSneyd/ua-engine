@@ -1,7 +1,7 @@
 import FrameAnimationManager from './FrameAnimationManager';
 import Events from '../../Events';
 import ScaleManager from './ScaleHandler';
-import IScreen from '../../../../Services/IScreen';
+import Screen from '../../../../Services/Screen';
 import ObjectHandler from '../../../../Services/ObjectHandler';
 import InputHandler from './InputHandler';
 import Utils from '../../Utils/Utils';
@@ -28,7 +28,7 @@ class ObjectCore {
   private _textureName: string;
   private _initialized: boolean;
 
-  private _screen: IScreen; _objectHandler: ObjectHandler;
+  private _screen: Screen; _objectHandler: ObjectHandler;
   private _input: InputHandler; _math: MathUtils;
   private _data: any;
   private _events: Events; _scaleHandler: ScaleManager; protected _pointFactory: Point; private _loop: Loop;
@@ -38,7 +38,7 @@ class ObjectCore {
   private _mask: Mask;
   private _updateCallback: Function;
 
-  constructor(screen: IScreen, objectHandler: ObjectHandler, input: InputHandler, mask: Mask, math: MathUtils, events: Events, pointFactory: Point, loop: Loop) {
+  constructor(screen: Screen, objectHandler: ObjectHandler, input: InputHandler, mask: Mask, math: MathUtils, events: Events, pointFactory: Point, loop: Loop) {
     this._screen = screen;
     this._objectHandler = objectHandler;
     this._input = input;
@@ -199,8 +199,11 @@ class ObjectCore {
     return this._data.angle;
   }
 
+  /**
+   * @descript set the angle. If greater than 360, modulo (%) is used via MathUtils.wrapAngle to create a valid angle value
+   */
   set angle(angle: number) {
-    this.objectHandler.setAngle(this.data, angle);
+    this.objectHandler.setAngle(this.data, this._math.wrapAngle(angle));
   }
 
   get left(): number{
@@ -222,9 +225,10 @@ class ObjectCore {
    * @description look at (angle towards) an object on screen. Any object with an x and y parameter is acceptible
    * @param object the object (must have x and y properties) to angle towards 
    */
-  public lookAt(object: { x: number, y: number }) {
+  public lookAt(object: { x: number, y: number }, offset: number = 0) {
     // Debug.info('lookAt: ', object);
     let angle  = this._math.angleBetween(this, object);
+    angle = angle + offset;
     this.angle = angle;
   }
 
@@ -356,8 +360,10 @@ class ObjectCore {
 
   public scaleMask() {
     if (this._mask.initialized) {
-      let scaleX = this._scaleHandler.getTrueScale(this._go.scaleHandler.scaleX);
-      let scaleY = this._scaleHandler.getTrueScale(this._go.scaleHandler.scaleY);
+     // let scaleX = this._scaleHandler.getTrueScale(this._go.scaleHandler.scaleX);
+    //  let scaleY = this._scaleHandler.getTrueScale(this._go.scaleHandler.scaleY);
+    let scaleX = this._go.scaleHandler.scaleX;
+   let scaleY = this._go.scaleHandler.scaleY;
 
       this._mask.scale(scaleX, scaleY);
     }
