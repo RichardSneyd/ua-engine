@@ -78,7 +78,7 @@ class GOFactory {
     public spriteFromObject(x: number, y: number, generateFrom: IGameObject, parent: IParentChild): SpriteObject {
         let sprite = this._sprite.createEmpty();
         sprite.init(x, y, '', null, parent);
-        sprite.changeTexture(this._screen.toTexture(generateFrom.data));
+        sprite.changeTexture(generateFrom.extract.toTexture());
         return sprite;
     }
 
