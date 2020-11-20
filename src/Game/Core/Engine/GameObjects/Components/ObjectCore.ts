@@ -267,7 +267,9 @@ class ObjectCore {
   }
 
   get data(): any {
-    return this._data;
+     // this allows for text objects, which are wrapped (target data is 1 level deaper)
+    let cont = this._data.data !== undefined ? this._data.data : this._data;
+    return cont;
   }
 
   set data(data: any) {

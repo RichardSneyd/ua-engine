@@ -12,6 +12,7 @@ import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
 import Debug from "../Debug";
 import BaseGameObject from "./BaseGameObject";
+import ExtractComponent from "./Components/ExtractComponent";
 
 /**
  * @description A spine game object class. 
@@ -20,8 +21,8 @@ class SpineObject extends BaseGameObject {
     protected _animationManager: SpineAnimationManager;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
-        scaleHandler: ScaleHandler, animationManager: SpineAnimationManager, tweenComponent: TweenComponent) {
-        super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent);
+        scaleHandler: ScaleHandler, animationManager: SpineAnimationManager, tweenComponent: TweenComponent, extract: ExtractComponent) {
+        super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent, extract);
         this._animationManager = animationManager;
     }
 
@@ -41,7 +42,7 @@ class SpineObject extends BaseGameObject {
     }
 
     public createEmpty(): SpineObject {
-        let sprite = new SpineObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this.animations.createNew(), this._tweenComponent.createNew());
+        let sprite = new SpineObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this.animations.createNew(), this._tweenComponent.createNew(),  this._extract.createEmpty());
         return sprite;
     }
 

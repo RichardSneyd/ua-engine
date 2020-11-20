@@ -7,6 +7,7 @@ import IParentChild from "./IParentChild";
 import Events from "../Events";
 import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
+import ExtractComponent from "./Components/ExtractComponent";
 
 /**
  * @description the base interface for all GameObjects
@@ -38,6 +39,7 @@ interface IGameObject extends IParentChild{
     textureName: string;
     atlas: string;
     zIndex: number;
+    extract: ExtractComponent;
 }
 
 export default IGameObject;

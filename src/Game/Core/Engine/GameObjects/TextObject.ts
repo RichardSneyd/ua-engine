@@ -10,6 +10,7 @@ import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
 import Debug from "../Debug";
 import BaseGameObject from "./BaseGameObject";
+import ExtractComponent from "./Components/ExtractComponent";
 
 /**
  * @description A text game object class. Converts text to sprite object under the hood.
@@ -19,8 +20,8 @@ class TextObject extends BaseGameObject {
     private _letters: string;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
-        scaleHandler: ScaleHandler, tweenComponent: TweenComponent) {
-        super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent);
+        scaleHandler: ScaleHandler, tweenComponent: TweenComponent, extract: ExtractComponent) {
+        super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent, extract);
         this._letters = '$$$$____$$$$'; //default uninitialized string
     }
 
@@ -39,7 +40,7 @@ class TextObject extends BaseGameObject {
     }
 
     public createEmpty(): TextObject {
-        let textObj = new TextObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenComponent.createNew());
+        let textObj = new TextObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenComponent.createNew(), this._extract.createEmpty());
         return textObj;
     }
 

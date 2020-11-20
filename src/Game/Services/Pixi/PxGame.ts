@@ -7,6 +7,7 @@ import 'pixi-spine';
 import Events from '../../Core/Engine/Events';
 import GameConfig from '../../Core/Engine/GameConfig';
 import Debug from '../../Core/Engine/Debug';
+import { AnyARecord } from 'dns';
 
 class PxGame {
   private _pxFactory: PxFactory; _loader: Loader; _events: Events;
@@ -28,10 +29,10 @@ class PxGame {
     return this._levelCont;
   }
 
-  get renderer(){
+  get renderer() {
     return this._game?.renderer;
   }
-  
+
 
   public init(w: number, h: number, container: string) {
     let elm = document.getElementById(container);
@@ -52,23 +53,45 @@ class PxGame {
     this._pxFactory.init(); // init factory to apply hitmap hacks
     Debug.exposeGlobal(this._game, 'game');
   }
+
   public toImgElement(container: PIXI.Container): Promise<HTMLImageElement> {
     let imgEl: HTMLImageElement | null;
     return new Promise((resolve: Function, reject: Function) => {
-      if(this.renderer){
+      if (this.renderer) {
         this.renderer.extract.canvas(container).toBlob((blob) => {
-       //   Debug.info('blob: ', blob);
+          //   Debug.info('blob: ', blob);
           imgEl = document.createElement('img');
           var objectURL = URL.createObjectURL(blob);
           imgEl.src = objectURL;
           resolve(imgEl);
-        }); 
+        });
       }
-      });
+    });
+  }
 
-     // return null;
+  public toPixels(container: PIXI.Container): Uint8Array | Uint8ClampedArray {
+    // let pixels: Uint8ClampedArray;
+    if (this.renderer) return this.renderer.extract.pixels(container);
+    Debug.error('renderer is undefined: ', this.renderer);
+    return new Uint8Array();
+  }
 
-}
+  public toBase64(container: PIXI.Container): string {
+    if (this.renderer) return this.renderer.extract.base64(container);
+    Debug.error('renderer is undefined: ', this.renderer);
+    return 'error';
+  }
+
+  public toTexture(object: any): PIXI.RenderTexture {
+    if (this._game !== null) {
+      let texture = this._game.renderer.generateTexture(object, PIXI.SCALE_MODES.LINEAR, 1);
+      Debug.info(texture);
+      //  Debug.breakpoint();
+      return texture;
+    }
+    Debug.error('renderer is null: ', this.renderer);
+    return new PIXI.RenderTexture(new PIXI.BaseRenderTexture()); // dummy to get around null issue
+  }
 
   public newLevel() {
     if (this._game !== null) {
@@ -216,16 +239,6 @@ class PxGame {
     }
   }
 
-  public toTexture(object: any): PIXI.RenderTexture | null {
-    if (this._game !== null) {
-      let texture = this._game.renderer.generateTexture(object, PIXI.SCALE_MODES.LINEAR, 1);
-      Debug.info(texture);
-    //  Debug.breakpoint();
-      return texture;
-    }
-    return null;
-  }
-
   /**
    * 
    * @param baseTex the texture.baseTexture to generate the hitmap data from (does not have to be connected to the target object)
@@ -240,7 +253,7 @@ class PxGame {
 
     const imgSource = resource.source;
     Debug.info('hitmap image resourc.source: ', imgSource);
-   // Debug.breakpoint();
+    // Debug.breakpoint();
     let canvas = null;
     if (!imgSource) {
       Debug.warn('no imgSource for resource: ', resource)
@@ -364,9 +377,10 @@ class PxGame {
     //  sprite.on('touchend', callback, context);
   }
 
-  public updateTexture(sprite: Sprite, texture: string | any, frame: string | null = null): void {
+  public updateTexture(sprite: Sprite, texture: string | RenderTexture, frame: string | null = null): void {
     if (typeof texture == 'string') {
       let tex = this._loader.getTexture(texture, frame);
+
       sprite.texture = tex;
       return;
     }

@@ -9,14 +9,15 @@ import ScaleHandler from "./Components/ScaleHandler";
 import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
 import BaseGameObject from "./BaseGameObject";
+import ExtractComponent from "./Components/ExtractComponent";
 
 /**
  * @description A nine-slice game object.
  */
 class SliceObject extends BaseGameObject{
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
-        scaleHandler: ScaleHandler, tweenComponent: TweenComponent) {
-            super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent);
+        scaleHandler: ScaleHandler, tweenComponent: TweenComponent, extract: ExtractComponent) {
+            super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent, extract);
     }
 
     public init(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, parent: IParentChild | null = null): void {
@@ -34,7 +35,7 @@ class SliceObject extends BaseGameObject{
     }
 
     public createEmpty() {
-        let slice = new SliceObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this.input.createNew(), this.scaleHandler.createNew(), this._tweenComponent.createNew());
+        let slice = new SliceObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this.input.createNew(), this.scaleHandler.createNew(), this._tweenComponent.createNew(),  this._extract.createEmpty());
 
         return slice;
     }
