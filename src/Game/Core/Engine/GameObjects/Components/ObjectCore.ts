@@ -323,10 +323,10 @@ class ObjectCore {
   }
 
   updateOrigin() {
-    // let scaleX = this._scaleHandler.getScale(this._scaleHandler.scaleX);
+    // let scaleX = this._scaleHandler.getScale(this._scaleHandler.x);
     //  let scaleY = this._scaleHandler.getScale(this._scaleHandler.scaleY);
 
-    let p = this._pointFactory.createNew(this._origin.x * this._scaleHandler.scaleX, this._origin.y * this._scaleHandler.scaleY);
+    let p = this._pointFactory.createNew(this._origin.x * this._scaleHandler.x, this._origin.y * this._scaleHandler.y);
     this._objectHandler.setPivot(this._data, p);
   }
 
@@ -362,10 +362,10 @@ class ObjectCore {
 
   public scaleMask() {
     if (this._mask.initialized) {
-     // let scaleX = this._scaleHandler.getTrueScale(this._go.scaleHandler.scaleX);
+     // let scaleX = this._scaleHandler.getTrueScale(this._go.scaleHandler.x);
     //  let scaleY = this._scaleHandler.getTrueScale(this._go.scaleHandler.scaleY);
-    let scaleX = this._go.scaleHandler.scaleX;
-   let scaleY = this._go.scaleHandler.scaleY;
+    let scaleX = this._go.scaleHandler.x;
+   let scaleY = this._go.scaleHandler.y;
 
       this._mask.scale(scaleX, scaleY);
     }
@@ -381,15 +381,15 @@ class ObjectCore {
   }
 
   private _importSize() {
-    this._width = this._objectHandler.getSize(this._data).width / this._scaleHandler.scaleX;
-    this._height = this._objectHandler.getSize(this._data).height / this._scaleHandler.scaleY;
+    this._width = this._objectHandler.getSize(this._data).width / this._scaleHandler.x;
+    this._height = this._objectHandler.getSize(this._data).height / this._scaleHandler.y;
   }
 
   private _updateSize() {
-    // let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.scaleX);
+    // let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.x);
     //  let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
 
-    this._objectHandler.setSize(this._data, this._width * this._go.scaleHandler.scaleX, this._height * this._go.scaleHandler.scaleY);
+    this._objectHandler.setSize(this._data, this._width * this._go.scaleHandler.x, this._height * this._go.scaleHandler.y);
     //   this._objectHandler.setSize(this._data, this._width * scaleX, this._height * scaleY);
   }
 

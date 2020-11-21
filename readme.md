@@ -326,8 +326,8 @@ class Background {
   }
 
   public scale(x: number, y: number) {
-    this._sprite.scaleHandler.scaleX = x;
-    this._sprite.scaleHandler.scaleY = y;
+    this._sprite.scaleHandler.x = x;
+    this._sprite.scaleHandlery = y;
   }
 
   public anchor(x: number, y: number) {

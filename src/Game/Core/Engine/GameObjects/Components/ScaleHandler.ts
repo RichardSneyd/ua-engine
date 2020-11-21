@@ -14,13 +14,13 @@ class ScaleHandler {
   private _events: Events;
   private _scaleManager: ScaleManager;
 
-  private _scaleX: number;
-  private _scaleY: number;
+  private _x: number;
+  private _y: number;
 
   constructor(scaleManager: ScaleManager) {
     this._scaleManager = scaleManager;
-    this._scaleX = 1;
-    this._scaleY = 1;
+    this._x = 1;
+    this._y = 1;
 
   }
 
@@ -35,26 +35,26 @@ class ScaleHandler {
     // Debug.info("smanager w(%s) h(%s)", this._width, this._height);
   }
 
-  get scaleX(): number {
-    return this._scaleX;
+  get x(): number {
+    return this._x;
   }
 
   get scaleFactor(): number {
     return this._scaleManager.scaleFactor();
   }
 
-  get scaleY(): number {
-    return this._scaleY;
+  get y(): number {
+    return this._y;
   }
 
-  set scaleX(xVal: number) {
-    this._scaleX = xVal;
+  set x(xVal: number) {
+    this._x = xVal;
 
     this.updateScale();
   }
 
-  set scaleY(yVal: number) {
-    this._scaleY = yVal;
+  set y(yVal: number) {
+    this._y = yVal;
 
     this.updateScale();
   }
@@ -63,7 +63,7 @@ class ScaleHandler {
    * @description set the scale for both the x and y axis
    */
   set scale(scale: number){
-    this._scaleX = scale; this._scaleY = scale;
+    this._x = scale; this._y = scale;
     this.updateScale();
   }
 
@@ -74,8 +74,8 @@ class ScaleHandler {
    */
   setScale(x: number, y?: number){
     if(!y) y = x;
-    this._scaleX = x;
-    this._scaleY = y;
+    this._x = x;
+    this._y = y;
     this.updateScale();
   }
 
@@ -105,8 +105,8 @@ class ScaleHandler {
   }
 
   private _updateScale() {
-    let scaleX = this._scaleX;
-    let scaleY = this._scaleY;
+    let scaleX = this._x;
+    let scaleY = this._y;
 
     this._core.objectHandler.setScale(this._core.data, scaleX, scaleY);
   }
