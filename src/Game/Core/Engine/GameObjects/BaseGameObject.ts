@@ -12,6 +12,8 @@ import FrameAnimationManager from './Components/FrameAnimationManager';
 import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
 import Debug from "../Debug";
+import ExtractComponent from './Components/ExtractComponent';
+import { RenderTexture } from "pixi.js-legacy";
 
 /**
  * @description A sprite game object class. 
@@ -24,11 +26,12 @@ abstract class BaseGameObject implements IGameObject {
     protected _scaleHandler: ScaleHandler;
     protected _animationManager: IAnimationManager;
     protected _tweenComponent: TweenComponent;
+    protected _extract: ExtractComponent;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
-        scaleHandler: ScaleHandler, tweenComponent: TweenComponent) {
+        scaleHandler: ScaleHandler, tweenComponent: TweenComponent, extract: ExtractComponent) {
         this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input;
-        this._scaleHandler = scaleHandler; this._tweenComponent = tweenComponent;
+        this._scaleHandler = scaleHandler; this._tweenComponent = tweenComponent; this._extract = extract;
     }
 
     public init(...args: any[]): void {
@@ -36,6 +39,7 @@ abstract class BaseGameObject implements IGameObject {
         this._scaleHandler.init(this, this._core);
         this._input.init(this, this._core);
         this._tweenComponent.init(this);
+        this._extract.init(this);
     }
 
     //public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): any {
@@ -50,14 +54,11 @@ abstract class BaseGameObject implements IGameObject {
         // return new BaseGameObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._animationManager.createNew(), this._tweenComponent.createNew());
     }
 
-    public toImgElement(): Promise<HTMLImageElement> | null {
-        let cont = this.data.data !== undefined ? this.data.data : this.data;
-       // let cont = this.data;
-       // Debug.info('cont: ', cont);
-        return this._screen.toImgElement(cont);
+    public get extract(): ExtractComponent {
+        return this._extract;
     }
 
-    public changeTexture(textureName: string) {
+    public changeTexture(textureName: string | RenderTexture) {
         this._core.changeTexture(textureName);
     }
 
@@ -223,14 +224,14 @@ abstract class BaseGameObject implements IGameObject {
     /**
      * @description calculates the width of the game object as a 'container', meaning based on the positions of its children
      */
-    get containerWidth(): number{
+    get containerWidth(): number {
         return this._containerWidth();
     }
 
-     /**
-     * @description calculates the height of the game object as a 'container', meaning based on the positions of its children
-     */
-    get containerHeight(): number{
+    /**
+    * @description calculates the height of the game object as a 'container', meaning based on the positions of its children
+    */
+    get containerHeight(): number {
         return this._containerHeight();
     }
 
@@ -272,8 +273,8 @@ abstract class BaseGameObject implements IGameObject {
         return this._pcHandler.children;
     }
 
-       // ALWAYS listen for core.update in events, never this one directly, as it is called from core.update.
-       protected _update(time: number) {
+    // ALWAYS listen for core.update in events, never this one directly, as it is called from core.update.
+    protected _update(time: number) {
         // this._TweenComponent.update(time);
         if (this._animationManager) this._animationManager.update();
     }

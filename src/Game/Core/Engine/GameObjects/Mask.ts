@@ -82,16 +82,16 @@ class Mask {
     return new Mask(this._objectHandler, this._screen);
   }
 
-  public scale(scaleX: number, scaleY: number) {
-    this._objectHandler.setXy(this._data, this._x * scaleX, this._y * scaleY);
-    this._objectHandler.setWidth(this._data, this._width * scaleX);
+  public scale(x: number, scaleY: number) {
+    this._objectHandler.setXy(this._data, this._x * x, this._y * scaleY);
+    this._objectHandler.setWidth(this._data, this._width * x);
     this._objectHandler.setHeight(this._data, this._height * scaleY);
   }
 
   private _updateScale() {
     /*
-    this._objectHandler.setXy(this._data, this._x * this._scaleX, this._y * this._scaleY);
-    this._objectHandler.setWidth(this._data, this._width * this._scaleX);
+    this._objectHandler.setXy(this._data, this._x * this._x, this._y * this._scaleY);
+    this._objectHandler.setWidth(this._data, this._width * this._x);
     this._objectHandler.setHeight(this._data, this._height * this._scaleY);
     */
   }

@@ -9,6 +9,7 @@ import ScaleHandler from './Components/ScaleHandler';
 import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
 import BaseGameObject from "./BaseGameObject";
+import ExtractComponent from "./Components/ExtractComponent";
 
 /**
  * @description A container object. Useful for grouping other GameObjects.
@@ -17,8 +18,8 @@ class ContainerObject extends BaseGameObject {
     private _pointFactory: Point;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
-        scaleHandler: ScaleHandler, tweenComponent: TweenComponent, point: Point) {
-        super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent);
+        scaleHandler: ScaleHandler, tweenComponent: TweenComponent, point: Point, extract: ExtractComponent) {
+        super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent, extract);
         this._pointFactory = point;
     }
 
@@ -36,7 +37,7 @@ class ContainerObject extends BaseGameObject {
     }
 
     public createEmpty(): ContainerObject {
-        return new ContainerObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this.scaleHandler.createNew(), this._tweenComponent.createNew(), this._pointFactory);
+        return new ContainerObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this.scaleHandler.createNew(), this._tweenComponent.createNew(), this._pointFactory, this._extract.createEmpty());
     }
 
     public changeTexture(textureName: string) {

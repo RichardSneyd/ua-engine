@@ -115,10 +115,6 @@ class Screen {
     return this._pxGame.width();
   }
 
-  public toTexture(object: DisplayObject): any | null {
-    return this._pxGame.toTexture(object);
-  }
-
   public height(): number | null {
     return this._pxGame.height();
   }
@@ -127,12 +123,28 @@ class Screen {
     this._pxGame.newLevel();
   }
 
-  public toImgElement(container: PIXI.Container): Promise<HTMLImageElement> | null{
+  public toImgElement(container: PIXI.Container): Promise<HTMLImageElement> | null {
     if (this._pxGame !== undefined) {
-     return this._pxGame.toImgElement(container);
+      return this._pxGame.toImgElement(container);
     }
     return null;
   }
+
+  public toPixels(container: PIXI.Container): Uint8Array | Uint8ClampedArray {
+    return this._pxGame.toPixels(container);
+  }
+
+  public toBase64(container: PIXI.Container): string {
+    return this._pxGame.toBase64(container);
+  }
+
+  public toTexture(object: DisplayObject): RenderTexture {
+    return this._pxGame.toTexture(object);
+  }
+
+   public toCanvas(container: PIXI.Container): Promise<HTMLCanvasElement> {
+    return this._pxGame.toCanvas(container);
+   }
 
 }
 

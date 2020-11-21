@@ -12,6 +12,7 @@ import FrameAnimationManager from './Components/FrameAnimationManager';
 import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
 import BaseGameObject from "./BaseGameObject";
+import ExtractComponent from "./Components/ExtractComponent";
 
 /**
  * @description A sprite game object class. 
@@ -20,8 +21,8 @@ class SpriteObject extends BaseGameObject {
     protected _animationManager: FrameAnimationManager;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
-        scaleHandler: ScaleHandler, animationManager: FrameAnimationManager, tweenComponent: TweenComponent) {
-        super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent);
+        scaleHandler: ScaleHandler, animationManager: FrameAnimationManager, tweenComponent: TweenComponent, extract: ExtractComponent) {
+        super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent, extract);
         this._animationManager = animationManager;
     }
 
@@ -41,7 +42,7 @@ class SpriteObject extends BaseGameObject {
     }
 
     public createEmpty(): SpriteObject {
-        return new SpriteObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._animationManager.createNew(), this._tweenComponent.createNew());
+        return new SpriteObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._animationManager.createNew(), this._tweenComponent.createNew(),  this._extract.createEmpty());
     }
 
     get animations(): FrameAnimationManager {

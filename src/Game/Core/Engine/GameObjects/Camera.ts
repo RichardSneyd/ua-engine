@@ -221,20 +221,20 @@ class Camera {
         return this._pivot;
     }
     /**
-     * @description Set the zoom level of the camera. Sets the scaleX and scaleY of the container
+     * @description Set the zoom level of the camera. Sets the x and scaleY of the container
      */
     set zoom(zoom: number) {
         let _clampZoom = this._math.clamp(zoom, 0, 10);
-        this._container.scaleHandler.scaleX = _clampZoom;
-        this._container.scaleHandler.scaleY = _clampZoom;
+        this._container.scaleHandler.x = _clampZoom;
+        this._container.scaleHandler.y = _clampZoom;
         this._updateContOrigin();
     }
 
     /**
-     * @description The zoom level of the camera. Sets the scaleX and scaleY of the container
+     * @description The zoom level of the camera. Sets the x and scaleY of the container
      */
     get zoom() {
-        return this._container.scaleHandler.scaleX;
+        return this._container.scaleHandler.x;
     }
 
     /**

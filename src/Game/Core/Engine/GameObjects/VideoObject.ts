@@ -11,6 +11,7 @@ import Events from '../Events'; // don't remove this import - it's needed
 import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
 import BaseGameObject from "./BaseGameObject";
+import ExtractComponent from "./Components/ExtractComponent";
 
 /**
  * @description A video game object class. 
@@ -20,8 +21,8 @@ class VideoObject extends BaseGameObject {
     private _vidElement: HTMLVideoElement;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
-        scaleHandler: ScaleHandler, tweenComponent: TweenComponent, gameConfig: GameConfig) {
-            super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent);
+        scaleHandler: ScaleHandler, tweenComponent: TweenComponent, gameConfig: GameConfig, extract: ExtractComponent) {
+            super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent, extract);
             this._gameConfig = gameConfig;
     }
 
@@ -63,7 +64,7 @@ class VideoObject extends BaseGameObject {
     }
 
     public createEmpty(): VideoObject {
-        return new VideoObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenComponent.createNew(), this._gameConfig);
+        return new VideoObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenComponent.createNew(), this._gameConfig, this._extract.createEmpty());
     }
 
     destroy(): void {
