@@ -11,6 +11,7 @@ import VideoObject from "./VideoObject";
 import IGameObject from "./IGameObject";
 import Screen from "../../../Services/Screen";
 import Camera from "./Camera";
+import { Texture } from "pixi.js-legacy";
 
 /**
  * @description A factory for creating game objects of various types
@@ -58,27 +59,27 @@ class GOFactory {
      * @param textureName the name of the texture to initialize the sprite with
      * @param frame the default frame for the Sprite. Optional. Provide this if working with an atlas animation
      */
-    public sprite(x?: number, y?: number, textureName?: string, frame: string | null = null, parent: IParentChild | null = null): SpriteObject {
-        if (x != null && y != null && textureName != null) {
+    public sprite(x?: number, y?: number, texture?: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null): SpriteObject {
+        if (x != null && y != null && texture != null) {
             //  let pos = this._scaleManager.getXY(x, y);
             //  Debug.info('pos: ', pos);
-            return this._sprite.createNew(x, y, textureName, frame, parent);
+            return this._sprite.createNew(x, y, texture, frame, parent);
         } else {
             return this._sprite.createEmpty();
         }
     }
 
     /**
-     * @description Create a sprite object with a texture generated from the provided IGameObject (especially useful for containers)
+     * @description Create a sprite object from a container or gameObject
      * @param x the starting x coordinate
      * @param y the starting y coordinate
-     * @param generateFrom the IGameObject to generate the texture from
+     * @param generateFrom a gameObject or container to generate a texture from
      * @param parent the parent (if any) to this object as a child to
      */
-    public spriteFromObject(x: number, y: number, generateFrom: IGameObject, parent: IParentChild): SpriteObject {
+    public spriteFromContainer(x: number, y: number, container: IGameObject, parent: IParentChild): SpriteObject {
         let sprite = this._sprite.createEmpty();
         sprite.init(x, y, '', null, parent);
-        sprite.changeTexture(generateFrom.extract.toTexture());
+        sprite.changeTexture(container.extract.toTexture());
         return sprite;
     }
 

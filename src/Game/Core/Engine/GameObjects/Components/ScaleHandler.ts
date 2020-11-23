@@ -97,7 +97,7 @@ class ScaleHandler {
   }
 
    /**
-   * @description Multiplies the local scale by the scaleFactor (for the screen), to provide the true scale
+   * @description Multiplies the local scale by the scaleFactor (for the screen), to provide the true scale. FOR DIAGNOSTICS ONLY.
    * @param localScale 
    */
   public getTrueScale(localScale: number) {

@@ -26,18 +26,18 @@ class SpriteObject extends BaseGameObject {
         this._animationManager = animationManager;
     }
 
-    public init(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): void {
-        this.data = this._screen.createSprite(x, y, textureName, frame);
-        if (frame != null) this._core.atlas = textureName;
-        this._core.init(this, x, y, textureName, this._update);
+    public init(x: number, y: number, texture: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null): void {
+        this.data = this._screen.createSprite(x, y, texture, frame);
+        if (frame != null) this._core.atlas = texture;
+        this._core.init(this, x, y, texture, this._update);
         super.init();
         this._animationManager.init(this, this._core);
         this._pcHandler.init(this, this._core, parent);
     }
 
-    public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): SpriteObject {
+    public createNew(x: number, y: number, texture: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null): SpriteObject {
         let sprite = this.createEmpty();
-        sprite.init(x, y, textureName, frame, parent);
+        sprite.init(x, y, texture, frame, parent);
         return sprite;
     }
 
