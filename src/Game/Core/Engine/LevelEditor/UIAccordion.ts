@@ -1,5 +1,10 @@
 import Debug from "../Debug";
 import Loader from '../Loader';
+import GameConfig from '../GameConfig';
+import GOFactory from "../GameObjects/GOFactory";
+import PxLoader from '../../../Services/Pixi/PxLoader';
+import ImgLoader from "../../../Services/ImgLoader";
+
 
 class UIAccordion {
 
@@ -9,9 +14,15 @@ class UIAccordion {
     protected _panels: HTMLDivElement[] = [];
 
     protected _loader: Loader;
+    protected _imgLoader: ImgLoader;
+    protected _gameConfig: GameConfig;
+    protected _goFactory: GOFactory;
 
-    constructor(loader: Loader) {
+    constructor(loader: Loader, imgLoader: ImgLoader, gameConfig: GameConfig, goFactory: GOFactory) {
         this._loader = loader;
+        this._imgLoader = imgLoader;
+        this._gameConfig = gameConfig;
+        this._goFactory = goFactory;
     }
 
     /**
@@ -57,7 +68,64 @@ class UIAccordion {
         let panel = document.createElement('div');
         panel.setAttribute('class', 'panel');
         this._container.appendChild(panel);
+
+        this.enableDragAndDropFileUpload(panel);
+
         this._panels.push(panel);
+    }
+
+    enableDragAndDropFileUpload(panel: HTMLDivElement): void {
+        panel.addEventListener('drop', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            this.dropHandler(event);
+
+        }, false);
+        panel.addEventListener('dragover', (event) => this.dragOverHandler(event), false);
+    }
+
+    dropHandler(event: DragEvent): void {
+        if (event.dataTransfer!.items) {
+            // Use DataTransferItemList interface to access the file(s)
+            for (let i = 0; i < event.dataTransfer!.items.length; i++) {
+                // If dropped items aren't files, reject them
+                if (event.dataTransfer!.items[i].kind === 'file') {
+                    let file = event.dataTransfer!.items[i].getAsFile();
+                    //Debug.warn('file[' + i + '].name = ' + file!.name);
+                    Debug.warn(file);
+                    let reader = new FileReader();
+                    reader.readAsDataURL(file!);
+                    reader.onloadend = () => {
+                        this.addImgSrc(reader.result, this._panels[0], file!.name);
+                    }
+
+                }
+            }
+        } else {
+            // Use DataTransfer interface to access the file(s)
+            for (let i = 0; i < event.dataTransfer!.files.length; i++) {
+                Debug.warn('... file[' + i + '].name = ' + event.dataTransfer!.files[i].name);
+            }
+        }
+    }
+
+
+    previewFile(file: any) {
+        Debug.warn("PREVIEW IMG FILE!");
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            let img = document.createElement('img');
+            img.src = reader.result as string;
+            this._panels[0].appendChild(img);
+        }
+    }
+
+    dragOverHandler(event: any): void {
+        // Prevent default behavior (prevent file from being opened)
+        event.preventDefault();
+        event.stopPropagation();
     }
 
     addImg(src: string, panel: HTMLDivElement): void {
@@ -65,6 +133,23 @@ class UIAccordion {
         img.setAttribute('class', 'panel-img');
         img.src = src;
         panel.appendChild(img);
+        this._images.push(img);
+    }
+
+    addImgSrc(imgSrc: any, panel: HTMLDivElement, fileName?: string): void {
+        let img = document.createElement('img');
+        img.setAttribute('class', 'panel-img');
+        img.src = imgSrc;
+        panel.appendChild(img);
+        //this._loader.base = this._gameConfig.data.PATHS.IMG;
+        this._loader.addImage(imgSrc, true, fileName);
+        Debug.warn("imgSrc: ", imgSrc);
+        this._loader.download().then(() => {
+
+            Debug.warn('resList:', this._loader.resList);
+            this._goFactory.sprite(600, 600, imgSrc);
+        });
+
         this._images.push(img);
     }
 

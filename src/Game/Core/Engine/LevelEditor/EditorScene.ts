@@ -99,9 +99,6 @@ class EditorScene implements ILevel {
         this.addImagesRow();
         this.addSpinesRow();
 
-        // This is needed for the first time creation of panels
-        this._accordion.removeAllSelections();
-        this._accordion.uncollapseAll();
     }
 
     addImagesRow(): void {
@@ -115,9 +112,35 @@ class EditorScene implements ILevel {
         let spineListFiltered = this._loader.resList.filter(res => res.type === 'spn');
         spineListFiltered.forEach(val => this.spineList.push(val.url));
 
-        this._accordion.addRow('Spines', ...[
-            `${this._loader.resList[37].url}`
-        ]);
+        Debug.warn("FilteredSpines:", spineListFiltered);
+
+        let spnSrc = this._goFactory.spine(500, 500, 'parrot');
+
+        let result: string = "";
+
+        let pixelData = this._pxGame.toPixels(spnSrc.data);
+        Debug.info("pixelData:", pixelData);
+
+        this._pxGame.toImgElement(spnSrc.data).then(res => {
+            Debug.warn("TOIMG:", res.src);
+
+            result = res.src;
+
+            this._accordion.addRow('Spines', ...[
+                `${result}`
+            ]);
+
+            this._accordion.removeAllSelections();
+            this._accordion.uncollapseAll();
+        });
+
+
+
+
+
+
+
+
     }
 
     update(_time: number): void {
