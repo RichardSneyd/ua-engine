@@ -31,6 +31,10 @@ class Resource {
     return this._name;
   }
 
+  get type(): string {
+    return this._type;
+  }
+
   /**
    * @description returns the basename of the file, without file extension
    */

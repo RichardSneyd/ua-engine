@@ -1,0 +1,174 @@
+import Debug from "../Debug";
+import ILevel from '../Activities/ILevel';
+
+import LevelManager from "../LevelManager";
+import GOFactory from "../GameObjects/GOFactory";
+import Loader from "../Loader";
+import UIAccordion from "./UIAccordion";
+import Loop from "../Loop";
+import SpriteObject from "../GameObjects/SpriteObject";
+import SpineObject from "../GameObjects/SpineObject";
+import PxGame from "../../../Services/Pixi/PxGame";
+import { Graphics } from "pixi.js-legacy";
+
+// build the visual of the editor here, like an activity level....
+
+class EditorScene implements ILevel {
+    private _loader: Loader;
+    private _manager: LevelManager;
+    private _goFactory: GOFactory;
+    private _accordion: UIAccordion;
+    private _loop: Loop;
+    protected _pxGame: PxGame;
+
+    protected imgList: string[] = [];
+    protected spineList: string[] = [];
+
+    protected selectedGO: SpriteObject | SpineObject;
+    protected xOffset: number = 0;
+    protected yOffset: number = 0;
+    protected dragging: boolean = false;
+    protected selectedGOBorder: PIXI.Graphics;
+
+    constructor(loader: Loader, manager: LevelManager, loop: Loop, goFactory: GOFactory, pxGame: PxGame, accordion: UIAccordion) {
+        this._loader = loader;
+        this._manager = manager;
+        this._goFactory = goFactory;
+        this._pxGame = pxGame;
+        this._loop = loop;
+        this._accordion = accordion;
+    }
+
+    init(): void {
+        Debug.info('Editor.init');
+
+        this._loop.addFunction(this.update, this);
+        this._loop.start();
+
+        this.preload();
+    }
+
+    preload(): void {
+        Debug.info('Editor.preload');
+
+        this.start();
+    }
+
+    start(): void {
+        Debug.info('Editor.start');
+        this._waitForFirstInput();
+
+        // TODO: build editor UI and populate GameObject panels
+        this.selectedGO = this._goFactory.sprite(200, 200, 'cat');
+        this.selectedGO.setOrigin(.5);
+        this.selectedGO.input.enableInput();
+        this.selectedGO.input.addInputListener('pointerdown', () => {
+            this.xOffset = this.selectedGO.x - this._manager.input.pointer.x;
+            this.yOffset = this.selectedGO.y - this._manager.input.pointer.y;
+            this.dragging = true;
+        }, this);
+        this.selectedGO.input.addInputListener('pointerup', () => {
+            this.dragging = false;
+        }, this);
+
+        this.selectedGOBorder = this._pxGame.addRectangle(
+            this.selectedGO.x,
+            this.selectedGO.y,
+            this.selectedGO.width,
+            this.selectedGO.height,
+            0xCF19B9,
+            0,
+            2,
+            0x77FE79,
+            1
+        );
+
+        this.selectedGOBorder.pivot.set(this.selectedGO.x + (this.selectedGO.width / 2), this.selectedGO.y + (this.selectedGO.height / 2));
+
+
+
+        let spn = this._goFactory.spine(900, 400, 'treasure_chest');
+        spn.scaleHandler.scale = 0.5;
+        Debug.warn("SPN:", spn);
+        //spn.animations.play('idle_closed');
+
+
+        this._accordion.createContainer();
+
+        // Create rows here
+        this.addImagesRow();
+        this.addSpinesRow();
+
+    }
+
+    addImagesRow(): void {
+        let imgListFiltered = this._loader.resList.filter(res => res.type === 'img');
+        imgListFiltered.forEach(val => this.imgList.push(val.url));
+
+        this._accordion.addRow('Images', ...this.imgList);
+    }
+
+    addSpinesRow(): void {
+        let spineListFiltered = this._loader.resList.filter(res => res.type === 'spn');
+        spineListFiltered.forEach(val => this.spineList.push(val.url));
+
+        Debug.warn("FilteredSpines:", spineListFiltered);
+
+        let spnSrc = this._goFactory.spine(500, 500, 'parrot');
+
+        let result: string = "";
+
+        let pixelData = this._pxGame.toPixels(spnSrc.data);
+        Debug.info("pixelData:", pixelData);
+
+        this._pxGame.toImgElement(spnSrc.data).then(res => {
+            Debug.warn("TOIMG:", res.src);
+
+            result = res.src;
+
+            this._accordion.addRow('Spines', ...[
+                `${result}`
+            ]);
+
+            this._accordion.removeAllSelections();
+            this._accordion.uncollapseAll();
+        });
+
+
+
+
+
+
+
+
+    }
+
+    update(_time: number): void {
+        if (this.dragging) {
+            this.selectedGO.moveToMouse(this.xOffset, this.yOffset);
+            this.selectedGOBorder.x = this.selectedGO.x;
+            this.selectedGOBorder.y = this.selectedGO.y;
+        }
+    }
+
+    shutdown(): void {
+        Debug.info('Editor.shutdown');
+    }
+
+    // added to comply with ILevel - but probably not needed
+    onNewRow(): void {
+        Debug.info('Editor.onNewRow');
+    }
+
+    // added to comply with ILevel - but probably not needed
+    loadConfig(): void {
+        Debug.info('Editor.loadConfig');
+    }
+
+    // added to comply with ILevel - but probably not needed
+    _waitForFirstInput(): void {
+        Debug.info('Editor.waitForFirstInput');
+    }
+}
+
+export default EditorScene;

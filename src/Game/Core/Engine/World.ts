@@ -34,6 +34,10 @@ class World {
     this._currentLevel = null;
   }
 
+  get initialized(): boolean {
+    return this._initialized;
+  }
+
   /**
    * @description Initialize the game world. This generates an empty screen
    * @param w The width value to initialize the world with. Defines the width of the game screen.
@@ -47,6 +51,7 @@ class World {
 
     this._createScreen(w, h, elmId);
     this._events.on('debugscreen', this.debugScreen, this);
+    this._initialized = true;
   }
 
   /**

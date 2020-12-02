@@ -48,7 +48,9 @@ const config = {
             'TransitionManager',
             'InputManager',
             'Game',
-            'TweenManager'
+            'TweenManager',
+            'LevelEditor',
+            'EditorScene'
         ],
         ignore: [
             'UAENGINE',
