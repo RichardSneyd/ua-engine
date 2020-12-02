@@ -3,7 +3,7 @@ import Loader from '../Loader';
 import GameConfig from '../GameConfig';
 import GOFactory from "../GameObjects/GOFactory";
 import PxLoader from '../../../Services/Pixi/PxLoader';
-import ImgLoader from "../../../Services/ImgLoader";
+import PxFactory from "../../../Services/Pixi/PxFactory";
 
 
 class UIAccordion {
@@ -14,15 +14,17 @@ class UIAccordion {
     protected _panels: HTMLDivElement[] = [];
 
     protected _loader: Loader;
-    protected _imgLoader: ImgLoader;
     protected _gameConfig: GameConfig;
     protected _goFactory: GOFactory;
+    protected _pxLoader: PxLoader;
+    protected _pxFactory: PxFactory;
 
-    constructor(loader: Loader, imgLoader: ImgLoader, gameConfig: GameConfig, goFactory: GOFactory) {
+    constructor(loader: Loader, pxFactory: PxFactory, pxLoader: PxLoader, gameConfig: GameConfig, goFactory: GOFactory) {
         this._loader = loader;
-        this._imgLoader = imgLoader;
         this._gameConfig = gameConfig;
         this._goFactory = goFactory;
+        this._pxFactory = pxFactory;
+        this._pxLoader = pxLoader;
     }
 
     /**
@@ -143,11 +145,20 @@ class UIAccordion {
         panel.appendChild(img);
         //this._loader.base = this._gameConfig.data.PATHS.IMG;
         this._loader.addImage(imgSrc, true, fileName);
+
+
         Debug.warn("imgSrc: ", imgSrc);
+
         this._loader.download().then(() => {
 
             Debug.warn('resList:', this._loader.resList);
-            this._goFactory.sprite(600, 600, imgSrc);
+            this._pxLoader.addImages(imgSrc);
+
+            this._pxLoader.addOnComplete(() => {
+                let go = this._goFactory.sprite(500, 500, imgSrc);
+                Debug.warn('GO:', go);
+            });
+
         });
 
         this._images.push(img);
