@@ -5,7 +5,6 @@ import GOFactory from "../GameObjects/GOFactory";
 import PxLoader from '../../../Services/Pixi/PxLoader';
 import ImgLoader from "../../../Services/ImgLoader";
 
-
 class UIAccordion {
 
     protected _container: HTMLDivElement;
@@ -15,6 +14,7 @@ class UIAccordion {
 
     protected _loader: Loader;
     protected _imgLoader: ImgLoader;
+ 
     protected _gameConfig: GameConfig;
     protected _goFactory: GOFactory;
 

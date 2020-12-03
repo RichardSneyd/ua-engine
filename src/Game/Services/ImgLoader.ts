@@ -8,10 +8,21 @@ class ImgLoader implements IImgLoader {
   constructor(pxLoader: PxLoader) {
     this._pxLoader = pxLoader;
   }
+  
+  init(onLoad: any, onComplete: any, context: any){
+    this.addOnLoad(onLoad, context);
+    this.addOnComplete(onComplete, context);
+  }
 
-  public loadImages(images: string[], onProgress: any, onDone: any, context: any): void {
-    this._pxLoader.addOnLoad(onProgress.bind(context));
-    this._pxLoader.addOnComplete(onDone.bind(context));
+  addOnLoad(callback: any, context: any){
+    this._pxLoader.addOnLoad(callback.bind(context));
+  }
+
+  addOnComplete(callback: any, context: any){
+    this._pxLoader.addOnComplete(callback.bind(context));
+  }
+
+  public loadImages(images: string[]): void {
     this._pxLoader.addImages(images);
   }
 
