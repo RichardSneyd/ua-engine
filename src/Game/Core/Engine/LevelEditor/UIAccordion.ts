@@ -14,7 +14,7 @@ class UIAccordion {
 
     protected _loader: Loader;
     protected _imgLoader: ImgLoader;
- 
+
     protected _gameConfig: GameConfig;
     protected _goFactory: GOFactory;
 
@@ -134,6 +134,7 @@ class UIAccordion {
         img.src = src;
         panel.appendChild(img);
         this._images.push(img);
+
     }
 
     addImgSrc(imgSrc: any, panel: HTMLDivElement, fileName?: string): void {
@@ -147,7 +148,12 @@ class UIAccordion {
         this._loader.download().then(() => {
 
             Debug.warn('resList:', this._loader.resList);
-            this._goFactory.sprite(600, 600, imgSrc);
+            // this._goFactory.sprite(600, 600, imgSrc);
+            Debug.info('ADDING SPRITE...');
+            let texture = this._loader.getTexture(imgSrc, null, false);
+            let sprite = this._goFactory.sprite(100, 600, texture);
+            Debug.exposeGlobal(sprite, 'last');
+            Debug.info('SPRITE ADDED: ', sprite);
         });
 
         this._images.push(img);

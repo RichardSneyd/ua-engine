@@ -108,7 +108,7 @@ class Loader {
    * @param callback the callback function
    * @param context the context of the callback
    */
-  addOnLoad(callback: any, context: any){
+  addOnLoad(callback: any, context: any) {
     this._imgLoader.addOnLoad(callback, context);
   }
 
@@ -117,7 +117,7 @@ class Loader {
    * @param callback the callback function
    * @param context the context of the callback
    */
-  addOnComplete(callback: any, context: any){
+  addOnComplete(callback: any, context: any) {
     this._imgLoader.addOnComplete(callback, context);
   }
 
@@ -326,7 +326,13 @@ class Loader {
     if (res != null) {
       return this._extractTexture(res.data, frame);
     } else {
-      Debug.warn("Resource '%s' doesn't exist.", sprite);
+      Debug.info('byName: ', byName);
+      Debug.breakpoint();
+      if (byName) {
+        Debug.warn("Resource '%s' doesn't exist.", sprite);
+        return;
+      }
+      Debug.warn("No resource with url: %s");
     }
   }
 
@@ -427,7 +433,7 @@ class Loader {
   }
 
   private _downloadedResource(url: string, data: any) {
-    Debug.info(url + ': ', data);
+    // Debug.info(url + ': ', data);
     // don't load json_image resources, which PIXI uses internally as child-resources of the json resources (atlas, spine etc)
     if (data.hasOwnProperty('name') && data.name.indexOf('.json_image') !== -1) {
       Debug.warn('will not inject a json_image resource, used by PIXI Loader internally as children of json resources like atlases');
