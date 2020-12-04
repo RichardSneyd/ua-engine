@@ -5,6 +5,7 @@ Universal Activity Engine, or UAE, is a HTML5 engine, developed by Highwood Educ
 ```
 git clone https://github.com/RichardSneyd/ua-engine
 npm install
+npm install -g dts-bundle
 gulp
 ```
 ## Engine Structure

@@ -1,5 +1,5 @@
 import Resource from '../Data/Resource';
-import IImgLoader from '../../Services/IImgLoader';
+import ImgLoader from '../../Services/ImgLoader';
 import SndLoader from '../../Services/SndLoader';
 import ISndLoader from '../../Services/ISndLoader';
 import AjaxLoader from '../../Services/AjaxLoader';
@@ -14,7 +14,7 @@ import Debug from './Debug';
 class Loader {
   private _resource: Resource;
   private _gameConfig: GameConfig; private _loop: Loop; private _events: Events;
-  private _imgLoader: IImgLoader; _sndLoader: ISndLoader; _ajaxLoader: AjaxLoader;
+  private _imgLoader: ImgLoader; _sndLoader: ISndLoader; _ajaxLoader: AjaxLoader;
   private _resList: Resource[];
   private _newResList: Resource[];
   private _downloadComplete: boolean = false;
@@ -71,7 +71,7 @@ class Loader {
     return Math.floor(this.progress * 100);
   }
 
-  constructor(resource: Resource, imgLoader: IImgLoader, sndLoader: ISndLoader,
+  constructor(resource: Resource, imgLoader: ImgLoader, sndLoader: ISndLoader,
     ajaxLoader: AjaxLoader, gameConfig: GameConfig, loop: Loop, events: Events) {
     this._resource = resource;
     this._imgLoader = imgLoader;
@@ -95,11 +95,30 @@ class Loader {
   }
 
   private _init() {
+    this._imgLoader.init(this._imgLoaded, this._imgDone, this);
     this._base = "";
     this._downloadComplete = false;
     this._startedLoading = false;
     this._newResList = [];
     Debug.info('%cLoader initialized', 'color: green;');
+  }
+
+  /**
+   * @description add a listener which fires every time a file is successfully loaded
+   * @param callback the callback function
+   * @param context the context of the callback
+   */
+  addOnLoad(callback: any, context: any) {
+    this._imgLoader.addOnLoad(callback, context);
+  }
+
+  /**
+   * @description add a listener that fires when the entire download queue is completed
+   * @param callback the callback function
+   * @param context the context of the callback
+   */
+  addOnComplete(callback: any, context: any) {
+    this._imgLoader.addOnComplete(callback, context);
   }
 
   get downloadComplete(): boolean {
@@ -111,10 +130,10 @@ class Loader {
    * populated with the image once loaded; Everything in the queue is processed when the download() method is called
    * @param name the filename of the image to load, including file extension. This is added to the base path value to find the image URL.
    */
-  public addImage(name: string, hasPath?: boolean, imgName?: string): Loader {
+  public addImage(name: string, hasPath: boolean = false, imgName?: string): Loader {
 
     // NOTE: I put seperated whole code that way in case if anything else needed to be specific for now.
-    if (typeof hasPath !== 'undefined') {
+    if (hasPath) {
       let url = name;
       // if the file has .json extension, it's an atlas, so change path. Won't be confused with spine assets - they are loaded via addSpine
       if (imgName?.indexOf('.json') !== -1) { url = this._getPath().atlas + name }
@@ -282,6 +301,7 @@ class Loader {
   private _sendAllDone(resolve: Function, reject: Function) {
     Debug.info('progress: ', this.progressPercentage, '%');
     if (this._downloadComplete) {
+      this._newResList = [];
       resolve({ status: true });
       Debug.info('%cdownload complete, promise RESOLVED', 'color: green;')
     } else {
@@ -295,12 +315,24 @@ class Loader {
     return this._getResource(url, byName, resList);
   }
 
-  public getTexture(sprite: string, frame: string | null = null): any {
-    let res = this.getImgResource(sprite, true);
+  /**
+   * 
+   * @param sprite the name/url of the the resource to retrieve a texture from
+   * @param frame the frame to retrieve. Optional.
+   * @param byName Find by name (i.e 'star'). If false, will find by URL (.ie 'mydomain.com/assets/img/star.png')
+   */
+  public getTexture(sprite: string, frame: string | null = null, byName: boolean = true): any {
+    let res = this.getImgResource(sprite, byName);
     if (res != null) {
       return this._extractTexture(res.data, frame);
     } else {
-      Debug.warn("Resource '%s' doesn't exist.", sprite);
+      Debug.info('byName: ', byName);
+      Debug.breakpoint();
+      if (byName) {
+        Debug.warn("Resource '%s' doesn't exist.", sprite);
+        return;
+      }
+      Debug.warn("No resource with url: %s");
     }
   }
 
@@ -370,22 +402,22 @@ class Loader {
 
   /**
    * @description "data" is BS from PIXI, "data2" is the actual PIXI resource object. Handles spine resource downloads/injections too
-   * @param data 
+   * @param pixi 
    * @param data2 
    */
-  private _imgLoaded(data: any, data2: any) {
-    if (data2.texture != null) {
-      //  Debug.info('image loaded and returned: ', data2, 'attemping injection....');
-      if (data2.name.indexOf('.json_image') !== -1) {
+  private _imgLoaded(pixi: any, data: any) {
+    if (data.texture != null) {
+      //  Debug.info('image loaded and returned: ', data, 'attemping injection....');
+      if (data.name.indexOf('.json_image') !== -1) {
         // ignore irrelavent returns from PxLoader
         Debug.warn('will not inject a .json_image, no resource in resList for that, is internal PIXI Loader child image resource mapped to atlas json resource');
       }
       else {
-        this._downloadedResource(data2.url, data2.texture);
+        this._downloadedResource(data.url, data.texture);
       }
     } else {
       // Debug.info('spine loaded and returned: ', data2, 'attempting injection...');
-      this._downloadedResource(data2.url, data2); //Spine!
+      this._downloadedResource(data.url, data); //Spine!
 
     }
   }
@@ -401,7 +433,7 @@ class Loader {
   }
 
   private _downloadedResource(url: string, data: any) {
-    Debug.info(url + ': ', data);
+    // Debug.info(url + ': ', data);
     // don't load json_image resources, which PIXI uses internally as child-resources of the json resources (atlas, spine etc)
     if (data.hasOwnProperty('name') && data.name.indexOf('.json_image') !== -1) {
       Debug.warn('will not inject a json_image resource, used by PIXI Loader internally as children of json resources like atlases');
@@ -470,7 +502,7 @@ class Loader {
     let urlList = this._getUrls(spnImgList, true);
 
     //add images to the load queue
-    this._imgLoader.loadImages(urlList, this._imgLoaded, this._imgDone, this);
+    this._imgLoader.loadImages(urlList);
 
     this._downloadSpines();
 
@@ -546,9 +578,9 @@ class Loader {
   }
 
   /**
-   * @description Retrieve texture object from resource
-   * @param data 
-   * @param frame 
+   * @description Retrieve texture object from resource, and returns it.
+   * @param data the PIXI resource object to extract the texture from
+   * @param frame optional. Specify if you are looking for a specific frome from an atlas to use as texture etc
    */
   private _extractTexture(data: any, frame: any = null) {
     return this._imgLoader.getTexture(data, frame);

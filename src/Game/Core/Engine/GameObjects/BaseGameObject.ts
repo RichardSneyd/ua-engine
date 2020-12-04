@@ -58,7 +58,7 @@ abstract class BaseGameObject implements IGameObject {
         return this._extract;
     }
 
-    public changeTexture(textureName: string | RenderTexture) {
+    public changeTexture(textureName: string | PIXI.Texture) {
         this._core.changeTexture(textureName);
     }
 

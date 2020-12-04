@@ -58,12 +58,13 @@ class ObjectCore {
   }
 
   // keep this one for GENERIC initializations 
-  public init(go: IGameObject, x: number, y: number, textureName: string = '', updateCallback: Function) {
+  public init(go: IGameObject, x: number, y: number, texture: string | PIXI.Texture = '', updateCallback: Function) {
     this._go = go;
     this._scaleHandler = go.scaleHandler;
     this.x = x;
     this.y = y;
-    this._textureName = textureName;
+    if(typeof texture == 'string') {this._textureName = texture;}
+
     this._initialized = true;
     this._updateCallback = updateCallback;
 
@@ -386,9 +387,6 @@ class ObjectCore {
   }
 
   private _updateSize() {
-    // let scaleX = this._scaleHandler.getScale(this._go.scaleHandler.x);
-    //  let scaleY = this._scaleHandler.getScale(this._go.scaleHandler.scaleY);
-
     this._objectHandler.setSize(this._data, this._width * this._go.scaleHandler.x, this._height * this._go.scaleHandler.y);
     //   this._objectHandler.setSize(this._data, this._width * scaleX, this._height * scaleY);
   }

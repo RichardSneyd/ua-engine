@@ -5,7 +5,6 @@ import GOFactory from "../GameObjects/GOFactory";
 import PxLoader from '../../../Services/Pixi/PxLoader';
 import PxFactory from "../../../Services/Pixi/PxFactory";
 
-
 class UIAccordion {
 
     protected _container: HTMLDivElement;
@@ -14,6 +13,7 @@ class UIAccordion {
     protected _panels: HTMLDivElement[] = [];
 
     protected _loader: Loader;
+
     protected _gameConfig: GameConfig;
     protected _goFactory: GOFactory;
     protected _pxLoader: PxLoader;
@@ -136,6 +136,7 @@ class UIAccordion {
         img.src = src;
         panel.appendChild(img);
         this._images.push(img);
+
     }
 
     addImgSrc(imgSrc: any, panel: HTMLDivElement, fileName?: string): void {
@@ -152,13 +153,12 @@ class UIAccordion {
         this._loader.download().then(() => {
 
             Debug.warn('resList:', this._loader.resList);
-            this._pxLoader.addImages(imgSrc);
-
-            this._pxLoader.addOnComplete(() => {
-                let go = this._goFactory.sprite(500, 500, imgSrc);
-                Debug.warn('GO:', go);
-            });
-
+            // this._goFactory.sprite(600, 600, imgSrc);
+            Debug.info('ADDING SPRITE...');
+            let texture = this._loader.getTexture(imgSrc, null, false);
+            let sprite = this._goFactory.sprite(100, 600, texture);
+            Debug.exposeGlobal(sprite, 'last');
+            Debug.info('SPRITE ADDED: ', sprite);
         });
 
         this._images.push(img);

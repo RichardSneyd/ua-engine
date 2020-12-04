@@ -39,6 +39,7 @@ class PxLoader {
    // Debug.info(this._loader.resources);
   }
 
+
   /**
    * @description Add spine file to the load queue (use before download is called)
    * @param name ...
