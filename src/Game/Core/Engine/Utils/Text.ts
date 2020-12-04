@@ -48,7 +48,8 @@ class Text {
 
             let vals = sublines[1].trim().split(valueSeperator);
             if (vals.length <= 1) {
-                obj[sublines[0]] = vals[0]
+                let asNumber: number = Number(vals[0]);
+                obj[sublines[0]] = (isNaN(asNumber)) ? vals[0]: asNumber;
             }
             else {
                 obj[sublines[0]] = vals;
