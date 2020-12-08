@@ -59,7 +59,11 @@ abstract class BaseGameObject implements IGameObject {
     }
 
     public changeTexture(textureName: string | PIXI.Texture) {
+        let scaleX = this.scaleHandler.x;
+        let scaleY = this.scaleHandler.y;
         this._core.changeTexture(textureName);
+        this.scaleHandler.x = scaleX;
+        this.scaleHandler.y = scaleY;
     }
 
     get angle() {

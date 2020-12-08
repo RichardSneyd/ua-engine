@@ -12,6 +12,7 @@ import IGameObject from "./IGameObject";
 import Screen from "../../../Services/Screen";
 import Camera from "./Camera";
 import { Texture } from "pixi.js-legacy";
+import DraggableObject from "./DraggableObject";
 
 /**
  * @description A factory for creating game objects of various types
@@ -22,6 +23,7 @@ class GOFactory {
     private _slice: SliceObject;
     private _spine: SpineObject;
     private _text: TextObject;
+    private _draggable: DraggableObject;
     private _button: Button;
     private _container: ContainerObject;
     private _scaleManager: ScaleManager;
@@ -29,9 +31,9 @@ class GOFactory {
     private _screen: Screen;
     private _camera: Camera;
 
-    constructor(core: ObjectCore, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject,
+    constructor(core: ObjectCore, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject, draggable: DraggableObject,
         container: ContainerObject, scaleManager: ScaleManager, button: Button, video: VideoObject, screen: Screen, camera: Camera) {
-        this._core = core; this._slice = slice; this._spine = spine; this._text = text; this._container = container;
+        this._core = core; this._slice = slice; this._spine = spine; this._text = text; this._draggable = draggable; this._container = container;
         this._sprite = sprite; this._scaleManager = scaleManager; this._button = button; this._video = video; this._screen = screen;
         this._camera = camera;
     }
@@ -81,6 +83,22 @@ class GOFactory {
         sprite.init(x, y, '', null, parent);
         sprite.changeTexture(container.extract.toTexture());
         return sprite;
+    }
+
+    /**
+     * @description Returns a Draggable Object. Parameters will create a composed SpriteObject
+     * @param x the x coordinate to initialize with
+     * @param y the y coordinate to initialize with
+     * @param textureName the name of the texture to initialize the sprite with
+     * @param frame the default frame for the Sprite. Optional. Provide this if working with an atlas animation
+     * @param parent the container it should be a child of. Optional
+     */
+    public draggable(x?: number, y?: number, texture?: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null): DraggableObject {
+        if (x != null && y != null && texture != null) {
+            return this._draggable.createNew(x, y, texture, frame, parent);
+        } else {
+            return this._draggable.createEmpty();
+        }
     }
 
     /**
