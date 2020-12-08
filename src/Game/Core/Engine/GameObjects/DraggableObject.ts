@@ -3,7 +3,13 @@ import Events from "../Events";
 import Loop from "../Loop";
 import BaseGameObject from "./BaseGameObject";
 import Easing from "./Components/Easing";
+import ExtractComponent from "./Components/ExtractComponent";
+import InputHandler from "./Components/InputHandler";
+import ParentChildHandler from "./Components/ParentChildHandler";
+import ScaleHandler from "./Components/ScaleHandler";
+import TweenComponent from "./Components/TweenComponent";
 import Dropzone from "./Dropzone";
+import IGameObject from "./IGameObject";
 import IParentChild from "./IParentChild";
 import SliceObject from "./SliceObject";
 import SpineObject from "./SpineObject";
@@ -13,7 +19,7 @@ import TextObject from "./TextObject";
 /**
  * @description A wrapper to stack other GOs and drag&drop them as one. 
  */
-class DraggableObject {
+class DraggableObject implements IGameObject{
     private _slice: SliceObject; private _spine: SpineObject; private _sprite: SpriteObject; private _text: TextObject;
     private _loop: Loop; private _dropzone: Dropzone; private _point: Point; private _events: Events;
     private _layers: BaseGameObject[];
@@ -112,8 +118,19 @@ class DraggableObject {
         return null;
     }
 
-    get dropzones(): Dropzone[] {
-        return this._dropzones;
+    addChild(child: IGameObject): void {
+        this._isInitialized();
+        this._background.addChild(child);
+    }
+
+    removeChild(child: IGameObject): void {
+        this._isInitialized();
+        this._background.removeChild(child);
+    }
+
+    hasChild(child: IGameObject): boolean {
+        this._isInitialized();
+        return this._background.hasChild(child);
     }
 
     private _determinePosition(x: number, y: number): Point {
@@ -188,8 +205,8 @@ class DraggableObject {
             && this.y >= dropzone.topLeft.y && this.y <= dropzone.bottomRight.y);
     }
 
-    moveTo(point: Point, time: number = 600) {
-        this._background?.tweens.add(Easing.Elastic.InOut)
+    moveTo(point: Point, easing: string = Easing.Elastic.InOut, time: number = 600) {
+        this._background?.tweens.add(easing)
             .to({x: point.x, y: point.y}, time)
             .start();
     }
@@ -221,6 +238,10 @@ class DraggableObject {
 
     changeTexture(textureName: string): void {
         if (this._isInitialized()) this._background.changeTexture(textureName);
+    }
+
+    get dropzones(): Dropzone[] {
+        return this._dropzones;
     }
 
     get inDropzone(): Dropzone | null {
@@ -257,11 +278,6 @@ class DraggableObject {
         return this._background.alpha;
     }
 
-    get origin(): Point {
-        this._isInitialized();
-        return this._background.origin;
-    }
-
     get textureName(): string {
         this._isInitialized();
         return this._background.textureName;
@@ -270,6 +286,91 @@ class DraggableObject {
     get id(): string {
         this._isInitialized();
         return this._id;
+    }
+    
+    get extract(): ExtractComponent {
+        this._isInitialized();
+        return this._background.extract;
+    }
+
+    get angle() {
+        this._isInitialized();
+        return this._background.angle;
+    }
+
+    get tweens(): TweenComponent {
+        this._isInitialized();
+        return this._background.tweens;
+    }
+
+    get input(): InputHandler {
+        this._isInitialized();
+        return this._background.input;
+    }
+
+    get scaleHandler(): ScaleHandler {
+        this._isInitialized();
+        return this._background.scaleHandler;
+    }
+
+    get pcHandler(): ParentChildHandler {
+        this._isInitialized();
+        return this._background.pcHandler;
+    }
+
+    get data() {
+        this._isInitialized();
+        return this._background.data;
+    }
+
+    get atlas() {
+        this._isInitialized();
+        return this._background.atlas;
+    }
+
+    get events() {
+        this._isInitialized();
+        return this._background.events;
+    }
+
+    get zIndex() {
+        this._isInitialized();
+        return this._background.zIndex;
+    }
+
+    get origin(): Point {
+        this._isInitialized();
+        return this._background.origin;
+    }
+
+    get left(): number {
+        this._isInitialized();
+        return this._background.left;
+    }
+
+    get right(): number {
+        this._isInitialized();
+        return this._background.right;
+    }
+
+    get top(): number {
+        this._isInitialized();
+        return this._background.top;
+    }
+
+    get bottom(): number {
+        this._isInitialized();
+        return this._background.bottom;
+    }
+
+    get parent() {
+        this._isInitialized();
+        return this._background.parent;
+    }
+
+    get children() {
+        this._isInitialized();
+        return this._background.children;
     }
 
     set x(x: number) {
@@ -305,6 +406,26 @@ class DraggableObject {
     set id(id: string) {
         this._isInitialized();
         this._id = id;
+    }
+
+    set angle(angle: number) {
+        this._isInitialized();
+        this._background.angle = angle;
+    }
+
+    set data(data: any) {
+        this._isInitialized();
+        this._background.data = data;
+    }
+
+    set zIndex(index: number) {
+        this._isInitialized();
+        this._background.zIndex = index;
+    }
+
+    set parent(parent: IGameObject | null) {
+        this._isInitialized();
+        this._background.parent = parent;
     }
 }
 
