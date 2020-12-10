@@ -1,4 +1,6 @@
-class Point {
+import IPoint from "./IPoint";
+
+class Point implements IPoint {
     protected _x: number;
     protected _y: number;
     private _onUpdate: Function;
@@ -29,9 +31,9 @@ class Point {
         this._onUpdate();
     }
 
-    set onUpdate(update: Function) {
+     set onUpdate(update: Function) {
         this._onUpdate = update;
-    }
+    } 
 
     /**
      * @description Creates a new Point object based on coordinates and returns it

@@ -12,6 +12,7 @@ import IGameObject from "./IGameObject";
 import Screen from "../../../Services/Screen";
 import Camera from "./Camera";
 import { Texture } from "pixi.js-legacy";
+import HitShapes from "./Components/HitShapes/HitShapes";
 
 /**
  * @description A factory for creating game objects of various types
@@ -28,12 +29,17 @@ class GOFactory {
     private _video: VideoObject;
     private _screen: Screen;
     private _camera: Camera;
+    private _hitShapes: HitShapes;
 
     constructor(core: ObjectCore, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject,
-        container: ContainerObject, scaleManager: ScaleManager, button: Button, video: VideoObject, screen: Screen, camera: Camera) {
+        container: ContainerObject, scaleManager: ScaleManager, button: Button, video: VideoObject, screen: Screen, camera: Camera, hitShapes: HitShapes) {
         this._core = core; this._slice = slice; this._spine = spine; this._text = text; this._container = container;
         this._sprite = sprite; this._scaleManager = scaleManager; this._button = button; this._video = video; this._screen = screen;
-        this._camera = camera;
+        this._camera = camera; this._hitShapes = hitShapes;
+    }
+
+    get hitShapes(){
+        return this._hitShapes;
     }
 
     /**

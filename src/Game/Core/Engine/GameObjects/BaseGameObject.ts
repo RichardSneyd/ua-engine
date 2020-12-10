@@ -14,6 +14,7 @@ import TweenComponent from "./Components/TweenComponent";
 import Debug from "../Debug";
 import ExtractComponent from './Components/ExtractComponent';
 import { RenderTexture } from "pixi.js-legacy";
+import IHitShape from "./Components/HitShapes/IHitShape";
 
 /**
  * @description A sprite game object class. 
@@ -27,11 +28,13 @@ abstract class BaseGameObject implements IGameObject {
     protected _animationManager: IAnimationManager;
     protected _tweenComponent: TweenComponent;
     protected _extract: ExtractComponent;
+    protected _hitShape: IHitShape | null;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
         scaleHandler: ScaleHandler, tweenComponent: TweenComponent, extract: ExtractComponent) {
-        this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input;
-        this._scaleHandler = scaleHandler; this._tweenComponent = tweenComponent; this._extract = extract;
+        this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input; this._extract = extract;
+        this._scaleHandler = scaleHandler; this._tweenComponent = tweenComponent;
+        this._hitShape = null;
     }
 
     public init(...args: any[]): void {
@@ -60,6 +63,14 @@ abstract class BaseGameObject implements IGameObject {
 
     public changeTexture(textureName: string | PIXI.Texture) {
         this._core.changeTexture(textureName);
+    }
+
+    get hitShape(): IHitShape | null {
+        return this._hitShape;
+    }
+
+    set hitShape(val: IHitShape | null) {
+        this._hitShape = val;
     }
 
     get angle() {
