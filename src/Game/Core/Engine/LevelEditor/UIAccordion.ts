@@ -144,24 +144,22 @@ class UIAccordion {
         img.setAttribute('class', 'panel-img');
         img.src = imgSrc;
         panel.appendChild(img);
-        //this._loader.base = this._gameConfig.data.PATHS.IMG;
+        this._images.push(img);
+
         this._loader.addImage(imgSrc, true, fileName);
 
+        setTimeout(() => { // this delay is needed to load all images sequantially millisecond-wise
+            this._loader.download().then(() => {
+                Debug.warn('resList:', this._loader.resList);
+                // this._goFactory.sprite(600, 600, imgSrc);
+                Debug.info('ADDING SPRITE...');
+                let texture = this._loader.getTexture(imgSrc, null, false);
+                let sprite = this._goFactory.sprite(100, 600, texture);
+                Debug.exposeGlobal(sprite, 'last');
+                Debug.info('SPRITE ADDED: ', sprite);
+            });
+        }, 10);
 
-        Debug.warn("imgSrc: ", imgSrc);
-
-        this._loader.download().then(() => {
-
-            Debug.warn('resList:', this._loader.resList);
-            // this._goFactory.sprite(600, 600, imgSrc);
-            Debug.info('ADDING SPRITE...');
-            let texture = this._loader.getTexture(imgSrc, null, false);
-            let sprite = this._goFactory.sprite(100, 600, texture);
-            Debug.exposeGlobal(sprite, 'last');
-            Debug.info('SPRITE ADDED: ', sprite);
-        });
-
-        this._images.push(img);
     }
 
     uncollapseAll(): void {
