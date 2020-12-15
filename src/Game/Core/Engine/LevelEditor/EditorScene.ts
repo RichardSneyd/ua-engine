@@ -80,7 +80,7 @@ class EditorScene implements ILevel {
             this.xOffset = gameobj.x - this._manager.input.pointer.x;
             this.yOffset = gameobj.y - this._manager.input.pointer.y;
             this.selectedGO = gameobj;
-            this.addGameObjectBorder();
+            this.addGameObjectBorder(gameobj.x, gameobj.y, gameobj.width, gameobj.height);
             this.dragging = true;
         }, this);
         gameobj.input.addInputListener('pointerup', () => {
@@ -90,13 +90,13 @@ class EditorScene implements ILevel {
         this.imgGameObjects.push(gameobj);
     }
 
-    addGameObjectBorder(): void {
+    addGameObjectBorder(x: number, y: number, width: number, height: number): void {
         if (this.selectedGOBorder === null || this.selectedGOBorder === undefined) {
             this.selectedGOBorder = this._pxGame.addRectangle(
-                this.selectedGO.x,
-                this.selectedGO.y,
-                this.selectedGO.width,
-                this.selectedGO.height,
+                x,
+                y,
+                width,
+                height,
                 0xCF19B9,
                 0,
                 2,
