@@ -4,27 +4,30 @@ import GameConfig from '../GameConfig';
 import GOFactory from "../GameObjects/GOFactory";
 import PxLoader from '../../../Services/Pixi/PxLoader';
 import PxFactory from "../../../Services/Pixi/PxFactory";
+import Events from "../Events";
 
 class UIAccordion {
-
-    protected _container: HTMLDivElement;
-    protected _images: HTMLImageElement[] = [];
-    protected _labels: HTMLButtonElement[] = [];
-    protected _panels: HTMLDivElement[] = [];
-
     protected _loader: Loader;
+    protected _events: Events;
 
     protected _gameConfig: GameConfig;
     protected _goFactory: GOFactory;
     protected _pxLoader: PxLoader;
     protected _pxFactory: PxFactory;
 
-    constructor(loader: Loader, pxFactory: PxFactory, pxLoader: PxLoader, gameConfig: GameConfig, goFactory: GOFactory) {
+    protected _container: HTMLDivElement;
+    protected _images: HTMLImageElement[] = [];
+    protected _labels: HTMLButtonElement[] = [];
+    protected _panels: HTMLDivElement[] = [];
+    protected _imgList: any[] = []; // TODO: once we are sure which types are needed, get rid off of "any" keyword
+
+    constructor(loader: Loader, pxFactory: PxFactory, pxLoader: PxLoader, events: Events, gameConfig: GameConfig, goFactory: GOFactory) {
         this._loader = loader;
         this._gameConfig = gameConfig;
         this._goFactory = goFactory;
         this._pxFactory = pxFactory;
         this._pxLoader = pxLoader;
+        this._events = events;
     }
 
     /**
@@ -135,16 +138,27 @@ class UIAccordion {
         img.setAttribute('class', 'panel-img');
         img.src = src;
         panel.appendChild(img);
-        this._images.push(img);
 
+        let file = src.split('/').pop();
+        let filename = file?.split('.').shift();
+
+        this._imgList.push({
+            src: filename,
+            imgEl: img
+        });
     }
 
+    /**
+     * @description Adding image source to DOM and image list for drag and drop, images based on base64 format. 
+     * @param imgSrc 
+     * @param panel 
+     * @param fileName 
+     */
     addImgSrc(imgSrc: any, panel: HTMLDivElement, fileName?: string): void {
         let img = document.createElement('img');
         img.setAttribute('class', 'panel-img');
         img.src = imgSrc;
         panel.appendChild(img);
-        this._images.push(img);
 
         this._loader.addImage(imgSrc, true, fileName);
 
@@ -154,9 +168,17 @@ class UIAccordion {
                 // this._goFactory.sprite(600, 600, imgSrc);
                 Debug.info('ADDING SPRITE...');
                 let texture = this._loader.getTexture(imgSrc, null, false);
-                let sprite = this._goFactory.sprite(100, 600, texture);
+
+                this._imgList.push({
+                    src: texture,
+                    imgEl: img
+                });
+
+                this._imgList[this._imgList.length - 1].imgEl.addEventListener("click", () => this._events.emit('gameobj_clicked', { src: texture }));
+
+                /* let sprite = this._goFactory.sprite(100, 600, texture);
                 Debug.exposeGlobal(sprite, 'last');
-                Debug.info('SPRITE ADDED: ', sprite);
+                Debug.info('SPRITE ADDED: ', sprite); */
             });
         }, 10);
 
@@ -200,20 +222,19 @@ class UIAccordion {
      * @description Removes all selected game objects
      */
     removeAllSelections(): void {
-        const img = document.getElementsByClassName("panel-img");
-
         let removeAllFirst = () => {
-            for (let i = 0; i < img.length; i++) {
-                img[i].classList.remove("selected");
-            }
+            this._imgList.forEach(val => {
+                val.imgEl.classList.remove("selected");
+            });
         };
 
-        for (let i = 0; i < img.length; i++) {
-            img[i].addEventListener("click", function () {
+        this._imgList.forEach(val => {
+            val.imgEl.addEventListener("click", () => {
                 removeAllFirst();
-                img[i].classList.toggle("selected");
+                //img[i].classList.toggle("selected");
+                this._events.emit('gameobj_clicked', { src: val.src });
             });
-        }
+        });
     }
 
     public selectGameObject(objId: number) {

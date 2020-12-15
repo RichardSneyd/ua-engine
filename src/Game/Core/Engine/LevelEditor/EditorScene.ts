@@ -45,6 +45,8 @@ class EditorScene implements ILevel {
         this._loop.addFunction(this.update, this);
         this._loop.start();
 
+        this._manager.events.on('gameobj_clicked', this._panelImageClicked, this);
+
         this.preload();
     }
 
@@ -59,7 +61,19 @@ class EditorScene implements ILevel {
         this._waitForFirstInput();
 
         // TODO: build editor UI and populate GameObject panels
-        this.selectedGO = this._goFactory.sprite(200, 200, 'cat');
+        //this.addSelectedGameObject();
+
+
+        this._accordion.createContainer();
+
+        // Create rows here
+        this.addImagesRow();
+        this.addSpinesRow();
+
+    }
+
+    selectGameObject(sprite: SpriteObject): void {
+        this.selectedGO = sprite;
         this.selectedGO.setOrigin(.5);
         this.selectedGO.input.enableInput();
         this.selectedGO.input.addInputListener('pointerdown', () => {
@@ -84,22 +98,16 @@ class EditorScene implements ILevel {
         );
 
         this.selectedGOBorder.pivot.set(this.selectedGO.x + (this.selectedGO.width / 2), this.selectedGO.y + (this.selectedGO.height / 2));
-
-
-
-        let spn = this._goFactory.spine(900, 400, 'treasure_chest');
-        spn.scaleHandler.scale = 0.5;
-        Debug.warn("SPN:", spn);
-        //spn.animations.play('idle_closed');
-
-
-        this._accordion.createContainer();
-
-        // Create rows here
-        this.addImagesRow();
-        this.addSpinesRow();
-
     }
+
+    _panelImageClicked({ src }: { src: string }) {
+        let gameobj = this._goFactory.sprite(500, 500, src);
+        gameobj.setOrigin(.5);
+
+
+        this.selectGameObject(gameobj);
+    }
+
 
     addImagesRow(): void {
         let imgListFiltered = this._loader.resList.filter(res => res.type === 'img');
@@ -133,13 +141,6 @@ class EditorScene implements ILevel {
             this._accordion.removeAllSelections();
             this._accordion.uncollapseAll();
         });
-
-
-
-
-
-
-
 
     }
 
