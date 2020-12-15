@@ -9,7 +9,6 @@ import Loop from "../Loop";
 import SpriteObject from "../GameObjects/SpriteObject";
 import SpineObject from "../GameObjects/SpineObject";
 import PxGame from "../../../Services/Pixi/PxGame";
-import { Graphics } from "pixi.js-legacy";
 
 // build the visual of the editor here, like an activity level....
 
@@ -23,6 +22,7 @@ class EditorScene implements ILevel {
 
     protected imgList: string[] = [];
     protected spineList: string[] = [];
+    protected imgGameObjects: SpriteObject[] = [];
 
     protected selectedGO: SpriteObject | SpineObject;
     protected xOffset: number = 0;
@@ -63,7 +63,6 @@ class EditorScene implements ILevel {
         // TODO: build editor UI and populate GameObject panels
         //this.addSelectedGameObject();
 
-
         this._accordion.createContainer();
 
         // Create rows here
@@ -72,40 +71,40 @@ class EditorScene implements ILevel {
 
     }
 
-    selectGameObject(sprite: SpriteObject): void {
-        this.selectedGO = sprite;
-        this.selectedGO.setOrigin(.5);
-        this.selectedGO.input.enableInput();
-        this.selectedGO.input.addInputListener('pointerdown', () => {
-            this.xOffset = this.selectedGO.x - this._manager.input.pointer.x;
-            this.yOffset = this.selectedGO.y - this._manager.input.pointer.y;
-            this.dragging = true;
-        }, this);
-        this.selectedGO.input.addInputListener('pointerup', () => {
-            this.dragging = false;
-        }, this);
-
-        this.selectedGOBorder = this._pxGame.addRectangle(
-            this.selectedGO.x,
-            this.selectedGO.y,
-            this.selectedGO.width,
-            this.selectedGO.height,
-            0xCF19B9,
-            0,
-            2,
-            0x77FE79,
-            1
-        );
-
-        this.selectedGOBorder.pivot.set(this.selectedGO.x + (this.selectedGO.width / 2), this.selectedGO.y + (this.selectedGO.height / 2));
-    }
-
     _panelImageClicked({ src }: { src: string }) {
         let gameobj = this._goFactory.sprite(500, 500, src);
         gameobj.setOrigin(.5);
 
+        gameobj.input.enableInput();
+        gameobj.input.addInputListener('pointerdown', () => {
+            this.xOffset = gameobj.x - this._manager.input.pointer.x;
+            this.yOffset = gameobj.y - this._manager.input.pointer.y;
+            this.selectedGO = gameobj;
+            this.addGameObjectBorder();
+            this.dragging = true;
+        }, this);
+        gameobj.input.addInputListener('pointerup', () => {
+            this.dragging = false;
+        }, this);
 
-        this.selectGameObject(gameobj);
+        this.imgGameObjects.push(gameobj);
+    }
+
+    addGameObjectBorder(): void {
+        if (this.selectedGOBorder === null || this.selectedGOBorder === undefined) {
+            this.selectedGOBorder = this._pxGame.addRectangle(
+                this.selectedGO.x,
+                this.selectedGO.y,
+                this.selectedGO.width,
+                this.selectedGO.height,
+                0xCF19B9,
+                0,
+                2,
+                0x77FE79,
+                1
+            );
+            this.selectedGOBorder.pivot.set(this.selectedGO.x + (this.selectedGO.width / 2), this.selectedGO.y + (this.selectedGO.height / 2));
+        }
     }
 
 
