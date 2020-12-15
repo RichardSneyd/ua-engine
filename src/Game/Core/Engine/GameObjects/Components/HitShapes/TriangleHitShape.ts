@@ -1,5 +1,6 @@
 import IPoint from "../../../../Geom/IPoint";
 import Triangle from "../../../../Geom/Triangle";
+import Debug from "../../../Debug";
 import Triangles from "../../../Utils/Triangles";
 import IGameObject from "../../IGameObject";
 import IHitShape from "./IHitShape";
@@ -36,7 +37,7 @@ class TriangleHitShape implements IHitShape {
     global(point: IPoint): IPoint {
         let xOff = this._go.left; let yOff = this._go.top;
         let local = this.local(point);
-        return this.local({ x: xOff + local.x, y: yOff + local.y});
+        return { x: xOff + local.x, y: yOff + local.y};
     }
 
     /**
@@ -54,8 +55,9 @@ class TriangleHitShape implements IHitShape {
      * @param local defaults to global space. set this to true for local space
      */
     containsPoint(point: IPoint, local: boolean = false): boolean {
+       // Debug.info(this);
         let v1 = this.global(this._triangle.pointA);
-        let v2 = this.global(this._triangleFactory.pointB);
+        let v2 = this.global(this._triangle.pointB);
         let v3 = this.global(this._triangle.pointC);
         if(local) point = this.global(point);
         return this._triUtils.containsPoint(point, v1, v2, v3);

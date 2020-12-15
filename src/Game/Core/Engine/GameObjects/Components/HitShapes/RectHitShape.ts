@@ -32,14 +32,12 @@ class RectHitShape implements IHitShape {
 
     containsPoint(point: { x: number, y: number }): boolean {
         let s = this._go.scaleHandler.x;
-        if(point.x > this._go.left + this._rect.left * s 
-            && point.x < this._go.left + this._rect.right * s 
-            && point.y > this._go.top + this._rect.top * s 
-            && point.y < this._rect.bottom * s) return true;
+        if(point.x > this._go.left + (this._rect.left * s) 
+            && point.x < this._go.left + (this._rect.right * s) 
+            && point.y > this._go.top + (this._rect.top * s) 
+            && point.y < this._go.bottom + (this._rect.bottom * s)) return true;
         return false;
     }
-    
-
 }
 
 export default RectHitShape;
