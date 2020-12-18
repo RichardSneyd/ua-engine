@@ -30,7 +30,6 @@ class ExportData {
     }
 
     public exportJSONData(): void {
-        // TODO: call this method whenever button gets clicked so we can get the latest data
         this._downloadBtn.setAttribute("href", `data: ${this._downloadData}`);
         this._downloadBtn.setAttribute("download", "data.json");
     }

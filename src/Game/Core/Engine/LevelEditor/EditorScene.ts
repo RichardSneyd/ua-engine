@@ -5,6 +5,7 @@ import LevelManager from "../LevelManager";
 import GOFactory from "../GameObjects/GOFactory";
 import Loader from "../Loader";
 import UIAccordion from "./UIAccordion";
+import ExportData from './ExportData';
 import Loop from "../Loop";
 import SpriteObject from "../GameObjects/SpriteObject";
 import SpineObject from "../GameObjects/SpineObject";
@@ -17,12 +18,14 @@ class EditorScene implements ILevel {
     private _manager: LevelManager;
     private _goFactory: GOFactory;
     private _accordion: UIAccordion;
+    private _exportData: ExportData;
     private _loop: Loop;
     protected _pxGame: PxGame;
 
     protected imgList: string[] = [];
     protected spineList: string[] = [];
-    protected imgGameObjects: SpriteObject[] = [];
+    protected _imgGameObjects: SpriteObject[] = [];
+    protected _downloadData: any;
 
     protected selectedGO: SpriteObject | SpineObject;
     protected xOffset: number = 0;
@@ -30,13 +33,14 @@ class EditorScene implements ILevel {
     protected dragging: boolean = false;
     protected selectedGOBorder: PIXI.Graphics;
 
-    constructor(loader: Loader, manager: LevelManager, loop: Loop, goFactory: GOFactory, pxGame: PxGame, accordion: UIAccordion) {
+    constructor(loader: Loader, manager: LevelManager, loop: Loop, goFactory: GOFactory, pxGame: PxGame, accordion: UIAccordion, exportData: ExportData) {
         this._loader = loader;
         this._manager = manager;
         this._goFactory = goFactory;
         this._pxGame = pxGame;
         this._loop = loop;
         this._accordion = accordion;
+        this._exportData = exportData;
     }
 
     init(): void {
@@ -61,13 +65,18 @@ class EditorScene implements ILevel {
         this._waitForFirstInput();
 
         // TODO: build editor UI and populate GameObject panels
-        //this.addSelectedGameObject();
 
+        /* UI Accordion */
         this._accordion.createContainer();
 
         // Create rows here
         this.addImagesRow();
         this.addSpinesRow();
+
+        /* Download Button */
+        this._exportData.createDownloadButton();
+
+
 
     }
 
@@ -86,8 +95,25 @@ class EditorScene implements ILevel {
         gameobj.input.addInputListener('pointerup', () => {
             this.dragging = false;
         }, this);
+        this._imgGameObjects.push(gameobj);
 
-        this.imgGameObjects.push(gameobj);
+        this.addDataDownloadLink();
+    }
+
+    addDataDownloadLink(): void {
+        let gameObjectData = {
+            sprites: [{}],
+            spines: [{}],
+            dropzones: [{}]
+        };
+
+        this._imgGameObjects.forEach((obj) => {
+            gameObjectData.sprites.push({ name: obj.textureName, x: obj.x, y: obj.y, originX: obj.origin.x, originY: obj.origin.y, angle: obj.angle, hitShape: "" });
+        });
+
+        this._exportData.downloadData = gameObjectData;
+        Debug.info("GameObjData: ", gameObjectData);
+        this._exportData.exportJSONData();
     }
 
     addGameObjSelectionBorder(x: number, y: number, width: number, height: number): void {
