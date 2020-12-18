@@ -126,6 +126,7 @@ class EditorScene implements ILevel {
         Debug.warn("FilteredSpines:", spineListFiltered);
 
         let spnSrc = this._goFactory.spine(500, 500, 'parrot');
+        spnSrc.alpha = 0;
 
         let result: string = "";
 
