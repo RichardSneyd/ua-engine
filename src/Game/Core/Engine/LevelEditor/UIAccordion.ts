@@ -67,6 +67,12 @@ class UIAccordion {
         label.innerHTML = name;
         this._container.appendChild(label);
         this._labels.push(label);
+
+        this.dragPanel(label, this._container);
+
+        function dragElement(elmnt: any) {
+
+        }
     }
 
     addPanelContent(): void {
@@ -77,6 +83,42 @@ class UIAccordion {
         this.enableDragAndDropFileUpload(panel);
 
         this._panels.push(panel);
+    }
+
+    dragPanel(label: HTMLButtonElement, dragContainer: HTMLDivElement): void {
+        let currentPosX = 0, currentPosY = 0, initialPosX = 0, initialPosY = 0;
+
+        let dragMouseDown = (e: any) => {
+            e = e || window.event;
+            e.preventDefault();
+            initialPosX = e.clientX;
+            initialPosY = e.clientY;
+            document.onmouseup = closeDragElement;
+            document.onmousemove = elementDrag;
+        }
+
+        let elementDrag = (e: any) => {
+            e = e || window.event;
+            e.preventDefault();
+            currentPosX = initialPosX - e.clientX;
+            currentPosY = initialPosY - e.clientY;
+            initialPosX = e.clientX;
+            initialPosY = e.clientY;
+            dragContainer.style.top = (dragContainer.offsetTop - currentPosY) + "px";
+            dragContainer.style.left = (dragContainer.offsetLeft - currentPosX) + "px";
+            Debug.info("Panel dragging");
+        }
+
+        let closeDragElement = () => {
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+
+        if (label) {
+            label.onmousedown = dragMouseDown;
+        } else {
+            dragContainer.onmousedown = dragMouseDown;
+        }
     }
 
     enableDragAndDropFileUpload(panel: HTMLDivElement): void {
