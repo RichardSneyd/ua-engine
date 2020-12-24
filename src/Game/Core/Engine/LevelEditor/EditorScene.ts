@@ -10,6 +10,7 @@ import Loop from "../Loop";
 import SpriteObject from "../GameObjects/SpriteObject";
 import SpineObject from "../GameObjects/SpineObject";
 import PxGame from "../../../Services/Pixi/PxGame";
+import Inspector from "./Inspector";
 
 // build the visual of the editor here, like an activity level....
 
@@ -21,6 +22,7 @@ class EditorScene implements ILevel {
     private _exportData: ExportData;
     private _loop: Loop;
     protected _pxGame: PxGame;
+    protected _inspector: Inspector;
 
     protected imgList: string[] = [];
     protected spineList: string[] = [];
@@ -33,7 +35,7 @@ class EditorScene implements ILevel {
     protected dragging: boolean = false;
     protected selectedGOBorder: PIXI.Graphics;
 
-    constructor(loader: Loader, manager: LevelManager, loop: Loop, goFactory: GOFactory, pxGame: PxGame, accordion: UIAccordion, exportData: ExportData) {
+    constructor(loader: Loader, manager: LevelManager, loop: Loop, goFactory: GOFactory, pxGame: PxGame, accordion: UIAccordion, exportData: ExportData, inspector: Inspector) {
         this._loader = loader;
         this._manager = manager;
         this._goFactory = goFactory;
@@ -41,6 +43,7 @@ class EditorScene implements ILevel {
         this._loop = loop;
         this._accordion = accordion;
         this._exportData = exportData;
+        this._inspector = inspector;
     }
 
     init(): void {
@@ -76,7 +79,8 @@ class EditorScene implements ILevel {
         /* Download Button */
         this._exportData.createDownloadButton();
 
-
+        /* Inspector UI */
+        this._inspector.createInspector();
 
     }
 
