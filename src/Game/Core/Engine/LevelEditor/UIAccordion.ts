@@ -69,10 +69,6 @@ class UIAccordion {
         this._labels.push(label);
 
         this.dragPanel(label, this._container);
-
-        function dragElement(elmnt: any) {
-
-        }
     }
 
     addPanelContent(): void {
