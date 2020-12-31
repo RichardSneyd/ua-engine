@@ -31,6 +31,10 @@ class Inspector {
         this._drag(this._header, this._container);
     }
 
+    public getInputValue(val: string): void {
+        document.getElementById(val);
+    }
+
     private _addContainer(): void {
         this._container = document.createElement('div');
         this._container.setAttribute('class', 'inspector');
@@ -53,8 +57,8 @@ class Inspector {
         this._container.appendChild(span);
 
         span.innerHTML =
-            `${name}: <input type="number" name="${name}" step="0.1" value="1" min="0" max="1920" class="number-input">
-            ${name2}: <input type="number" name="${name2}" step="0.1" value="1" min="0" max="1920" class="number-input">
+            `${name}: <input type="number" name="${name}" id="${name}" step="0.1" value="1" min="0" max="1920" class="number-input">
+            ${name2}: <input type="number" name="${name2}" name="${name2}" step="0.1" value="1" min="0" max="1920" class="number-input">
         `;
     }
 
@@ -65,7 +69,7 @@ class Inspector {
         this._container.appendChild(span);
 
         span.innerHTML =
-            `${name}: <input type="number" name="${name}" step="0.1" value="1" min="${min}" max="${max}" class="number-input">
+            `${name}: <input type="number" name="${name}" id="${name}" step="0.1" value="1" min="${min}" max="${max}" class="number-input">
         `;
     }
 
@@ -77,6 +81,7 @@ class Inspector {
 
         let input = document.createElement('input');
         input.setAttribute('name', `${name}`);
+        input.setAttribute('id', `${name}`);
         span.appendChild(input);
     }
 
