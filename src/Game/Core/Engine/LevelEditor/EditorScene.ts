@@ -53,6 +53,7 @@ class EditorScene implements ILevel {
         this._loop.start();
 
         this._manager.events.on('gameobj_clicked', this._panelImageClicked, this);
+        this._manager.events.on('input_changed', this._inputChanged, this);
 
         this.preload();
     }
@@ -82,6 +83,8 @@ class EditorScene implements ILevel {
         /* Inspector UI */
         this._inspector.createInspector();
 
+
+
     }
 
     _panelImageClicked({ src }: { src: string }) {
@@ -102,6 +105,30 @@ class EditorScene implements ILevel {
         this._imgGameObjects.push(gameobj);
 
         this.addDataDownloadLink();
+    }
+
+    _inputChanged({ prop, val }: { prop: string, val: number }) {
+        Debug.info(`prop: ${prop} val: ${val}`);
+
+        if (prop === "name") {
+            //this.selectedGO.textureName = val;
+        }
+        else if (prop === "x") {
+            this.selectedGO.x = val;
+        }
+        else if (prop === "y") {
+            this.selectedGO.y = val;
+        }
+        else if (prop === "angle") {
+            this.selectedGO.angle = val;
+        }
+        else if (prop === "origin x") {
+            this.selectedGO.origin.x = val;
+        }
+        else if (prop === "origin y") {
+            this.selectedGO.origin.y = val;
+        }
+
     }
 
     addDataDownloadLink(): void {
@@ -140,7 +167,6 @@ class EditorScene implements ILevel {
             this.selectedGOBorder.height = height;
         }
     }
-
 
     addImagesRow(): void {
         let imgListFiltered = this._loader.resList.filter(res => res.type === 'img');
@@ -183,7 +209,23 @@ class EditorScene implements ILevel {
             this.selectedGO.moveToMouse(this.xOffset, this.yOffset);
             this.selectedGOBorder.x = this.selectedGO.x;
             this.selectedGOBorder.y = this.selectedGO.y;
+
+            Debug.warn(`selected x: ${this.selectedGO.x} selected y: ${this.selectedGO.y}`);
+
+            this._inspector.setInputValue('x', this.selectedGO.x);
+            this._inspector.setInputValue('y', this.selectedGO.y);
+            this._inspector.setInputValue('origin x', this.selectedGO.origin.x);
+            this._inspector.setInputValue('origin y', this.selectedGO.origin.y);
+            this._inspector.setInputValue('angle', this.selectedGO.angle);
         }
+
+        if (this.selectedGO) {
+            this.selectedGOBorder.x = this.selectedGO.x;
+            this.selectedGOBorder.y = this.selectedGO.y;
+
+            this._inspector.setInputValue("name", this.selectedGO.textureName);
+        }
+
     }
 
     shutdown(): void {
