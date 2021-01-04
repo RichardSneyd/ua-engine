@@ -19,7 +19,7 @@ import TextObject from "./TextObject";
 /**
  * @description A wrapper to stack other GOs and drag&drop them as one. 
  */
-class DraggableObject implements IGameObject{
+class DraggableObject implements IGameObject {
     private _slice: SliceObject; private _spine: SpineObject; private _sprite: SpriteObject; private _text: TextObject;
     private _loop: Loop; private _dropzone: Dropzone; private _point: Point; private _events: Events;
     private _layers: BaseGameObject[];
@@ -36,15 +36,15 @@ class DraggableObject implements IGameObject{
     private _id: string;
 
     constructor(slice: SliceObject, spine: SpineObject, sprite: SpriteObject, text: TextObject,
-                loop: Loop, dropzone: Dropzone, point: Point, events: Events) {
+        loop: Loop, dropzone: Dropzone, point: Point, events: Events) {
         this._slice = slice; this._spine = spine; this._sprite = sprite; this._text = text;
         this._loop = loop; this._dropzone = dropzone; this._point = point; this._events = events;
         this._layers = [];
         this._dropzones = [];
         this._enabled = true;
         this._beingDragged = false;
-        this._doBeforeDragging = () => {};
-        this._doAfterDropping = () => {};
+        this._doBeforeDragging = () => { };
+        this._doAfterDropping = () => { };
         this._currentDropzone = null;
 
         this._loop.addFunction(this._update, this);
@@ -92,7 +92,9 @@ class DraggableObject implements IGameObject{
         let finalPosition = this._determinePosition(x, y);
         let sprite = this._sprite.createNew(finalPosition.x, finalPosition.y, texture, frame, parent);
         this._addGO(sprite, scale);
-        if(typeof texture == 'string') this.id = texture;
+        if (typeof texture == 'string') {
+            this.id = texture;
+        }
         return sprite;
     }
 
@@ -183,8 +185,8 @@ class DraggableObject implements IGameObject{
     private _drop() {
         if (this._background) {
             this._beingDragged = false;
-            
-            if(this._dropzones.length > 0) {
+
+            if (this._dropzones.length > 0) {
                 let moveTo;
                 for (let dropzone of this._dropzones) {
                     if (this.isInside(dropzone)) {
@@ -194,12 +196,12 @@ class DraggableObject implements IGameObject{
                         break;
                     }
                 }
-                if(!moveTo) {
+                if (!moveTo) {
                     this.moveTo(this._initialPosition);
                     this._currentDropzone = null;
                 }
 
-                this._events.emit('draggable_dropped', {draggable: this});
+                this._events.emit('draggable_dropped', { draggable: this });
             }
             this._doAfterDropping();
         }
@@ -212,7 +214,7 @@ class DraggableObject implements IGameObject{
 
     moveTo(point: Point, easing: string = Easing.Elastic.InOut, time: number = 600) {
         this._background?.tweens.add(easing)
-            .to({x: point.x, y: point.y}, time)
+            .to({ x: point.x, y: point.y }, time)
             .start();
     }
 
@@ -232,7 +234,9 @@ class DraggableObject implements IGameObject{
     }
 
     setOrigin(x: number, y?: number): void {
-        if (this._isInitialized()) this._background.setOrigin(x, y);
+        if (this._isInitialized()) {
+            this._background.setOrigin(x, y);
+        }
     }
 
     destroy(): void {
@@ -242,7 +246,9 @@ class DraggableObject implements IGameObject{
     }
 
     changeTexture(textureName: string): void {
-        if (this._isInitialized()) this._background.changeTexture(textureName);
+        if (this._isInitialized()) {
+            this._background.changeTexture(textureName);
+        }
     }
 
     get dropzones(): Dropzone[] {
@@ -292,7 +298,7 @@ class DraggableObject implements IGameObject{
         this._isInitialized();
         return this._id;
     }
-    
+
     get extract(): ExtractComponent {
         this._isInitialized();
         return this._background.extract;
@@ -378,6 +384,10 @@ class DraggableObject implements IGameObject{
         return this._background.children;
     }
 
+    get enabled(): boolean {
+        return this._enabled;
+    }
+
     set x(x: number) {
         this._isInitialized();
         this._background.x = x;
@@ -431,6 +441,10 @@ class DraggableObject implements IGameObject{
     set parent(parent: IGameObject | null) {
         this._isInitialized();
         this._background.parent = parent;
+    }
+
+    set enabled(enabled: boolean) {
+        this._enabled = enabled;
     }
 }
 
