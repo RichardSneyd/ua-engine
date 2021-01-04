@@ -503,9 +503,9 @@ class Loader {
   }
 
   public loadActScript(file: string, callback?: Function, staticPath: boolean = false): any {
-    let basePath = this._getPath().jsn;
+    let basePath = '';
 
-    if (staticPath) basePath = '';
+    if (!staticPath) basePath = this._getPath().jsn;
 
     this._ajaxLoader.loadFile(basePath + file + '.json', (data: any) => {
       if (callback !== undefined) {
