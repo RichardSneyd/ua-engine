@@ -14,6 +14,7 @@ import TweenComponent from "./Components/TweenComponent";
 import Debug from "../Debug";
 import ExtractComponent from './Components/ExtractComponent';
 import { RenderTexture } from "pixi.js-legacy";
+import IHitShape from "./Components/HitShapes/IHitShape";
 
 /**
  * @description A sprite game object class. 
@@ -27,11 +28,13 @@ abstract class BaseGameObject implements IGameObject {
     protected _animationManager: IAnimationManager;
     protected _tweenComponent: TweenComponent;
     protected _extract: ExtractComponent;
+    protected _hitShape: IHitShape | null;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
         scaleHandler: ScaleHandler, tweenComponent: TweenComponent, extract: ExtractComponent) {
-        this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input;
-        this._scaleHandler = scaleHandler; this._tweenComponent = tweenComponent; this._extract = extract;
+        this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input; this._extract = extract;
+        this._scaleHandler = scaleHandler; this._tweenComponent = tweenComponent;
+        this._hitShape = null;
     }
 
     public init(...args: any[]): void {
@@ -64,6 +67,14 @@ abstract class BaseGameObject implements IGameObject {
         this._core.changeTexture(textureName);
         this.scaleHandler.x = scaleX;
         this.scaleHandler.y = scaleY;
+    }
+
+    get hitShape(): IHitShape | null {
+        return this._hitShape;
+    }
+
+    set hitShape(val: IHitShape | null) {
+        this._hitShape = val;
     }
 
     get angle() {
@@ -178,6 +189,38 @@ abstract class BaseGameObject implements IGameObject {
         return this._core.bottom;
     }
 
+    get childrenLeft(): number {
+        return this._childrenLeft();
+    }
+
+    get childrenRight(): number {
+        return this._childrenRight();
+    }
+
+    get childrenTop(): number {
+        return this._childrenTop();
+    }
+
+    get childrenBottom(): number {
+        return this._childrenLeft();
+    }
+
+    get globalChildrenLeft(): number {
+        return this.x + this.childrenLeft;
+    }
+
+    get globalChildrenRight(): number {
+        return this.x + this.childrenRight;
+    }
+
+    get globalChildrenTop(): number {
+        return this.y + this.childrenTop;
+    }
+
+    get globalChildrenBottom(): number {
+        return this.y + this.childrenBottom;
+    }
+
     /**
   * @description returns the calculated 'bounds' of the GameObject as an object literal, in game-units
   */
@@ -229,14 +272,14 @@ abstract class BaseGameObject implements IGameObject {
      * @description calculates the width of the game object as a 'container', meaning based on the positions of its children
      */
     get containerWidth(): number {
-        return this._containerWidth();
+        return this._childrenWidth();
     }
 
     /**
     * @description calculates the height of the game object as a 'container', meaning based on the positions of its children
     */
     get containerHeight(): number {
-        return this._containerHeight();
+        return this._childrenHeight();
     }
 
     /**
@@ -283,26 +326,62 @@ abstract class BaseGameObject implements IGameObject {
         if (this._animationManager) this._animationManager.update();
     }
 
-    protected _containerWidth(): number {
-        let right = 0;
+    protected _childrenWidth(): number {
+        return this._childrenRight() - this._childrenLeft();
+    }
+
+    protected _childrenHeight(): number {
+        return this._childrenBottom() - this._childrenTop();
+    }
+
+    protected _childrenBottom(): number {
+       // Debug.info('in BaseGameObject._chilrenBottom')
+        let bottom = 0;
+        let children = this.pcHandler._children;
+        for (let c = 0; c < children.length; c++) {
+        //    Debug.info('looping child ', c);
+            let child = children[c];
+            if(c == 0) bottom = child.bottom;
+            if (child.bottom > bottom) bottom = child.bottom;
+        }
+
+        return bottom;
+    }
+
+    protected _childrenTop() {
+        let top = 0;
         let children = this.pcHandler.children;
         for (let c = 0; c < children.length; c++) {
             let child = children[c];
+            if(c == 0) top = child.top;
+            if (child.top < top) top = child.top;
+        }
+
+        return top;
+    }
+
+    protected _childrenRight(){
+        let right = 0;
+        let children = this._pcHandler.children;
+        for (let c = 0; c < children.length; c++) {
+            let child = children[c];
+            if(c == 0) right = child.right;
             if (child.right > right) right = child.right;
         }
 
         return right;
     }
 
-    protected _containerHeight(): number {
-        let bottom = 0;
-        let children = this.pcHandler.children;
-        for (let c = 0; c < children.length; c++) {
+    protected _childrenLeft(){
+        let left = 0;
+        let children = this._pcHandler.children;
+        for(let c = 0; c < children.length; c++){
             let child = children[c];
-            if (child.bottom > bottom) bottom = child.bottom;
+            if(c == 0) left = child.left;
+            if(child.left < left) left = child.left;
         }
 
-        return bottom;
+        return left;
     }
 }
 

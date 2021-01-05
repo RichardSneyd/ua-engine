@@ -7,6 +7,7 @@ import ScaleManager from "./ScaleManager";
 import KeyCodes from './Keys';
 import KeyListener from "./KeyListener";
 import Debug from "./Debug";
+import IGameObject from "./GameObjects/IGameObject";
 
 /**
  * @description The InputManager is responsible for all keyboard and mouse event handling
@@ -66,7 +67,7 @@ class InputManager {
         this._callKeyListenersForAll(this._keyPressListeners, { evt: evt });
     }
 
-    private _callKeyListenersForAll(listeners: KeyListener[], data: {evt: any}) {
+    private _callKeyListenersForAll(listeners: KeyListener[], data: { evt: any }) {
         // Debug.info('evt: ', data.evt);
         for (let l = 0; l < listeners.length; l++) {
             listeners[l].callIfMatch(data);
@@ -104,27 +105,37 @@ class InputManager {
     }
 
     /**
-     * @description Add listener for specified input event to specific sprite
+     * @description Add listener for specified input event to specific GameObject
      * @param event the event to add the listener to; must be a valid input event
      * @param callback the callback method to register
      * @param sprite the sprite this event lisener is being associated with
      * @param context the context of the callback
      */
-    public addListener(event: string, callback: Function, sprite: any, context: any) {
-        this._screen.addListener(event, sprite, (evt: any) => {
-
-            callback.bind(context)(evt);
+    public addListener(event: string, callback: Function, go: IGameObject, context: any) {
+        let pixiData: any = this._getData(go);
+       
+        this._screen.addListener(event, pixiData, (evt: any) => {
+            if (go.hitShape == null) callback.bind(context)(evt);
+            else if (go.hitShape.containsPoint(this._pointer)) callback.bind(context)(evt);
         }, context);
     }
 
     /**
      * @description Remove listener from input event
-     * @param event 
-     * @param callback 
+     * @param event event to remove listener from
+     * @param callback the callback on the listener
      * @param sprite 
      */
-    public removeListener(event: string, callback: Function, sprite: any) {
-        this._screen.removeListener(event, sprite, callback);
+    public removeListener(event: string, callback: Function, go: IGameObject) {
+        let data = this._getData(go);
+        this._screen.removeListener(event, data, callback);
+    }
+
+    private _getData(go: IGameObject): any {
+        if (go.data.data) {
+            return go.data.data;
+        }
+        return go.data;
     }
 
     private _onPointerMove(data: any) {
@@ -134,7 +145,7 @@ class InputManager {
         this._pointer.y = data.mouseY / scaleF;
         this._pointerMovement.x = data.moveX / scaleF;
         this._pointerMovement.y = data.moveY / scaleF;
-     //   Debug.info('pointer moved: ', this._pointer);
+        //   Debug.info('pointer moved: ', this._pointer);
         //  Debug.info('data: ', data);
     }
 

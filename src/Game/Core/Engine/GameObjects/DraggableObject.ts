@@ -51,6 +51,11 @@ class DraggableObject implements IGameObject {
         this._loop.start();
     }
 
+    // added this to avoid IGameObject implementation error
+    get hitShape(){
+        return null;
+    }
+
     init(x: number, y: number, texture: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null): void {
         this.addSprite(x, y, texture, frame, parent);
     }
