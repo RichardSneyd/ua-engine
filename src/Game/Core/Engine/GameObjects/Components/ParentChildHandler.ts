@@ -64,17 +64,11 @@ class ParentChildHandler implements IParentChild{
             if(object.parent && object.parent !== this._go) {
                 object.parent.removeChild(object);
                 object.parent = this._go;
-                this._children.push(object);
             }
+            this._children.push(object);
 
             // added this condition because text objects hold their Px data 1 level deeper, due to custom PxText class
-            let child;
-            if (object.data.data) {
-                child = object.data.data;
-            }
-            else {
-                child = object.data;
-            }
+            let child: IGameObject = object.data.data ? object.data.data : object.data;
 
             this.core.data.addChild(child);
             this._go.setOrigin(this._go.origin.x, this._go.origin.y); // needed to manually update origin calculation

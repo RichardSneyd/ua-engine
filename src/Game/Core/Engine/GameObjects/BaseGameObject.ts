@@ -189,6 +189,38 @@ abstract class BaseGameObject implements IGameObject {
         return this._core.bottom;
     }
 
+    get childrenLeft(): number {
+        return this._childrenLeft();
+    }
+
+    get childrenRight(): number {
+        return this._childrenRight();
+    }
+
+    get childrenTop(): number {
+        return this._childrenTop();
+    }
+
+    get childrenBottom(): number {
+        return this._childrenLeft();
+    }
+
+    get globalChildrenLeft(): number {
+        return this.x + this.childrenLeft;
+    }
+
+    get globalChildrenRight(): number {
+        return this.x + this.childrenRight;
+    }
+
+    get globalChildrenTop(): number {
+        return this.y + this.childrenTop;
+    }
+
+    get globalChildrenBottom(): number {
+        return this.y + this.childrenBottom;
+    }
+
     /**
   * @description returns the calculated 'bounds' of the GameObject as an object literal, in game-units
   */
@@ -240,14 +272,14 @@ abstract class BaseGameObject implements IGameObject {
      * @description calculates the width of the game object as a 'container', meaning based on the positions of its children
      */
     get containerWidth(): number {
-        return this._containerWidth();
+        return this._childrenWidth();
     }
 
     /**
     * @description calculates the height of the game object as a 'container', meaning based on the positions of its children
     */
     get containerHeight(): number {
-        return this._containerHeight();
+        return this._childrenHeight();
     }
 
     /**
@@ -294,26 +326,62 @@ abstract class BaseGameObject implements IGameObject {
         if (this._animationManager) this._animationManager.update();
     }
 
-    protected _containerWidth(): number {
-        let right = 0;
+    protected _childrenWidth(): number {
+        return this._childrenRight() - this._childrenLeft();
+    }
+
+    protected _childrenHeight(): number {
+        return this._childrenBottom() - this._childrenTop();
+    }
+
+    protected _childrenBottom(): number {
+       // Debug.info('in BaseGameObject._chilrenBottom')
+        let bottom = 0;
+        let children = this.pcHandler._children;
+        for (let c = 0; c < children.length; c++) {
+        //    Debug.info('looping child ', c);
+            let child = children[c];
+            if(c == 0) bottom = child.bottom;
+            if (child.bottom > bottom) bottom = child.bottom;
+        }
+
+        return bottom;
+    }
+
+    protected _childrenTop() {
+        let top = 0;
         let children = this.pcHandler.children;
         for (let c = 0; c < children.length; c++) {
             let child = children[c];
+            if(c == 0) top = child.top;
+            if (child.top < top) top = child.top;
+        }
+
+        return top;
+    }
+
+    protected _childrenRight(){
+        let right = 0;
+        let children = this._pcHandler.children;
+        for (let c = 0; c < children.length; c++) {
+            let child = children[c];
+            if(c == 0) right = child.right;
             if (child.right > right) right = child.right;
         }
 
         return right;
     }
 
-    protected _containerHeight(): number {
-        let bottom = 0;
-        let children = this.pcHandler.children;
-        for (let c = 0; c < children.length; c++) {
+    protected _childrenLeft(){
+        let left = 0;
+        let children = this._pcHandler.children;
+        for(let c = 0; c < children.length; c++){
             let child = children[c];
-            if (child.bottom > bottom) bottom = child.bottom;
+            if(c == 0) left = child.left;
+            if(child.left < left) left = child.left;
         }
 
-        return bottom;
+        return left;
     }
 }
 

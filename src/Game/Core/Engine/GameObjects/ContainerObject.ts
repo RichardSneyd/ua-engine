@@ -10,6 +10,7 @@ import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
 import BaseGameObject from "./BaseGameObject";
 import ExtractComponent from "./Components/ExtractComponent";
+import { runInThisContext } from "vm";
 
 /**
  * @description A container object. Useful for grouping other GameObjects.
@@ -45,19 +46,21 @@ class ContainerObject extends BaseGameObject {
     }
 
     get left(): number {
-        return this.x;
+        let leftest = this.x > this.childrenLeft ? this.childrenLeft : this.x;
+        return leftest;
     }
 
     get right(): number {
-        return this.x + this.containerWidth;
-    }
-
-    get top(): number {
         return this.y;
     }
 
+    get top(): number {
+        let heighest = this.y > this.childrenTop ? this.childrenTop : this.y;
+        return heighest;
+    }
+
     get bottom(): number {
-        return this.y + this.containerHeight;
+        return this._childrenBottom();
     }
 
     
