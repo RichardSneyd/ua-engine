@@ -50,10 +50,12 @@ class LevelEditor implements IActivity {
     /**
      * @description will simultaneously initialize the the editor, and launch it
      * @param game must provide a reference to the current game object, accessed from UAE.game in the API
+     * @param bgd gets the background image from activity script if there is any
      */
-    public launch(game: Game) {
+    public launch(game: Game, bgd: string) {
         // launch editor...
         Debug.info('Editor.launch()');
+        this._scene.bgdName = bgd;
         this.init(game);
         Debug.info('Editor initialized');
         this._game.startActivity(this._name, this._name); // call the activity (engine will call Editor.startActivity in return, which will call game.loadLevel)

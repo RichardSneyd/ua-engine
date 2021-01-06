@@ -24,6 +24,8 @@ class EditorScene implements ILevel {
     protected _pxGame: PxGame;
     protected _inspector: Inspector;
 
+    public bgdName: string;
+    protected _bgd: SpriteObject;
     protected imgList: string[] = [];
     protected spineList: string[] = [];
     protected _imgGameObjects: SpriteObject[] = [];
@@ -35,7 +37,8 @@ class EditorScene implements ILevel {
     protected dragging: boolean = false;
     protected selectedGOBorder: PIXI.Graphics;
 
-    constructor(loader: Loader, manager: LevelManager, loop: Loop, goFactory: GOFactory, pxGame: PxGame, accordion: UIAccordion, exportData: ExportData, inspector: Inspector) {
+    constructor(loader: Loader, manager: LevelManager, loop: Loop, goFactory: GOFactory,
+        pxGame: PxGame, accordion: UIAccordion, exportData: ExportData, inspector: Inspector) {
         this._loader = loader;
         this._manager = manager;
         this._goFactory = goFactory;
@@ -69,6 +72,7 @@ class EditorScene implements ILevel {
         this._waitForFirstInput();
 
         // TODO: build editor UI and populate GameObject panels
+        this._createBackground();
 
         /* UI Accordion */
         this._accordion.createContainer();
@@ -82,9 +86,14 @@ class EditorScene implements ILevel {
 
         /* Inspector UI */
         this._inspector.createInspector();
+    }
 
-
-
+    _createBackground() {
+        Debug.warn("bgName:", this.bgdName);
+        if (this.bgdName !== null || this.bgdName !== undefined || this.bgdName !== "") {
+            this._bgd = this._goFactory.sprite(0, 0, this.bgdName);
+            this._bgd.setOrigin(0);
+        }
     }
 
     _panelImageClicked({ src }: { src: string }) {
@@ -169,7 +178,7 @@ class EditorScene implements ILevel {
     }
 
     addImagesRow(): void {
-        let imgListFiltered = this._loader.resList.filter(res => res.type === 'img');
+        let imgListFiltered = this._loader.resList.filter(res => res.type === 'img' && res.ext === 'png');
         imgListFiltered.forEach(val => this.imgList.push(val.url));
 
         this._accordion.addRow('Images', ...this.imgList);

@@ -153,7 +153,6 @@ class UIAccordion {
         }
     }
 
-
     previewFile(file: any) {
         Debug.warn("PREVIEW IMG FILE!");
         let reader = new FileReader();
@@ -222,6 +221,14 @@ class UIAccordion {
 
     }
 
+    /*   addSpineSrc(jsonSrc: any, imgSrc: any, panel: HTMLDivElement, fileName?: string): void {
+      
+          this._loader.addSpine(jsonSrc, true);
+          this._loader.addImage(imgSrc, true, fileName);
+  
+  
+      }
+   */
     uncollapseAll(): void {
         Debug.info('Editor.uncollapsed');
         const acc = document.getElementsByClassName("accordion");

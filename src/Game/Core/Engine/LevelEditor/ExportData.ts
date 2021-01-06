@@ -1,13 +1,11 @@
 class ExportData {
-
     protected _levelData: string[] = [];
     protected _downloadData: string;
+    protected _downloadBtn: HTMLAnchorElement;
 
     constructor() {
 
     }
-
-    protected _downloadBtn: HTMLAnchorElement;
 
     set levelData(data: string[]) {
         this._levelData = data;
