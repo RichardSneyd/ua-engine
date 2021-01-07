@@ -94,6 +94,35 @@ class EditorScene implements ILevel {
             this._bgd = this._goFactory.sprite(0, 0, this.bgdName);
             this._bgd.setOrigin(0);
         }
+
+        this._enableBackgroundDnd();
+    }
+
+    _enableBackgroundDnd() {
+        let canvas = document.getElementsByTagName("canvas");
+
+        canvas[0]!.addEventListener("dragover", (event) => event.preventDefault(), true);
+        canvas[0]!.addEventListener("drop", (event) => {
+            event.preventDefault();
+
+            if (event.dataTransfer!.items) {
+                for (let i = 0; i < event.dataTransfer!.items.length; i++) {
+                    if (event.dataTransfer!.items[i].kind === 'file') {
+                        let file = event.dataTransfer!.items[i].getAsFile();
+                        let reader = new FileReader();
+                        reader.readAsDataURL(file!);
+                        reader.onloadend = () => {
+                            //Debug.warn("bgd base64: ", reader.result);
+                            this._loader.addImage(`${reader.result}`, true, file!.name);
+                            this._loader.download().then(() => {
+                                let texture = this._loader.getTexture(`${reader.result}`, null, false);
+                                this._bgd.changeTexture(texture);
+                            });
+                        }
+                    }
+                }
+            }
+        }, true);
     }
 
     _panelImageClicked({ src }: { src: string }) {
@@ -196,10 +225,10 @@ class EditorScene implements ILevel {
         let result: string = "";
 
         let pixelData = this._pxGame.toPixels(spnSrc.data);
-        Debug.info("pixelData:", pixelData);
+        //Debug.info("pixelData:", pixelData);
 
         this._pxGame.toImgElement(spnSrc.data).then(res => {
-            Debug.warn("TOIMG:", res.src);
+            //Debug.warn("TOIMG:", res.src);
 
             result = res.src;
 
