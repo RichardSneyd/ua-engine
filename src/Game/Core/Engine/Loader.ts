@@ -107,6 +107,25 @@ class Loader {
   }
 
   /**
+   * @description returns a list of files that are not loading properly
+   */
+  get snagList(): any[] {
+    let list: any[] = [];
+    for(let x = 0; x < this._resList.length; x++){
+      let res = this._resList[x];
+      if((res.data == null || (res.type == 'snd' && res.data._state != 'loaded'))) {
+        list.push({type: res.type, name: res.name, ext: res.data._ext});
+      }
+    }
+    return list;
+  }
+
+  public printSnagList(){
+    Debug.info('snag-list (missing or problematic files):');
+    Debug.table(this.snagList);
+  }
+
+  /**
    * @description Creates an image resource and adds the image to the load queue. The data property of the resource will be
    * populated with the image once loaded; Everything in the queue is processed when the download() method is called
    * @param name the filename of the image to load, including file extension. This is added to the base path value to find the image URL.
