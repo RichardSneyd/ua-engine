@@ -95,7 +95,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         }
 
         if(configRow.config.hasOwnProperty('char')){
-            this._character = this._goFactory.spine(0, 0, configRow.config.char, this._playground);
+            this._character = this._goFactory.spine(20, this._game.height() - 150, configRow.config.char, this._playground); // reposition _character as needed when extending
         }
 
         this._waitForFirstInput();
@@ -120,7 +120,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     /**
      * @description extend this to load configuration settings whenever a new row is called -- generally used to implement settings in the config 
      * cell of the row. By default, it checks for a bgd property, and updates this._bgd with the new texture if so (allows changing background image
-     * from row to row, gives control to the IDs)
+     * from row to row, gives control to the IDs). Called in BaseLevel.onNewRow by defeault. Override onNewRow to change this.
      */
     loadConfig(): void {
         if (this.manager.script.active.config.hasOwnProperty('bgd') && this.manager.script.active.config.bgd !== '') {
@@ -170,6 +170,12 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      */
     set ready(ready: boolean) {
         this._ready = ready;
+    }
+
+    shutdown(){
+        this._loop.removeFunction(this.update, this);
+        this._events.off('newRow', this.onNewRow, this);
+      //  super.shutdown(); 
     }
 }
 
