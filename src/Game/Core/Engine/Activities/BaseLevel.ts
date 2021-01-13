@@ -173,9 +173,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     }
 
     shutdown(){
-        this._loop.removeFunction(this.update, this);
-        this._events.off('newRow', this.onNewRow, this);
-      //  super.shutdown(); 
+       super.shutdown();
     }
 }
 

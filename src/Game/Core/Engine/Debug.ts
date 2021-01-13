@@ -10,6 +10,7 @@ class Debug {
     private static _source: string = '';
     private static _previousSource: string = '';
     private static _level: number = LogLevel.INFO;
+    private static _fillerAudio: string = 'missing_audio_file'
 
     private static _identifyLogSource(): string {
         if (!Debug._source) {
@@ -27,11 +28,22 @@ class Debug {
         return source;
     }
 
+    static get fillerAudio(){
+        return this._fillerAudio;
+    }
+
     /**
      * @description Returns all levels this Debug can be set to
      */
     public static get LEVELS() {
         return Debug._LEVELS;
+    }
+
+    /**
+     * @description the current level that is set
+     */
+    public static get level() {
+        return Debug._level;
     }
 
     /**
@@ -72,6 +84,19 @@ class Debug {
         if (Debug._level >= LogLevel.INFO) {
             Debug._setGroup();
             return console.log.bind(console);
+        }
+        return () => {};
+    }
+
+    
+    /**
+     * @description Logs a message in the browser console using console.table
+     * @param args one or more arguments, any type
+     */
+    static get table() {
+        if (Debug._level >= LogLevel.INFO) {
+            Debug._setGroup();
+            return console.table.bind(console);
         }
         return () => {};
     }
@@ -176,6 +201,14 @@ class Debug {
      */
     get info() {
         return Debug.info;
+    };
+
+     /**
+     * @description Logs a message in the browser console using console.table
+     * @param args one or more arguments, any type
+     */
+    get table() {
+        return Debug.table;
     };
 
     /**

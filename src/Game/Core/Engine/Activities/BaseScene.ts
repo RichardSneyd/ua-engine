@@ -36,6 +36,7 @@ abstract class BaseScene implements IScene {
 
     preload(): void {
         // override this to preload your assets, call super.preload at the end to start the promise
+        if(Debug.level == Debug.LEVELS.INFO) this._loader.addSnd(Debug.fillerAudio);
          this._loader.download().then(() => {
             this.start();
         });

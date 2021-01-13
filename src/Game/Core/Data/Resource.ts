@@ -23,6 +23,10 @@ class Resource {
     this._data = null;
   }
 
+  get type(): string {
+    return this._type;
+  }
+  
   get data(): any {
     return this._data;
   }
