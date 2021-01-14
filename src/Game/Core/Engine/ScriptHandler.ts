@@ -174,18 +174,12 @@ class ScriptHandler {
                         }
                     }
                 }
-                else {
-                    Debug.error('script has no column with name: ', parseCols[y]);
-                }
             }
             for (let z = 0; z < objectifyCols.length; z++) {
                 if (this._rows[x][objectifyCols[z]] !== undefined) {
                     if (this._rows[x][objectifyCols[z]] !== '') {
                         this._rows[x][objectifyCols[z]] = this._getKeyValPairs(this._raw[x][objectifyCols[z]]);
                     }
-                }
-                else {
-                    Debug.error('script has no column with name: ', objectifyCols[z]);
                 }
             }
 
@@ -207,9 +201,6 @@ class ScriptHandler {
                                 this._rows[x][processText[s]][u] = obj;
                             }
                         }
-                    }
-                    else {
-                        Debug.error('script has no column called: ', processText[s]);
                     }
                 }
             }
@@ -252,7 +243,7 @@ class ScriptHandler {
                 let col = cols[y];
                 let split = col.split('.');
                 if (split.length > 1) {
-                    let val = row[split[0]][split[1]];
+                    let val = ((row[split[0]])) ? row[split[0]][split[1]] : null;
                     if (!this.isFalsy(val)) {
                         files = files.concat(row[split[0]][split[1]]);
                     }
