@@ -39,9 +39,19 @@ class ScriptHandler {
     init(name: string, raw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]) {
         this._name = name;
         this._raw = raw;
+        this._checkIfColumnNamesValid(parseCols.concat(objectifyCols)); // check if column names provided for processing are valid before proceeding
         this._convertRowsFromRaw(parseCols, objectifyCols, processText);
         this._parseNumbers(['id', 'page', 'auto_next', 'round']);
         this._initialized = true;
+    }
+
+    private _checkIfColumnNamesValid(columns: string[]){
+       let list = [];
+        let configRow = this._raw[0];
+        for(let x = 0; x < columns.length; x++){
+            if(!configRow.hasOwnProperty(columns[x])) list.push(columns[x]);
+        }
+        if(list.length > 0) Debug.error('these columns do not exist in script: ', list);
     }
 
     get name(): string {
