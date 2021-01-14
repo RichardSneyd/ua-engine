@@ -15,7 +15,7 @@ import Debug from "../Debug";
 import ExtractComponent from './Components/ExtractComponent';
 import { RenderTexture } from "pixi.js-legacy";
 import IHitShape from "./Components/HitShapes/IHitShape";
-import IPoint from "UAE/Core/Geom/IPoint";
+import IPoint from "../../Geom/IPoint";
 
 /**
  * @description A sprite game object class. 
@@ -277,7 +277,7 @@ abstract class BaseGameObject implements IGameObject {
      * @description the local center of all children
      */
     get childrenCenter(): IPoint {
-        return { x: this._childrenWidth() / 2, y: this._childrenHeight() / 2}
+        return { x: this._childrenWidth() / 2, y: this._childrenHeight() / 2 }
     }
 
     /**
