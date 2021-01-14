@@ -95,7 +95,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         }
 
         if(configRow.config.hasOwnProperty('char')){
-            this._character = this._goFactory.spine(20, this._game.height() - 150, configRow.config.char, this._playground); // reposition _character as needed when extending
+            this._character = this._goFactory.spine(20, this._game.height() - 150, configRow.config.char, this._foreground); // reposition _character as needed when extending
         }
 
         this._waitForFirstInput();
