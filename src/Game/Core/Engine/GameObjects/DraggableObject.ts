@@ -52,7 +52,7 @@ class DraggableObject implements IGameObject {
     }
 
     // added this to avoid IGameObject implementation error
-    get hitShape(){
+    get hitShape() {
         return null;
     }
 
@@ -70,6 +70,20 @@ class DraggableObject implements IGameObject {
         return new DraggableObject(this._slice.createEmpty(), this._spine.createEmpty(), this._sprite.createEmpty(), this._text.createEmpty(), this._loop, this._dropzone.createEmpty(), this._point, this._events);
     }
 
+    /**
+     * @description Creates a SliceObject and adds it to this DraggableObject
+     * @param x X coordinate. Only used for the first GO added, ignored for the rest
+     * @param y Y coordinate. Only used for the first GO added, ignored for the rest
+     * @param textureName Name of the image to be sliced
+     * @param leftWidth Optional left margin that won't be copied to extend the slice
+     * @param topHeight Optional top margin that won't be copied to extend the slice
+     * @param rightWidth Optional right margin that won't be copied to extend the slice
+     * @param bottomHeight Optional bottom margin that won't be copied to extend the slice
+     * @param width Optional width for the sliced image
+     * @param height Optional width for the sliced image
+     * @param parent Optional parent for the Draggable. Only used for the first GO added, ignored for the rest
+     * @param scale Optional scale for the slice
+     */
     addSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number, width?: number, height?: number, parent: IParentChild | null = null, scale: number = 1): SliceObject {
         let finalPosition = this._determinePosition(x, y);
         let slice = this._slice.createNew(finalPosition.x, finalPosition.y, textureName, leftWidth, topHeight, rightWidth, bottomHeight, parent);
@@ -80,6 +94,15 @@ class DraggableObject implements IGameObject {
         return slice;
     }
 
+    /**
+     * @description Creates a SpineObject and adds it to this DraggableObject
+     * @param x X coordinate. Only used for the first GO added, ignored for the rest
+     * @param y Y coordinate. Only used for the first GO added, ignored for the rest
+     * @param textureName Name of the spine
+     * @param frame Optional string
+     * @param parent Optional parent for the Draggable. Only used for the first GO added, ignored for the rest
+     * @param scale Optional scale for the spine
+     */
     addSpine(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null, scale: number = 1): SpineObject {
         let finalPosition = this._determinePosition(x, y);
         let spine = this._spine.createNew(finalPosition.x, finalPosition.y, textureName, frame, parent);
@@ -88,6 +111,15 @@ class DraggableObject implements IGameObject {
         return spine;
     }
 
+    /**
+     * @description Creates a SpriteObject and adds it to this DraggableObject
+     * @param x X coordinate. Only used for the first GO added, ignored for the rest
+     * @param y Y coordinate. Only used for the first GO added, ignored for the rest
+     * @param texture Name of the sprite
+     * @param frame Optional frame the sprite will be set to
+     * @param parent Optional parent for the Draggable. Only used for the first GO added, ignored for the rest
+     * @param scale Optional scale for the sprite
+     */
     addSprite(x: number, y: number, texture: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null, scale: number = 1): SpriteObject {
         let finalPosition = this._determinePosition(x, y);
         let sprite = this._sprite.createNew(finalPosition.x, finalPosition.y, texture, frame, parent);
@@ -98,6 +130,15 @@ class DraggableObject implements IGameObject {
         return sprite;
     }
 
+    /**
+     * @description Creates a TextObject and adds it to this DraggableObject
+     * @param x X coordinate. Only used for the first GO added, ignored for the rest
+     * @param y Y coordinate. Only used for the first GO added, ignored for the rest
+     * @param text String text to be created
+     * @param style Optional object with the style to apply to the text
+     * @param parent Optional parent for the Draggable. Only used for the first GO added, ignored for the rest
+     * @param scale Optional scale for the text
+     */
     addText(x: number, y: number, text: string, style: any = undefined, parent: IParentChild | null = null, scale: number = 1): TextObject {
         let finalPosition = this._determinePosition(x, y);
         let textObject = this._text.createNew(finalPosition.x, finalPosition.y, text, style, parent);
@@ -106,16 +147,29 @@ class DraggableObject implements IGameObject {
         return textObject;
     }
 
+    /**
+     * @description Adds a Dropzone internal object the draggable can be dropped to. Equivalent method `addZone()` receives coordinates and returns a Dropzone. This method can be used to avoid creating a Dropzone too many times
+     * @param dropzone Dropzone object created using `addZone()`
+     */
     addDropzone(dropzone: Dropzone) {
         this._dropzones.push(dropzone);
     }
 
+    /**
+     * @description Adds a named dropzone where the draggable can be dropped. Internally it will create a Dropzone object
+     * @param name dropzone name. It doesn't need to be unique, but `getZone()` searchs by name
+     * @param zone x1, y1: top left corner; x2, y2: bottom right corner; x3, y3: Optional center of the zone, calculated if missing.
+     */
     addZone(name: string, zone: { x1: number, y1: number, x2: number, y2: number, x3?: number, y3?: number }): Dropzone {
         let dropzone = this._dropzone.createNew(name, zone);
         this._dropzones.push(dropzone);
         return dropzone;
     }
 
+    /**
+     * @description Returns the first zone with provided name
+     * @param name Name of the zone
+     */
     getZone(name: string): Dropzone | null {
         for (let dropzone of this._dropzones) {
             if (dropzone.name == name) {
@@ -125,19 +179,74 @@ class DraggableObject implements IGameObject {
         return null;
     }
 
+    /**
+     * @description Adds a child to the first GO in the draggable
+     * @param child GO to add
+     */
     addChild(child: IGameObject): void {
         this._isInitialized();
         this._background.addChild(child);
     }
 
+    /**
+     * @description Removes a previously added child to the first GO in the draggable
+     * @param child GO to remove
+     */
     removeChild(child: IGameObject): void {
         this._isInitialized();
         this._background.removeChild(child);
     }
 
+    /**
+     * @description Checks if a GO is already child of the draggable
+     * @param child GO being searched
+     */
     hasChild(child: IGameObject): boolean {
         this._isInitialized();
         return this._background.hasChild(child);
+    }
+
+    /**
+     * @description Gets the string representation of the draggable, its id
+     */
+    toString(): string {
+        return this.id;
+    }
+
+    /**
+     * @description Returns the first slice added to the draggable if there is one
+     */
+    get firstSlice(): SliceObject | undefined {
+        for (let go of [this._background].concat(this._layers)) {
+            if (go instanceof SliceObject) return go;
+        }
+    }
+
+    /**
+     * @description Returns the first spine added to the draggable if there is one
+     */
+    get firstSpine(): SpineObject | undefined {
+        for (let go of [this._background].concat(this._layers)) {
+            if (go instanceof SpineObject) return go;
+        }
+    }
+
+    /**
+     * @description Returns the first sprite added to the draggable if there is one
+     */
+    get firstSprite(): SpriteObject | undefined {
+        for (let go of [this._background].concat(this._layers)) {
+            if (go instanceof SpriteObject) return go;
+        }
+    }
+
+    /**
+     * @description Returns the first text added to the draggable if there is one
+     */
+    get firstText(): TextObject | undefined {
+        for (let go of [this._background].concat(this._layers)) {
+            if (go instanceof TextObject) return go;
+        }
     }
 
     private _determinePosition(x: number, y: number): Point {
@@ -207,21 +316,39 @@ class DraggableObject implements IGameObject {
         }
     }
 
+    /**
+     * @description If the draggable is inside a given Dropzone
+     * @param dropzone Object created when adding a zone with `addZone()`
+     */
     isInside(dropzone: Dropzone): boolean {
         return (this.x >= dropzone.topLeft.x && this.x <= dropzone.bottomRight.x
             && this.y >= dropzone.topLeft.y && this.y <= dropzone.bottomRight.y);
     }
 
+    /**
+     * @description Moves the draggable to a specific coordinate
+     * @param point Point to move to
+     * @param easing Optional easing method. Use Easing enum
+     * @param time Optional time for the animation
+     */
     moveTo(point: Point, easing: string = Easing.Elastic.InOut, time: number = 600) {
         this._background?.tweens.add(easing)
             .to({ x: point.x, y: point.y }, time)
             .start();
     }
 
+    /**
+     * @description Executes a function just when the draggable is tapped
+     * @param doThis Function with the action
+     */
     doBeforeDragging(doThis: Function): void {
         this._doBeforeDragging = doThis;
     }
 
+    /**
+     * @description Executes a function just after the draggable is dropped
+     * @param doThis Function with the action
+     */
     doAfterDropping(doThis: Function): void {
         this._doAfterDropping = doThis;
     }
@@ -233,28 +360,46 @@ class DraggableObject implements IGameObject {
         return true;
     }
 
+    /**
+     * @description Sets the origin to the first GO of this draggable
+     * @param x X coordinate
+     * @param y Y coordinate
+     */
     setOrigin(x: number, y?: number): void {
         if (this._isInitialized()) {
             this._background.setOrigin(x, y);
         }
     }
 
+    /**
+     * @description Destroys all GO that make up this draggable
+     */
     destroy(): void {
         for (let object of this._layers) object.destroy();
         this._background.destroy();
         this._loop.removeFunction(this._update, this);
     }
 
+    /**
+     * @description Changes the texture of the first GO of this draggable
+     * @param textureName New texture name
+     */
     changeTexture(textureName: string): void {
         if (this._isInitialized()) {
             this._background.changeTexture(textureName);
         }
     }
 
+    /**
+     * @description Returns all Dropzones added
+     */
     get dropzones(): Dropzone[] {
         return this._dropzones;
     }
 
+    /**
+     * @description Dropzone this draggable is in, if any
+     */
     get inDropzone(): Dropzone | null {
         return this._currentDropzone;
     }
@@ -289,16 +434,25 @@ class DraggableObject implements IGameObject {
         return this._background.alpha;
     }
 
+    /**
+     * @description Texture name of the first GO added
+     */
     get textureName(): string {
         this._isInitialized();
         return this._background.textureName;
     }
 
+    /**
+     * @description Draggable's Id, the last GO texture name or text by default
+     */
     get id(): string {
         this._isInitialized();
         return this._id;
     }
 
+    /**
+     * @description Firt GO's extract
+     */
     get extract(): ExtractComponent {
         this._isInitialized();
         return this._background.extract;
@@ -384,6 +538,9 @@ class DraggableObject implements IGameObject {
         return this._background.children;
     }
 
+    /**
+     * @description Gets if this draggable can be moved
+     */
     get enabled(): boolean {
         return this._enabled;
     }
@@ -418,6 +575,9 @@ class DraggableObject implements IGameObject {
         this._background.height = height;
     }
 
+    /**
+     * @description Changes the id, that by default is the latest GO's texture name or text
+     */
     set id(id: string) {
         this._isInitialized();
         this._id = id;
@@ -443,6 +603,9 @@ class DraggableObject implements IGameObject {
         this._background.parent = parent;
     }
 
+    /**
+     * @description Sets if this draggable can be moved
+     */
     set enabled(enabled: boolean) {
         this._enabled = enabled;
     }

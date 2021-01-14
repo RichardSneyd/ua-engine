@@ -1,5 +1,4 @@
 import Point from "../../Geom/Point";
-import DraggableObject from "./DraggableObject";
 
 class Dropzone {
     private _point: Point;
