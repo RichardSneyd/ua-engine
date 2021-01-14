@@ -11,6 +11,7 @@ import SpriteObject from "../GameObjects/SpriteObject";
 import SpineObject from "../GameObjects/SpineObject";
 import PxGame from "../../../Services/Pixi/PxGame";
 import Inspector from "./Inspector";
+import { spine } from "pixi.js-legacy";
 
 // build the visual of the editor here, like an activity level....
 
@@ -219,27 +220,25 @@ class EditorScene implements ILevel {
 
         Debug.warn("FilteredSpines:", spineListFiltered);
 
-        let spnSrc = this._goFactory.spine(500, 500, 'parrot');
-        spnSrc.alpha = 0;
-
-        let result: string = "";
-
-        let pixelData = this._pxGame.toPixels(spnSrc.data);
-        //Debug.info("pixelData:", pixelData);
-
-        this._pxGame.toImgElement(spnSrc.data).then(res => {
-            //Debug.warn("TOIMG:", res.src);
-
-            result = res.src;
-
-            this._accordion.addRow('Spines', ...[
-                `${result}`
-            ]);
-
-            this._accordion.removeAllSelections();
-            this._accordion.uncollapseAll();
+        let spinePixels: any = [];
+        let spineResults: string[] = [];
+        spineListFiltered.forEach((val) => {
+            let spnSrc = this._goFactory.spine(500, 500, `${val.basename}`);
+            spnSrc.scaleHandler.setScale(.5);
+            setTimeout(() => spnSrc.alpha = 0, 50); // we don't want to show not active spine objects, this trick did the work
+            spinePixels.push(spnSrc.data);
         });
 
+        for (let i = 0; i < spinePixels.length; i++) {
+            this._pxGame.toImgElement(spinePixels[i]).then(res => {
+                spineResults.push(res.src);
+                if (i === spinePixels.length - 1) {
+                    this._accordion.addRow('Spines', ...spineResults);
+                    this._accordion.removeAllSelections();
+                    this._accordion.uncollapseAll();
+                }
+            });
+        }
     }
 
     update(_time: number): void {
