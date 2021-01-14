@@ -60,6 +60,7 @@ class Game {
     this._activities = [];
     this._gameStarted = false;
     this._exposeGlobal();
+    Debug.exposeGlobal(this.startActivity.bind(this), 'goto'); //type goto('script_name') in console to jump to any activity
   }
 
   /**
