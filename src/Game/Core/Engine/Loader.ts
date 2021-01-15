@@ -211,20 +211,38 @@ class Loader {
    * @description add a spine file to the load queue - must include .json extension
    * @param name if name does not include '.json' at the end, this will be automatically appended
    */
-  public addSpine(name: string): Loader {
-    if (name.indexOf('.json') == -1) name = name + '.json';
-    let url = this._getPath().spn + name;
-    if (this._getResource(url, false) == null) {
-      let res = this._createResource();
-      res.initSpine(url, false);
+  public addSpine(name: string, hasPath: boolean = false): Loader {
 
-      this._resList.push(res);
-      this._newResList.push(res);
-      Debug.info(this._resList);
+    if (hasPath) {
+      if (name.indexOf('.json') == -1) name = name + '.json';
+      let url = this._getPath().spn + name;
+      if (this._getResource(url, false) == null) {
+        let res = this._createResource();
+        res.initSpine(url, false);
+
+        this._resList.push(res);
+        this._newResList.push(res);
+        Debug.info(this._resList);
+        return this;
+      }
+      Debug.warn('did not add %s spine, as it already exists', name);
       return this;
     }
-    Debug.warn('did not add %s spine, as it already exists', name);
-    return this;
+    else {
+      if (name.indexOf('.json') == -1) name = name + '.json';
+      let url = this._getPath().spn + name;
+      if (this._getResource(url, false) == null) {
+        let res = this._createResource();
+        res.initSpine(url, false);
+
+        this._resList.push(res);
+        this._newResList.push(res);
+        Debug.info(this._resList);
+        return this;
+      }
+      Debug.warn('did not add %s spine, as it already exists', name);
+      return this;
+    }
   }
 
   /**
@@ -327,7 +345,7 @@ class Loader {
       return this._extractTexture(res.data, frame);
     } else {
       Debug.info('byName: ', byName);
-      Debug.breakpoint();
+      //Debug.breakpoint();
       if (byName) {
         Debug.warn("Resource '%s' doesn't exist.", sprite);
         return;
