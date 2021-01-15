@@ -30,6 +30,7 @@ class EditorScene implements ILevel {
     protected imgList: string[] = [];
     protected spineList: string[] = [];
     protected _imgGameObjects: SpriteObject[] = [];
+    protected _spineGameObjects: SpineObject[] = [];
     protected _downloadData: any;
 
     protected selectedGO: SpriteObject | SpineObject;
@@ -57,6 +58,7 @@ class EditorScene implements ILevel {
         this._loop.start();
 
         this._manager.events.on('gameobj_clicked', this._panelImageClicked, this);
+        this._manager.events.on('spine_clicked', this._panelSpineClicked, this);
         this._manager.events.on('input_changed', this._inputChanged, this);
 
         this.preload();
@@ -146,6 +148,27 @@ class EditorScene implements ILevel {
         this.addDataDownloadLink();
     }
 
+    _panelSpineClicked({ src }: { src: string }) {
+        let gameobj = this._goFactory.spine(500, 500, src);
+        gameobj.scaleHandler.setScale(.5);
+        gameobj.setOrigin(.5);
+
+        gameobj.input.enableInput();
+        gameobj.input.addInputListener('pointerdown', () => {
+            this.xOffset = gameobj.x - this._manager.input.pointer.x;
+            this.yOffset = gameobj.y - this._manager.input.pointer.y;
+            this.selectedGO = gameobj;
+            this.addGameObjSelectionBorder(gameobj.x, gameobj.y, gameobj.width, gameobj.height);
+            this.dragging = true;
+        }, this);
+        gameobj.input.addInputListener('pointerup', () => {
+            this.dragging = false;
+        }, this);
+        this._spineGameObjects.push(gameobj);
+
+        //this.addDataDownloadLink();
+    }
+
     _inputChanged({ prop, val }: { prop: string, val: number }) {
         Debug.info(`prop: ${prop} val: ${val}`);
 
@@ -211,7 +234,7 @@ class EditorScene implements ILevel {
         let imgListFiltered = this._loader.resList.filter(res => res.type === 'img' && res.ext === 'png');
         imgListFiltered.forEach(val => this.imgList.push(val.url));
 
-        this._accordion.addRow('Images', ...this.imgList);
+        this._accordion.addRow('Images', 'image', ...this.imgList);
     }
 
     addSpinesRow(): void {
@@ -221,7 +244,7 @@ class EditorScene implements ILevel {
         Debug.warn("FilteredSpines:", spineListFiltered);
 
         let spinePixels: any = [];
-        let spineResults: string[] = [];
+        let spineResults: any[] = [];
         spineListFiltered.forEach((val) => {
             let spnSrc = this._goFactory.spine(500, 500, `${val.basename}`);
             spnSrc.scaleHandler.setScale(.5);
@@ -232,12 +255,17 @@ class EditorScene implements ILevel {
         for (let i = 0; i < spinePixels.length; i++) {
             this._pxGame.toImgElement(spinePixels[i]).then(res => {
                 spineResults.push(res.src);
+
                 if (i === spinePixels.length - 1) {
-                    this._accordion.addRow('Spines', ...spineResults);
+                    this._accordion.addRow('Spines', 'spine', ...spineResults);
                     this._accordion.removeAllSelections();
                     this._accordion.uncollapseAll();
                 }
             });
+
+
+
+
         }
     }
 

@@ -19,7 +19,7 @@ class UIAccordion {
     protected _images: HTMLImageElement[] = [];
     protected _labels: HTMLButtonElement[] = [];
     protected _panels: HTMLDivElement[] = [];
-    protected _imgList: any[] = []; // TODO: once we are sure which types are needed, get rid off of "any" keyword
+    protected _imgList: any[] = [];
 
     constructor(loader: Loader, pxFactory: PxFactory, pxLoader: PxLoader, events: Events, gameConfig: GameConfig, goFactory: GOFactory) {
         this._loader = loader;
@@ -47,12 +47,13 @@ class UIAccordion {
      * @description Adds a new panel row inside of the its main container
      * @param label Name of the panel header
      * @param imageUrls Array of sprites/spines
+     * @param type type of the resources, ex: image or spine
      */
-    addRow(label: string, ...imageUrls: string[]): void {
+    addRow(label: string, type: string, ...imageUrls: string[]): void {
         this.addLabel(label);
         this.addPanelContent();
         for (let i = 0; i < imageUrls.length; i++) {
-            this.addImg(imageUrls[i], this._panels[this._panels.length - 1]);
+            this.addImg(imageUrls[i], this._panels[this._panels.length - 1], type);
         }
         Debug.info("Editor.Accordion row created.");
     }
@@ -170,7 +171,7 @@ class UIAccordion {
         event.stopPropagation();
     }
 
-    addImg(src: string, panel: HTMLDivElement): void {
+    addImg(src: string, panel: HTMLDivElement, type: string): void {
         let img = document.createElement('img');
         img.setAttribute('class', 'panel-img');
         img.src = src;
@@ -181,7 +182,8 @@ class UIAccordion {
 
         this._imgList.push({
             src: filename,
-            imgEl: img
+            imgEl: img,
+            type: type
         });
     }
 
@@ -201,34 +203,21 @@ class UIAccordion {
 
         setTimeout(() => { // this delay is needed to load all images sequantially millisecond-wise
             this._loader.download().then(() => {
-                Debug.warn('resList:', this._loader.resList);
-                // this._goFactory.sprite(600, 600, imgSrc);
-                Debug.info('ADDING SPRITE...');
                 let texture = this._loader.getTexture(imgSrc, null, false);
 
                 this._imgList.push({
                     src: texture,
-                    imgEl: img
+                    imgEl: img,
+                    type: 'sprite'
                 });
 
-                this._imgList[this._imgList.length - 1].imgEl.addEventListener("click", () => this._events.emit('gameobj_clicked', { src: texture }));
+                this._imgList[this._imgList.length - 1].imgEl.addEventListener("click", () => this._events.emit('gameobj_clicked', { src: texture, type: this._imgList[this._imgList.length - 1].type }));
 
-                /* let sprite = this._goFactory.sprite(100, 600, texture);
-                Debug.exposeGlobal(sprite, 'last');
-                Debug.info('SPRITE ADDED: ', sprite); */
             });
         }, 10);
 
     }
 
-    /*   addSpineSrc(jsonSrc: any, imgSrc: any, panel: HTMLDivElement, fileName?: string): void {
-      
-          this._loader.addSpine(jsonSrc, true);
-          this._loader.addImage(imgSrc, true, fileName);
-  
-  
-      }
-   */
     uncollapseAll(): void {
         Debug.info('Editor.uncollapsed');
         const acc = document.getElementsByClassName("accordion");
@@ -277,7 +266,7 @@ class UIAccordion {
             val.imgEl.addEventListener("click", () => {
                 removeAllFirst();
                 //img[i].classList.toggle("selected");
-                this._events.emit('gameobj_clicked', { src: val.src });
+                this._events.emit('gameobj_clicked', { src: val.src, type: val.type });
             });
         });
     }
