@@ -171,19 +171,20 @@ class UIAccordion {
         event.stopPropagation();
     }
 
-    addImg(src: string, panel: HTMLDivElement, type: string): void {
+    addImg(image: any, panel: HTMLDivElement, type: string): void {
         let img = document.createElement('img');
         img.setAttribute('class', 'panel-img');
-        img.src = src;
+        img.src = image.src;
         panel.appendChild(img);
 
-        let file = src.split('/').pop();
+        let file = image.src.split('/').pop();
         let filename = file?.split('.').shift();
 
         this._imgList.push({
             src: filename,
             imgEl: img,
-            type: type
+            type: type,
+            name: image.name
         });
     }
 
@@ -211,7 +212,11 @@ class UIAccordion {
                     type: 'sprite'
                 });
 
-                this._imgList[this._imgList.length - 1].imgEl.addEventListener("click", () => this._events.emit('gameobj_clicked', { src: texture, type: this._imgList[this._imgList.length - 1].type }));
+                this._imgList[this._imgList.length - 1].imgEl.addEventListener("click", () => this._events.emit('gameobj_clicked', {
+                    src: texture,
+                    type: this._imgList[this._imgList.length - 1].type,
+                    name: this._imgList[this._imgList.length - 1].name
+                }));
 
             });
         }, 10);
@@ -266,7 +271,7 @@ class UIAccordion {
             val.imgEl.addEventListener("click", () => {
                 removeAllFirst();
                 //img[i].classList.toggle("selected");
-                this._events.emit('gameobj_clicked', { src: val.src, type: val.type });
+                this._events.emit('gameobj_clicked', { src: val.src, type: val.type, name: val.name });
             });
         });
     }

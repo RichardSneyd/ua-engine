@@ -27,7 +27,7 @@ class EditorScene implements ILevel {
 
     public bgdName: string;
     protected _bgd: SpriteObject;
-    protected imgList: string[] = [];
+    protected imgList: any[] = [];
     protected spineList: string[] = [];
     protected _imgGameObjects: SpriteObject[] = [];
     protected _spineGameObjects: SpineObject[] = [];
@@ -58,7 +58,6 @@ class EditorScene implements ILevel {
         this._loop.start();
 
         this._manager.events.on('gameobj_clicked', this._panelImageClicked, this);
-        this._manager.events.on('spine_clicked', this._panelSpineClicked, this);
         this._manager.events.on('input_changed', this._inputChanged, this);
 
         this.preload();
@@ -128,9 +127,18 @@ class EditorScene implements ILevel {
         }, true);
     }
 
-    _panelImageClicked({ src }: { src: string }) {
-        let gameobj = this._goFactory.sprite(500, 500, src);
-        gameobj.setOrigin(.5);
+    _panelImageClicked({ src, type, name }: { src: string, type: string, name: string }) {
+        //Debug.info('type: ', type);
+
+        let gameobj: any;
+        if (type === "image") {
+            gameobj = this._goFactory.sprite(500, 500, src);
+            gameobj.setOrigin(.5);
+        }
+        else if (type === "spine") {
+            gameobj = this._goFactory.spine(500, 500, name);
+            gameobj.animations.play("idle", true);
+        }
 
         gameobj.input.enableInput();
         gameobj.input.addInputListener('pointerdown', () => {
@@ -148,26 +156,6 @@ class EditorScene implements ILevel {
         this.addDataDownloadLink();
     }
 
-    _panelSpineClicked({ src }: { src: string }) {
-        let gameobj = this._goFactory.spine(500, 500, src);
-        gameobj.scaleHandler.setScale(.5);
-        gameobj.setOrigin(.5);
-
-        gameobj.input.enableInput();
-        gameobj.input.addInputListener('pointerdown', () => {
-            this.xOffset = gameobj.x - this._manager.input.pointer.x;
-            this.yOffset = gameobj.y - this._manager.input.pointer.y;
-            this.selectedGO = gameobj;
-            this.addGameObjSelectionBorder(gameobj.x, gameobj.y, gameobj.width, gameobj.height);
-            this.dragging = true;
-        }, this);
-        gameobj.input.addInputListener('pointerup', () => {
-            this.dragging = false;
-        }, this);
-        this._spineGameObjects.push(gameobj);
-
-        //this.addDataDownloadLink();
-    }
 
     _inputChanged({ prop, val }: { prop: string, val: number }) {
         Debug.info(`prop: ${prop} val: ${val}`);
@@ -232,7 +220,7 @@ class EditorScene implements ILevel {
 
     addImagesRow(): void {
         let imgListFiltered = this._loader.resList.filter(res => res.type === 'img' && res.ext === 'png');
-        imgListFiltered.forEach(val => this.imgList.push(val.url));
+        imgListFiltered.forEach(val => this.imgList.push({ src: val.url, name: val.basename }));
 
         this._accordion.addRow('Images', 'image', ...this.imgList);
     }
@@ -254,7 +242,7 @@ class EditorScene implements ILevel {
 
         for (let i = 0; i < spinePixels.length; i++) {
             this._pxGame.toImgElement(spinePixels[i]).then(res => {
-                spineResults.push(res.src);
+                spineResults.push({ src: res.src, name: spineListFiltered[i].basename });
 
                 if (i === spinePixels.length - 1) {
                     this._accordion.addRow('Spines', 'spine', ...spineResults);
@@ -262,9 +250,6 @@ class EditorScene implements ILevel {
                     this._accordion.uncollapseAll();
                 }
             });
-
-
-
 
         }
     }
