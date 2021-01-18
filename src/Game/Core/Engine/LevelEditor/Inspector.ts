@@ -29,7 +29,9 @@ class Inspector {
         this._addTextInput('name');
         this._addGroupNumberInput('x', 'y');
         this._addGroupNumberInput('x origin', 'y origin');
+        this._addGroupNumberInput('scale x', 'scale y');
         this._addNumberInput('angle', 0, 0, 360);
+
 
         this._drag(this._header, this._container);
     }
@@ -42,7 +44,7 @@ class Inspector {
         }
     }
 
-    public setInputValue(id: string, val: string | number) {
+    public setInputValue(id: string, val: any) {
         let input = document.getElementById(id);
 
         if (input) {

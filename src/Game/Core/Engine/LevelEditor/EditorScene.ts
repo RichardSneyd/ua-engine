@@ -134,10 +134,14 @@ class EditorScene implements ILevel {
         if (type === "image") {
             gameobj = this._goFactory.sprite(500, 500, src);
             gameobj.setOrigin(.5);
+
+            this._imgGameObjects.push(gameobj);
         }
         else if (type === "spine") {
             gameobj = this._goFactory.spine(500, 500, name);
             gameobj.animations.play("idle", true);
+
+            this._spineGameObjects.push(gameobj);
         }
 
         gameobj.input.enableInput();
@@ -151,7 +155,7 @@ class EditorScene implements ILevel {
         gameobj.input.addInputListener('pointerup', () => {
             this.dragging = false;
         }, this);
-        this._imgGameObjects.push(gameobj);
+
 
         this.addDataDownloadLink();
     }
@@ -266,6 +270,10 @@ class EditorScene implements ILevel {
             this._inspector.setInputValue('y', this.selectedGO.y);
             this._inspector.setInputValue('origin x', this.selectedGO.origin.x);
             this._inspector.setInputValue('origin y', this.selectedGO.origin.y);
+
+            this._inspector.setInputValue('scale x', this.selectedGO.scaleHandler.x);
+            this._inspector.setInputValue('scale y', this.selectedGO.scaleHandler.y);
+
             this._inspector.setInputValue('angle', this.selectedGO.angle);
         }
 
@@ -273,7 +281,10 @@ class EditorScene implements ILevel {
             this.selectedGOBorder.x = this.selectedGO.x;
             this.selectedGOBorder.y = this.selectedGO.y;
 
+            this.selectedGO.scaleHandler.setScale(this._inspector.getInputValue('scale x'), this._inspector.getInputValue('scale y'));
+
             this._inspector.setInputValue("name", this.selectedGO.textureName);
+
         }
 
     }
