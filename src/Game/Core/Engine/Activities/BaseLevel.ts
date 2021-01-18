@@ -123,7 +123,8 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * from row to row, gives control to the IDs). Called in BaseLevel.onNewRow by defeault. Override onNewRow to change this.
      */
     loadConfig(): void {
-        if (this.manager.script.active.config.hasOwnProperty('bgd') && this.manager.script.active.config.bgd !== '') {
+        let activeRow = this.manager.script.active;
+        if (activeRow.hasOwnProperty('config') && activeRow.config.hasOwnProperty('bgd') && activeRow.config.bgd !== '') {
             this._bgd.changeTexture(this.manager.script.active.config.bgd);
         }
     }
