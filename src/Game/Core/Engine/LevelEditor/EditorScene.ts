@@ -11,7 +11,6 @@ import SpriteObject from "../GameObjects/SpriteObject";
 import SpineObject from "../GameObjects/SpineObject";
 import PxGame from "../../../Services/Pixi/PxGame";
 import Inspector from "./Inspector";
-import { spine } from "pixi.js-legacy";
 
 // build the visual of the editor here, like an activity level....
 
@@ -216,10 +215,6 @@ class EditorScene implements ILevel {
             );
             this.selectedGOBorder.pivot.set(this.selectedGO.x + (this.selectedGO.width / 2), this.selectedGO.y + (this.selectedGO.height / 2));
         }
-        else {
-            this.selectedGOBorder.width = width;
-            this.selectedGOBorder.height = height;
-        }
     }
 
     addImagesRow(): void {
@@ -283,8 +278,10 @@ class EditorScene implements ILevel {
 
             this.selectedGO.scaleHandler.setScale(this._inspector.getInputValue('scale x'), this._inspector.getInputValue('scale y'));
 
-            this._inspector.setInputValue("name", this.selectedGO.textureName);
+            this.selectedGOBorder.width = this.selectedGO.scaleHandler.x * this.selectedGO.width;
+            this.selectedGOBorder.height = this.selectedGO.scaleHandler.y * this.selectedGO.height;
 
+            this._inspector.setInputValue("name", this.selectedGO.textureName);
         }
 
     }
