@@ -50,6 +50,14 @@ class LevelManager {
     get globalEvents(): Events {
         return this._globalEvents;
     }
+    
+    /** 
+     * @description Passes on the Level file content to the Level Manager.
+     * @param content Level file content
+     */
+    setLevelFile(content: any) {
+        this._script.levelFile = content;
+    }
 
     get audio(): AudioManager {
         return this._audio;
