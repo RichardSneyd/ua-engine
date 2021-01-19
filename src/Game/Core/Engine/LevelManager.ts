@@ -39,6 +39,14 @@ class LevelManager {
         this._script.init(scriptName, scriptRaw, parseCols, objectifyCols, processText);
     }
 
+    /**
+     * @description Passes on the Level file content to the Level Manager.
+     * @param content Level file content
+     */
+    setLevelFile(content: any) {
+        this._script.levelFile = content;
+    }
+
     get events(): Events {
         return this._events;
     }

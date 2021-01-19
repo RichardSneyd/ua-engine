@@ -533,6 +533,17 @@ class Loader {
     });
   }
 
+  loadLevelFile(file: string, callback?: Function, staticPath: boolean = false) {
+    let basePath = '';
+    if (!staticPath) basePath = this._getPath().jsn;
+
+    this._ajaxLoader.loadFile(basePath + file + '_level.json', (data: any) => {
+      if (callback !== undefined) {
+        callback(data.data);
+      }
+    });
+  }
+
   private _downloadSpines() {
     let spineList = this._getSpnArray(this._newResList);
     Debug.info('spines to load:');

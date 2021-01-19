@@ -14,6 +14,7 @@ class ScriptHandler {
     private _rows: any[];
     private _active: any;
     private _last: any;
+    private _levelFile: any;
 
     constructor(utils: ActScripts, events: Events) {
         this._utils = utils;
@@ -54,6 +55,10 @@ class ScriptHandler {
         if(list.length > 0) Debug.error('these columns do not exist in script: ', list);
     }
 
+    get levelFile(): any {
+        return this._levelFile;
+    }
+
     get name(): string {
         return this._name;
     }
@@ -75,6 +80,10 @@ class ScriptHandler {
      */
     get active(): any {
         return this._active;
+    }
+
+    set levelFile(content: any) {
+        this._levelFile = content;
     }
 
     /**

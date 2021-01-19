@@ -66,6 +66,11 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         this._loader.loadActScript(scriptName, (script: any, data: any) => {
             if (data == null || data == undefined) Debug.error('no script data returned: ', data);
             this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
+            if(script[0].hasOwnProperty('config') && script[0].config.includes('level_file:')) {
+                this._loader.loadLevelFile(scriptName, (script: any) => {
+                    this.manager.setLevelFile(script);
+                });
+            }
             this.preload();
         });
     }
