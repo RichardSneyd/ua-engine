@@ -10,6 +10,7 @@ import Loader from "../Loader";
 import Loop from "../Loop";
 import BaseScene from "./BaseScene";
 import ILevel from "./ILevel";
+import SceneEvents from "./SceneEvents";
 
 /**
  * @description Extending the BaseLevel class is the quickes, cleanest and easiest way of creaing a barebones Highwood level
@@ -31,7 +32,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
 
     protected _character: SpineObject;
 
-    constructor(manager: LevelManager, events: Events, loop: Loop, goFactory: GOFactory, loader: Loader, game: Game) {
+    constructor(manager: LevelManager, events: SceneEvents, loop: Loop, goFactory: GOFactory, loader: Loader, game: Game) {
         super(events, loop, goFactory, loader, game);
         this._manager = manager;
 
@@ -43,6 +44,10 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      */
     get manager() {
         return this._manager;
+    }
+
+    get events() {
+        return this._events;
     }
 
     /**@description the init method. Adds a callback to the update method for Loop.ts, adds listeners for shutdown and newRow,
@@ -60,12 +65,14 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         this._foreground = this._goFactory.container(0, 0);
         this._HUD = this._goFactory.container(0, 0);
         // cookie-cutter event listeners (necessary for the functioning of activities and levels, and for avoiding memory leaks etc)
-        this.manager.events.on('newRow', this.onNewRow, this);
+        this._manager.globalEvents.on('newRow', this.onNewRow, this);
+        this._manager.globalEvents.on('shutdown', this.shutdown, this);
 
         // load activity script, then call manager.init to preprocess the activity script, then call preload
         this._loader.loadActScript(scriptName, (script: any, data: any) => {
             if (data == null || data == undefined) Debug.error('no script data returned: ', data);
-            this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
+            this.manager.init(this, scriptName, script, parseCols, objectifyCols, processText);
+          //  this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
             if(script[0].hasOwnProperty('config') && script[0].config.includes('level_file:')) {
                 this._loader.loadLevelFile(scriptName, (script: any) => {
                     this.manager.setLevelFile(script);
@@ -99,26 +106,33 @@ abstract class BaseLevel extends BaseScene implements ILevel {
             Debug.error('no bgd property in config cell of first row');
         }
 
-        if(configRow.config.hasOwnProperty('char')){
+        if (configRow.config.hasOwnProperty('char')) {
             this._character = this._goFactory.spine(20, this._game.height() - 150, configRow.config.char, this._foreground); // reposition _character as needed when extending
         }
 
         this._waitForFirstInput();
+        Debug.exposeGlobal(this, 'level'); // for easy testing of the active level in the console during development
     }
 
     /**
      * @description called whenever the 'newRow' event is emitted. Forms the foundation of the 'row loop', as it were. Logic to perform whenever a 
      * new row is loaded
      */
-    onNewRow(): void {
+    public onNewRow(): void {
         Debug.info('onNewRow called for row %s: ', this.manager.script.active.id, this.manager.script.active);
         this.loadConfig();
-        
-        if(this._character) {
+        this.updateCharacterState();
+    }
+
+    /**
+     * @description check the current row, and play animation if one is indicated for the character
+     */
+    public updateCharacterState() {
+        if (this._character) {
             let activeRow = this.manager.script.active;
             let loop = (activeRow.char_loop == 'y');
             let animation = activeRow.char;
-            if (animation !== '') this._character.animations.play(animation, loop);
+            if (animation && animation !== '') this._character.animations.play(animation, loop);
         }
     }
 
@@ -178,8 +192,10 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         this._ready = ready;
     }
 
-    shutdown(){
-       super.shutdown();
+    shutdown() {
+        this._manager.globalEvents.off('newRow', this.onNewRow, this);
+        this._manager.globalEvents.off('shutdown', this.shutdown, this);
+        super.shutdown();
     }
 }
 

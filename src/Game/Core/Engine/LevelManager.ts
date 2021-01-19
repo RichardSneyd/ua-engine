@@ -5,20 +5,20 @@ import ScriptHandler from "./ScriptHandler";
 import InputManager from './InputManager';
 import Game from '../Game';
 import GOFactory from "./GameObjects/GOFactory";
-
-
+import ILevel from "./Activities/ILevel";
 
 class LevelManager {
+    private _level: ILevel;
     private _audio: AudioManager;
-    private _events: Events;
+    private _globalEvents: Events;
     private _script: ScriptHandler;
     private _utils: Utils;
     private _input: InputManager;
     private _goFactory: GOFactory;
 
-    constructor(audioManager: AudioManager, events: Events, script: ScriptHandler, utils: Utils, input: InputManager, goFactory: GOFactory) {
+    constructor(audioManager: AudioManager, script: ScriptHandler, utils: Utils, input: InputManager, goFactory: GOFactory, events: Events) {
         this._audio = audioManager;
-        this._events = events;
+        this._globalEvents = events;
         this._script = script;
         this._utils = utils;
         this._input = input;
@@ -35,20 +35,28 @@ class LevelManager {
      * => {bgd: 'bgd_1', overlay: 'overlay_1'}
      * @param processText (optional) the column names to convert into lines and words of text. Mainly useful in passage (reading) types.
      */
-    init(scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]) {
+    init(level: ILevel, scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]) {
+        this._level = level;
         this._script.init(scriptName, scriptRaw, parseCols, objectifyCols, processText);
     }
 
     /**
+     * @description the attached level
+     */
+    get level(){
+        return this._level;
+    }
+
+    get globalEvents(): Events {
+        return this._globalEvents;
+    }
+    
+    /** 
      * @description Passes on the Level file content to the Level Manager.
      * @param content Level file content
      */
     setLevelFile(content: any) {
         this._script.levelFile = content;
-    }
-
-    get events(): Events {
-        return this._events;
     }
 
     get audio(): AudioManager {
