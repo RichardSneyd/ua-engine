@@ -1,13 +1,15 @@
 import ActScripts from './Utils/ActScripts';
 import Events from './Events';
 import Debug from './Debug';
+import SceneEvents from './Activities/SceneEvents';
+import ILevel from './Activities/ILevel';
 
 /**
  * @description An activity script preprocessor and wrapper. 
  */
 class ScriptHandler {
-    private _utils: ActScripts;
     private _events: Events;
+    private _utils: ActScripts;
     private _name: string;
     private _initialized: boolean;
     private _raw: any[];
@@ -37,6 +39,8 @@ class ScriptHandler {
       * @param processText (optional) the column names to convert into lines and _words of text. Mainly useful in passage (reading) types.
       */
     init(name: string, raw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]) {
+       // this._level = level;
+      // this._events = level.events;
         this._name = name;
         this._raw = raw;
         this._checkIfColumnNamesValid(parseCols.concat(objectifyCols)); // check if column names provided for processing are valid before proceeding
@@ -83,7 +87,7 @@ class ScriptHandler {
     set active(row: any) {
         this._last = this.active;
         this._active = row;
-        this._events.fire('newRow'); // this event can be listened for anywhere you need to respond to a row change (goTo)
+        this._events.emit('newRow'); // this event can be listened for anywhere you need to respond to a row change (goTo)
     }
 
     /**

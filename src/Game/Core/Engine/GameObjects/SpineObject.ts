@@ -19,6 +19,7 @@ import ExtractComponent from "./Components/ExtractComponent";
  */
 class SpineObject extends BaseGameObject {
     protected _animationManager: SpineAnimationManager;
+    
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
         scaleHandler: ScaleHandler, animationManager: SpineAnimationManager, tweenComponent: TweenComponent, extract: ExtractComponent) {
@@ -46,7 +47,7 @@ class SpineObject extends BaseGameObject {
         return sprite;
     }
 
-    get animations() : IAnimationManager {
+    get animations() : SpineAnimationManager {
         return this._animationManager;
     }
 

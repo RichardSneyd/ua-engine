@@ -23,6 +23,8 @@ const config = {
         single: [
             'Loader',
             'Loop',
+            'LevelManager',
+            'ScriptHandler',
             'Events',
             'AudioManager',
             'ImgLoader',
@@ -45,8 +47,6 @@ const config = {
             'Vectors',
             'GameConfig',
             'ScaleManager',
-            'TransitionManager',
-            'InputManager',
             'Game',
             'TweenManager'
         ],
@@ -54,7 +54,8 @@ const config = {
             'UAENGINE',
             'BaseActivity',
             'BaseLevel',
-            'BaseScene'
+            'BaseScene',
+            'AbstractEventEmitter'
         ],
     },
     replaceAll: {
