@@ -50,10 +50,12 @@ class AudioManager {
 
     /**
      * @description For playing instructional audio arrays, one after the other. Mostly used for playing contents of audio_id in scripts
-     * @param arr the array of audio ids to play
+     * @param arr the array of audio ids to play. If string it'll be converted to array.
      * @param onDone Called when the entire array has been played.
      */
-    public playInstructionArr(arr: string[], onDone: Function) {
+    public playInstructionArr(arr: string[] | string, onDone: Function) {
+        if (typeof arr == 'string') arr = [arr];
+
         this._stopInstPlaying(); // clean the palette
         this._instArr = arr; // new instructional array
         //   Debug.info('playInstructionalArr called..');
