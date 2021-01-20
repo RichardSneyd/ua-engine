@@ -1,3 +1,6 @@
+import GOFactory from "../GameObjects/GOFactory";
+import Loader from "../Loader";
+import Loop from "../Loop";
 import SceneEvents from "./SceneEvents";
 
 /**
@@ -8,6 +11,7 @@ interface IScene {
   preload(): void;
   start(): void;
   shutdown(): void;
+  events: SceneEvents;
 }
 
 export default IScene;

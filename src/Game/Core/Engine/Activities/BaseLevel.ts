@@ -46,10 +46,6 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         return this._manager;
     }
 
-    get events() {
-        return this._events;
-    }
-
     /**@description the init method. Adds a callback to the update method for Loop.ts, adds listeners for shutdown and newRow,
      * loads the script, then calls preload
      * @param scriptName the name of the script to load, without the '.json' file extension
@@ -71,7 +67,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         // load activity script, then call manager.init to preprocess the activity script, then call preload
         this._loader.loadActScript(scriptName, (script: any, data: any) => {
             if (data == null || data == undefined) Debug.error('no script data returned: ', data);
-            this.manager.init(this, scriptName, script, parseCols, objectifyCols, processText);
+            this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
           //  this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
             if(script[0].hasOwnProperty('config') && script[0].config.includes('level_file:')) {
                 this._loader.loadLevelFile(scriptName, (script: any) => {

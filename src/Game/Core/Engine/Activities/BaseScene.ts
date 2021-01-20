@@ -24,6 +24,11 @@ abstract class BaseScene implements IScene {
         this._game = game;
     }
 
+    
+    get events() {
+        return this._events;
+    }
+
     init(...args: any): void {
         // do init stuff for all scenes
         Debug.info('init called');
