@@ -7,7 +7,6 @@ import SceneEvents from "./SceneEvents";
 interface ILevel extends IScene {
     onNewRow(): void;
     loadConfig(): void;
-    events: SceneEvents;
     _waitForFirstInput(): void;
 }
 

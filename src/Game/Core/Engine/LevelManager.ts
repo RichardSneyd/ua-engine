@@ -6,11 +6,13 @@ import InputManager from './InputManager';
 import Game from '../Game';
 import GOFactory from "./GameObjects/GOFactory";
 import ILevel from "./Activities/ILevel";
+import SceneEvents from "./Activities/SceneEvents";
 
 class LevelManager {
-    private _level: ILevel;
+  //  private _level: ILevel;
     private _audio: AudioManager;
     private _globalEvents: Events;
+  //  private _events: SceneEvents;
     private _script: ScriptHandler;
     private _utils: Utils;
     private _input: InputManager;
@@ -35,22 +37,27 @@ class LevelManager {
      * => {bgd: 'bgd_1', overlay: 'overlay_1'}
      * @param processText (optional) the column names to convert into lines and words of text. Mainly useful in passage (reading) types.
      */
-    init(level: ILevel, scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]) {
-        this._level = level;
+    init(scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]) {
+       // this._level = level;
+       // this._events = level.events;
         this._script.init(scriptName, scriptRaw, parseCols, objectifyCols, processText);
     }
 
     /**
      * @description the attached level
      */
-    get level(){
+  /*   get level(){
         return this._level;
-    }
+    } */
 
     get globalEvents(): Events {
         return this._globalEvents;
     }
-    
+
+  /*   get events(): SceneEvents {
+        return this._events;
+    } */
+
     /** 
      * @description Passes on the Level file content to the Level Manager.
      * @param content Level file content
