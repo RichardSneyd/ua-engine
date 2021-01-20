@@ -30,13 +30,9 @@ class ParentChildHandler implements IParentChild{
     }
 
     set parent(parent: IGameObject | null) {
-        if(parent !== null){
-            if(this._parent){this._parent.removeChild(this._go)}
+        if(parent !== null) {
+            parent.addChild(this._go);
             this._parent = parent;
-            if(this._parent){
-                if(!this._parent.hasChild(this._go)) this._parent.addChild(this._go); // addChild if it isn't already one
-            }
-          //  this._go.scaleHandler.onResize();
         }
     }
 
@@ -63,18 +59,12 @@ class ParentChildHandler implements IParentChild{
         if (!this.hasChild(object)) {
             if(object.parent && object.parent !== this._go) {
                 object.parent.removeChild(object);
-                object.parent = this._go;
-                this._children.push(object);
             }
+            this._children.push(object);
+            object.parent = this._go;
 
             // added this condition because text objects hold their Px data 1 level deeper, due to custom PxText class
-            let child;
-            if (object.data.data) {
-                child = object.data.data;
-            }
-            else {
-                child = object.data;
-            }
+            let child: IGameObject = object.data.data ? object.data.data : object.data;
 
             this.core.data.addChild(child);
             this._go.setOrigin(this._go.origin.x, this._go.origin.y); // needed to manually update origin calculation

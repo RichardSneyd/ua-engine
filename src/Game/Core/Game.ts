@@ -36,6 +36,7 @@ class Game {
   protected _tween: TweenManager;
   protected _debug: Debug;
   protected _editor: LevelEditor;
+  protected _scene: IScene;
 
   constructor(world: World, loop: Loop, loader: Loader,
     events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
@@ -63,6 +64,7 @@ class Game {
     this._activities = [];
     this._gameStarted = false;
     this._exposeGlobal();
+    Debug.exposeGlobal(this.startActivity.bind(this), 'goto'); //type goto('script_name') in console to jump to any activity
   }
 
   /**
@@ -81,6 +83,13 @@ class Game {
   */
   public get gameStarted(): boolean {
     return this._gameStarted;
+  }
+
+  /**
+   * @description returns a reference to the active scene/level. Useful, for example, to access the local SceneEvents emitter object from outside the MainLevel class
+   */
+  public get scene(): IScene {
+    return this._scene;
   }
 
   /**
@@ -121,12 +130,12 @@ class Game {
    * @param the activity type (object) to start. Takes the object itself, or it's name in the form of a string
    */
   public startActivity(scriptName: string, act: IActivity | string | null = null) {
-    if(act == null) act = this.getActivityByCode(this.extractCode(scriptName));
+    if (act == null) act = this.getActivityByCode(this.extractCode(scriptName));
 
     if (typeof act !== 'string' && act !== null) {
       this._startActivity(act, scriptName);
     }
-    else if(typeof act == 'string') {
+    else if (typeof act == 'string') {
       let name = act;
       let activity: IActivity | undefined;
       activity = this._getActByName(name);
@@ -145,12 +154,12 @@ class Game {
   public extractCode(scriptName: string): string {
     let scriptCodeParts = scriptName.split('_');
     let code = scriptCodeParts[scriptCodeParts.length - 1];
-    
+
     return code;
   }
 
-  public loadLevel(level: ILevel, scriptName: string) {
-    this.loadScene(level, scriptName)
+  public loadLevel(level: BaseLevel, scriptName: string) {
+    this.loadScene(level, scriptName);
   }
 
   private _startActivity(act: IActivity, scriptName: string) {
@@ -190,9 +199,10 @@ class Game {
    * @description load and start a level (via world.loadLevel). 
    * @param level the level to load
    */
-  public loadScene(level: IScene, scriptName: string) {
+  public loadScene(scene: IScene, scriptName: string) {
     this._events.emit('shutdown');
-    this._world.startScene(level, scriptName);
+    this._scene = scene;
+    this._world.startScene(scene, scriptName);
   }
 
   /**

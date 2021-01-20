@@ -1,19 +1,22 @@
 import ActScripts from './Utils/ActScripts';
 import Events from './Events';
 import Debug from './Debug';
+import SceneEvents from './Activities/SceneEvents';
+import ILevel from './Activities/ILevel';
 
 /**
  * @description An activity script preprocessor and wrapper. 
  */
 class ScriptHandler {
-    private _utils: ActScripts;
     private _events: Events;
+    private _utils: ActScripts;
     private _name: string;
     private _initialized: boolean;
     private _raw: any[];
     private _rows: any[];
     private _active: any;
     private _last: any;
+    private _levelFile: any;
 
     constructor(utils: ActScripts, events: Events) {
         this._utils = utils;
@@ -37,11 +40,27 @@ class ScriptHandler {
       * @param processText (optional) the column names to convert into lines and _words of text. Mainly useful in passage (reading) types.
       */
     init(name: string, raw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]) {
+       // this._level = level;
+      // this._events = level.events;
         this._name = name;
         this._raw = raw;
+        this._checkIfColumnNamesValid(parseCols.concat(objectifyCols)); // check if column names provided for processing are valid before proceeding
         this._convertRowsFromRaw(parseCols, objectifyCols, processText);
         this._parseNumbers(['id', 'page', 'auto_next', 'round']);
         this._initialized = true;
+    }
+
+    private _checkIfColumnNamesValid(columns: string[]){
+       let list = [];
+        let configRow = this._raw[0];
+        for(let x = 0; x < columns.length; x++){
+            if(!configRow.hasOwnProperty(columns[x])) list.push(columns[x]);
+        }
+        if(list.length > 0) Debug.error('these columns do not exist in script: ', list);
+    }
+
+    get levelFile(): any {
+        return this._levelFile;
     }
 
     get name(): string {
@@ -67,13 +86,17 @@ class ScriptHandler {
         return this._active;
     }
 
+    set levelFile(content: any) {
+        this._levelFile = content;
+    }
+
     /**
      * @description Set the active row. 
      */
     set active(row: any) {
         this._last = this.active;
         this._active = row;
-        this._events.fire('newRow'); // this event can be listened for anywhere you need to respond to a row change (goTo)
+        this._events.emit('newRow'); // this event can be listened for anywhere you need to respond to a row change (goTo)
     }
 
     /**
@@ -174,18 +197,12 @@ class ScriptHandler {
                         }
                     }
                 }
-                else {
-                    Debug.error('script has no column with name: ', parseCols[y]);
-                }
             }
             for (let z = 0; z < objectifyCols.length; z++) {
                 if (this._rows[x][objectifyCols[z]] !== undefined) {
                     if (this._rows[x][objectifyCols[z]] !== '') {
                         this._rows[x][objectifyCols[z]] = this._getKeyValPairs(this._raw[x][objectifyCols[z]]);
                     }
-                }
-                else {
-                    Debug.error('script has no column with name: ', objectifyCols[z]);
                 }
             }
 
@@ -207,9 +224,6 @@ class ScriptHandler {
                                 this._rows[x][processText[s]][u] = obj;
                             }
                         }
-                    }
-                    else {
-                        Debug.error('script has no column called: ', processText[s]);
                     }
                 }
             }
@@ -252,7 +266,7 @@ class ScriptHandler {
                 let col = cols[y];
                 let split = col.split('.');
                 if (split.length > 1) {
-                    let val = row[split[0]][split[1]];
+                    let val = ((row[split[0]])) ? row[split[0]][split[1]] : null;
                     if (!this.isFalsy(val)) {
                         files = files.concat(row[split[0]][split[1]]);
                     }

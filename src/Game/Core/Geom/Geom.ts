@@ -3,6 +3,7 @@ import Point from "./Point";
 import LineSegment from './LineSegment';
 import Rect from "./Rect";
 import Polygon from './Polygon';
+import IPoint from "./IPoint";
 
 class Geom {
     protected _circle: Circle;
@@ -31,8 +32,8 @@ class Geom {
         return this._rect.createNew(x, y, width, height)
     }
 
-    polygon(center: Point, points: Point[]): Polygon {
-        return this._polygon.createNew(center, points);
+    polygon(points: IPoint[], center: IPoint): Polygon {
+        return this._polygon.createNew(points, center);
     }
 }
 
