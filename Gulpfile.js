@@ -48,7 +48,9 @@ const config = {
             'GameConfig',
             'ScaleManager',
             'Game',
-            'TweenManager'
+            'TweenManager',
+            'LevelEditor',
+            'EditorScene'
         ],
         ignore: [
             'UAENGINE',

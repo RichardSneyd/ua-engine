@@ -22,10 +22,6 @@ class Resource {
     this._loaded = false;
     this._data = null;
   }
-
-  get type(): string {
-    return this._type;
-  }
   
   get data(): any {
     return this._data;
@@ -33,6 +29,10 @@ class Resource {
 
   get name(): string {
     return this._name;
+  }
+
+  get type(): string {
+    return this._type;
   }
 
   /**

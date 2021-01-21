@@ -10,6 +10,7 @@ import Geom from './Core/Geom/Geom';
 import Utils from './Core/Engine/Utils/Utils';
 import Transitions from './Core/Engine/Transitions';
 import TweenManager from './Core/Engine/TweenManager';
+import LevelEditor from './Core/Engine/LevelEditor/LevelEditor';
 import Debug from './Core/Engine/Debug';
 import Activities from './Core/Engine/Activities/Activities';
 
@@ -28,8 +29,9 @@ class UAE {
   public static geom: Geom;
   public static utils: Utils;
   public static tween: TweenManager;
-  public static transitions = Transitions;
+  public static editor: LevelEditor;
   public static debug: Debug;
+  public static transitions = Transitions;
   public static activities: Activities;
 }
 

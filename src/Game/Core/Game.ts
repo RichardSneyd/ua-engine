@@ -16,6 +16,7 @@ import ILevel from './Engine/Activities/ILevel';
 import Transitions from '../Core/Engine/Transitions';
 import TweenManager from './Engine/TweenManager';
 import Debug from './Engine/Debug';
+import LevelEditor from './Engine/LevelEditor/LevelEditor';
 import Activities from './Engine/Activities/Activities';
 
 /**
@@ -34,12 +35,13 @@ class Game {
   protected _transitions = Transitions;
   protected _tween: TweenManager;
   protected _debug: Debug;
+  protected _editor: LevelEditor;
   protected _scene: IScene;
 
   constructor(world: World, loop: Loop, loader: Loader,
     events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
     levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils, tween: TweenManager,
-    debug: Debug, activityClasses: Activities) {
+    debug: Debug, editor: LevelEditor, activityClasses: Activities) {
 
     this._world = world;
     this._events = events;
@@ -57,6 +59,7 @@ class Game {
     this._utils = utils;
     this._tween = tween;
     this._debug = debug;
+    this._editor = editor;
 
     this._activities = [];
     this._gameStarted = false;
@@ -155,13 +158,11 @@ class Game {
     return code;
   }
 
-  public loadLevel(level: BaseLevel, scriptName: string) {
+  public loadLevel(level: ILevel, scriptName: string) {
     this.loadScene(level, scriptName);
   }
 
   private _startActivity(act: IActivity, scriptName: string) {
-    // call shutdown, to give the current activity a chance to tidy up before the transition
-    // setTimeout(()=>{debugger}, 1000); 
     // start the new activity, with the assumption that the shutdown has been handled
     act.startActivity(scriptName);
   }
@@ -270,6 +271,7 @@ class Game {
     this._expose.add('transitions', this._transitions);
     this._expose.add('tween', this._tween);
     this._expose.add('debug', this._debug);
+    this._expose.add('editor', this._editor);
     this._expose.add('activities', this._activityClasses);
   }
 
