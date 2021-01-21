@@ -94,6 +94,8 @@ class EditorScene implements ILevel {
 
         /* Inspector UI */
         this._inspector.createInspector();
+
+
     }
 
     _createBackground() {
@@ -215,6 +217,8 @@ class EditorScene implements ILevel {
 
     }
 
+
+
     addDataDownloadLink(): void {
         let gameObjectData: any = {
             sprites: [],
@@ -223,11 +227,19 @@ class EditorScene implements ILevel {
         };
 
         this._imgGameObjects.forEach((obj) => {
-            gameObjectData.sprites.push({ name: obj.name, filename: obj.filename, x: obj.gameObj.x, y: obj.gameObj.y, originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, angle: obj.gameObj.angle, hitShape: "" });
+            gameObjectData.sprites.push({
+                name: obj.name, filename: obj.filename, x: obj.gameObj.x, y: obj.gameObj.y,
+                originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, scaleX: obj.gameObj.scaleHandler.x, scaleY: obj.gameObj.scaleHandler.y,
+                angle: obj.gameObj.angle, hitShape: ""
+            });
         });
 
         this._spineGameObjects.forEach((obj) => {
-            gameObjectData.spines.push({ name: obj.name, filename: obj.filename, x: obj.gameObj.x, y: obj.gameObj.y, originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, angle: obj.gameObj.angle, hitShape: "" });
+            gameObjectData.spines.push({
+                name: obj.name, filename: obj.filename, x: obj.gameObj.x, y: obj.gameObj.y,
+                originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, scaleX: obj.gameObj.scaleHandler.x, scaleY: obj.gameObj.scaleHandler.y,
+                angle: obj.gameObj.angle, hitShape: ""
+            });
         });
 
         this._exportData.downloadData = gameObjectData;
