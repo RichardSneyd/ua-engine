@@ -5,20 +5,22 @@ import ScriptHandler from "./ScriptHandler";
 import InputManager from './InputManager';
 import Game from '../Game';
 import GOFactory from "./GameObjects/GOFactory";
-
-
+import ILevel from "./Activities/ILevel";
+import SceneEvents from "./Activities/SceneEvents";
 
 class LevelManager {
+  //  private _level: ILevel;
     private _audio: AudioManager;
-    private _events: Events;
+    private _globalEvents: Events;
+  //  private _events: SceneEvents;
     private _script: ScriptHandler;
     private _utils: Utils;
     private _input: InputManager;
     private _goFactory: GOFactory;
 
-    constructor(audioManager: AudioManager, events: Events, script: ScriptHandler, utils: Utils, input: InputManager, goFactory: GOFactory) {
+    constructor(audioManager: AudioManager, script: ScriptHandler, utils: Utils, input: InputManager, goFactory: GOFactory, events: Events) {
         this._audio = audioManager;
-        this._events = events;
+        this._globalEvents = events;
         this._script = script;
         this._utils = utils;
         this._input = input;
@@ -36,11 +38,32 @@ class LevelManager {
      * @param processText (optional) the column names to convert into lines and words of text. Mainly useful in passage (reading) types.
      */
     init(scriptName: string, scriptRaw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]) {
+       // this._level = level;
+       // this._events = level.events;
         this._script.init(scriptName, scriptRaw, parseCols, objectifyCols, processText);
     }
 
-    get events(): Events {
+    /**
+     * @description the attached level
+     */
+  /*   get level(){
+        return this._level;
+    } */
+
+    get globalEvents(): Events {
+        return this._globalEvents;
+    }
+
+  /*   get events(): SceneEvents {
         return this._events;
+    } */
+
+    /** 
+     * @description Passes on the Level file content to the Level Manager.
+     * @param content Level file content
+     */
+    setLevelFile(content: any) {
+        this._script.levelFile = content;
     }
 
     get audio(): AudioManager {

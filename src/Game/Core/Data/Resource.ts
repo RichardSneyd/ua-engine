@@ -22,7 +22,7 @@ class Resource {
     this._loaded = false;
     this._data = null;
   }
-
+  
   get data(): any {
     return this._data;
   }

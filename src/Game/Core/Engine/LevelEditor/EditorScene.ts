@@ -11,7 +11,7 @@ import SpriteObject from "../GameObjects/SpriteObject";
 import SpineObject from "../GameObjects/SpineObject";
 import PxGame from "../../../Services/Pixi/PxGame";
 import Inspector from "./Inspector";
-import { throws } from "assert";
+import SceneEvents from "../Activities/SceneEvents";
 
 // build the visual of the editor here, like an activity level....
 
@@ -19,6 +19,7 @@ class EditorScene implements ILevel {
     private _loader: Loader;
     private _manager: LevelManager;
     private _goFactory: GOFactory;
+    private _events: SceneEvents;
     private _accordion: UIAccordion;
     private _exportData: ExportData;
     private _loop: Loop;
@@ -40,10 +41,11 @@ class EditorScene implements ILevel {
     protected selectedGOBorder: PIXI.Graphics;
 
     constructor(loader: Loader, manager: LevelManager, loop: Loop, goFactory: GOFactory,
-        pxGame: PxGame, accordion: UIAccordion, exportData: ExportData, inspector: Inspector) {
+        pxGame: PxGame, accordion: UIAccordion, exportData: ExportData, inspector: Inspector, events: SceneEvents) {
         this._loader = loader;
         this._manager = manager;
         this._goFactory = goFactory;
+        this._events = events;
         this._pxGame = pxGame;
         this._loop = loop;
         this._accordion = accordion;
@@ -57,10 +59,14 @@ class EditorScene implements ILevel {
         this._loop.addFunction(this.update, this);
         this._loop.start();
 
-        this._manager.events.on('gameobj_clicked', this._panelImageClicked, this);
-        this._manager.events.on('input_changed', this._inputChanged, this);
+        this._manager.globalEvents.on('gameobj_clicked', this._panelImageClicked, this);
+        this._manager.globalEvents.on('input_changed', this._inputChanged, this);
 
         this.preload();
+    }
+
+    get events(){
+        return this._events;
     }
 
     preload(): void {

@@ -21,7 +21,7 @@ abstract class BaseActivity implements IActivity {
     }
 
     get name(){
-        return this._code;
+        return this._name;
     }
 
     startActivity(scriptName: string, level: ILevel) {

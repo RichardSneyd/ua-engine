@@ -86,7 +86,9 @@ class ActScripts {
      * @param cellString the string that the cell was converted to from the Activity Script
      */
     public objectifyCell(cellString: string): object {
-        return this._text.propertiesFromString(cellString, '\n', ':', ',');
+        let obj = this._text.propertiesFromString(cellString, '\n', ':', ',');
+       
+        return obj;
     }
 
     /**

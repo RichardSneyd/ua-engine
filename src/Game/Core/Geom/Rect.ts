@@ -1,12 +1,12 @@
+import IPoint from './IPoint';
 import Point from './Point';
 
 class Rect {
     protected _pointFactory: Point;
-
-    _x: number;
-    _y: number;
-    _width: number;
-    _height: number;
+    protected _x: number;
+    protected _y: number;
+    protected _width: number;
+    protected _height: number;
 
     constructor(pointFactory: Point) {
         this._pointFactory = pointFactory;
@@ -48,48 +48,64 @@ class Rect {
         this._height = height;
     }
 
-    halfHeight(): number {
+    get halfHeight(): number {
         return this.height / 2;
     }
 
-    halfWidth(): number {
+    get halfWidth(): number {
         return this.width / 2;
     }
 
-    topLeft(): Point {
+    get topLeft(): Point {
         return this._pointFactory.createNew(this.x, this.y);
     }
 
-    topCenter() {
-        return this._pointFactory.createNew(this.x + this.halfWidth(), this.y);
+    get topCenter() {
+        return this._pointFactory.createNew(this.x + this.halfWidth, this.y);
     }
 
-    center() {
-        return this._pointFactory.createNew(this.x + this.halfWidth(), this.y + this.halfHeight());
+    get center() {
+        return this._pointFactory.createNew(this.x + this.halfWidth, this.y + this.halfHeight);
     }
 
-    topRight(): Point {
+    get topRight(): Point {
         return this._pointFactory.createNew(this.x + this.width, this.y);
     }
 
-    rightCenter(): Point {
-        return this._pointFactory.createNew(this.x + this.width, this.y + this.halfHeight());
+    get left(): number {
+        return this.x;
     }
 
-    bottomRight(): Point {
+    get right(): number {
+        return this.x + this.width;
+    }
+
+    get top(): number {
+        return this.y;
+    }
+
+    get bottom(): number {
+        return this.y + this.height;
+    }
+
+    get rightCenter(): Point {
+        return this._pointFactory.createNew(this.x + this.width, this.y + this.halfHeight);
+    }
+
+    get bottomRight(): Point {
         return this._pointFactory.createNew(this.x + this.width, this.y + this.height);
     }
 
-    bottomCenter(): Point {
-        return this._pointFactory.createNew(this.x + this.halfWidth(), this.y + this.height)
+    get bottomCenter(): Point {
+        return this._pointFactory.createNew(this.x + this.halfWidth, this.y + this.height)
     }
 
-    bottomLeft(): Point {
+    get bottomLeft(): Point {
         return this._pointFactory.createNew(this.x, this.y + this.height);
     }
 
-    leftCenter(): Point {
-        return this._pointFactory.createNew(this.x, this.y + this.halfHeight());
+    get leftCenter(): Point {
+        return this._pointFactory.createNew(this.x, this.y + this.halfHeight);
     }
 
     /**

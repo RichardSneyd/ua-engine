@@ -42,25 +42,7 @@ class ContainerObject extends BaseGameObject {
 
     public changeTexture(textureName: string) {
         this._core.changeTexture(textureName);
-    }
-
-    get left(): number {
-        return this.x;
-    }
-
-    get right(): number {
-        return this.x + this.containerWidth;
-    }
-
-    get top(): number {
-        return this.y;
-    }
-
-    get bottom(): number {
-        return this.y + this.containerHeight;
-    }
-
-    
+    }   
 }
 
 export default ContainerObject;

@@ -1,25 +1,41 @@
+import IPoint from './IPoint';
 import Point from './Point';
 
 class Polygon {
     protected _pointFactory: Point;
-    private _center: Point;
-    private _points: Point[];
+    private _center: IPoint;
+    private _points: IPoint[];
 
     // points relative to center
     constructor(pointFactory: Point){
         this._pointFactory = pointFactory;
+        this._center = this._pointFactory.createNew(0, 0);
     }
 
-    init(center: Point, points: Point[]){
-        this._center = center;
+    init(points: IPoint[], center?: IPoint): Polygon{
+        if(center) this._center = center;
         this._points = points;
+        return this;
+    }
+    
+    /**
+     * @description Creates a new Polygon object based on center Point and Point arrays
+     * @param center 
+     * @param points 
+     */
+    createNew(points: IPoint[], center?: IPoint): Polygon{      
+        return this.createEmpty().init(points, center);
     }
 
-    get center(): Point {
+    createEmpty(): Polygon{
+        return new Polygon(this._pointFactory);
+    }
+
+    get center(): IPoint {
         return this._center;
     }
 
-    set center(center: Point) {
+    set center(center: IPoint) {
         this._center = center;
     }
 
@@ -27,24 +43,14 @@ class Polygon {
         this.center = this._pointFactory.createNew(x, y);
     }
 
-    get points(): Point[]{
+    get points(): IPoint[]{
         return this._points;
     }
 
-    set points(points: Point[]) {
+    set points(points: IPoint[]) {
         this._points = points;
     }
 
-    /**
-     * @description Creates a new Polygon object based on center Point and Point arrays
-     * @param center 
-     * @param points 
-     */
-    createNew(center: Point, points: Point[]): Polygon{
-        let poly = new Polygon(this._pointFactory);
-        poly.init(center, points);
-        return poly;
-    }
 }
 
 export default Polygon;

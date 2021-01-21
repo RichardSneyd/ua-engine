@@ -1,27 +1,32 @@
 import Game from "../../Game";
 import Debug from "../Debug";
-import Events from "../Events";
 import GOFactory from "../GameObjects/GOFactory";
 import Loader from "../Loader";
 import Loop from "../Loop";
 import IScene from "./IScene";
+import SceneEvents from "./SceneEvents";
 
 /**
  * @description Extending the BaseScene class is the quickes, cleanest and easiest way of creaing a barebones Highwood scene
  */
 abstract class BaseScene implements IScene {
-    protected _events: Events;
+    protected _events: SceneEvents;
     protected _loop: Loop;
     protected _goFactory: GOFactory;
     protected _loader: Loader;
     protected _game: Game;
 
-    constructor(events: Events, loop: Loop, goFactory: GOFactory, loader: Loader, game: Game){
+    constructor(events: SceneEvents, loop: Loop, goFactory: GOFactory, loader: Loader, game: Game){
         this._events = events;
         this._loop = loop;
         this._goFactory = goFactory;
         this._loader = loader;
         this._game = game;
+    }
+
+    
+    get events() {
+        return this._events;
     }
 
     init(...args: any): void {
@@ -30,12 +35,12 @@ abstract class BaseScene implements IScene {
         Debug.info(this);
         this._loop.addFunction(this.update, this);
         this._loop.start();
-        this._events.on('shutdown', this.shutdown, this);
         // remember to call preload from the subclass
     }
 
     preload(): void {
         // override this to preload your assets, call super.preload at the end to start the promise
+        if(Debug.level == Debug.LEVELS.INFO) this._loader.addSnd(Debug.fillerAudio);
          this._loader.download().then(() => {
             this.start();
         });
@@ -60,7 +65,6 @@ abstract class BaseScene implements IScene {
      */
     shutdown(): void {
       this._loop.removeFunction(this.update, this);
-      this._events.off('shutdown', this.shutdown, this);
     }
 
 }

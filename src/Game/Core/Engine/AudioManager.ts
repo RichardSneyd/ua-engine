@@ -38,22 +38,37 @@ class AudioManager {
     public play(name: string, onStop: Function, loop: boolean = false) {
         let _name = name;
         let res = this._loader.getResource(name, true);
-        if (res !== null) {
+        if (res !== null && res.data._state == 'loaded') { // when the file doesn't exists, the res is still created in loader, but data._state says 'loading'
             this._hwPlayer.play(name, res, () => {
                 //   Debug.info('callback received for %s in AudioManager', _name)
                 this._playing.splice(this._playing.indexOf(name), 1);
                 onStop();
             }, loop);
-        } else Debug.error("no resource named ", name);
+        } else {
+            if(Debug.level == Debug.LEVELS.INFO) {
+                Debug.warn(name, ' audio file missing, using filler audio because in development mode. Fix later...');
+                this.play(Debug.fillerAudio, onStop, loop);
+            }
+            else {
+                if(res == null){
+                    Debug.error("no audio resource named ", name);
+                }
+                else {
+                    Debug.error(name, "res exists but does not appear to be loaded");
+                }
+            }
+        }
 
     }
 
     /**
      * @description For playing instructional audio arrays, one after the other. Mostly used for playing contents of audio_id in scripts
-     * @param arr the array of audio ids to play
+     * @param arr the array of audio ids to play. If string it'll be converted to array.
      * @param onDone Called when the entire array has been played.
      */
-    public playInstructionArr(arr: string[], onDone: Function) {
+    public playInstructionArr(arr: string[] | string, onDone: Function) {
+        if (typeof arr == 'string') arr = [arr];
+
         this._stopInstPlaying(); // clean the palette
         this._instArr = arr; // new instructional array
         //   Debug.info('playInstructionalArr called..');

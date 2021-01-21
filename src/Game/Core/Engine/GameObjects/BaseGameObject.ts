@@ -14,6 +14,8 @@ import TweenComponent from "./Components/TweenComponent";
 import Debug from "../Debug";
 import ExtractComponent from './Components/ExtractComponent';
 import { RenderTexture } from "pixi.js-legacy";
+import IHitShape from "./Components/HitShapes/IHitShape";
+import IPoint from "../../Geom/IPoint";
 
 /**
  * @description A sprite game object class. 
@@ -27,11 +29,13 @@ abstract class BaseGameObject implements IGameObject {
     protected _animationManager: IAnimationManager;
     protected _tweenComponent: TweenComponent;
     protected _extract: ExtractComponent;
+    protected _hitShape: IHitShape | null;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
         scaleHandler: ScaleHandler, tweenComponent: TweenComponent, extract: ExtractComponent) {
-        this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input;
-        this._scaleHandler = scaleHandler; this._tweenComponent = tweenComponent; this._extract = extract;
+        this._core = objectCore; this._pcHandler = pcHandler; this._screen = screen; this._input = input; this._extract = extract;
+        this._scaleHandler = scaleHandler; this._tweenComponent = tweenComponent;
+        this._hitShape = null;
     }
 
     public init(...args: any[]): void {
@@ -59,7 +63,19 @@ abstract class BaseGameObject implements IGameObject {
     }
 
     public changeTexture(textureName: string | PIXI.Texture) {
+        let scaleX = this.scaleHandler.x;
+        let scaleY = this.scaleHandler.y;
         this._core.changeTexture(textureName);
+        this.scaleHandler.x = scaleX;
+        this.scaleHandler.y = scaleY;
+    }
+
+    get hitShape(): IHitShape | null {
+        return this._hitShape;
+    }
+
+    set hitShape(val: IHitShape | null) {
+        this._hitShape = val;
     }
 
     get angle() {
@@ -158,20 +174,144 @@ abstract class BaseGameObject implements IGameObject {
         return this._core.origin;
     }
 
+    /**
+   * @description returns the leftmost point, which is 0 by default for a container. If there are children, the left value of the furthest left child will be returned.
+   */
     get left(): number {
-        return this._core.left;
+        let leftest = this._core.left > this.globalChildrenLeft ? this.globalChildrenLeft : this._core.left;
+        return leftest;
     }
 
     get right(): number {
-        return this._core.right;
+        let rightest = this._core.right < this.globalChildrenRight ? this.globalChildrenRight : this._core.right;
+        return rightest;
     }
 
     get top(): number {
-        return this._core.top;
+        let heighest = this._core.top > this.globalChildrenTop ? this.globalChildrenTop : this._core.top;
+        return heighest;
     }
 
     get bottom(): number {
+        let bottom = this._core.bottom < this.globalChildrenBottom ? this.globalChildrenBottom : this._core.bottom;
+        return bottom;
+    }
+
+    set left(left: number) {
+        let diff = left - this.left;
+        this.x += diff;
+    }
+
+    set right(right: number) {
+        let diff = right - this.right;
+        this.x += diff;
+    }
+
+    set top(top: number) {
+        let diff = top - this.top;
+        this.y += diff;
+    }
+
+    set bottom(bottom: number) {
+        let diff = bottom - this.bottom;
+        this.y += diff;
+    }
+
+    /**
+     * @description the leftmost position, disregarding the positions of any children gameObjects
+     */
+    get childlessLeft(): number {
+        return this._core.left;
+    }
+
+    /**
+     * @description the rightmost position, disregarding the positions of any children gameObjects
+     */
+    get childlessRight(): number {
+        return this._core.right;
+    }
+
+    /**
+     * @description the heighest position, disregarding the positions of any children gameObjects
+     */
+    get childlessTop(): number {
+        return this._core.top;
+    }
+
+    /**
+     * @description the lowest position, disregarding the positions of any children gameObjects
+     */
+    get childlessBottom(): number {
         return this._core.bottom;
+    }
+
+    /**
+     * @description the greatest left value of any child object
+     */
+    get childrenLeft(): number {
+        return this._childrenLeft();
+    }
+
+    /**
+    * @description the greatest right value of any child object
+    */
+    get childrenRight(): number {
+        return this._childrenRight();
+    }
+
+    /**
+   * @description the greatest top value of any child object
+   */
+    get childrenTop(): number {
+        return this._childrenTop();
+    }
+
+    /**
+      * @description the greatest bottom value of any child object
+      */
+    get childrenBottom(): number {
+        return this._childrenBottom();
+    }
+
+    /**
+     * @description the local center of all children
+     */
+    get childrenCenter(): IPoint {
+        return { x: this._childrenWidth() / 2, y: this._childrenHeight() / 2 }
+    }
+
+    /**
+     * @description the global center of all children
+     */
+    get globalChildrenCenter(): IPoint {
+        let localCenter = this.childrenCenter;
+        return { x: this.x + localCenter.x, y: this.y + localCenter.y }
+    }
+
+    /**
+    * @description the greatest left value of any child object, in global space   
+    */
+    get globalChildrenLeft(): number {
+        return this.x + this.childrenLeft;
+    }
+    /**
+      * @description the greatest right value of any child object, in global space
+      */
+    get globalChildrenRight(): number {
+        return this.x + this.childrenRight;
+    }
+
+    /**
+  * @description the greatest top value of any child object, in global space
+  */
+    get globalChildrenTop(): number {
+        return this.y + this.childrenTop;
+    }
+    /**
+      * @description the greatest bottom value of any child object, in global space
+      */
+    get globalChildrenBottom(): number {
+        return this.y + this.childrenBottom;
     }
 
     /**
@@ -179,6 +319,13 @@ abstract class BaseGameObject implements IGameObject {
   */
     get bounds(): { x: number, y: number, width: number, height: number } {
         return { x: this.left, y: this.top, width: this.width, height: this.height }
+    }
+
+    /**
+  * @description returns the calculated 'bounds' of the GameObject as an object literal, in game-units
+  */
+    get childlessBounds(): { x: number, y: number, width: number, height: number } {
+        return { x: this.childlessLeft, y: this.childlessTop, width: this.childlessWidth, height: this.childlessHeight }
     }
 
     get moveBy(): (x: number, y: number) => void {
@@ -206,17 +353,41 @@ abstract class BaseGameObject implements IGameObject {
     }
 
     get width() {
+        let width = this._childrenWidth() > this._core.width ? this._childrenWidth() : this._core.width;
+        return width;
+    }
+
+    /**
+     * @description the width, without regard for child objects
+     */
+    get childlessWidth() {
         return this._core.width;
     }
 
+    /**
+     * @description for resizing sprite-based objects graphically. Has no effect on the calculated height of an object being used as a container, which is based on the positions 
+     * of the children
+     */
     set width(width: number) {
         this._core.width = width;
     }
 
     get height() {
+        let height = this._childrenHeight() > this._core.height ? this._childrenHeight() : this._core.height;
+        return height;
+    }
+
+    /**
+     * @description the height, without regard for child objects
+     */
+    get childlessHeight() {
         return this._core.height;
     }
 
+    /**
+     * @description for resizing sprite-based objects graphically. Has no effect on the calculated width of an object being used as a container, which is based on the positions 
+     * of the children
+     */
     set height(height: number) {
         this._core.height = height;
     }
@@ -225,14 +396,14 @@ abstract class BaseGameObject implements IGameObject {
      * @description calculates the width of the game object as a 'container', meaning based on the positions of its children
      */
     get containerWidth(): number {
-        return this._containerWidth();
+        return this._childrenWidth();
     }
 
     /**
     * @description calculates the height of the game object as a 'container', meaning based on the positions of its children
     */
     get containerHeight(): number {
-        return this._containerHeight();
+        return this._childrenHeight();
     }
 
     /**
@@ -279,26 +450,62 @@ abstract class BaseGameObject implements IGameObject {
         if (this._animationManager) this._animationManager.update();
     }
 
-    protected _containerWidth(): number {
-        let right = 0;
+    protected _childrenWidth(): number {
+        return this._childrenRight() - this._childrenLeft();
+    }
+
+    protected _childrenHeight(): number {
+        return this._childrenBottom() - this._childrenTop();
+    }
+
+    protected _childrenBottom(): number {
+        // Debug.info('in BaseGameObject._chilrenBottom')
+        let bottom = 0;
+        let children = this.pcHandler._children;
+        for (let c = 0; c < children.length; c++) {
+            //    Debug.info('looping child ', c);
+            let child = children[c];
+            if (c == 0) bottom = child.bottom;
+            if (child.bottom > bottom) bottom = child.bottom;
+        }
+
+        return bottom;
+    }
+
+    protected _childrenTop() {
+        let top = 0;
         let children = this.pcHandler.children;
         for (let c = 0; c < children.length; c++) {
             let child = children[c];
+            if (c == 0) top = child.top;
+            if (child.top < top) top = child.top;
+        }
+
+        return top;
+    }
+
+    protected _childrenRight() {
+        let right = 0;
+        let children = this._pcHandler.children;
+        for (let c = 0; c < children.length; c++) {
+            let child = children[c];
+            if (c == 0) right = child.right;
             if (child.right > right) right = child.right;
         }
 
         return right;
     }
 
-    protected _containerHeight(): number {
-        let bottom = 0;
-        let children = this.pcHandler.children;
+    protected _childrenLeft() {
+        let left = 0;
+        let children = this._pcHandler.children;
         for (let c = 0; c < children.length; c++) {
             let child = children[c];
-            if (child.bottom > bottom) bottom = child.bottom;
+            if (c == 0) left = child.left;
+            if (child.left < left) left = child.left;
         }
 
-        return bottom;
+        return left;
     }
 }
 
