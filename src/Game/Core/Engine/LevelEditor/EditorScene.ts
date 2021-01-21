@@ -95,7 +95,8 @@ class EditorScene implements ILevel {
         /* Inspector UI */
         this._inspector.createInspector();
 
-
+        /* Enable arrow keys */
+        this._addKeyboardInput();
     }
 
     _createBackground() {
@@ -217,7 +218,37 @@ class EditorScene implements ILevel {
 
     }
 
-
+    private _addKeyboardInput() {
+        window.addEventListener(
+            "keydown", (input) => {
+                let moveUnit: number = 5;
+                Debug.info('key: ', input.key);
+                if (input.key === "ArrowUp") {
+                    this.selectedGO.y -= moveUnit;
+                    this._inspector.setInputValue('y', this.selectedGO.y);
+                }
+                else if (input.key === "ArrowDown") {
+                    this.selectedGO.y += moveUnit;
+                    this._inspector.setInputValue('y', this.selectedGO.y);
+                }
+                else if (input.key === "ArrowLeft") {
+                    this.selectedGO.x -= moveUnit;
+                    this._inspector.setInputValue('x', this.selectedGO.x);
+                }
+                else if (input.key === "ArrowRight") {
+                    this.selectedGO.x += moveUnit;
+                    this._inspector.setInputValue('x', this.selectedGO.x);
+                }
+            }, false
+        );
+        window.addEventListener(
+            "keyup", (input) => {
+                /*  if (input.key === "Delete") {
+                     this.selectedGO = null;
+                     // TODO: remove specific selected gameobject from spine or image list for the download data
+                 } */
+            }, false);
+    }
 
     addDataDownloadLink(): void {
         let gameObjectData: any = {
