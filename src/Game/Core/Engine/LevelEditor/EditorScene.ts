@@ -65,7 +65,7 @@ class EditorScene implements ILevel {
         this.preload();
     }
 
-    get events(){
+    get events() {
         return this._events;
     }
 
@@ -163,10 +163,8 @@ class EditorScene implements ILevel {
             let prefix = `${name}_`;
             let uniqName = _tryName(this._spineGameObjects, prefix, 0);
             gameobj.uniqName = uniqName;
-
-
-            gameobj.animations.play("idle", true);
-
+            let defaultAnimState = gameobj.animations.animationNames[0];
+            gameobj.animations.play(`${defaultAnimState}`, true);
 
             this._spineGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
         }
