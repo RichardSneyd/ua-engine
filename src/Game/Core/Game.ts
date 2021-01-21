@@ -158,7 +158,7 @@ class Game {
     return code;
   }
 
-  public loadLevel(level: BaseLevel, scriptName: string) {
+  public loadLevel(level: ILevel, scriptName: string) {
     this.loadScene(level, scriptName);
   }
 
