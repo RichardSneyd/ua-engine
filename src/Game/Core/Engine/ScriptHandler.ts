@@ -59,6 +59,20 @@ class ScriptHandler {
         if(list.length > 0) Debug.error('these columns do not exist in script: ', list);
     }
 
+    /**
+     * @description Searches for an object on the Level File
+     * @param rootObject Type of object being looked for. 'sprites', 'spines', 'dropzones', etc.
+     * @param value String value the object must have for the given key
+     * @param key Property that identifies the object, 'name' by default
+     */
+    getLevelFileObject(rootObject: string, value: string, key: string = 'name'): any {
+        for(let object of this.levelFile[rootObject]) {
+            if(object[key] == value) {
+                return object;
+            }
+        }
+    }
+
     get levelFile(): any {
         return this._levelFile;
     }

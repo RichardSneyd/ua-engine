@@ -180,6 +180,20 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     }
 
     /**
+     * @description Shorthand to get the script active row, possibly undefined
+     */
+    get activeRow(): any {
+        return this.manager.script.active;
+    }
+
+    /**
+     * @description Shorthand to get the first row of the activity script, always the first one.
+     */
+    get configRow(): any {
+        return this.manager.script.rows[0];
+    }
+
+    /**
      * @description Sets the readiness of the level. Overwrite this setter to also set this value to other interactable objects in cascade.
      * @param ready If the Level is ready
      */
