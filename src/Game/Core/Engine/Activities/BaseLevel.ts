@@ -36,7 +36,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         super(events, loop, goFactory, loader, game);
         this._manager = manager;
 
-        Debug.exposeGlobal(this, 'level'); // expose all levels globally as 'level' for debugging convenience
+      //  Debug.exposeGlobal(this, 'level'); // expose all levels globally as 'level' for debugging convenience
     }
 
     /**
@@ -101,13 +101,12 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         else {
             Debug.error('no bgd property in config cell of first row');
         }
-
-        if (configRow.config.hasOwnProperty('char')) {
+     
+        if (configRow.config.hasOwnProperty('char') && !this._manager.script.isFalsy(configRow.config.char)) {
             this._character = this._goFactory.spine(20, this._game.height() - 150, configRow.config.char, this._foreground); // reposition _character as needed when extending
         }
 
         this._waitForFirstInput();
-        Debug.exposeGlobal(this, 'level'); // for easy testing of the active level in the console during development
     }
 
     /**
