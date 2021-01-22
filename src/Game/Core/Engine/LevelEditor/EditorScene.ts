@@ -140,13 +140,13 @@ class EditorScene implements ILevel {
         let _tryName = (arr: any[], prefix: string, index: number): string => {
             let unique: boolean = true;
             for (let t = 0; t < arr.length; t++) {
-                if (arr[t].name == prefix + index) {
+                if (arr[t].name == `${prefix}_${index}`) {
                     unique = false;
                     break;
                 }
             }
             if (!unique) return _tryName(arr, prefix, index + 1);
-            return (prefix + index);
+            return (`${prefix}_${index}`);
         }
 
         let gameobj: any;
@@ -154,7 +154,7 @@ class EditorScene implements ILevel {
             gameobj = this._goFactory.sprite(500, 500, src);
             gameobj.setOrigin(.5);
             gameobj.objType = `${type}`;
-            let prefix = `${name}_`;
+            let prefix = `${name}`;
             let uniqName = _tryName(this._imgGameObjects, prefix, 0);
             gameobj.uniqName = uniqName;
 
@@ -163,7 +163,7 @@ class EditorScene implements ILevel {
         else if (type === "spine") {
             gameobj = this._goFactory.spine(500, 500, name);
             gameobj.objType = `${type}`;
-            let prefix = `${name}_`;
+            let prefix = `${name}`;
             let uniqName = _tryName(this._spineGameObjects, prefix, 0);
             gameobj.uniqName = uniqName;
             let defaultAnimState = gameobj.animations.animationNames[0];
@@ -223,30 +223,35 @@ class EditorScene implements ILevel {
             "keydown", (input) => {
                 let moveUnit: number = 5;
                 Debug.info('key: ', input.key);
-                if (input.key === "ArrowUp") {
-                    this.selectedGO.y -= moveUnit;
-                    this._inspector.setInputValue('y', this.selectedGO.y);
-                }
-                else if (input.key === "ArrowDown") {
-                    this.selectedGO.y += moveUnit;
-                    this._inspector.setInputValue('y', this.selectedGO.y);
-                }
-                else if (input.key === "ArrowLeft") {
-                    this.selectedGO.x -= moveUnit;
-                    this._inspector.setInputValue('x', this.selectedGO.x);
-                }
-                else if (input.key === "ArrowRight") {
-                    this.selectedGO.x += moveUnit;
-                    this._inspector.setInputValue('x', this.selectedGO.x);
+                if (this.selectedGO !== null || this.selectedGO !== undefined) {
+                    if (input.key === "ArrowUp") {
+                        this.selectedGO.y -= moveUnit;
+                        this._inspector.setInputValue('y', this.selectedGO.y);
+                    }
+                    else if (input.key === "ArrowDown") {
+                        this.selectedGO.y += moveUnit;
+                        this._inspector.setInputValue('y', this.selectedGO.y);
+                    }
+                    else if (input.key === "ArrowLeft") {
+                        this.selectedGO.x -= moveUnit;
+                        this._inspector.setInputValue('x', this.selectedGO.x);
+                    }
+                    else if (input.key === "ArrowRight") {
+                        this.selectedGO.x += moveUnit;
+                        this._inspector.setInputValue('x', this.selectedGO.x);
+                    }
                 }
             }, false
         );
         window.addEventListener(
             "keyup", (input) => {
-                /*  if (input.key === "Delete") {
-                     this.selectedGO = null;
-                     // TODO: remove specific selected gameobject from spine or image list for the download data
-                 } */
+                if (input.key === "Delete") {
+                    this.selectedGO.visible = false;
+                    this.selectedGO.alpha = 0;
+                    this.selectedGOBorder.alpha = 0;
+                    this.selectedGOBorder.visible = false;
+                    // TODO: remove specific selected gameobject from spine or image list for the download data
+                }
             }, false);
     }
 
@@ -292,6 +297,10 @@ class EditorScene implements ILevel {
                 1
             );
             this.selectedGOBorder.pivot.set(this.selectedGO.x + (this.selectedGO.width / 2), this.selectedGO.y + (this.selectedGO.height / 2));
+        }
+        else {
+            this.selectedGOBorder.alpha = 1;
+            this.selectedGOBorder.visible = true;
         }
     }
 
@@ -348,7 +357,7 @@ class EditorScene implements ILevel {
             this._inspector.setInputValue('angle', this.selectedGO.angle);
         }
 
-        if (this.selectedGO) {
+        if (this.selectedGO && this.selectedGO.alpha !== 0) {
             this.selectedGOBorder.x = this.selectedGO.x;
             this.selectedGOBorder.y = this.selectedGO.y;
 
@@ -360,7 +369,6 @@ class EditorScene implements ILevel {
             this.selectedGO.uniqName = this._inspector.getInputValue('name');
 
         }
-
     }
 
     shutdown(): void {
