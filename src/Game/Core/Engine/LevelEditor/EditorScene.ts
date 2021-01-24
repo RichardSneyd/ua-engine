@@ -138,33 +138,51 @@ class EditorScene implements ILevel {
 
     _panelImageClicked({ src, type, name }: { src: string, type: string, name: string }) {
         let _tryName = (arr: any[], prefix: string, index: number): string => {
-            let unique: boolean = true;
-            for (let t = 0; t < arr.length; t++) {
-                if (arr[t].name == `${prefix}_${index}`) {
-                    unique = false;
-                    break;
+            if (arr.length > 0) {
+                let count: number = 0;
+                arr.forEach((val) => {
+                    if (val.name == prefix) {
+                        ++count;
+                    }
+                })
+
+                let unique: boolean = true;
+                for (let t = 0; t < arr.length; t++) {
+
+                    if (count === 0) {
+                        return prefix;
+                    }
+                    else {
+                        if (arr[t].name == `${prefix}_${index}`) {
+                            unique = false;
+                            break;
+                        }
+                    }
                 }
+                if (!unique) return _tryName(arr, prefix, index + 1);
+
+                return (`${prefix}_${index}`);
             }
-            if (!unique) return _tryName(arr, prefix, index + 1);
-            return (`${prefix}_${index}`);
-        }
+            else {
+                return `${prefix}`;
+            }
+        };
 
         let gameobj: any;
         if (type === "image") {
             gameobj = this._goFactory.sprite(500, 500, src);
             gameobj.setOrigin(.5);
             gameobj.objType = `${type}`;
-            let prefix = `${name}`;
-            let uniqName = _tryName(this._imgGameObjects, prefix, 0);
+            let uniqName = _tryName(this._imgGameObjects, `${name}`, 2);
             gameobj.uniqName = uniqName;
 
             this._imgGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
+
         }
         else if (type === "spine") {
             gameobj = this._goFactory.spine(500, 500, name);
             gameobj.objType = `${type}`;
-            let prefix = `${name}`;
-            let uniqName = _tryName(this._spineGameObjects, prefix, 0);
+            let uniqName = _tryName(this._spineGameObjects, `${name}`, 2);
             gameobj.uniqName = uniqName;
             let defaultAnimState = gameobj.animations.animationNames[0];
             gameobj.animations.play(`${defaultAnimState}`, true);
