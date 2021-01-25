@@ -19,6 +19,10 @@ class ExportData {
         this._downloadData = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obj));
     }
 
+    get downloadBtn(): HTMLAnchorElement {
+        return this._downloadBtn;
+    }
+
     public createDownloadButton(): void {
         this._downloadBtn = document.createElement("a");
         this._downloadBtn.innerHTML = 'Export Data';
@@ -29,7 +33,7 @@ class ExportData {
 
     public exportJSONData(): void {
         this._downloadBtn.setAttribute("href", `data: ${this._downloadData}`);
-        this._downloadBtn.setAttribute("download", "data.json");
+        this._downloadBtn.setAttribute("download", "level_data.json");
     }
 }
 
