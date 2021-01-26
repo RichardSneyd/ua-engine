@@ -290,7 +290,7 @@ class Loader {
       // Debug.info(this._resList);
       return this;
     }
-    Debug.info('did not add %s, as it already exists', name);
+    Debug.warn('did not add %s, as it already exists', name);
     return this;
   }
 
@@ -338,7 +338,7 @@ class Loader {
     if (this._downloadComplete) {
       this._newResList = [];
       resolve({ status: true });
-      Debug.info('%cdownload complete, promise RESOLVED', Debug.STYLES.GOOD);
+      Debug.info('%cdownload complete, promise RESOLVED', Debug.STYLES.GOOD)
     } else {
       setTimeout(() => {
         this._sendAllDone(resolve, reject);

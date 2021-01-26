@@ -16,7 +16,7 @@ abstract class BaseScene implements IScene {
     protected _loader: Loader;
     protected _game: Game;
 
-    constructor(events: SceneEvents, loop: Loop, goFactory: GOFactory, loader: Loader, game: Game){
+    constructor(events: SceneEvents, loop: Loop, goFactory: GOFactory, loader: Loader, game: Game) {
         this._events = events;
         this._loop = loop;
         this._goFactory = goFactory;
@@ -24,7 +24,7 @@ abstract class BaseScene implements IScene {
         this._game = game;
     }
 
-    
+
     get events() {
         return this._events;
     }
@@ -40,8 +40,8 @@ abstract class BaseScene implements IScene {
 
     preload(): void {
         // override this to preload your assets, call super.preload at the end to start the promise
-        if(Debug.level == Debug.LEVELS.INFO) this._loader.addSnd(Debug.fillerAudio);
-         this._loader.download().then(() => {
+        if (Debug.level == Debug.LEVELS.INFO) this._loader.addSnd(Debug.fillerAudio);
+        this._loader.download().then(() => {
             this.start();
         });
     }
@@ -49,7 +49,7 @@ abstract class BaseScene implements IScene {
     /**
      * @description used to build the scene. override me.
      */
-    start(){
+    start() {
         // build the scene
     }
 
@@ -64,7 +64,7 @@ abstract class BaseScene implements IScene {
      * @description shutdown the level before loading another one. By default, it removes the UAE.Loop listener, and turns of fthe shutdown listener
      */
     shutdown(): void {
-      this._loop.removeFunction(this.update, this);
+        this._loop.removeFunction(this.update, this);
     }
 
 }
