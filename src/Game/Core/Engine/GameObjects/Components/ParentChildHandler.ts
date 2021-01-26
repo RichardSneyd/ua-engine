@@ -70,7 +70,7 @@ class ParentChildHandler implements IParentChild{
             this._go.setOrigin(this._go.origin.x, this._go.origin.y); // needed to manually update origin calculation
             return true;
         }
-        Debug.info('that is already a child of this object, skipping adding...');
+        Debug.info('object', object, ' is already a child of ', this._go,' skipping...');
         return false;
     }
 

@@ -445,7 +445,7 @@ class Loader {
       //  Debug.info('image loaded and returned: ', data, 'attemping injection....');
       if (data.name.indexOf('.json_image') !== -1) {
         // ignore irrelavent returns from PxLoader
-        Debug.warn('will not inject a .json_image, no resource in resList for that, is internal PIXI Loader child image resource mapped to atlas json resource');
+        Debug.info('will not inject a .json_image, no resource in resList for that, is internal PIXI Loader child image resource mapped to atlas json resource');
       }
       else {
         this._downloadedResource(data.url, data.texture);
@@ -471,11 +471,11 @@ class Loader {
     // Debug.info(url + ': ', data);
     // don't load json_image resources, which PIXI uses internally as child-resources of the json resources (atlas, spine etc)
     if (data.hasOwnProperty('name') && data.name.indexOf('.json_image') !== -1) {
-      Debug.warn('will not inject a json_image resource, used by PIXI Loader internally as children of json resources like atlases');
+      Debug.info('will not inject a json_image resource, used by PIXI Loader internally as children of json resources like atlases');
       return;
     }
     else if (data.hasOwnProperty('name') && data.name.indexOf('.json_atlas') !== -1) {
-      Debug.warn('will not inject a json_atlas resource, used by PIXI Loader internally as children of json resources like atlases');
+      Debug.info('will not inject a json_atlas resource, used by PIXI Loader internally as children of json resources like atlases');
       return;
     }
     let res = this._getResource(url);
@@ -485,7 +485,7 @@ class Loader {
       res.data = data;
     } else {
       //   let res = this._createResource()
-      Debug.warn("Injection failed: no resource exists in Loader.resList with name %s & url %s:", data.name, url, data);
+      Debug.error("Injection failed: no resource exists in Loader.resList with name %s & url %s:", data.name, url, data);
     }
 
   }
