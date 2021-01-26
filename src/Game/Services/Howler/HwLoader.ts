@@ -41,7 +41,7 @@ class HwLoader {
                   if(howl !== null){
                       this._howls.push(howl);
                       onProgress.bind(context)({data: howl, url: url});
-                      return `%c${url} loaded asycronously`;
+                      return `${url} loaded asycronously`;
                   }
               }
               else {

@@ -23,7 +23,7 @@ class SndLoader implements ISndLoader {
             let result = this._loader.loadSound(url, extensions, onProgress, onDone, context);
             resolve(result);
         }).then((value: any) => {
-            Debug.info(value, Debug.STYLES.GOOD);
+            Debug.info(`%c${value}`, Debug.STYLES.GOOD);
         }
         );
     }

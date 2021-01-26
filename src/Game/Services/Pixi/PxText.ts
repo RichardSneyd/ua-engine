@@ -223,7 +223,7 @@ class PxText {
       
     }
     if(this._rawText !== undefined && this._rawText !== null){
-    //  this._rawText.destroy();
+      this._rawText.destroy();
     }
   }
 }
