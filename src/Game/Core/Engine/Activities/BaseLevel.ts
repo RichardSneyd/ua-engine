@@ -72,9 +72,9 @@ abstract class BaseLevel extends BaseScene implements ILevel {
             if(script[0].hasOwnProperty('config') && script[0].config.includes('level_file:')) {
                 this._loader.loadLevelFile(scriptName, (script: any) => {
                     this.manager.setLevelFile(script);
+                    this.preload();
                 });
             }
-            this.preload();
         });
     }
 
@@ -127,9 +127,8 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      */
     public updateCharacterState() {
         if (this._character) {
-            let activeRow = this.manager.script.active;
-            let loop = (activeRow.char_loop == 'y');
-            let animation = activeRow.char;
+            let loop = (this.activeRow.char_loop == 'y');
+            let animation = this.activeRow.char;
             if (animation && animation !== '') this._character.animations.play(animation, loop);
         }
     }
@@ -140,8 +139,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * from row to row, gives control to the IDs). Called in BaseLevel.onNewRow by defeault. Override onNewRow to change this.
      */
     loadConfig(): void {
-        let activeRow = this.manager.script.active;
-        if (activeRow.hasOwnProperty('config') && activeRow.config.hasOwnProperty('bgd') && activeRow.config.bgd !== '') {
+        if (this.activeRow.hasOwnProperty('config') && this.activeRow.config.hasOwnProperty('bgd') && this.activeRow.config.bgd !== '') {
             this._bgd.changeTexture(this.manager.script.active.config.bgd);
         }
     }
