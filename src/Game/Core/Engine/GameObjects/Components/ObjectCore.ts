@@ -13,7 +13,7 @@ import ContainerObject from '../ContainerObject';
 import Mask from '../Mask';
 import SpineObject from '../SpineObject';
 import Loop from '../../Loop';
-import { RenderTexture } from 'pixi.js-legacy';
+import { Container, RenderTexture } from 'pixi.js-legacy';
 import Debug from '../../Debug';
 
 /**
@@ -75,7 +75,7 @@ class ObjectCore {
     this._updateSize();
     this._setListners();
     this._loop.addFunction(this.update, this);
-    this._events.on('shutdown', this._go.destroy, this._go);
+    this._events.on('shutdown', this._go.destroy, this._go); // every object has it's own 'shutdown' listener
   }
 
   get objectHandler() {
@@ -250,8 +250,8 @@ class ObjectCore {
     this._loop.removeFunction(this.update, this);
 
     this._go.scaleHandler.shutdown.bind(this._go.scaleHandler)();
-    this._events.off('shutdown', this._go.destroy, this._go);
-    this._objectHandler.destroy(this._data);
+    this._events.off('shutdown', this._go.destroy, this._go); 
+    if(this._data !== undefined && this._data !== null) this._objectHandler.destroy(this._data);
   }
 
   /**

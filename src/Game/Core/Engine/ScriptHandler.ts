@@ -1,8 +1,8 @@
 import ActScripts from './Utils/ActScripts';
 import Events from './Events';
 import Debug from './Debug';
-import SceneEvents from './Activities/SceneEvents';
-import ILevel from './Activities/ILevel';
+//import SceneEvents from './Activities/SceneEvents';
+//import ILevel from './Activities/ILevel';
 
 /**
  * @description An activity script preprocessor and wrapper. 
@@ -48,6 +48,7 @@ class ScriptHandler {
         this._convertRowsFromRaw(parseCols, objectifyCols, processText);
         this._parseNumbers(['id', 'page', 'auto_next', 'round']);
         this._initialized = true;
+        this._active = this._rows[0];
     }
 
     private _checkIfColumnNamesValid(columns: string[]){

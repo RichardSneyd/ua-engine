@@ -100,7 +100,7 @@ class Loader {
     this._downloadComplete = false;
     this._startedLoading = false;
     this._newResList = [];
-    Debug.info('%cLoader initialized', 'color: green;');
+    Debug.info('%cLoader initialized', Debug.STYLES.GOOD);
   }
 
   /**
@@ -181,9 +181,7 @@ class Loader {
       }
     }
 
-
-
-    Debug.warn('did not add %s, as it already exists', name);
+    Debug.info('did not add %s, as it already exists', name);
     return this;
   }
 
@@ -292,7 +290,7 @@ class Loader {
       // Debug.info(this._resList);
       return this;
     }
-    Debug.warn('did not add %s, as it already exists', name);
+    Debug.info('did not add %s, as it already exists', name);
     return this;
   }
 
@@ -317,7 +315,7 @@ class Loader {
       let _imgsDone: boolean = false, _sndsDone: boolean = false;
 
       // if no new resource being loaded for this activity, just resolve, as there is nothing to wait for
-      Debug.info('%ctotal new resources: ' + this._newResList.length, 'color: green;');
+      Debug.info('%ctotal new resources: ' + this._newResList.length, Debug.STYLES.GOOD);
       //  Debug.info(this._newResList);
       if (this._newResList.length == 0) {
         resolve('loading completed');
@@ -340,7 +338,7 @@ class Loader {
     if (this._downloadComplete) {
       this._newResList = [];
       resolve({ status: true });
-      Debug.info('%cdownload complete, promise RESOLVED', 'color: green;')
+      Debug.info('%cdownload complete, promise RESOLVED', Debug.STYLES.GOOD);
     } else {
       setTimeout(() => {
         this._sendAllDone(resolve, reject);
@@ -392,7 +390,7 @@ class Loader {
       }
       this._downloadComplete = isLoaded;
       if (this._downloadComplete) {
-        Debug.info('%cdownload complete!', 'color: green');
+        Debug.info('%cdownload complete!', Debug.STYLES.GOOD);
         this._startedLoading = false;
       }
     }

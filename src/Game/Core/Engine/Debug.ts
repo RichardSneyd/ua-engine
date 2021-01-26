@@ -1,3 +1,4 @@
+import DebugStyles from "./DebugStyles";
 import LogLevel from "./LogLevel";
 
 /**
@@ -11,6 +12,7 @@ class Debug {
     private static _previousSource: string = '';
     private static _level: number = LogLevel.INFO;
     private static _fillerAudio: string = 'missing_audio_file'
+    private static _STYLES = DebugStyles;
 
     private static _identifyLogSource(): string {
         if (!Debug._source) {
@@ -26,6 +28,14 @@ class Debug {
         let source = Debug._source;
         Debug._source = '';
         return source;
+    }
+
+    static get STYLES() {
+        return Debug._STYLES;
+    }
+
+    public get STYLES() {
+        return Debug.STYLES;
     }
 
     static get fillerAudio(){

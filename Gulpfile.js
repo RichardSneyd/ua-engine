@@ -24,7 +24,6 @@ const config = {
             'Loader',
             'Loop',
             'LevelManager',
-            'ScriptHandler',
             'Events',
             'AudioManager',
             'ImgLoader',

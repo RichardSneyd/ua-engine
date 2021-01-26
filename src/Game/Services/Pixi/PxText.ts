@@ -218,12 +218,12 @@ class PxText {
   }
 
   public destroy(){
-    if(this._data){
+    if(this._data !== undefined && this._data !== null){
       this._data.destroy();
       
     }
-    if(this._rawText){
-      this._rawText.destroy();
+    if(this._rawText !== undefined && this._rawText !== null){
+    //  this._rawText.destroy();
     }
   }
 }
