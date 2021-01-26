@@ -57,9 +57,10 @@ class ObjectHandler implements IObjectHandler {
     object.height = parseInt(<any>height);
   }
 
-  public destroy(object: Container) {
+  public destroy(object: any) {
   //  object.destroy({children: true, baseTexture: true, texture: true}); // true destroys texture, baseTexture, and calls destroy() on all children
     object.destroy({children: true, baseTexture: true, texture: true}); 
+    object = null; // clear the reference
   }
 
   public setMask(object: any, mask: any) {

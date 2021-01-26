@@ -251,7 +251,8 @@ class ObjectCore {
 
     this._go.scaleHandler.shutdown.bind(this._go.scaleHandler)();
     this._events.off('shutdown', this._go.destroy, this._go); 
-    if(this._data !== undefined && this._data !== null) this._objectHandler.destroy(this._data);
+    //if(this._data !== undefined && this._data !== null) this._objectHandler.destroy(this._data);
+    this._objectHandler.destroy(this._data);
   }
 
   /**
