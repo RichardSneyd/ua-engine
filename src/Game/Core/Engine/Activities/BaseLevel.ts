@@ -208,8 +208,8 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     }
 
     shutdown() {
-        this._manager.globalEvents.off('newRow', this.onNewRow, this);
         this._manager.globalEvents.off('shutdown', this.shutdown, this);
+        this._manager.globalEvents.off('newRow', this.onNewRow, this);
         super.shutdown();
     }
 }

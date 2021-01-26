@@ -58,9 +58,8 @@ class ObjectHandler implements IObjectHandler {
   }
 
   public destroy(object: any) {
-  //  object.destroy({children: true, baseTexture: true, texture: true}); // true destroys texture, baseTexture, and calls destroy() on all children
-    object.destroy({children: true, baseTexture: true, texture: true}); 
-    object = null; // clear the reference
+    if(object !== undefined && object !== null) object.destroy({children: false, baseTexture: false, texture: true}); // true destroys texture, baseTexture, and calls destroy() on all children  
+   // if(object !== undefined && object !== null) object.destroy();
   }
 
   public setMask(object: any, mask: any) {

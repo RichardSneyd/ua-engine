@@ -334,7 +334,7 @@ class Loader {
   }
 
   private _sendAllDone(resolve: Function, reject: Function) {
-    Debug.info('progress: ', this.progressPercentage, '%');
+    //Debug.info('progress: ', this.progressPercentage, '%');
     if (this._downloadComplete) {
       this._newResList = [];
       resolve({ status: true });

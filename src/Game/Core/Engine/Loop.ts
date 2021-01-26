@@ -53,7 +53,7 @@ class Loop {
    * @param context the context of the function to remove (required to find the exact function of exact objectc)
    */
   public removeFunction(f: Function, context: any) {
-    Debug.info(this._fList);
+ //   Debug.info(this._fList);
     let i = this._getFunObj(f, context);
 
     if (i != null) {
