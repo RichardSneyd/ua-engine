@@ -14,6 +14,7 @@ class Loop {
   private _lastTime: number;
   private _delay: number;
   private _oldDelay: number;
+  private _started: boolean = false;
 
   constructor(events: Events, funObj: FunObj) {
     this._events = events;
@@ -28,6 +29,7 @@ class Loop {
     this._boundExecuteAll = this._executeAll.bind(this);
 
     this._addListeners();
+   // this.start();
   }
 
   /**
@@ -65,10 +67,14 @@ class Loop {
   }
 
   /**
-   * @description start the loop -- interally, this binds the loop to requestAnimatonFrame on window obj.
+   * @description start the loop -- internally, this binds the loop to requestAnimatonFrame on window obj. Loop is a singleton, so this method will only execute
+   * the first time it's called; otherwise, there would be multiple requestAnimationFrame calls each time a new scene loaded, and everything would animate too fast.
    */
   public start(): void {
-    window.requestAnimationFrame(this._boundExecuteAll);
+    if(!this._started) {
+      window.requestAnimationFrame(this._boundExecuteAll);
+      this._started = true;
+    } 
   }
 
   private _executeAll(time: number) {
