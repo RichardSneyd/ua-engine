@@ -123,11 +123,8 @@ class Screen {
     this._pxGame.newLevel();
   }
 
-  public toImgElement(container: PIXI.Container): Promise<HTMLImageElement> | null {
-    if (this._pxGame !== undefined) {
+  public toImgElement(container: PIXI.Container): HTMLImageElement { 
       return this._pxGame.toImgElement(container);
-    }
-    return null;
   }
 
   public toPixels(container: PIXI.Container): Uint8Array | Uint8ClampedArray {

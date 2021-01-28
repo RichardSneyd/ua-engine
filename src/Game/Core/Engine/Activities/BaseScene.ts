@@ -31,8 +31,8 @@ abstract class BaseScene implements IScene {
 
     init(...args: any): void {
         // do init stuff for all scenes
-        Debug.info('init called');
-        Debug.info(this);
+      //  Debug.info('init called');
+     //   Debug.info(this);
         this._loop.addFunction(this.update, this);
         this._loop.start(); // just in case the loop hasn't been started yet - if it has, this will do nothing.
 

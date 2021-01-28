@@ -54,7 +54,7 @@ class PxGame {
     Debug.exposeGlobal(this._game, 'game');
   }
 
-  public toImgElement(container: PIXI.Container): Promise<HTMLImageElement> {
+  /* public toImgElement(container: PIXI.Container): Promise<HTMLImageElement> {
     let imgEl: HTMLImageElement | null;
     return new Promise((resolve: Function, reject: Function) => {
       if (this.renderer) {
@@ -67,11 +67,36 @@ class PxGame {
         });
       }
     });
+  } */
+
+  public toImgElement(container: PIXI.Container): HTMLImageElement {
+    let img: HTMLImageElement = document.createElement('img');
+   // img.width = container.width;
+   // img.height = container.height;
+    img.src = this.toBase64(container);
+    
+    return img;
   }
 
-  public toPixels(container: PIXI.Container): Uint8Array | Uint8ClampedArray {
-    // let pixels: Uint8ClampedArray;
-    if (this.renderer) return this.renderer.extract.pixels(container);
+  public toPixels(container: PIXI.Container, x: number = 0, y: number = 0, width?: number, height?: number): Uint8Array | Uint8ClampedArray {
+    let pixels: Uint8Array | Uint8ClampedArray;
+    let img = this.toImgElement(container);
+    Debug.info(img.width);
+    Debug.breakpoint();
+    let canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    let context = canvas.getContext('2d');
+    if(context){
+      context.drawImage(img, 0, 0, canvas.width, canvas.height);
+      if(width && height){
+        pixels = context.getImageData(x, y, width, height).data;
+      }
+      else {
+        pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+      }
+      return pixels;
+    }
     Debug.error('renderer is undefined: ', this.renderer);
     return new Uint8Array();
   }
