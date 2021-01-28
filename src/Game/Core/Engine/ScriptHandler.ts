@@ -1,8 +1,8 @@
 import ActScripts from './Utils/ActScripts';
 import Events from './Events';
 import Debug from './Debug';
-import SceneEvents from './Activities/SceneEvents';
-import ILevel from './Activities/ILevel';
+//import SceneEvents from './Activities/SceneEvents';
+//import ILevel from './Activities/ILevel';
 
 /**
  * @description An activity script preprocessor and wrapper. 
@@ -48,6 +48,7 @@ class ScriptHandler {
         this._convertRowsFromRaw(parseCols, objectifyCols, processText);
         this._parseNumbers(['id', 'page', 'auto_next', 'round']);
         this._initialized = true;
+        this._active = this._rows[0];
     }
 
     private _checkIfColumnNamesValid(columns: string[]){
@@ -57,6 +58,20 @@ class ScriptHandler {
             if(!configRow.hasOwnProperty(columns[x])) list.push(columns[x]);
         }
         if(list.length > 0) Debug.error('these columns do not exist in script: ', list);
+    }
+
+    /**
+     * @description Searches for an object on the Level File
+     * @param rootObject Type of object being looked for. 'sprites', 'spines', 'dropzones', etc.
+     * @param value String value the object must have for the given key
+     * @param key Property that identifies the object, 'name' by default
+     */
+    getLevelFileObject(rootObject: string, value: string, key: string = 'name'): any {
+        for(let object of this.levelFile[rootObject]) {
+            if(object[key] == value) {
+                return object;
+            }
+        }
     }
 
     get levelFile(): any {

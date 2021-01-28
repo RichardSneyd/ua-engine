@@ -46,8 +46,7 @@ class TweenManager {
         tween.init(tweenName, easing, object, repeat, delay);
         Debug.info('created and initiated ', tweenName);
         this._tweens.push(tween);
-        Debug.info(this._tweens)
-
+       // Debug.info(this._tweens)
         return tween;
     }
 

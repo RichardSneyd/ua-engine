@@ -61,6 +61,7 @@ class ParentChildHandler implements IParentChild{
                 object.parent.removeChild(object);
             }
             this._children.push(object);
+            Debug.info('%csuccessfully added child', Debug.STYLES.GOOD);
             object.parent = this._go;
 
             // added this condition because text objects hold their Px data 1 level deeper, due to custom PxText class
@@ -70,7 +71,7 @@ class ParentChildHandler implements IParentChild{
             this._go.setOrigin(this._go.origin.x, this._go.origin.y); // needed to manually update origin calculation
             return true;
         }
-        Debug.warn('that is already a child of this object, and cannot be added again');
+      //  Debug.info('that is already a child of this object, skipping...');
         return false;
     }
 
@@ -85,6 +86,7 @@ class ParentChildHandler implements IParentChild{
             }
             if(object.parent !== null) object.parent = null;
             this._children.splice(this._children.indexOf(object), 1);
+            Debug.info('%csuccessfully removed child', Debug.STYLES.NOTEWORTHY);
             return;
         }
         Debug.warn('could not remove, no such entity found in children array');

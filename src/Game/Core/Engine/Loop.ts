@@ -14,6 +14,7 @@ class Loop {
   private _lastTime: number;
   private _delay: number;
   private _oldDelay: number;
+  private _started: boolean = false;
 
   constructor(events: Events, funObj: FunObj) {
     this._events = events;
@@ -28,6 +29,7 @@ class Loop {
     this._boundExecuteAll = this._executeAll.bind(this);
 
     this._addListeners();
+    this.start();
   }
 
   /**
@@ -41,9 +43,9 @@ class Loop {
     if (fObj == null) {
       let o = this._newFunObj(f, context);
       this._fList.push(o);
-      Debug.info(`%csuccessfully added listener with context %s to Loop`, 'color:green', context);
+      Debug.info(`%csuccessfully added listener with context %s to Loop`, Debug.STYLES.GOOD, context);
     } else {
-      Debug.error("trying to add function %s twice with identical context: ", f, context);
+      Debug.error("trying to add same function %s and context %s to loop twice: ", f, context);
     }
   }
 
@@ -53,22 +55,34 @@ class Loop {
    * @param context the context of the function to remove (required to find the exact function of exact objectc)
    */
   public removeFunction(f: Function, context: any) {
-    Debug.info(this._fList);
+ //   Debug.info(this._fList);
     let i = this._getFunObj(f, context);
-
-    if (i != null) {
+    Debug.info('listener found: ', i);
+    if (i) {
       this._fList.splice(this._fList.indexOf(i), 1);
-      Debug.info(`%cremoved listener with context %s`, 'color:green', context);
+      Debug.info(`%cremoved listener with context %s`, Debug.STYLES.NOTEWORTHY, context);
     } else {
-      Debug.warn("Did not find loop listener with context %s, so cannot remove", context);
+     // Debug.warn("Did not find loop listener with context %s, that matches: ", context, f);
+    // this.diagnostics(f, context);
     }
   }
 
+  public diagnostics(f: Function, context: any){
+    Debug.info('looking for context: %s with function: ', context, f);
+    Debug.info('%cLoop listeners:', Debug.STYLES.CURIOUS)
+    Debug.table(this._fList);
+  // Debug.breakpoint();
+  }
+
   /**
-   * @description start the loop -- interally, this binds the loop to requestAnimatonFrame on window obj.
+   * @description start the loop -- internally, this binds the loop to requestAnimatonFrame on window obj. Loop is a singleton, so this method will only execute
+   * the first time it's called; otherwise, there would be multiple requestAnimationFrame calls each time a new scene loaded, and everything would animate too fast.
    */
   public start(): void {
-    window.requestAnimationFrame(this._boundExecuteAll);
+    if(!this._started) {
+      window.requestAnimationFrame(this._boundExecuteAll);
+      this._started = true;
+    } 
   }
 
   private _executeAll(time: number) {
@@ -106,7 +120,7 @@ class Loop {
       if (f == this._fList[c].function && this._fList[c].context == context) return this._fList[c];
     }
 
-    Debug.warn("Did not find loop listener with context %", context);
+    Debug.info("No existing loop listener with context %s...", context);
     return null;
   }
 

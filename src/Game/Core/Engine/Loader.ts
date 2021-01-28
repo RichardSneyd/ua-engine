@@ -100,7 +100,7 @@ class Loader {
     this._downloadComplete = false;
     this._startedLoading = false;
     this._newResList = [];
-    Debug.info('%cLoader initialized', 'color: green;');
+    Debug.info('%cLoader initialized', Debug.STYLES.GOOD);
   }
 
   /**
@@ -181,9 +181,7 @@ class Loader {
       }
     }
 
-
-
-    Debug.warn('did not add %s, as it already exists', name);
+    Debug.info('did not add %s, as it already exists', name);
     return this;
   }
 
@@ -292,7 +290,7 @@ class Loader {
       // Debug.info(this._resList);
       return this;
     }
-    Debug.warn('did not add %s, as it already exists', name);
+    Debug.info('%cdid not add %s, as it already exists', Debug.STYLES.NOTEWORTHY, name);
     return this;
   }
 
@@ -317,7 +315,7 @@ class Loader {
       let _imgsDone: boolean = false, _sndsDone: boolean = false;
 
       // if no new resource being loaded for this activity, just resolve, as there is nothing to wait for
-      Debug.info('%ctotal new resources: ' + this._newResList.length, 'color: green;');
+      Debug.info('%ctotal new resources: ' + this._newResList.length, Debug.STYLES.GOOD);
       //  Debug.info(this._newResList);
       if (this._newResList.length == 0) {
         resolve('loading completed');
@@ -336,11 +334,11 @@ class Loader {
   }
 
   private _sendAllDone(resolve: Function, reject: Function) {
-    Debug.info('progress: ', this.progressPercentage, '%');
+    //Debug.info('progress: ', this.progressPercentage, '%');
     if (this._downloadComplete) {
       this._newResList = [];
       resolve({ status: true });
-      Debug.info('%cdownload complete, promise RESOLVED', 'color: green;')
+      Debug.info('%cdownload complete, promise RESOLVED', Debug.STYLES.GOOD)
     } else {
       setTimeout(() => {
         this._sendAllDone(resolve, reject);
@@ -392,7 +390,7 @@ class Loader {
       }
       this._downloadComplete = isLoaded;
       if (this._downloadComplete) {
-        Debug.info('%cdownload complete!', 'color: green');
+        Debug.info('%cdownload complete!', Debug.STYLES.GOOD);
         this._startedLoading = false;
       }
     }
@@ -447,7 +445,7 @@ class Loader {
       //  Debug.info('image loaded and returned: ', data, 'attemping injection....');
       if (data.name.indexOf('.json_image') !== -1) {
         // ignore irrelavent returns from PxLoader
-        Debug.warn('will not inject a .json_image, no resource in resList for that, is internal PIXI Loader child image resource mapped to atlas json resource');
+        Debug.info('will not inject a .json_image, no resource in resList for that, is internal PIXI Loader child image resource mapped to atlas json resource');
       }
       else {
         this._downloadedResource(data.url, data.texture);
@@ -473,11 +471,11 @@ class Loader {
     // Debug.info(url + ': ', data);
     // don't load json_image resources, which PIXI uses internally as child-resources of the json resources (atlas, spine etc)
     if (data.hasOwnProperty('name') && data.name.indexOf('.json_image') !== -1) {
-      Debug.warn('will not inject a json_image resource, used by PIXI Loader internally as children of json resources like atlases');
+      Debug.info('will not inject a json_image resource, used by PIXI Loader internally as children of json resources like atlases');
       return;
     }
     else if (data.hasOwnProperty('name') && data.name.indexOf('.json_atlas') !== -1) {
-      Debug.warn('will not inject a json_atlas resource, used by PIXI Loader internally as children of json resources like atlases');
+      Debug.info('will not inject a json_atlas resource, used by PIXI Loader internally as children of json resources like atlases');
       return;
     }
     let res = this._getResource(url);
@@ -487,7 +485,7 @@ class Loader {
       res.data = data;
     } else {
       //   let res = this._createResource()
-      Debug.warn("Injection failed: no resource exists in Loader.resList with name %s & url %s:", data.name, url, data);
+      Debug.error("Injection failed: no resource exists in Loader.resList with name %s & url %s:", data.name, url, data);
     }
 
   }
