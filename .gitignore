@@ -3,7 +3,7 @@ package-lock.json
 cache.db
 uglifycache.db
 js/*
-dist/
+dist/*
 src/Dep/ControlContainer.ts
 ControlContainer.ts
 uae-docs/

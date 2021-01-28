@@ -109,9 +109,10 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         else {
             Debug.error('no bgd property in config cell of first row');
         }
-     
-        if (configRow.config.hasOwnProperty('char') && !this._manager.script.isFalsy(configRow.config.char)) {
+     //   let char = this._loader.getResource(configRow.config.char, true);
+        if (configRow.config.hasOwnProperty('char') && !this._manager.script.isFalsy(configRow.config.char) && this._loader.getResource(configRow.config.char, true)) {
             this._character = this._goFactory.spine(20, this._game.height() - 150, configRow.config.char, this._foreground); // reposition _character as needed when extending
+            Debug.exposeGlobal(this._character, 'char');
         }
 
         this._waitForFirstInput();
@@ -163,19 +164,27 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     /**
      * @description go to previous act (todo)
      */
-    protected prevAct() {
+    public prevAct() {
         Debug.info('prevAct!');
         let config = this._manager.script.rows[0].config;
-        if (config.hasOwnProperty('prev_act')) this._game.startActivity(config.prev_act);
+        if (config.hasOwnProperty('prev_act')) this.goto(config.prev_act);
     }
 
     /**
      * @description go to next act (todo)
      */
-    protected nextAct() {
+    public nextAct() {
         Debug.info('nextAct!');
         let config = this._manager.script.rows[0].config;
-        if (config.hasOwnProperty('next_act')) this._game.startActivity(config.prev_act);
+        if (config.hasOwnProperty('next_act')) this.goto(config.next_act);
+    }
+
+    /**
+     * @description go to a different activity (a product is also an activity, and it's menus are levels/scenes within it)
+     * @param code the code of the activity, or menu, to go to
+     */
+    public goto(code: string){
+        this._game.startActivity(code);
     }
 
     /**

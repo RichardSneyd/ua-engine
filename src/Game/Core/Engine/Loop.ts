@@ -29,7 +29,7 @@ class Loop {
     this._boundExecuteAll = this._executeAll.bind(this);
 
     this._addListeners();
-   // this.start();
+    this.start();
   }
 
   /**
@@ -45,7 +45,7 @@ class Loop {
       this._fList.push(o);
       Debug.info(`%csuccessfully added listener with context %s to Loop`, Debug.STYLES.GOOD, context);
     } else {
-      Debug.error("trying to add same function %s to loop twice (identical context): ", f, context);
+      Debug.error("trying to add same function %s and context %s to loop twice: ", f, context);
     }
   }
 
@@ -57,13 +57,21 @@ class Loop {
   public removeFunction(f: Function, context: any) {
  //   Debug.info(this._fList);
     let i = this._getFunObj(f, context);
-
-    if (i != null) {
+    Debug.info('listener found: ', i);
+    if (i) {
       this._fList.splice(this._fList.indexOf(i), 1);
-      Debug.info(`%cremoved listener with context %s`, Debug.STYLES.GOOD, context);
+      Debug.info(`%cremoved listener with context %s`, Debug.STYLES.NOTEWORTHY, context);
     } else {
-      Debug.warn("Did not find loop listener with context %s, so cannot remove", context);
+     // Debug.warn("Did not find loop listener with context %s, that matches: ", context, f);
+    // this.diagnostics(f, context);
     }
+  }
+
+  public diagnostics(f: Function, context: any){
+    Debug.info('looking for context: %s with function: ', context, f);
+    Debug.info('%cLoop listeners:', Debug.STYLES.CURIOUS)
+    Debug.table(this._fList);
+  // Debug.breakpoint();
   }
 
   /**

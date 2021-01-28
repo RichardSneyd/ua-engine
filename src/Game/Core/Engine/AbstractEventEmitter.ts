@@ -267,10 +267,11 @@ abstract class AbstractEventEmitter {
             if (listener) {
                 //   Debug.info('found a match!! now REMOVING IT with splice..');
                 event.splice(event.indexOf(listener), 1);
+                Debug.info("%c removed listener for %s with context of %s", Debug.STYLES.GOOD, eventName, context);
                 return;
             }
             else {
-                Debug.warn("cannot remove a listener for %s with context of %s that doesn't exist: %s", eventName, context, callback);
+                Debug.warn("cannot remove listener for %s with context of %s because it doesn't exist", eventName, context);
             }
         }
         else {

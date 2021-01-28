@@ -290,7 +290,7 @@ class Loader {
       // Debug.info(this._resList);
       return this;
     }
-    Debug.warn('did not add %s, as it already exists', name);
+    Debug.info('%cdid not add %s, as it already exists', Debug.STYLES.NOTEWORTHY, name);
     return this;
   }
 

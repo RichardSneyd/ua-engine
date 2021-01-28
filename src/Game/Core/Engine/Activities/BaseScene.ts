@@ -34,7 +34,8 @@ abstract class BaseScene implements IScene {
         Debug.info('init called');
         Debug.info(this);
         this._loop.addFunction(this.update, this);
-        this._loop.start(); 
+        this._loop.start(); // just in case the loop hasn't been started yet - if it has, this will do nothing.
+
         // remember to call preload from the subclass
     }
 
