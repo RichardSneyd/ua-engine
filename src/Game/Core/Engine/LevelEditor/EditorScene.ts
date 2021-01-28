@@ -95,8 +95,8 @@ class EditorScene implements ILevel {
         /* Inspector UI */
         this._inspector.createInspector();
 
-        /* Enable arrow keys */
-        this._addKeyboardInput();
+        /* Handle Inputs */
+        this._addInputManager();
     }
 
     _createBackground() {
@@ -177,6 +177,7 @@ class EditorScene implements ILevel {
             gameobj.uniqName = uniqName;
 
             this._imgGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
+            gameobj.objID = this._imgGameObjects.length - 1;
 
         }
         else if (type === "spine") {
@@ -188,6 +189,7 @@ class EditorScene implements ILevel {
             gameobj.animations.play(`${defaultAnimState}`, true);
 
             this._spineGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
+            gameobj.objID = this._spineGameObjects.length - 1;
         }
 
         gameobj.input.enableInput();
@@ -206,9 +208,6 @@ class EditorScene implements ILevel {
         gameobj.input.addInputListener('pointerup', () => {
             this.dragging = false;
         }, this);
-
-
-        this.addDataDownloadLink();
     }
 
 
@@ -216,6 +215,8 @@ class EditorScene implements ILevel {
         Debug.info(`prop: ${prop} val: ${val}`);
 
         if (prop === "name") {
+            Debug.warn("objType:", this.selectedGO.objType);
+            Debug.warn("objID:", this.selectedGO.objID);
             //this.selectedGO.textureName = val;
         }
         else if (prop === "x") {
@@ -233,10 +234,13 @@ class EditorScene implements ILevel {
         else if (prop === "origin y") {
             this.selectedGO.origin.y = val;
         }
-
     }
 
-    private _addKeyboardInput() {
+    private _addInputManager() {
+        this._exportData.downloadBtn.addEventListener('click', (event) => {
+            this._addDataDownloadLink();
+        });
+
         window.addEventListener(
             "keydown", (input) => {
                 let moveUnit: number = 5;
@@ -269,11 +273,20 @@ class EditorScene implements ILevel {
                     this.selectedGOBorder.alpha = 0;
                     this.selectedGOBorder.visible = false;
                     // TODO: remove specific selected gameobject from spine or image list for the download data
+                    if (this.selectedGO.objType === 'image') {
+                        this._imgGameObjects.splice(this.selectedGO.objID, 1);
+
+                        Debug.info('IMAGES:', this._imgGameObjects);
+                    }
+                    if (this.selectedGO.objType === 'spine') {
+                        this._spineGameObjects.splice(this.selectedGO.objID, 1);
+                        Debug.info('SPINES:', this._spineGameObjects);
+                    }
                 }
             }, false);
     }
 
-    addDataDownloadLink(): void {
+    protected _addDataDownloadLink(): void {
         let gameObjectData: any = {
             sprites: [],
             spines: [],
@@ -364,7 +377,8 @@ class EditorScene implements ILevel {
             this.selectedGOBorder.x = this.selectedGO.x;
             this.selectedGOBorder.y = this.selectedGO.y;
 
-            Debug.warn(`selected x: ${this.selectedGO.x} selected y: ${this.selectedGO.y}`);
+            //Debug.warn(`selected x: ${this.selectedGO.x} selected y: ${this.selectedGO.y}`);
+            Debug.info("imagesList:", this._imgGameObjects);
 
             this._inspector.setInputValue('x', this.selectedGO.x);
             this._inspector.setInputValue('y', this.selectedGO.y);
