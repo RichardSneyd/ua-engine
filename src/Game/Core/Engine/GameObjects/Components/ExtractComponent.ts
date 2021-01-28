@@ -13,11 +13,9 @@ class ExtractComponent {
     /**
      * @description generates and returns a html image element for the container/object
      */
-    public toImgElement(): Promise<HTMLImageElement> | null {
-        //  let cont = this.data.data !== undefined ? this.data.data : this.data;
-        // let cont = this.data;
-        // Debug.info('cont: ', cont);
-        return this._screen.toImgElement(this._go.data);
+    public toImgElement(): HTMLImageElement {
+        let cont = this._go.data.data !== undefined ? this._go.data.data : this._go.data;
+        return this._screen.toImgElement(cont);
     }
 
     /**
@@ -27,16 +25,16 @@ class ExtractComponent {
         return this._screen.toPixels(this._go.data);
     }
 
-     /**
-     * @description generates and returns an encoded base64 string for the container/object
-     */
+    /**
+    * @description generates and returns an encoded base64 string for the container/object
+    */
     public toBase64(): string {
         return this._screen.toBase64(this._go.data);
     }
 
-     /**
-     * @description generates and returns a RenderTexture, which is essentially a snapshot, for the container/object
-     */
+    /**
+    * @description generates and returns a RenderTexture, which is essentially a snapshot, for the container/object
+    */
     public toTexture(): RenderTexture {
         return this._screen.toTexture(this._go.data);
     }

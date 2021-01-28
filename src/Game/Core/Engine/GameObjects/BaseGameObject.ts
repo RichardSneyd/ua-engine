@@ -444,6 +444,14 @@ abstract class BaseGameObject implements IGameObject {
         return this._pcHandler.children;
     }
 
+    set opacity(value: number){
+        this._core.alpha = value;
+    }
+
+    get opacity(){
+        return this._core.alpha;
+    }
+
     // ALWAYS listen for core.update in events, never this one directly, as it is called from core.update.
     protected _update(time: number) {
         // this._TweenComponent.update(time);

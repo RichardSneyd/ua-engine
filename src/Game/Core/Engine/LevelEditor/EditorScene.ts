@@ -358,15 +358,15 @@ class EditorScene implements ILevel {
         });
 
         for (let i = 0; i < spinePixels.length; i++) {
-            this._pxGame.toImgElement(spinePixels[i]).then(res => {
-                spineResults.push({ src: res.src, name: spineListFiltered[i].basename });
+            let res = this._pxGame.toImgElement(spinePixels[i]);
 
-                if (i === spinePixels.length - 1) {
-                    this._accordion.addRow('Spines', 'spine', ...spineResults);
-                    this._accordion.removeAllSelections();
-                    this._accordion.uncollapseAll();
-                }
-            });
+            spineResults.push({ src: res.src, name: spineListFiltered[i].basename });
+
+            if (i === spinePixels.length - 1) {
+                this._accordion.addRow('Spines', 'spine', ...spineResults);
+                this._accordion.removeAllSelections();
+                this._accordion.uncollapseAll();
+            }
 
         }
     }
