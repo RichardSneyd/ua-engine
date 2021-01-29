@@ -180,6 +180,13 @@ class DraggableObject implements IGameObject {
     }
 
     /**
+     * @description Returns all zones the go can be dropped into
+     */
+    getZones(): Dropzone[] {
+        return this._dropzones;
+    }
+
+    /**
      * @description Adds a child to the first GO in the draggable
      * @param child GO to add
      */
