@@ -78,7 +78,7 @@ class PxGame {
     return img;
   }
 
-  public toPixels(container: PIXI.Container, x: number = 0, y: number = 0, width?: number, height?: number): Uint8Array | Uint8ClampedArray {
+ /*  public toPixels(container: PIXI.Container, x: number = 0, y: number = 0, width?: number, height?: number): Uint8Array | Uint8ClampedArray {
     let pixels: Uint8Array | Uint8ClampedArray;
     let img = this.toImgElement(container);
     Debug.info('width: ', img.width);
@@ -99,6 +99,28 @@ class PxGame {
     }
     Debug.error('renderer is undefined: ', this.renderer);
     return new Uint8Array();
+  }
+ */
+  public toPixels(container: PIXI.Container, x: number = 0, y: number = 0, width?: number, height?: number): Promise<Uint8Array | Uint8ClampedArray> {
+    let pixels: Uint8Array | Uint8ClampedArray;
+    return new Promise((resolve: Function, reject: Function)=>{
+
+      this.toCanvasAsync(container).then((canvas)=>{
+        let ctx = canvas.getContext('2d');
+        if(ctx){
+          if (width && height) {
+            pixels = ctx.getImageData(x, y, width, height).data;
+          }
+          else {
+            pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+          }
+          resolve(pixels);
+        }
+        else {
+          Debug.error('context is null');
+        }
+      });
+    });
   }
 
   public toBase64(container: PIXI.Container): string {
@@ -126,177 +148,202 @@ class PxGame {
     });
   }  */
 
-  public toCanvas(container: PIXI.Container): HTMLCanvasElement {
+  public toCanvasAsync(container: PIXI.Container): Promise<HTMLCanvasElement> {
     let img = this.toImgElement(container);
- //  Debug.info(img.width);
-   // Debug.breakpoint();
+
     let canvas = document.createElement('canvas');
-    canvas.width = img.naturalWidth;
-    canvas.height = img.naturalHeight;
-    canvas.onload
-    return canvas;
-  }
+    let ctx = canvas.getContext('2d');
+    
+    return new Promise((resolve: Function, reject: Function) => {
+      img.onload = () => {
+        Debug.info('img loaded: ', img);
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        ctx?.drawImage(img, 0, 0, img.width, img.height);
+        resolve(canvas);
+      }
+      img.onerror = (err) => {
+        Debug.error(err);
+      }
+    })
+}
+
+  public toCanvas(container: PIXI.Container): HTMLCanvasElement {
+  let img = this.toImgElement(container);
+  //  Debug.info(img.width);
+  // Debug.breakpoint();
+  let canvas = document.createElement('canvas');
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+  let ctx = canvas.getContext('2d');
+
+  ctx?.drawImage(img, 0, 0, img.width, img.height);
+  return canvas;
+
+
+}
+
 
   public newLevel() {
-    if (this._game !== null) {
-      if (this.levelCont !== null && this.levelCont !== undefined) {
-        this._lastLevelCont = this.levelCont;
-        this._lastLevelCont.destroy();
-      }
-      this._levelCont = this._pxFactory.createContainer();
-      this._game.stage.addChild(this._levelCont);
-      this.levelCont.x = 0; this.levelCont.y = 0;
+  if (this._game !== null) {
+    if (this.levelCont !== null && this.levelCont !== undefined) {
+      this._lastLevelCont = this.levelCont;
+      this._lastLevelCont.destroy();
     }
+    this._levelCont = this._pxFactory.createContainer();
+    this._game.stage.addChild(this._levelCont);
+    this.levelCont.x = 0; this.levelCont.y = 0;
   }
+}
 
-  _onMouseMove(evt: any) {
-    let canvas = document.getElementsByTagName('canvas')[0];
-    let rect = canvas.getBoundingClientRect();
-    let args: any = {}
-    args.mouseX = evt.clientX - rect.left;
-    args.mouseY = evt.clientY - rect.top;
-    args.moveX = evt.movementX;
-    args.moveY = evt.movementY;
-    // Debug.warn(evt);
-    this._events.fire('pointermove', args);
+_onMouseMove(evt: any) {
+  let canvas = document.getElementsByTagName('canvas')[0];
+  let rect = canvas.getBoundingClientRect();
+  let args: any = {}
+  args.mouseX = evt.clientX - rect.left;
+  args.mouseY = evt.clientY - rect.top;
+  args.moveX = evt.movementX;
+  args.moveY = evt.movementY;
+  // Debug.warn(evt);
+  this._events.fire('pointermove', args);
 
-  }
+}
 
   public resize(width: number, height: number) {
-    if (this._game != null) {
-      this._game.renderer.resize(width, height)
-      // Debug.warn('width provided: ', width);
-      let scale = (width / this._gameConfig.data.DISPLAY.WIDTH);
-      // Debug.warn('scale::: ', scale);
-      this._game.stage.scale.set(scale);
-    }
-
+  if (this._game != null) {
+    this._game.renderer.resize(width, height)
+    // Debug.warn('width provided: ', width);
+    let scale = (width / this._gameConfig.data.DISPLAY.WIDTH);
+    // Debug.warn('scale::: ', scale);
+    this._game.stage.scale.set(scale);
   }
+
+}
 
   public addText(x: number, y: number, text: string, style: any = undefined): PxText {
-    if (this._game != null) {
-      let txt = this._pxFactory.createText(text, this._game.renderer, style);
+  if (this._game != null) {
+    let txt = this._pxFactory.createText(text, this._game.renderer, style);
 
-      txt.x = x;
-      txt.y = y;
+    txt.x = x;
+    txt.y = y;
 
-      this._game.stage.addChild(txt.data);
+    this._game.stage.addChild(txt.data);
 
-      return txt;
-    } else {
-      Debug.error("Can't add text before starting game!");
+    return txt;
+  } else {
+    Debug.error("Can't add text before starting game!");
 
-      let t: any;
+    let t: any;
 
-      return <PxText>t;
-    }
+    return <PxText>t;
   }
+}
 
   public addGraphic(x: number, y: number, width: number, height: number): Graphics {
-    let gfx = new Graphics();
-    gfx.x = x;
-    gfx.y = y;
+  let gfx = new Graphics();
+  gfx.x = x;
+  gfx.y = y;
 
-    gfx.beginFill();
-    gfx.drawRect(x, y, width, height);
-    gfx.endFill();
+  gfx.beginFill();
+  gfx.drawRect(x, y, width, height);
+  gfx.endFill();
 
-    this._addChild(gfx);
+  this._addChild(gfx);
 
-    return gfx;
-  }
+  return gfx;
+}
 
   public addRectangle(x: number, y: number, width: number, height: number, rectColor: number, rectAlpha: number, lineWidth: number, lineColor: number, lineAlpha: number): Graphics {
-    let gfx = new Graphics();
-    gfx.x = x;
-    gfx.y = y;
+  let gfx = new Graphics();
+  gfx.x = x;
+  gfx.y = y;
 
-    gfx.lineStyle(lineWidth, lineColor, lineAlpha);
-    gfx.beginFill(rectColor, rectAlpha);
-    gfx.drawRect(x, y, width, height);
-    gfx.endFill();
+  gfx.lineStyle(lineWidth, lineColor, lineAlpha);
+  gfx.beginFill(rectColor, rectAlpha);
+  gfx.drawRect(x, y, width, height);
+  gfx.endFill();
 
-    this._addChild(gfx);
+  this._addChild(gfx);
 
-    return gfx;
-  }
+  return gfx;
+}
 
   public addContainer(x: number, y: number): Container {
-    let cont = this._createContainer();
-    cont.x = x;
-    cont.y = y;
-    this._addChild(cont);
-    return cont;
-  }
+  let cont = this._createContainer();
+  cont.x = x;
+  cont.y = y;
+  this._addChild(cont);
+  return cont;
+}
 
   public addSprite(x: number, y: number, texture: string, frame: string | null): Sprite {
-    //  let texture = this._loader.getTexture(sprName);
-    let sprite;
+  //  let texture = this._loader.getTexture(sprName);
+  let sprite;
 
-    sprite = this._createSprite(x, y, texture, frame);
+  sprite = this._createSprite(x, y, texture, frame);
 
-    sprite.x = x;
-    sprite.y = y;
+  sprite.x = x;
+  sprite.y = y;
 
-    this._addChild(sprite);
+  this._addChild(sprite);
 
-    // this._enableInputEvents(sprite);
+  // this._enableInputEvents(sprite);
 
-    return sprite;
-  }
+  return sprite;
+}
 
   public addSpine(name: string): PIXI.spine.Spine | null {
-    let spineResource = this._loader.getResource(name, true);
-    let spine = null;
+  let spineResource = this._loader.getResource(name, true);
+  let spine = null;
 
-    if (spineResource != null) {
-      spine = new PIXI.spine.Spine(spineResource.data.spineData);
+  if (spineResource != null) {
+    spine = new PIXI.spine.Spine(spineResource.data.spineData);
 
-      // spine.spineData.imagesPath;
-      this._addChild(spine);
-    } else {
-      Debug.warn('spine resource named "%s" not found', name);
-    }
-
-    return spine;
+    // spine.spineData.imagesPath;
+    this._addChild(spine);
+  } else {
+    Debug.warn('spine resource named "%s" not found', name);
   }
+
+  return spine;
+}
 
   public addVideo(x: number, y: number, videoName: string): Sprite {
-    let video = this._createVideo(x, y, videoName);
+  let video = this._createVideo(x, y, videoName);
 
-    this._addChild(video);
-    return video;
+  this._addChild(video);
+  return video;
+}
+
+  public addNineSlice(x: number, y: number, textureName: string, leftWidth ?: number, topHeight ?: number, rightWidth ?: number, bottomHeight ?: number): NineSlicePlane {
+
+  let slice = this._createNineSlice(textureName, leftWidth, topHeight, rightWidth, bottomHeight);
+  slice.x = x;
+  slice.y = y;
+  Debug.warn('slice object: ', slice);
+
+  this._addChild(slice);
+  if (this._game) {
+    Debug.info(this._game.stage.children);
   }
-
-  public addNineSlice(x: number, y: number, textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): NineSlicePlane {
-
-    let slice = this._createNineSlice(textureName, leftWidth, topHeight, rightWidth, bottomHeight);
-    slice.x = x;
-    slice.y = y;
-    Debug.warn('slice object: ', slice);
-
-    this._addChild(slice);
-    if (this._game) {
-      Debug.info(this._game.stage.children);
-    }
-    // debugger;
-    return slice;
-  }
+  // debugger;
+  return slice;
+}
 
   public debugScreen() {
-    if (this._game) {
-      Debug.info(this._game.stage.children);
-    }
+  if (this._game) {
+    Debug.info(this._game.stage.children);
   }
+}
 
   private _addChild(child: DisplayObject) {
-    if (this._game != null && this.levelCont !== null && this.levelCont !== undefined) {
-      //this._game.stage.addChild(child);
-      this.levelCont.addChild(child);
-    } else {
-      Debug.error("Can not add sprite before initializing the game!");
-    }
+  if (this._game != null && this.levelCont !== null && this.levelCont !== undefined) {
+    //this._game.stage.addChild(child);
+    this.levelCont.addChild(child);
+  } else {
+    Debug.error("Can not add sprite before initializing the game!");
   }
+}
 
   /**
    * 
@@ -305,62 +352,62 @@ class PxGame {
    * @param threshold 
    */
   public genHitmap(baseTex: BaseTexture, object: any, threshold: number) {
-    let resource: any = baseTex.resource;
-    if (!baseTex.hasOwnProperty('resource')) console.error('cannot generate hitmap for %s, no baseTexture.resource property', object);
-    if (resource.source == undefined) console.error('cannot generate hitmap for %s, no baseTexture.resource.source property', object);
-    // resource = <ImageResource>baseTex.resource;
+  let resource: any = baseTex.resource;
+  if (!baseTex.hasOwnProperty('resource')) console.error('cannot generate hitmap for %s, no baseTexture.resource property', object);
+  if (resource.source == undefined) console.error('cannot generate hitmap for %s, no baseTexture.resource.source property', object);
+  // resource = <ImageResource>baseTex.resource;
 
-    const imgSource = resource.source;
-    Debug.info('hitmap image resourc.source: ', imgSource);
-    // Debug.breakpoint();
-    let canvas = null;
-    if (!imgSource) {
-      Debug.warn('no imgSource for resource: ', resource)
-      return false;
-    }
-    let context = null;
-    if (imgSource.getContext) {
-      canvas = imgSource;
-      context = canvas.getContext('2d');
-      Debug.info(context);
-    }
-    else if (imgSource instanceof Image) {
-      canvas = document.createElement('canvas');
-      canvas.width = imgSource.width;
-      canvas.height = imgSource.height;
-      context = canvas.getContext('2d');
-      if (context) {
-        // accepts an ImageBitmap object also -- try to generate and pass, so it works for all GameObject types
-        context.drawImage(imgSource, 0, 0);
-      }
-    }
-    else {
-      //unknown source;
-      return false;
-    }
-
-    const w = canvas.width, h = canvas.height;
-    let imageData = context.getImageData(0, 0, w, h);
-
-    Debug.warn('building hitmap from context.getImageData, which yields: ', imageData);
-    let hitmap = new Uint32Array(Math.ceil(w * h / 32));
-    for (let i = 0; i < w * h; i++) {
-      let ind1 = i % 32;
-      let ind2 = i / 32 | 0;
-      if (imageData.data[i * 4 + 3] >= threshold) {
-        hitmap[ind2] = hitmap[ind2] | (1 << ind1);
-      }
-    }
-    Debug.info('hitmap is: ', hitmap);
-    if (object.hasOwnProperty('skeleton')) {
-      object.hitmap = hitmap; // Spine object have no texture or baseTexture property, so hitmap must be stored on the spine object itself
-    }
-    else {
-      object.texture.baseTexure.hitmap = hitmap;
-    }
-    // debugger;
-    return true;
+  const imgSource = resource.source;
+  Debug.info('hitmap image resourc.source: ', imgSource);
+  // Debug.breakpoint();
+  let canvas = null;
+  if (!imgSource) {
+    Debug.warn('no imgSource for resource: ', resource)
+    return false;
   }
+  let context = null;
+  if (imgSource.getContext) {
+    canvas = imgSource;
+    context = canvas.getContext('2d');
+    Debug.info(context);
+  }
+  else if (imgSource instanceof Image) {
+    canvas = document.createElement('canvas');
+    canvas.width = imgSource.width;
+    canvas.height = imgSource.height;
+    context = canvas.getContext('2d');
+    if (context) {
+      // accepts an ImageBitmap object also -- try to generate and pass, so it works for all GameObject types
+      context.drawImage(imgSource, 0, 0);
+    }
+  }
+  else {
+    //unknown source;
+    return false;
+  }
+
+  const w = canvas.width, h = canvas.height;
+  let imageData = context.getImageData(0, 0, w, h);
+
+  Debug.warn('building hitmap from context.getImageData, which yields: ', imageData);
+  let hitmap = new Uint32Array(Math.ceil(w * h / 32));
+  for (let i = 0; i < w * h; i++) {
+    let ind1 = i % 32;
+    let ind2 = i / 32 | 0;
+    if (imageData.data[i * 4 + 3] >= threshold) {
+      hitmap[ind2] = hitmap[ind2] | (1 << ind1);
+    }
+  }
+  Debug.info('hitmap is: ', hitmap);
+  if (object.hasOwnProperty('skeleton')) {
+    object.hitmap = hitmap; // Spine object have no texture or baseTexture property, so hitmap must be stored on the spine object itself
+  }
+  else {
+    object.texture.baseTexure.hitmap = hitmap;
+  }
+  // debugger;
+  return true;
+}
   /* 
     public genHitmap(baseTex: any, threshold: number) {
       if (!baseTex.resource) {
@@ -419,82 +466,82 @@ class PxGame {
     * @param displayObject the object to enable input for
     */
   public enableInput(sprite: DisplayObject) {
-    sprite.interactive = true;
-  }
+  sprite.interactive = true;
+}
 
   public disableInput(sprite: DisplayObject) {
-    sprite.interactive = false;
-  }
+  sprite.interactive = false;
+}
 
   public removeListener(event: string, sprite: DisplayObject, callback: Function) {
-    // sprite.removeAllListeners('mouseup');
-    sprite.removeListener(event, callback);
-  }
+  // sprite.removeAllListeners('mouseup');
+  sprite.removeListener(event, callback);
+}
 
   public addListener(event: string, sprite: DisplayObject, callback: Function, context: any) {
-    sprite.on(event, callback, context);
-    //  sprite.on('touchend', callback, context);
-  }
+  sprite.on(event, callback, context);
+  //  sprite.on('touchend', callback, context);
+}
 
   public updateTexture(sprite: Sprite, texture: string | RenderTexture, frame: string | null = null): void {
-    if (typeof texture == 'string') {
-      let tex = this._loader.getTexture(texture, frame);
+  if(typeof texture == 'string') {
+  let tex = this._loader.getTexture(texture, frame);
 
-      sprite.texture = tex;
-      return;
-    }
-    // if texture is not a string, it must be a Texture object; assign directly
-    sprite.texture = texture;
+  sprite.texture = tex;
+  return;
+}
+// if texture is not a string, it must be a Texture object; assign directly
+sprite.texture = texture;
   }
 
   public clearScreen() {
-    Debug.info('clearing screen (todo)');
-  }
+  Debug.info('clearing screen (todo)');
+}
 
   public width(): number | null {
-    if (this._game) return this._game.stage.width; return null;
-  }
+  if (this._game) return this._game.stage.width; return null;
+}
 
   public height(): number | null {
-    if (this._game) return this._game.stage.height; return null;
-  }
+  if (this._game) return this._game.stage.height; return null;
+}
 
   private _createSprite(x: number, y: number, texture: string | any, frame: string | null = null) {
-    let textureObj = texture;
-    if (typeof texture == 'string') { textureObj = this._loader.getTexture(texture, frame); }
+  let textureObj = texture;
+  if (typeof texture == 'string') { textureObj = this._loader.getTexture(texture, frame); }
 
-    let sprite = this._pxFactory.createSprite(textureObj);
-    sprite.x = x;
-    sprite.y = y;
+  let sprite = this._pxFactory.createSprite(textureObj);
+  sprite.x = x;
+  sprite.y = y;
 
-    return sprite;
-  }
+  return sprite;
+}
 
   private _createVideo(x: number, y: number, videoName: string): Sprite {
-    let vSprite = this._pxFactory.createVideo(this._gameConfig.data.PATHS.VIDEO + videoName);
-    vSprite.x = x;
-    vSprite.y = y;
+  let vSprite = this._pxFactory.createVideo(this._gameConfig.data.PATHS.VIDEO + videoName);
+  vSprite.x = x;
+  vSprite.y = y;
 
-    return vSprite;
-  }
+  return vSprite;
+}
 
-  private _createNineSlice(textureName: string, leftWidth?: number, topHeight?: number, rightWidth?: number, bottomHeight?: number): NineSlicePlane {
-    let texture = this._loader.getTexture(textureName);
-    let slice = this._pxFactory.createNineSlice(texture, leftWidth, topHeight, rightWidth, bottomHeight);
-    slice.width = texture.width;
-    slice.height = texture.height;
+  private _createNineSlice(textureName: string, leftWidth ?: number, topHeight ?: number, rightWidth ?: number, bottomHeight ?: number): NineSlicePlane {
+  let texture = this._loader.getTexture(textureName);
+  let slice = this._pxFactory.createNineSlice(texture, leftWidth, topHeight, rightWidth, bottomHeight);
+  slice.width = texture.width;
+  slice.height = texture.height;
 
-    return slice;
-  }
+  return slice;
+}
 
   //Foreign Elements
   private _createGame(w: number, h: number, container: string): Application {
-    return this._pxFactory.createGame(w, h, container);
-  }
+  return this._pxFactory.createGame(w, h, container);
+}
 
   private _createContainer(): Container {
-    return this._pxFactory.createContainer();
-  }
+  return this._pxFactory.createContainer();
+}
 }
 
 export default PxGame;

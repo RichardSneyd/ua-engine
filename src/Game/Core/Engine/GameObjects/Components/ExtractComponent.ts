@@ -21,7 +21,7 @@ class ExtractComponent {
     /**
      * @description returns a 1 dimentional RGBA pixel array for the container/object
      */
-    public toPixels(x: number = 0, y: number = 0, width?: number, height?: number): Uint8Array | Uint8ClampedArray {
+    public toPixels(x: number = 0, y: number = 0, width?: number, height?: number): Promise<Uint8Array | Uint8ClampedArray> {
         return this._screen.toPixels(this._go.data, x, y, width, height);
     }
 
@@ -44,6 +44,13 @@ class ExtractComponent {
      */
     public toCanvas(): HTMLCanvasElement {
         return this._screen.toCanvas(this._go.data);
+    }
+
+      /**
+     * @description generates and returns a new canvas element for the container/object
+     */
+    public toCanvasAsync(): Promise<HTMLCanvasElement> {
+        return this._screen.toCanvasAsync(this._go.data);
     }
 
     init(go: IGameObject): ExtractComponent {

@@ -187,9 +187,8 @@ class Loader {
 
   public addImages(names: string[], extension: string): Loader {
     let _ext = extension;
-    if (_ext.indexOf('.') !== 0) {
-      _ext = '.' + _ext;
-    }
+    if (_ext.indexOf('.') !== 0)  _ext = '.' + _ext;
+    
     for (let x = 0; x < names.length; x++) {
       this.addImage(names[x] + _ext);
     }
