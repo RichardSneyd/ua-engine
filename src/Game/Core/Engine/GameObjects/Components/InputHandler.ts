@@ -2,21 +2,25 @@ import ObjectCore from "./ObjectCore";
 import InputManager from '../../InputManager';
 import IGameObject from "../IGameObject";
 import Screen from "../../../../Services/Screen";
+import Point from "../../../Geom/Point";
+import BaseGameObject from "../BaseGameObject";
+import Debug from "../../Debug";
 
 /**
  * @description handles mouse and touch input for the attached IGameObject.
  */
 class InputHandler {
   private _inputManager: InputManager;
-  private _go: IGameObject; private _core: ObjectCore;
+  private _go: BaseGameObject; private _core: ObjectCore;
   private _screen: Screen;
   private _pixelPerfect: boolean = false;
+  private _pixelPerfectThreshold = 127;
 
   get pixelPerfect(): boolean {
     return this._pixelPerfect;
   }
 
-  get manager(){
+  get manager() {
     return this._inputManager;
   }
 
@@ -24,16 +28,23 @@ class InputHandler {
     this._inputManager = inputManager;
   }
 
-  init(go: IGameObject, core: ObjectCore) {
+  init(go: BaseGameObject, core: ObjectCore) {
     this._go = go;
     this._core = core;
     this._screen = this._core.screen;
   }
 
   // this method will likely be deprecated soon, as it only works for static sprites properly
+  /*  public makePixelPerfect(threshold: number = 127): boolean {
+     this._screen.addHitMap(this._core.data, threshold);
+     this._pixelPerfect = true;
+     return true;
+   } */
+
   public makePixelPerfect(threshold: number = 127): boolean {
-    this._screen.addHitMap(this._core.data, threshold);
+    // this._screen.addHitMap(this._core.data, threshold);
     this._pixelPerfect = true;
+    this._pixelPerfectThreshold = threshold;
     return true;
   }
 
@@ -41,9 +52,9 @@ class InputHandler {
     return this._core.data;
   }
 
-   /**
-     * @description enable mouse/pointer input for the attached GameObject
-     */
+  /**
+    * @description enable mouse/pointer input for the attached GameObject
+    */
   public enableInput() {
     if (this._core.data.data) {
       this._inputManager.enable(this._core.data.data);
@@ -67,7 +78,18 @@ class InputHandler {
   }
 
   public removeInputListener(event: string, callback: Function) {
-      this._inputManager.removeListener(event, callback, this._go);
+    this._inputManager.removeListener(event, callback, this._go);
+  }
+
+  public pixelHit(point: Point): boolean {
+    // get pixel index formula: (x + y * width )* 4
+    let x = point.x - this._go.left;
+    let y = point.y - this._go.top;
+    let index: number = (x + y * this._go.width) * 4;
+    Debug.info('RGBA index: ', index, ', val: ', this._go.pixels[index]);
+
+    if (this._go.pixels[index] > this._pixelPerfectThreshold) return true;
+    return false;
   }
 
   createNew(): InputHandler {

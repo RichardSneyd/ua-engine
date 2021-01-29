@@ -136,7 +136,6 @@ class PxGame {
     
     return new Promise((resolve: Function, reject: Function) => {
       img.onload = () => {
-        Debug.info('img loaded: ', img);
         canvas.width = img.naturalWidth;
         canvas.height = img.naturalHeight;
         ctx?.drawImage(img, 0, 0, img.width, img.height);

@@ -45,7 +45,7 @@ class Screen {
     return this._pxGame.addGraphic(x, y, width, height);
   }
 
-  public addHitMap(obj: any, threshold: number = 127): boolean {
+ /*  public addHitMap(obj: any, threshold: number = 127): boolean {
     // requires baseTexture -- generate from 'screengrab'??
     // let texture = this._pxGame.toTexture(obj);
     // Debug.info(texture);
@@ -54,7 +54,7 @@ class Screen {
 
     this._pxGame.genHitmap(obj.texture.baseTexture, obj, threshold);
     return true;
-  }
+  } */
 
   /* public addHitMap(obj: Sprite, threshold: number = 127) {
     this._pxGame.genHitmap(obj.texture.baseTexture, threshold);

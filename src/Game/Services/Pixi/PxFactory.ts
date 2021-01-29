@@ -15,7 +15,7 @@ class PxFactory {
 
   init(){
  //   setTimeout(() => {   
-      this._applyHacks();
+    //  this._applyHacks();
       this._initialized = true;
   //  }, 500);
   }
