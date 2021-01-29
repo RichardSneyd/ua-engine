@@ -127,8 +127,8 @@ class Screen {
       return this._pxGame.toImgElement(container);
   }
 
-  public toPixels(container: PIXI.Container): Uint8Array | Uint8ClampedArray {
-    return this._pxGame.toPixels(container);
+  public toPixels(container: PIXI.Container, x: number = 0, y: number = 0, width?: number, height?: number): Uint8Array | Uint8ClampedArray {
+    return this._pxGame.toPixels(container, x, y, width, height);
   }
 
   public toBase64(container: PIXI.Container): string {
@@ -139,7 +139,7 @@ class Screen {
     return this._pxGame.toTexture(object);
   }
 
-   public toCanvas(container: PIXI.Container): Promise<HTMLCanvasElement> {
+   public toCanvas(container: PIXI.Container): HTMLCanvasElement {
     return this._pxGame.toCanvas(container);
    }
 
