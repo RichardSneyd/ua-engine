@@ -179,6 +179,20 @@ class EditorScene implements ILevel {
             }
         };
 
+        let _orderName = (arr: any[], prefix: string, index: number): string => {
+            let unique: boolean = true;
+
+            for (let t = 0; t < arr.length; t++) {
+                if (arr[t].name == `${prefix}_${index}`) {
+                    unique = false;
+                    break;
+                };
+            }
+
+            if (!unique) return _orderName(arr, prefix, index + 1);
+            return (`${prefix}_${index}`);
+        }
+
         let gameobj: any;
         if (type === "image") {
             gameobj = this._goFactory.sprite(500, 500, src);
@@ -205,7 +219,7 @@ class EditorScene implements ILevel {
         else if (type === "dropzone") {
             gameobj = this._goFactory.nineSlice(660, 240, name, 4, 4, 4, 4, 300, 200);
             gameobj.objType = `${type}`;
-            let uniqName = _tryName(this._dropzoneGameObjects, `${name}`, 2);
+            let uniqName = _orderName(this._dropzoneGameObjects, `${name.charAt(0)}`, 1);
             gameobj.uniqName = uniqName;
 
             this._dropzoneGameObjects.push({ name: gameobj.uniqName, gameObj: gameobj, type: type });
@@ -214,7 +228,7 @@ class EditorScene implements ILevel {
         else if (type === "hotspot") {
             gameobj = this._goFactory.nineSlice(660, 240, name, 4, 4, 4, 4, 300, 200);
             gameobj.objType = `${type}`;
-            let uniqName = _tryName(this._hotspotGameObjects, `${name}`, 2);
+            let uniqName = _orderName(this._hotspotGameObjects, `${name.charAt(0)}`, 1);
             gameobj.uniqName = uniqName;
 
             this._hotspotGameObjects.push({ name: gameobj.uniqName, gameObj: gameobj, type: type });
@@ -237,7 +251,7 @@ class EditorScene implements ILevel {
 
             if (gameobj.objType === 'dropzone' || gameobj.objType === 'hotspot') {
                 Debug.info("selectBorder:", this.selectedGOBorder);
-                if (this.selectedGOBorder !== null || this.selectedGOBorder !== undefined) { this.selectedGOBorder.alpha = 0; }
+                if (this.selectedGOBorder) { this.selectedGOBorder.alpha = 0; }
 
                 let mouseX = this._manager.input.pointer.x;
                 let mouseY = this._manager.input.pointer.y;
