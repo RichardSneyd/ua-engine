@@ -1,6 +1,7 @@
 import Debug from "../Debug";
 import ILevel from '../Activities/ILevel';
 
+import MathUtils from '../Utils/MathUtils';
 import LevelManager from "../LevelManager";
 import GOFactory from "../GameObjects/GOFactory";
 import Loader from "../Loader";
@@ -13,8 +14,8 @@ import PxGame from "../../../Services/Pixi/PxGame";
 import Inspector from "./Inspector";
 import SceneEvents from "../Activities/SceneEvents";
 
-// build the visual of the editor here, like an activity level....
 
+// build the visual of the editor here, like an activity level....
 class EditorScene implements ILevel {
     private _loader: Loader;
     private _manager: LevelManager;
@@ -25,6 +26,7 @@ class EditorScene implements ILevel {
     private _loop: Loop;
     protected _pxGame: PxGame;
     protected _inspector: Inspector;
+    _math: MathUtils;
 
     public bgdName: string;
     protected _bgd: SpriteObject;
@@ -32,6 +34,8 @@ class EditorScene implements ILevel {
     protected spineList: string[] = [];
     protected _imgGameObjects: any[] = [];
     protected _spineGameObjects: any[] = [];
+    protected _dropzoneGameObjects: any[] = [];
+    protected _hotspotGameObjects: any[] = [];
     protected _downloadData: any;
 
     protected selectedGO: any;
@@ -40,14 +44,19 @@ class EditorScene implements ILevel {
     protected dragging: boolean = false;
     protected selectedGOBorder: PIXI.Graphics;
 
+    protected _resize: boolean = false;
+    protected _resizeOffsetX: number = 0;
+    protected _resizeOffsetY: number = 0;
+
     constructor(loader: Loader, manager: LevelManager, loop: Loop, goFactory: GOFactory,
-        pxGame: PxGame, accordion: UIAccordion, exportData: ExportData, inspector: Inspector, events: SceneEvents) {
+        pxGame: PxGame, accordion: UIAccordion, exportData: ExportData, inspector: Inspector, events: SceneEvents, math: MathUtils) {
         this._loader = loader;
         this._manager = manager;
         this._goFactory = goFactory;
         this._events = events;
         this._pxGame = pxGame;
         this._loop = loop;
+        this._math = math;
         this._accordion = accordion;
         this._exportData = exportData;
         this._inspector = inspector;
@@ -88,6 +97,8 @@ class EditorScene implements ILevel {
         // Create rows here
         this.addImagesRow();
         this.addSpinesRow();
+        this._addDropzonesRow();
+        this._addHotspotsRow();
 
         /* Download Button */
         this._exportData.createDownloadButton();
@@ -191,22 +202,60 @@ class EditorScene implements ILevel {
             this._spineGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
             gameobj.objID = this._spineGameObjects.length - 1;
         }
+        else if (type === "dropzone") {
+            gameobj = this._goFactory.nineSlice(660, 240, name, 4, 4, 4, 4, 300, 200);
+            gameobj.objType = `${type}`;
+            let uniqName = _tryName(this._dropzoneGameObjects, `${name}`, 2);
+            gameobj.uniqName = uniqName;
+
+            this._dropzoneGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
+            gameobj.objID = this._dropzoneGameObjects.length - 1;
+        }
 
         gameobj.input.enableInput();
         gameobj.input.addInputListener('pointerdown', () => {
-            this.xOffset = gameobj.x - this._manager.input.pointer.x;
-            this.yOffset = gameobj.y - this._manager.input.pointer.y;
             this.selectedGO = gameobj;
             this.selectedGO.uniqName = gameobj.uniqName;
-            this.addGameObjSelectionBorder(gameobj.x, gameobj.y, gameobj.width, gameobj.height);
-            this.dragging = true;
             this._inspector.setInputValue("name", this.selectedGO.uniqName);
 
-            Debug.info("gameobj.uniqName: ", gameobj.uniqName);
+            if (gameobj.objType === 'image' || gameobj.objType === 'spine') {
+                this.xOffset = gameobj.x - this._manager.input.pointer.x;
+                this.yOffset = gameobj.y - this._manager.input.pointer.y;
+
+                this.addGameObjSelectionBorder(gameobj.x, gameobj.y, gameobj.width, gameobj.height);
+                this.dragging = true;
+            }
+
+            if (gameobj.objType === 'dropzone' || gameobj.objType === 'hotspot') {
+                Debug.info("selectBorder:", this.selectedGOBorder);
+                // if (this.selectedGOBorder !== null || this.selectedGOBorder !== undefined) { this.selectedGOBorder.alpha = 0; }
+
+                let mouseX = this._manager.input.pointer.x;
+                let mouseY = this._manager.input.pointer.y;
+
+                let distanceBetween = (x1: number, y1: number, x2: number, y2: number): number => {
+                    let xDiff = x2 - x1;
+                    let yDiff = y2 - y1;
+                    let distance = Math.hypot(xDiff, yDiff);
+                    return distance;
+                }
+
+                if (distanceBetween(gameobj.right, gameobj.bottom, mouseX, mouseY) < 70) {
+                    this._resizeOffsetX = gameobj.right - this._manager.input.pointer.x;
+                    this._resizeOffsetY = gameobj.bottom - this._manager.input.pointer.y;
+                    this._resize = true;
+                }
+                else {
+                    this.dragging = true;
+                    this.xOffset = gameobj.x - this._manager.input.pointer.x;
+                    this.yOffset = gameobj.y - this._manager.input.pointer.y;
+                }
+            }
 
         }, this);
         gameobj.input.addInputListener('pointerup', () => {
             this.dragging = false;
+            this._resize = false;
         }, this);
     }
 
@@ -364,21 +413,42 @@ class EditorScene implements ILevel {
 
             if (i === spinePixels.length - 1) {
                 this._accordion.addRow('Spines', 'spine', ...spineResults);
-                this._accordion.removeAllSelections();
-                this._accordion.uncollapseAll();
             }
 
         }
     }
 
+    _addDropzonesRow(): void {
+        this._loader.addImage('../editor/dropzone.png', true);
+
+        let dropzoneList: any[] = [{ src: 'assets/editor/dropzone.png', name: 'dropzone' }];
+
+        this._accordion.addRow('Dropzones', 'dropzone', ...dropzoneList);
+        Debug.warn("dropzoneList: ", dropzoneList);
+    }
+
+    _addHotspotsRow(): void {
+        this._loader.addImage('../editor/hotspot.png', true);
+
+        this._loader.download().then(() => {
+            let hotspotList: any[] = [{ src: 'assets/editor/hotspot.png', name: 'hotspot' }];
+
+            this._accordion.addRow('Hotspots', 'hotspot', ...hotspotList);
+            Debug.warn("hotspotList: ", hotspotList);
+
+            this._accordion.removeAllSelections();
+            this._accordion.uncollapseAll();
+        });
+    }
+
     update(_time: number): void {
         if (this.dragging) {
             this.selectedGO.moveToMouse(this.xOffset, this.yOffset);
-            this.selectedGOBorder.x = this.selectedGO.x;
-            this.selectedGOBorder.y = this.selectedGO.y;
 
-            //Debug.warn(`selected x: ${this.selectedGO.x} selected y: ${this.selectedGO.y}`);
-            Debug.info("imagesList:", this._imgGameObjects);
+            if ((this.selectedGO.objType === 'image' || this.selectedGO.objType === 'spine')) {
+                this.selectedGOBorder.x = this.selectedGO.x;
+                this.selectedGOBorder.y = this.selectedGO.y;
+            }
 
             this._inspector.setInputValue('x', this.selectedGO.x);
             this._inspector.setInputValue('y', this.selectedGO.y);
@@ -389,17 +459,24 @@ class EditorScene implements ILevel {
             this._inspector.setInputValue('angle', this.selectedGO.angle);
         }
 
-        if (this.selectedGO && this.selectedGO.alpha !== 0) {
-            this.selectedGOBorder.x = this.selectedGO.x;
-            this.selectedGOBorder.y = this.selectedGO.y;
+        if (this._resize && (this.selectedGO.objType === 'dropzone' || this.selectedGO.objType === 'hotspot')) {
+            let xDiff = this._manager.input.pointer.x - this.selectedGO.right;
+            let yDiff = this._manager.input.pointer.y - this.selectedGO.bottom;
+            this.selectedGO.width = this.selectedGO.width + this._resizeOffsetX + xDiff;
+            this.selectedGO.height = this.selectedGO.height + this._resizeOffsetY + yDiff;
+        }
 
+        if (this.selectedGO && this.selectedGO.alpha !== 0) {
             this.selectedGO.scaleHandler.setScale(this._inspector.getInputValue('scale x'), this._inspector.getInputValue('scale y'));
 
-            this.selectedGOBorder.width = this.selectedGO.scaleHandler.x * this.selectedGO.width;
-            this.selectedGOBorder.height = this.selectedGO.scaleHandler.y * this.selectedGO.height;
+            if ((this.selectedGO.objType === 'image' || this.selectedGO.objType === 'spine')) {
+                this.selectedGOBorder.x = this.selectedGO.x;
+                this.selectedGOBorder.y = this.selectedGO.y;
+                this.selectedGOBorder.width = this.selectedGO.scaleHandler.x * this.selectedGO.width;
+                this.selectedGOBorder.height = this.selectedGO.scaleHandler.y * this.selectedGO.height;
+            }
 
             this.selectedGO.uniqName = this._inspector.getInputValue('name');
-
         }
     }
 
