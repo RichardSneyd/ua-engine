@@ -71,25 +71,25 @@ class PxGame {
 
   public toImgElement(container: PIXI.Container): HTMLImageElement {
     let img: HTMLImageElement = document.createElement('img');
-   // img.width = container.width;
-   // img.height = container.height;
+    img.width = container.width;
+    img.height = container.height;
     img.src = this.toBase64(container);
-    
+
     return img;
   }
 
   public toPixels(container: PIXI.Container, x: number = 0, y: number = 0, width?: number, height?: number): Uint8Array | Uint8ClampedArray {
     let pixels: Uint8Array | Uint8ClampedArray;
     let img = this.toImgElement(container);
-    Debug.info(img.width);
-    Debug.breakpoint();
+    Debug.info('width: ', img.width);
+    //  Debug.breakpoint();
     let canvas = document.createElement('canvas');
-    canvas.width = img.naturalWidth;
-    canvas.height = img.naturalHeight;
+    canvas.width = img.width;
+    canvas.height = img.height;
     let context = canvas.getContext('2d');
-    if(context){
+    if (context) {
       context.drawImage(img, 0, 0, canvas.width, canvas.height);
-      if(width && height){
+      if (width && height) {
         pixels = context.getImageData(x, y, width, height).data;
       }
       else {
@@ -118,12 +118,23 @@ class PxGame {
     return new PIXI.RenderTexture(new PIXI.BaseRenderTexture()); // dummy to get around null issue
   }
 
-  public toCanvas(container: PIXI.Container): Promise<HTMLCanvasElement> {
+  /*  public toCanvas(container: PIXI.Container): Promise<HTMLCanvasElement> {
     return new Promise((resolve: Function, reject: Function) => {
       if (this.renderer) {
         resolve(this.renderer.extract.canvas(container));
       }
     });
+  }  */
+
+  public toCanvas(container: PIXI.Container): HTMLCanvasElement {
+    let img = this.toImgElement(container);
+ //  Debug.info(img.width);
+   // Debug.breakpoint();
+    let canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    canvas.onload
+    return canvas;
   }
 
   public newLevel() {
@@ -200,7 +211,7 @@ class PxGame {
     gfx.x = x;
     gfx.y = y;
 
-    gfx.lineStyle(lineWidth, lineColor, lineAlpha); 
+    gfx.lineStyle(lineWidth, lineColor, lineAlpha);
     gfx.beginFill(rectColor, rectAlpha);
     gfx.drawRect(x, y, width, height);
     gfx.endFill();
