@@ -237,7 +237,7 @@ class EditorScene implements ILevel {
 
             if (gameobj.objType === 'dropzone' || gameobj.objType === 'hotspot') {
                 Debug.info("selectBorder:", this.selectedGOBorder);
-                // if (this.selectedGOBorder !== null || this.selectedGOBorder !== undefined) { this.selectedGOBorder.alpha = 0; }
+                if (this.selectedGOBorder !== null || this.selectedGOBorder !== undefined) { this.selectedGOBorder.alpha = 0; }
 
                 let mouseX = this._manager.input.pointer.x;
                 let mouseY = this._manager.input.pointer.y;
@@ -355,7 +355,8 @@ class EditorScene implements ILevel {
         let gameObjectData: any = {
             sprites: [],
             spines: [],
-            dropzones: []
+            dropzones: [],
+            hotspots: []
         };
 
         this._imgGameObjects.forEach((obj) => {
@@ -371,6 +372,22 @@ class EditorScene implements ILevel {
                 name: obj.name, filename: obj.filename, x: obj.gameObj.x, y: obj.gameObj.y,
                 originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, scaleX: obj.gameObj.scaleHandler.x, scaleY: obj.gameObj.scaleHandler.y,
                 angle: obj.gameObj.angle, hitShape: ""
+            });
+        });
+
+        this._dropzoneGameObjects.forEach((obj) => {
+            gameObjectData.dropzones.push({
+                type: 'rect',// make this dynamic once other shapes are in
+                name: obj.name, x: obj.gameObj.x, y: obj.gameObj.y,
+                width: obj.gameObj.width, height: obj.gameObj.height,
+            });
+        });
+
+        this._hotspotGameObjects.forEach((obj) => {
+            gameObjectData.hotspots.push({
+                type: 'rect',// make this dynamic once other shapes are in
+                name: obj.name, x: obj.gameObj.x, y: obj.gameObj.y,
+                width: obj.gameObj.width, height: obj.gameObj.height,
             });
         });
 
