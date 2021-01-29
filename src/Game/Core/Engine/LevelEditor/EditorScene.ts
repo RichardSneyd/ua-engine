@@ -208,8 +208,17 @@ class EditorScene implements ILevel {
             let uniqName = _tryName(this._dropzoneGameObjects, `${name}`, 2);
             gameobj.uniqName = uniqName;
 
-            this._dropzoneGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
+            this._dropzoneGameObjects.push({ name: gameobj.uniqName, gameObj: gameobj, type: type });
             gameobj.objID = this._dropzoneGameObjects.length - 1;
+        }
+        else if (type === "hotspot") {
+            gameobj = this._goFactory.nineSlice(660, 240, name, 4, 4, 4, 4, 300, 200);
+            gameobj.objType = `${type}`;
+            let uniqName = _tryName(this._hotspotGameObjects, `${name}`, 2);
+            gameobj.uniqName = uniqName;
+
+            this._hotspotGameObjects.push({ name: gameobj.uniqName, gameObj: gameobj, type: type });
+            gameobj.objID = this._hotspotGameObjects.length - 1;
         }
 
         gameobj.input.enableInput();
@@ -324,12 +333,19 @@ class EditorScene implements ILevel {
                     // TODO: remove specific selected gameobject from spine or image list for the download data
                     if (this.selectedGO.objType === 'image') {
                         this._imgGameObjects.splice(this.selectedGO.objID, 1);
-
-                        Debug.info('IMAGES:', this._imgGameObjects);
+                        //Debug.info('IMAGES:', this._imgGameObjects);
                     }
                     if (this.selectedGO.objType === 'spine') {
                         this._spineGameObjects.splice(this.selectedGO.objID, 1);
-                        Debug.info('SPINES:', this._spineGameObjects);
+                        //Debug.info('SPINES:', this._spineGameObjects);
+                    }
+                    if (this.selectedGO.objType === 'dropzone') {
+                        this._dropzoneGameObjects.splice(this.selectedGO.objID, 1);
+                        //Debug.info('DROPZONES:', this._spineGameObjects);
+                    }
+                    if (this.selectedGO.objType === 'hotspot') {
+                        this._hotspotGameObjects.splice(this.selectedGO.objID, 1);
+                        //Debug.info('HOTSPOTS:', this._spineGameObjects);
                     }
                 }
             }, false);
@@ -420,25 +436,21 @@ class EditorScene implements ILevel {
 
     _addDropzonesRow(): void {
         this._loader.addImage('../editor/dropzone.png', true);
-
         let dropzoneList: any[] = [{ src: 'assets/editor/dropzone.png', name: 'dropzone' }];
-
         this._accordion.addRow('Dropzones', 'dropzone', ...dropzoneList);
-        Debug.warn("dropzoneList: ", dropzoneList);
+        //Debug.info("dropzoneList: ", dropzoneList);
     }
 
     _addHotspotsRow(): void {
         this._loader.addImage('../editor/hotspot.png', true);
-
         this._loader.download().then(() => {
-            let hotspotList: any[] = [{ src: 'assets/editor/hotspot.png', name: 'hotspot' }];
-
-            this._accordion.addRow('Hotspots', 'hotspot', ...hotspotList);
-            Debug.warn("hotspotList: ", hotspotList);
-
             this._accordion.removeAllSelections();
             this._accordion.uncollapseAll();
         });
+
+        let hotspotList: any[] = [{ src: 'assets/editor/hotspot.png', name: 'hotspot' }];
+        this._accordion.addRow('Hotspots', 'hotspot', ...hotspotList);
+        //Debug.info("hotspotList: ", hotspotList);
     }
 
     update(_time: number): void {
