@@ -130,12 +130,12 @@ class Game {
    * @param the activity type (object) to start. Takes the object itself, or it's name in the form of a string
    */
   public startActivity(scriptName: string, act: IActivity | string | null = null) {
-    if(act == null) act = this.getActivityByCode(this.extractCode(scriptName));
+    if (act == null) act = this.getActivityByCode(this.extractCode(scriptName));
 
     if (typeof act !== 'string' && act !== null) {
       this._startActivity(act, scriptName);
     }
-    else if(typeof act == 'string') {
+    else if (typeof act == 'string') {
       let name = act;
       let activity: IActivity | undefined;
       activity = this._getActByName(name);
@@ -154,7 +154,7 @@ class Game {
   public extractCode(scriptName: string): string {
     let scriptCodeParts = scriptName.split('_');
     let code = scriptCodeParts[scriptCodeParts.length - 1];
-    
+
     return code;
   }
 
