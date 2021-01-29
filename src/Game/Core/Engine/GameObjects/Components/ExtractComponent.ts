@@ -11,46 +11,44 @@ class ExtractComponent {
     }
 
     /**
-     * @description generates and returns a html image element for the container/object
-     */
+    * @description syncronously generates an image element from the object/container
+    */
     public toImgElement(): HTMLImageElement {
         let cont = this._go.data.data !== undefined ? this._go.data.data : this._go.data;
         return this._screen.toImgElement(cont);
     }
 
     /**
-     * @description returns a 1 dimentional RGBA pixel array for the container/object
-     */
+     * @description returns a 1D array of pixels for the image. This is achieved by creating an imgEl with base64 src, and drawing it to an invisible canvas. 
+     * img.onload must be used to avoid drawing the img before it is loaded, hence the Promise.
+     * @param x the x value to start at on the canvas
+     * @param y the y value to start at on the canvas
+     * @param width the width of the section to return data for
+     * @param height the height of the section to return data for
+    */
     public toPixels(x: number = 0, y: number = 0, width?: number, height?: number): Promise<Uint8Array | Uint8ClampedArray> {
         return this._screen.toPixels(this._go.data, x, y, width, height);
     }
 
     /**
-    * @description generates and returns an encoded base64 string for the container/object
-    */
+   * @description Generate a base64 version of the image synchronously, using PIXI extract
+   */
     public toBase64(): string {
         return this._screen.toBase64(this._go.data);
     }
 
     /**
-    * @description generates and returns a RenderTexture, which is essentially a snapshot, for the container/object
-    */
+   * @description Generate a new texture and baseTexture, with base64 src, from existing gameObject/container
+   */
     public toTexture(): RenderTexture {
         return this._screen.toTexture(this._go.data);
     }
 
     /**
-     * @description generates and returns a new canvas element for the container/object
-     */
-    public toCanvas(): HTMLCanvasElement {
+    * @description generates a canvas element asyncronously for the object/container
+    */
+    public toCanvas(): Promise<HTMLCanvasElement> {
         return this._screen.toCanvas(this._go.data);
-    }
-
-      /**
-     * @description generates and returns a new canvas element for the container/object
-     */
-    public toCanvasAsync(): Promise<HTMLCanvasElement> {
-        return this._screen.toCanvasAsync(this._go.data);
     }
 
     init(go: IGameObject): ExtractComponent {

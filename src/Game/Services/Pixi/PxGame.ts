@@ -54,21 +54,10 @@ class PxGame {
     Debug.exposeGlobal(this._game, 'game');
   }
 
-  /* public toImgElement(container: PIXI.Container): Promise<HTMLImageElement> {
-    let imgEl: HTMLImageElement | null;
-    return new Promise((resolve: Function, reject: Function) => {
-      if (this.renderer) {
-        this.renderer.extract.canvas(container).toBlob((blob) => {
-          //   Debug.info('blob: ', blob);
-          imgEl = document.createElement('img');
-          var objectURL = URL.createObjectURL(blob);
-          imgEl.src = objectURL;
-          resolve(imgEl);
-        });
-      }
-    });
-  } */
-
+  /**
+   * @description syncronously generates an image element from the object/container
+   * @param container the object/container to generate an img element from
+   */
   public toImgElement(container: PIXI.Container): HTMLImageElement {
     let img: HTMLImageElement = document.createElement('img');
     img.width = container.width;
@@ -78,34 +67,20 @@ class PxGame {
     return img;
   }
 
- /*  public toPixels(container: PIXI.Container, x: number = 0, y: number = 0, width?: number, height?: number): Uint8Array | Uint8ClampedArray {
-    let pixels: Uint8Array | Uint8ClampedArray;
-    let img = this.toImgElement(container);
-    Debug.info('width: ', img.width);
-    //  Debug.breakpoint();
-    let canvas = document.createElement('canvas');
-    canvas.width = img.width;
-    canvas.height = img.height;
-    let context = canvas.getContext('2d');
-    if (context) {
-      context.drawImage(img, 0, 0, canvas.width, canvas.height);
-      if (width && height) {
-        pixels = context.getImageData(x, y, width, height).data;
-      }
-      else {
-        pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
-      }
-      return pixels;
-    }
-    Debug.error('renderer is undefined: ', this.renderer);
-    return new Uint8Array();
-  }
- */
+ /**
+  * @description returns a 1D array of pixels for the image. This is achieved by creating an imgEl with base64 src, and drawing it to an invisible canvas. 
+  * img.onload must be used to avoid drawing the img before it is loaded, hence the Promise.
+  * @param container the Container/GameObject to get pixels for
+  * @param x the x value to start at on the canvas
+  * @param y the y value to start at on the canvas
+  * @param width the width of the section to return data for
+  * @param height the height of the section to return data for
+  */
   public toPixels(container: PIXI.Container, x: number = 0, y: number = 0, width?: number, height?: number): Promise<Uint8Array | Uint8ClampedArray> {
     let pixels: Uint8Array | Uint8ClampedArray;
     return new Promise((resolve: Function, reject: Function)=>{
 
-      this.toCanvasAsync(container).then((canvas)=>{
+      this.toCanvas(container).then((canvas)=>{
         let ctx = canvas.getContext('2d');
         if(ctx){
           if (width && height) {
@@ -123,12 +98,20 @@ class PxGame {
     });
   }
 
+  /**
+   * @description Generate a base64 version of the image synchronously, using PIXI extract
+   * @param container The contaienr to generate a base64 string for
+   */
   public toBase64(container: PIXI.Container): string {
     if (this.renderer) return this.renderer.extract.base64(container);
     Debug.error('renderer is undefined: ', this.renderer);
     return 'error';
   }
 
+  /**
+   * @description Generate a new texture with base64 src from existing gameObject/container
+   * @param object The object/container to generate the texture (and corresponding base64) from
+   */
   public toTexture(object: any): PIXI.RenderTexture {
     if (this._game !== null) {
       let texture = this._game.renderer.generateTexture(object, PIXI.SCALE_MODES.LINEAR, 1);
@@ -140,15 +123,12 @@ class PxGame {
     return new PIXI.RenderTexture(new PIXI.BaseRenderTexture()); // dummy to get around null issue
   }
 
-  /*  public toCanvas(container: PIXI.Container): Promise<HTMLCanvasElement> {
-    return new Promise((resolve: Function, reject: Function) => {
-      if (this.renderer) {
-        resolve(this.renderer.extract.canvas(container));
-      }
-    });
-  }  */
 
-  public toCanvasAsync(container: PIXI.Container): Promise<HTMLCanvasElement> {
+  /**
+   * @description generates a canvas element asyncronously for the object/container
+   * @param container the container to generate a canvas from
+   */
+  public toCanvas(container: PIXI.Container): Promise<HTMLCanvasElement> {
     let img = this.toImgElement(container);
 
     let canvas = document.createElement('canvas');
@@ -166,21 +146,6 @@ class PxGame {
         Debug.error(err);
       }
     })
-}
-
-  public toCanvas(container: PIXI.Container): HTMLCanvasElement {
-  let img = this.toImgElement(container);
-  //  Debug.info(img.width);
-  // Debug.breakpoint();
-  let canvas = document.createElement('canvas');
-  canvas.width = img.naturalWidth;
-  canvas.height = img.naturalHeight;
-  let ctx = canvas.getContext('2d');
-
-  ctx?.drawImage(img, 0, 0, img.width, img.height);
-  return canvas;
-
-
 }
 
 

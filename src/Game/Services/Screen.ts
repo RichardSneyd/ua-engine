@@ -123,27 +123,48 @@ class Screen {
     this._pxGame.newLevel();
   }
 
+   /**
+   * @description syncronously generates an image element from the object/container
+   * @param container the object/container to generate an img element from
+   */
   public toImgElement(container: PIXI.Container): HTMLImageElement { 
       return this._pxGame.toImgElement(container);
   }
 
+  /**
+  * @description returns a 1D array of pixels for the image. This is achieved by creating an imgEl with base64 src, and drawing it to an invisible canvas. 
+  * img.onload must be used to avoid drawing the img before it is loaded, hence the Promise.
+  * @param container the Container/GameObject to get pixels for
+  * @param x the x value to start at on the canvas
+  * @param y the y value to start at on the canvas
+  * @param width the width of the section to return data for
+  * @param height the height of the section to return data for
+  */
   public toPixels(container: PIXI.Container, x: number = 0, y: number = 0, width?: number, height?: number): Promise<Uint8Array | Uint8ClampedArray> {
     return this._pxGame.toPixels(container, x, y, width, height);
   }
 
+  /**
+   * @description Generate a base64 version of the image synchronously, using PIXI extract
+   * @param container The contaienr to generate a base64 string for
+   */
   public toBase64(container: PIXI.Container): string {
     return this._pxGame.toBase64(container);
   }
 
+  /**
+   * @description Generate a new texture with base64 src from existing gameObject/container
+   * @param object The object/container to generate the texture (and corresponding base64) from
+   */
   public toTexture(object: DisplayObject): RenderTexture {
     return this._pxGame.toTexture(object);
   }
 
-   public toCanvasAsync(container: PIXI.Container): Promise<HTMLCanvasElement> {
-    return this._pxGame.toCanvasAsync(container);
-   }
-
-   public toCanvas(container: PIXI.Container): HTMLCanvasElement {
+ /**
+   * @description generates a canvas element asyncronously for the object/container
+   * @param container the container to generate a canvas from
+   */
+   public toCanvas(container: PIXI.Container): Promise<HTMLCanvasElement> {
     return this._pxGame.toCanvas(container);
    }
 
