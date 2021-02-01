@@ -188,14 +188,14 @@ class EditorScene implements ILevel {
             let unique: boolean = true;
 
             for (let t = 0; t < arr.length; t++) {
-                if (arr[t].name == `${prefix}_${index}`) {
+                if (arr[t].name == `${prefix}${index}`) {
                     unique = false;
                     break;
                 };
             }
 
             if (!unique) return _orderName(arr, prefix, index + 1);
-            return (`${prefix}_${index}`);
+            return (`${prefix}${index}`);
         }
 
         let gameobj: any;
@@ -265,15 +265,7 @@ class EditorScene implements ILevel {
                 let mouseX = this._manager.input.pointer.x;
                 let mouseY = this._manager.input.pointer.y;
 
-                // TODO: retry MathUtils in order to use distanceBetween
-                let distanceBetween = (x1: number, y1: number, x2: number, y2: number): number => {
-                    let xDiff = x2 - x1;
-                    let yDiff = y2 - y1;
-                    let distance = Math.hypot(xDiff, yDiff);
-                    return distance;
-                }
-
-                if (distanceBetween(gameobj.right, gameobj.bottom, mouseX, mouseY) < 70) {
+                if (this._math.distanceBetween(gameobj.right, gameobj.bottom, mouseX, mouseY) < 70) {
                     this._resizeOffsetX = gameobj.right - this._manager.input.pointer.x;
                     this._resizeOffsetY = gameobj.bottom - this._manager.input.pointer.y;
                     this._resize = true;
