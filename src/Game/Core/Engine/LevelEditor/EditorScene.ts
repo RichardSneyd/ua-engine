@@ -9,10 +9,10 @@ import UIAccordion from "./UIAccordion";
 import ExportData from './ExportData';
 import Loop from "../Loop";
 import SpriteObject from "../GameObjects/SpriteObject";
-import SpineObject from "../GameObjects/SpineObject";
 import PxGame from "../../../Services/Pixi/PxGame";
 import Inspector from "./Inspector";
 import SceneEvents from "../Activities/SceneEvents";
+import ContainerObject from "../GameObjects/ContainerObject";
 
 
 // build the visual of the editor here, like an activity level....
@@ -30,6 +30,8 @@ class EditorScene implements ILevel {
 
     public bgdName: string;
     protected _bgd: SpriteObject;
+    protected _zoneContainer: ContainerObject;
+    protected _playgroundContainer: ContainerObject;
     protected imgList: any[] = [];
     protected spineList: string[] = [];
     protected _imgGameObjects: any[] = [];
@@ -108,6 +110,9 @@ class EditorScene implements ILevel {
 
         /* Handle Inputs */
         this._addInputManager();
+
+        this._playgroundContainer = this._goFactory.container(0, 0);
+        this._zoneContainer = this._goFactory.container(0, 0);
     }
 
     _createBackground() {
@@ -196,6 +201,7 @@ class EditorScene implements ILevel {
         let gameobj: any;
         if (type === "image") {
             gameobj = this._goFactory.sprite(500, 500, src);
+            this._playgroundContainer.addChild(gameobj);
             gameobj.setOrigin(.5);
             gameobj.objType = `${type}`;
             let uniqName = _tryName(this._imgGameObjects, `${name}`, 2);
@@ -207,6 +213,7 @@ class EditorScene implements ILevel {
         }
         else if (type === "spine") {
             gameobj = this._goFactory.spine(500, 500, name);
+            this._playgroundContainer.addChild(gameobj);
             gameobj.objType = `${type}`;
             let uniqName = _tryName(this._spineGameObjects, `${name}`, 2);
             gameobj.uniqName = uniqName;
@@ -218,6 +225,7 @@ class EditorScene implements ILevel {
         }
         else if (type === "dropzone") {
             gameobj = this._goFactory.nineSlice(660, 240, name, 4, 4, 4, 4, 300, 200);
+            this._zoneContainer.addChild(gameobj);
             gameobj.objType = `${type}`;
             let uniqName = _orderName(this._dropzoneGameObjects, `${name.charAt(0)}`, 1);
             gameobj.uniqName = uniqName;
@@ -227,6 +235,7 @@ class EditorScene implements ILevel {
         }
         else if (type === "hotspot") {
             gameobj = this._goFactory.nineSlice(660, 240, name, 4, 4, 4, 4, 300, 200);
+            this._zoneContainer.addChild(gameobj);
             gameobj.objType = `${type}`;
             let uniqName = _orderName(this._hotspotGameObjects, `${name.charAt(0)}`, 1);
             gameobj.uniqName = uniqName;
@@ -256,6 +265,7 @@ class EditorScene implements ILevel {
                 let mouseX = this._manager.input.pointer.x;
                 let mouseY = this._manager.input.pointer.y;
 
+                // TODO: retry MathUtils in order to use distanceBetween
                 let distanceBetween = (x1: number, y1: number, x2: number, y2: number): number => {
                     let xDiff = x2 - x1;
                     let yDiff = y2 - y1;
