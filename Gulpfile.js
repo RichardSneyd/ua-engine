@@ -64,9 +64,9 @@ const config = {
         files: ['dist/game.js'],
         replace: [['UAENGINE_1["default"]', 'window.UAENGINE']]
     },
-    CopyUAE: {
-        src: ['../ua-engine/dist/uae.d.ts', '../ua-engine/dist/uae.js', '../ua-engine/dist/uae.js.map'],
-        dest: ['./@types/uae.d.ts', './js/lib/uae.js', './js/lib/uae.js.map']
+    CopyPatches: {
+        src: ['./patches/resource-loader.cjs.js'],
+        dest: ['./node_modules/resource-loader/dist/resource-loader.cjs.js']
     },
     concat: {
         src: ['./lib/rise_h5_sdk_v1.0.js', './dist/uae-pure.js'],
@@ -219,7 +219,21 @@ function genDecs(){
 
 }
 
-exports.default = gulp.parallel(genDecs, watchDecs, gulp.series(calculateDeps, watchT));
+function copyPatches() {
+    const CopyFiles = require('./CopyFiles.js');
+    let cFiles = new CopyFiles();
+
+    let src = config.CopyPatches.src;
+    let dest = config.CopyPatches.dest;
+
+    return new Promise((resolve, reject) => {
+        if(cFiles.copy(src, dest)){
+            resolve('copyPatches completed');
+        }
+    });
+}
+
+exports.default = gulp.parallel(genDecs, watchDecs, gulp.series(gulp.parallel(copyPatches, calculateDeps), watchT));
 exports.concat = concatT;
 exports.uglify = uglifyT;
 exports.browserify = browserifyT;
@@ -229,3 +243,4 @@ exports.calc = calculateDeps;
 exports.genDecs = genDecs;
 exports.watchDecs = watchDecs;
 exports.watch = watchT;
+exports.patch = copyPatches;

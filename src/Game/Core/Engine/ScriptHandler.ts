@@ -44,7 +44,7 @@ class ScriptHandler {
       // this._events = level.events;
         this._name = name;
         this._raw = raw;
-        this._checkIfColumnNamesValid(parseCols.concat(objectifyCols)); // check if column names provided for processing are valid before proceeding
+       // this._checkIfColumnNamesValid(parseCols.concat(objectifyCols)); // check if column names provided for processing are valid before proceeding
         this._convertRowsFromRaw(parseCols, objectifyCols, processText);
         this._parseNumbers(['id', 'page', 'auto_next', 'round']);
         this._initialized = true;

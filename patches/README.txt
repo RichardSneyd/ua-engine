@@ -1,0 +1,2 @@
+This directory is for files which will be copied over into other directories as patches - for example, as a 'hacky' fix to a 
+dependency who's repo we cannot push our own commits to. For example, 'resource-loader.cjs.js', to bypass errors for trying to load spine files that are already loaded.
