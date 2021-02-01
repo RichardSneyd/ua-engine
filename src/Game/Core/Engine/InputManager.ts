@@ -117,8 +117,8 @@ class InputManager {
         this._screen.addListener(event, pixiData, (evt: any) => {
             if (go.hitShape == null) {
                 if(go.input.pixelPerfect){
-                   // if(go.input.pixelHit(this._pointer)) callback.bind(context)(evt);
-                   callback.bind(context)(evt);
+                    if(go.input.pixelHit(this._pointer)) callback.bind(context)(evt);
+                  // callback.bind(context)(evt);
                 }
                 else callback.bind(context)(evt);
             } 
