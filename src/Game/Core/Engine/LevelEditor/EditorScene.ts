@@ -210,6 +210,8 @@ class EditorScene implements ILevel {
             this._imgGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
             gameobj.objID = this._imgGameObjects.length - 1;
 
+            this._inspector.setInputReadOnly('width', true);
+            this._inspector.setInputReadOnly('height', true);
         }
         else if (type === "spine") {
             gameobj = this._goFactory.spine(500, 500, name);
@@ -222,6 +224,9 @@ class EditorScene implements ILevel {
 
             this._spineGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
             gameobj.objID = this._spineGameObjects.length - 1;
+
+            this._inspector.setInputReadOnly('width', true);
+            this._inspector.setInputReadOnly('height', true);
         }
         else if (type === "dropzone") {
             gameobj = this._goFactory.nineSlice(660, 240, name, 4, 4, 4, 4, 300, 200);
@@ -232,6 +237,9 @@ class EditorScene implements ILevel {
 
             this._dropzoneGameObjects.push({ name: gameobj.uniqName, gameObj: gameobj, type: type });
             gameobj.objID = this._dropzoneGameObjects.length - 1;
+
+            this._inspector.setInputReadOnly('width', false);
+            this._inspector.setInputReadOnly('height', false);
         }
         else if (type === "hotspot") {
             gameobj = this._goFactory.nineSlice(660, 240, name, 4, 4, 4, 4, 300, 200);
@@ -242,6 +250,9 @@ class EditorScene implements ILevel {
 
             this._hotspotGameObjects.push({ name: gameobj.uniqName, gameObj: gameobj, type: type });
             gameobj.objID = this._hotspotGameObjects.length - 1;
+
+            this._inspector.setInputReadOnly('width', false);
+            this._inspector.setInputReadOnly('height', false);
         }
 
         gameobj.input.enableInput();
@@ -256,6 +267,9 @@ class EditorScene implements ILevel {
 
                 this.addGameObjSelectionBorder(gameobj.x, gameobj.y, gameobj.width, gameobj.height);
                 this.dragging = true;
+
+                this._inspector.setInputReadOnly('width', true);
+                this._inspector.setInputReadOnly('height', true);
             }
 
             if (gameobj.objType === 'dropzone' || gameobj.objType === 'hotspot') {
@@ -265,6 +279,9 @@ class EditorScene implements ILevel {
                 let mouseX = this._manager.input.pointer.x;
                 let mouseY = this._manager.input.pointer.y;
 
+                Debug.info("distance between: ", this._math.distanceBetween(gameobj.right, gameobj.bottom, mouseX, mouseY));
+                Debug.info('RIGHT: ', gameobj.right);
+                Debug.info('BOTTOM: ', gameobj.bottom);
                 if (this._math.distanceBetween(gameobj.right, gameobj.bottom, mouseX, mouseY) < 70) {
                     this._resizeOffsetX = gameobj.right - this._manager.input.pointer.x;
                     this._resizeOffsetY = gameobj.bottom - this._manager.input.pointer.y;
@@ -275,6 +292,12 @@ class EditorScene implements ILevel {
                     this.xOffset = gameobj.x - this._manager.input.pointer.x;
                     this.yOffset = gameobj.y - this._manager.input.pointer.y;
                 }
+
+                this._inspector.setInputReadOnly('width', false);
+                this._inspector.setInputReadOnly('height', false);
+
+                /* this._inspector.setInputValue('width', this.selectedGO.width);
+                this._inspector.setInputValue('height', this.selectedGO.height); */
             }
 
         }, this);
@@ -307,6 +330,12 @@ class EditorScene implements ILevel {
         }
         else if (prop === "origin y") {
             this.selectedGO.origin.y = val;
+        }
+        else if (prop === "width") {
+            this.selectedGO.width = val;
+        }
+        else if (prop === "height") {
+            this.selectedGO.height = val;
         }
     }
 
@@ -487,6 +516,7 @@ class EditorScene implements ILevel {
     }
 
     update(_time: number): void {
+
         if (this.dragging) {
             this.selectedGO.moveToMouse(this.xOffset, this.yOffset);
 
@@ -509,7 +539,14 @@ class EditorScene implements ILevel {
             let yDiff = this._manager.input.pointer.y - this.selectedGO.bottom;
             this.selectedGO.width = this.selectedGO.width + this._resizeOffsetX + xDiff;
             this.selectedGO.height = this.selectedGO.height + this._resizeOffsetY + yDiff;
+
+            Debug.info(`${this.selectedGO.width} -  ${this.selectedGO.width}`);
+
+            this._inspector.setInputValue('width', this.selectedGO.width);
+            this._inspector.setInputValue('height', this.selectedGO.height);
         }
+
+
 
         if (this.selectedGO && this.selectedGO.alpha !== 0) {
             this.selectedGO.scaleHandler.setScale(this._inspector.getInputValue('scale x'), this._inspector.getInputValue('scale y'));
