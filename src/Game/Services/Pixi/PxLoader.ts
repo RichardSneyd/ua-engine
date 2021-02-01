@@ -1,5 +1,6 @@
+import * as PIXI from 'pixi.js-legacy';
 import { Loader } from 'pixi.js-legacy';
-import 'pixi-spine';
+require('pixi-spine');
 
 import PxFactory from './PxFactory';
 import Debug from '../../Core/Engine/Debug';

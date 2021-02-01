@@ -83,9 +83,10 @@ class InputHandler {
 
   public pixelHit(point: Point): boolean {
     // get pixel index formula: (x + y * width )* 4
-    let x = point.x - this._go.left;
-    let y = point.y - this._go.top;
-    let index: number = (x + y * this._go.width) * 4;
+    let x = Math.abs(point.x - this._go.left);
+    let y = Math.abs(point.y - this._go.top);
+    let index: number = Math.round((x + (y * this._go.width)) * 4);
+    Debug.info('x: ', x, 'y: ', y, 'width: ', this._go.width);
     Debug.info('RGBA index: ', index, ', val: ', this._go.pixels[index]);
 
     if (this._go.pixels[index] > this._pixelPerfectThreshold) return true;

@@ -1,13 +1,14 @@
 
+import * as PIXI from 'pixi.js-legacy';
+(<any> window).PIXI = PIXI;
+require('pixi-spine'); // import is pre-executed, causing an error (No PIXI object on global yet). Use require instead.
 import { Application, Sprite, Renderer, Container, DisplayObject, NineSlicePlane, BaseTexture, Graphics, RenderTexture } from 'pixi.js-legacy';
 import PxText from './PxText';
 import PxFactory from './PxFactory';
 import Loader from '../../Core/Engine/Loader';
-import 'pixi-spine';
 import Events from '../../Core/Engine/Events';
 import GameConfig from '../../Core/Engine/GameConfig';
 import Debug from '../../Core/Engine/Debug';
-import { AnyARecord } from 'dns';
 
 class PxGame {
   private _pxFactory: PxFactory; _loader: Loader; _events: Events;
