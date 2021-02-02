@@ -273,15 +273,12 @@ class EditorScene implements ILevel {
             }
 
             if (gameobj.objType === 'dropzone' || gameobj.objType === 'hotspot') {
-                Debug.info("selectBorder:", this.selectedGOBorder);
+                //Debug.info("selectBorder:", this.selectedGOBorder);
                 if (this.selectedGOBorder) { this.selectedGOBorder.alpha = 0; }
 
                 let mouseX = this._manager.input.pointer.x;
                 let mouseY = this._manager.input.pointer.y;
 
-                Debug.info("distance between: ", this._math.distanceBetween(gameobj.right, gameobj.bottom, mouseX, mouseY));
-                Debug.info('RIGHT: ', gameobj.right);
-                Debug.info('BOTTOM: ', gameobj.bottom);
                 if (this._math.distanceBetween(gameobj.right, gameobj.bottom, mouseX, mouseY) < 70) {
                     this._resizeOffsetX = gameobj.right - this._manager.input.pointer.x;
                     this._resizeOffsetY = gameobj.bottom - this._manager.input.pointer.y;
@@ -292,13 +289,12 @@ class EditorScene implements ILevel {
                     this.xOffset = gameobj.x - this._manager.input.pointer.x;
                     this.yOffset = gameobj.y - this._manager.input.pointer.y;
                 }
-
                 this._inspector.setInputReadOnly('width', false);
                 this._inspector.setInputReadOnly('height', false);
-
-                /* this._inspector.setInputValue('width', this.selectedGO.width);
-                this._inspector.setInputValue('height', this.selectedGO.height); */
             }
+
+            this._inspector.setInputValue('width', this.selectedGO.width);
+            this._inspector.setInputValue('height', this.selectedGO.height);
 
         }, this);
         gameobj.input.addInputListener('pointerup', () => {
@@ -312,30 +308,30 @@ class EditorScene implements ILevel {
         Debug.info(`prop: ${prop} val: ${val}`);
 
         if (prop === "name") {
-            Debug.warn("objType:", this.selectedGO.objType);
-            Debug.warn("objID:", this.selectedGO.objID);
-            //this.selectedGO.textureName = val;
+            /* Debug.info("objType:", this.selectedGO.objType);
+            Debug.info("objID:", this.selectedGO.objID); */
+            this.selectedGO.uniqName = `${val}`;
         }
         else if (prop === "x") {
-            this.selectedGO.x = val;
+            this.selectedGO.x = Number(val);
         }
         else if (prop === "y") {
-            this.selectedGO.y = val;
+            this.selectedGO.y = Number(val);
         }
         else if (prop === "angle") {
-            this.selectedGO.angle = val;
+            this.selectedGO.angle = Number(val);
         }
         else if (prop === "origin x") {
-            this.selectedGO.origin.x = val;
+            this.selectedGO.origin.x = Number(val);
         }
         else if (prop === "origin y") {
-            this.selectedGO.origin.y = val;
+            this.selectedGO.origin.y = Number(val);
         }
         else if (prop === "width") {
-            this.selectedGO.width = val;
+            this.selectedGO.width = Number(val);
         }
         else if (prop === "height") {
-            this.selectedGO.height = val;
+            this.selectedGO.height = Number(val);
         }
     }
 
@@ -373,9 +369,10 @@ class EditorScene implements ILevel {
                 if (input.key === "Delete") {
                     this.selectedGO.visible = false;
                     this.selectedGO.alpha = 0;
-                    this.selectedGOBorder.alpha = 0;
-                    this.selectedGOBorder.visible = false;
-                    // TODO: remove specific selected gameobject from spine or image list for the download data
+                    if (this.selectedGOBorder) {
+                        this.selectedGOBorder.alpha = 0;
+                        this.selectedGOBorder.visible = false;
+                    }
                     if (this.selectedGO.objType === 'image') {
                         this._imgGameObjects.splice(this.selectedGO.objID, 1);
                         //Debug.info('IMAGES:', this._imgGameObjects);
@@ -542,8 +539,8 @@ class EditorScene implements ILevel {
 
             Debug.info(`${this.selectedGO.width} -  ${this.selectedGO.width}`);
 
-            this._inspector.setInputValue('width', this.selectedGO.width);
-            this._inspector.setInputValue('height', this.selectedGO.height);
+            this._inspector.setInputValue('width', parseInt(this.selectedGO.width));
+            this._inspector.setInputValue('height', parseInt(this.selectedGO.height));
         }
 
 
