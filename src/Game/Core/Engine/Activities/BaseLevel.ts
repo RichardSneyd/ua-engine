@@ -31,12 +31,13 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     protected _ready: boolean = false;
 
     protected _character: SpineObject;
+    protected _sfx: SpineObject;
 
     constructor(manager: LevelManager, events: SceneEvents, loop: Loop, goFactory: GOFactory, loader: Loader, game: Game) {
         super(events, loop, goFactory, loader, game);
         this._manager = manager;
 
-      //  Debug.exposeGlobal(this, 'level'); // expose all levels globally as 'level' for debugging convenience
+        //  Debug.exposeGlobal(this, 'level'); // expose all levels globally as 'level' for debugging convenience
     }
 
     /**
@@ -68,9 +69,9 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         this._loader.loadActScript(scriptName, (script: any, data: any) => {
             if (data == null || data == undefined) Debug.error('no script data returned: ', data);
             this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
-          //  this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
-            if(script[0].hasOwnProperty('config')) {
-                if(script[0].config.includes('level_file:')){
+            //  this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
+            if (script[0].hasOwnProperty('config')) {
+                if (script[0].config.includes('level_file:')) {
                     this._loader.loadLevelFile(scriptName, (script: any) => {
                         this.manager.setLevelFile(script);
                         this.preload();
@@ -87,8 +88,12 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @description adds resources to the load queue, then uses a promise to download those resource, then call the start method
      */
     preload(): void {
-        if(!this._manager.script.isFalsy(this.configRow.config.char)){
+        if (!this._manager.script.isFalsy(this.configRow.config.char)) {
             this._loader.addSpine(this.configRow.config.char);
+        }
+        let sfx = this._manager.script.fileList(['config.sfx']);
+        if (sfx.length > 0) {
+            this._loader.addSpine(sfx[0]);
         }
         super.preload();
     }
@@ -109,7 +114,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         else {
             Debug.error('no bgd property in config cell of first row');
         }
-     //   let char = this._loader.getResource(configRow.config.char, true);
+        //   let char = this._loader.getResource(configRow.config.char, true);
         if (configRow.config.hasOwnProperty('char') && !this._manager.script.isFalsy(configRow.config.char) && this._loader.getResource(configRow.config.char, true)) {
             this._character = this._goFactory.spine(20, this._game.height() - 150, configRow.config.char, this._foreground); // reposition _character as needed when extending
             Debug.exposeGlobal(this._character, 'char');
@@ -126,6 +131,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         Debug.info('onNewRow called for row %s: ', this.manager.script.active.id, this.manager.script.active);
         this.loadConfig();
         this.updateCharacterState();
+        this.playSfx();
     }
 
     /**
@@ -136,6 +142,19 @@ abstract class BaseLevel extends BaseScene implements ILevel {
             let loop = (this.activeRow.char_loop == 'y');
             let animation = this.activeRow.char;
             if (animation && animation !== '') this._character.animations.play(animation, loop);
+        }
+    }
+
+    /**
+     * @description check the current row, and play 'out' animation in sfx spine if indicated
+     */
+    playSfx() {
+        if (this.activeRow.config && !this.manager.script.isFalsy(this.activeRow.config.sfx)) {
+            if (!this._sfx) {
+                this._sfx = this._goFactory.spine(this._game.width() / 2, this._game.height() / 2, this.activeRow.config.sfx, this._foreground);
+                this._sfx.setOrigin(.5);
+            }
+            this._sfx.animations.play('starburst_out');
         }
     }
 
@@ -183,7 +202,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @description go to a different activity (a product is also an activity, and it's menus are levels/scenes within it)
      * @param code the code of the activity, or menu, to go to
      */
-    public goto(code: string){
+    public goto(code: string) {
         this._game.startActivity(code);
     }
 
