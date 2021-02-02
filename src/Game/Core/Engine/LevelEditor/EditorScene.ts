@@ -13,6 +13,7 @@ import PxGame from "../../../Services/Pixi/PxGame";
 import Inspector from "./Inspector";
 import SceneEvents from "../Activities/SceneEvents";
 import ContainerObject from "../GameObjects/ContainerObject";
+import TextObject from "../GameObjects/TextObject";
 
 
 // build the visual of the editor here, like an activity level....
@@ -49,6 +50,12 @@ class EditorScene implements ILevel {
     protected _resize: boolean = false;
     protected _resizeOffsetX: number = 0;
     protected _resizeOffsetY: number = 0;
+    protected _fontStyle: any = {
+        fontFamily: 'gothic',
+        fill: 'white',
+        fontSize: '30px',
+        fontWeight: 'bold'
+    };
 
     constructor(loader: Loader, manager: LevelManager, loop: Loop, goFactory: GOFactory,
         pxGame: PxGame, accordion: UIAccordion, exportData: ExportData, inspector: Inspector, events: SceneEvents, math: MathUtils) {
@@ -235,6 +242,10 @@ class EditorScene implements ILevel {
             let uniqName = _orderName(this._dropzoneGameObjects, `${name.charAt(0)}`, 1);
             gameobj.uniqName = uniqName;
 
+            let followText: TextObject = this._goFactory.text(gameobj.x / 2 - gameobj.width / 2, gameobj.y / 2 - gameobj.height / 2 + 40, gameobj.uniqName, this._fontStyle, gameobj);
+            followText.setOrigin(1);
+            gameobj.followText = followText;
+
             this._dropzoneGameObjects.push({ name: gameobj.uniqName, gameObj: gameobj, type: type });
             gameobj.objID = this._dropzoneGameObjects.length - 1;
 
@@ -247,6 +258,10 @@ class EditorScene implements ILevel {
             gameobj.objType = `${type}`;
             let uniqName = _orderName(this._hotspotGameObjects, `${name.charAt(0)}`, 1);
             gameobj.uniqName = uniqName;
+
+            let followText: TextObject = this._goFactory.text(gameobj.x / 2 - gameobj.width / 2, gameobj.y / 2 - gameobj.height / 2 + 40, gameobj.uniqName, this._fontStyle, gameobj);
+            followText.setOrigin(1);
+            gameobj.followText = followText;
 
             this._hotspotGameObjects.push({ name: gameobj.uniqName, gameObj: gameobj, type: type });
             gameobj.objID = this._hotspotGameObjects.length - 1;
@@ -300,6 +315,10 @@ class EditorScene implements ILevel {
         gameobj.input.addInputListener('pointerup', () => {
             this.dragging = false;
             this._resize = false;
+
+            if (this.selectedGO.followText) {
+                this.selectedGO.followText.x = 30 + this.selectedGO.width / 2;
+            }
         }, this);
     }
 
@@ -308,8 +327,6 @@ class EditorScene implements ILevel {
         Debug.info(`prop: ${prop} val: ${val}`);
 
         if (prop === "name") {
-            /* Debug.info("objType:", this.selectedGO.objType);
-            Debug.info("objID:", this.selectedGO.objID); */
             this.selectedGO.uniqName = `${val}`;
             if (this.selectedGO.objType === "image") {
                 this._imgGameObjects[this.selectedGO.objID].name = `${val}`;
@@ -341,9 +358,11 @@ class EditorScene implements ILevel {
         }
         else if (prop === "width") {
             this.selectedGO.width = Number(val);
+            this.selectedGO.followText.x = 30 + this.selectedGO.width / 2;
         }
         else if (prop === "height") {
             this.selectedGO.height = Number(val);
+            this.selectedGO.followText.x = 30 + this.selectedGO.width / 2;
         }
     }
 
@@ -549,13 +568,10 @@ class EditorScene implements ILevel {
             this.selectedGO.width = this.selectedGO.width + this._resizeOffsetX + xDiff;
             this.selectedGO.height = this.selectedGO.height + this._resizeOffsetY + yDiff;
 
-            Debug.info(`${this.selectedGO.width} -  ${this.selectedGO.width}`);
-
+            //Debug.info(`${this.selectedGO.width} -  ${this.selectedGO.width}`);
             this._inspector.setInputValue('width', parseInt(this.selectedGO.width));
             this._inspector.setInputValue('height', parseInt(this.selectedGO.height));
         }
-
-
 
         if (this.selectedGO && this.selectedGO.alpha !== 0) {
             this.selectedGO.scaleHandler.setScale(this._inspector.getInputValue('scale x'), this._inspector.getInputValue('scale y'));
