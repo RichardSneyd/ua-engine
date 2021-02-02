@@ -311,6 +311,18 @@ class EditorScene implements ILevel {
             /* Debug.info("objType:", this.selectedGO.objType);
             Debug.info("objID:", this.selectedGO.objID); */
             this.selectedGO.uniqName = `${val}`;
+            if (this.selectedGO.objType === "image") {
+                this._imgGameObjects[this.selectedGO.objID].name = `${val}`;
+            }
+            else if (this.selectedGO.objType === "spine") {
+                this._spineGameObjects[this.selectedGO.objID].name = `${val}`;
+            }
+            else if (this.selectedGO.objType === "dropzone") {
+                this._dropzoneGameObjects[this.selectedGO.objID].name = `${val}`;
+            }
+            else if (this.selectedGO.objType === "hotspot") {
+                this._hotspotGameObjects[this.selectedGO.objID].name = `${val}`;
+            }
         }
         else if (prop === "x") {
             this.selectedGO.x = Number(val);
