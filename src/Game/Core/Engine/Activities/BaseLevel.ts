@@ -31,7 +31,6 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     protected _ready: boolean = false;
 
     protected _character: SpineObject;
-    protected _sfx: SpineObject;
 
     constructor(manager: LevelManager, events: SceneEvents, loop: Loop, goFactory: GOFactory, loader: Loader, game: Game) {
         super(events, loop, goFactory, loader, game);
@@ -93,7 +92,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         }
         let sfx = this._manager.script.fileList(['config.sfx']);
         if (sfx.length > 0) {
-            this._loader.addSpine(sfx[0]);
+            this._loader.addSnds(sfx);
         }
         super.preload();
     }
@@ -150,11 +149,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      */
     playSfx() {
         if (this.activeRow.config && !this.manager.script.isFalsy(this.activeRow.config.sfx)) {
-            if (!this._sfx) {
-                this._sfx = this._goFactory.spine(this._game.width() / 2, this._game.height() / 2, this.activeRow.config.sfx, this._foreground);
-                this._sfx.setOrigin(.5);
-            }
-            this._sfx.animations.play('starburst_out');
+            this.manager.audio.play(this.activeRow.config.sfx, () => { });
         }
     }
 
