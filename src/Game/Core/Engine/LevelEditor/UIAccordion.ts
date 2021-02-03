@@ -276,20 +276,6 @@ class UIAccordion {
         });
     }
 
-    public selectGameObject(objId: number) {
-        const img = document.getElementsByClassName("panel-img");
-
-        let removeAllFirst = () => {
-            for (let i = 0; i < img.length; i++) {
-                img[i].classList.remove("selected");
-            }
-        };
-
-        removeAllFirst();
-        img[objId].classList.add("selected");
-
-    }
-
 }
 
 export default UIAccordion;
