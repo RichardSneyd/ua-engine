@@ -5,6 +5,7 @@ import IFrameAnimatedGameObject from '../IFrameAnimatedGameObject';
 import Loader from '../../Loader';
 import ObjectCore from './ObjectCore';
 import Debug from '../../Debug';
+import UAE from '../../../../UAE';
 
 /**
  * @description A frame based animation manager (for use with SpriteObject mainly, with atlas animations). 
@@ -28,6 +29,7 @@ class FrameAnimationManager implements IAnimationManager {
     this._go = go; this._core = core;
   }
 
+
   get current() {
     return this._anim;
   }
@@ -36,7 +38,7 @@ class FrameAnimationManager implements IAnimationManager {
     let anim = this._getAnim(name);
 
     if (anim != null) {
-     // Debug.info(`%c calling play on ${name}  for ${this._go.textureName}?`, 'color: purple;');
+      // Debug.info(`%c calling play on ${name}  for ${this._go.textureName}?`, 'color: purple;');
       this._play(anim);
     } else {
       Debug.error("Could not find animation named: %s", name);
@@ -90,8 +92,56 @@ class FrameAnimationManager implements IAnimationManager {
     return arr;
   }
 
+  /**
+   * @description returns the array of animation objects
+   */
+  get animations(){
+    return this._animations;
+  }
+
+  /**
+   * @description returns a list of all the animation names pulled using REGEX from the json file
+   */
+  get animationNames(): string[] {
+    let animationNames: string[] = [];
+    let atlasName = this._core.atlas;
+
+    let res = this._loader.getResource(atlasName, true);
+    if (res !== null) {
+      let json = res.data.data;
+      // Debug.info('json: ', res);
+      let frames = json.frames;
+      let frameNames: string[] = [];
+
+      for (let x = 0; x < frames.length; x++) {
+        let fname: string = frames[x].filename;
+        let reg = new RegExp('([a-zA-Z-])+');
+
+        //let reg = new RegExp(name + '[-_]' + '[0-9]|' + name + '[0-9]');
+        let prefix = fname.match(reg)![0];
+
+        if(animationNames.indexOf(prefix) == -1) {
+          animationNames.push(prefix);
+        }
+      }
+    }
+
+    return animationNames;
+  }
+
+  /***
+   * @description automatically import all animations from atlas json file. Simply call play(animName) to trigger after this step.
+   */
+  public importAnimations() {
+    let atlasName = this._core.atlas;
+    let animationNames = this.animationNames;
+    for(let a = 0; a < animationNames.length; a++){
+      this.addAnimation(animationNames[a], this.autoGenFrames(animationNames[a]));
+    }
+  }
+
   public autoGenFrames(name: string): string[] {
-   // Debug.info('trying to gen frames for %s on %s', name, this._go.textureName);
+    // Debug.info('trying to gen frames for %s on %s', name, this._go.textureName);
     let atlasName = this._core.atlas;
     let res = this._loader.getResource(atlasName, true);
     if (res !== null) {
@@ -108,6 +158,7 @@ class FrameAnimationManager implements IAnimationManager {
           frameNames.push(fname);
         }
         else if (fname.match(reg)) {
+
           frameNames.push(fname);
         }
       }
@@ -147,16 +198,16 @@ class FrameAnimationManager implements IAnimationManager {
 
     let updatedFrame = this.getUpdatedFrame();
     // monitor if update is called
-   /*  if (this._core.atlas == 'continue_button') {
-      Debug.info('AnimManager.update called for %s at %s', this._core.atlas, new Date().getTime());
-    } */
+    /*  if (this._core.atlas == 'continue_button') {
+       Debug.info('AnimManager.update called for %s at %s', this._core.atlas, new Date().getTime());
+     } */
     if (updatedFrame != null) {
       if (this._core.atlas != null) {
         this._core.screen.changeTexture(this._core.data, this._core.atlas, updatedFrame);
         // monitor if the texture is being updated
-       /*  if (this._core.atlas == 'continue_button') {
-          Debug.info('changeTexture called for', this._core.atlas);
-        } */
+        /*  if (this._core.atlas == 'continue_button') {
+           Debug.info('changeTexture called for', this._core.atlas);
+         } */
       } else {
         this._core.screen.changeTexture(this._core.data, updatedFrame);
       }

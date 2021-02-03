@@ -510,6 +510,9 @@ class PxGame {
 
   private _createSprite(x: number, y: number, texture: string | any, frame: string | null = null) {
     let textureObj = texture;
+    /* if(frame == 'default') {
+      frame = this._loader.
+    } */
     if (typeof texture == 'string') { textureObj = this._loader.getTexture(texture, frame); }
 
     let sprite = this._pxFactory.createSprite(textureObj);
