@@ -132,8 +132,8 @@ class Screen {
   }
 
   /**
-  * @description returns a 1D array of pixels for the image. This is achieved by creating an imgEl with base64 src, and drawing it to an invisible canvas. 
-  * img.onload must be used to avoid drawing the img before it is loaded, hence the Promise.
+  * @description returns a 1D UintArray of pixels, asynch (Promise), for the image. This is achieved by creating an imgEl with base64 src, and drawing it to an invisible canvas. 
+  * img.onload must be used to avoid drawing the img before it is loaded, hence the Promise. Use pixels() instead if possible - it's synchronous, but faster.
   * @param container the Container/GameObject to get pixels for
   * @param x the x value to start at on the canvas
   * @param y the y value to start at on the canvas
@@ -142,6 +142,14 @@ class Screen {
   */
   public toPixels(container: PIXI.Container, x: number = 0, y: number = 0, width?: number, height?: number): Promise<Uint8Array | Uint8ClampedArray> {
     return this._pxGame.toPixels(container, x, y, width, height);
+  }
+
+  /**
+   * @description an experimental pixel retrieval method using PIXI RenderTexture to circumvent PIXI extract issues
+   * @param container the Container/DisplayObject to retrieve pixels for
+   */
+  public pixels(container: PIXI.Container): Uint8Array | Uint8ClampedArray {
+    return this._pxGame.pixels(container);
   }
 
   /**
@@ -167,6 +175,13 @@ class Screen {
    public toCanvas(container: PIXI.Container): Promise<HTMLCanvasElement> {
     return this._pxGame.toCanvas(container);
    }
+
+    /**
+   * @description generate canvas syncronously via PIXI renderTexture and extract
+   */
+  public canvas(container: PIXI.Container): HTMLCanvasElement{
+    return this._pxGame.canvas(container);
+  }
 
 }
 

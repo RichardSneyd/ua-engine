@@ -330,6 +330,7 @@ class ObjectCore {
 
     let p = this._pointFactory.createNew(this._origin.x * this._scaleHandler.x, this._origin.y * this._scaleHandler.y);
     this._objectHandler.setPivot(this._data, p);
+    this.updateXY();
   }
 
   public enableInput() {

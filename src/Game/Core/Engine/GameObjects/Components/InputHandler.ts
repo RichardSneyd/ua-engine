@@ -45,6 +45,7 @@ class InputHandler {
     // this._screen.addHitMap(this._core.data, threshold);
     this._pixelPerfect = true;
     this._pixelPerfectThreshold = threshold;
+    this._go.updateColorMap();
     return true;
   }
 
@@ -87,9 +88,9 @@ class InputHandler {
     let y = Math.abs(point.y - this._go.top);
     let index: number = Math.round((x + (y * this._go.width)) * 4);
     Debug.info('x: ', x, 'y: ', y, 'width: ', this._go.width);
-    Debug.info('RGBA index: ', index, ', val: ', this._go.pixels[index]);
+    Debug.info('RGBA index: ', index, ', val: ', this._go.colorMap[index]);
 
-    if (this._go.pixels[index] > this._pixelPerfectThreshold) return true;
+    if (this._go.colorMap[index] > this._pixelPerfectThreshold) return true;
     return false;
   }
 

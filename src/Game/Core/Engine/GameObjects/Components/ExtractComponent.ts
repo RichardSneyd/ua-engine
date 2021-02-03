@@ -31,6 +31,14 @@ class ExtractComponent {
     }
 
     /**
+ * @description extract 1D Uint8Array of RGBA pixel data synchronously using PIXI RenderTexture to circumvent PIXI extract issues
+ * @param container the Container/DisplayObject to retrieve pixels for
+ */
+    public pixels(): Uint8Array | Uint8ClampedArray {
+        return this._screen.pixels(this._go.data);
+    }
+
+    /**
    * @description Generate a base64 version of the image synchronously, using PIXI extract
    */
     public toBase64(): string {
@@ -49,6 +57,13 @@ class ExtractComponent {
     */
     public toCanvas(): Promise<HTMLCanvasElement> {
         return this._screen.toCanvas(this._go.data);
+    }
+
+    /**
+  * @description generate canvas syncronously via PIXI renderTexture and extract. Based on bounding box, which can be inaccurate in spine animations
+  */
+    public canvas(): HTMLCanvasElement {
+        return this._screen.canvas(this._go.data);
     }
 
     init(go: IGameObject): ExtractComponent {

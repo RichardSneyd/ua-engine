@@ -30,7 +30,7 @@ abstract class BaseGameObject implements IGameObject {
     protected _tweenComponent: TweenComponent;
     protected _extract: ExtractComponent;
     protected _hitShape: IHitShape | null;
-    protected _pixels: Uint8Array | Uint8ClampedArray;
+    protected _colorMap: Uint8Array | Uint8ClampedArray; // 1D array of 8 bit (1 byte) unsigned (0 or positive) integers, in format RGBA
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
         scaleHandler: ScaleHandler, tweenComponent: TweenComponent, extract: ExtractComponent) {
@@ -45,16 +45,23 @@ abstract class BaseGameObject implements IGameObject {
         this._input.init(this, this._core);
         this._tweenComponent.init(this);
         this._extract.init(this);
-        this._extract.toPixels().then((pixels)=>{
+       /*  this._extract.toPixels().then((pixels)=>{
             this._pixels = pixels;
-        })
+        }) */
     }
 
     /**
      * @description a 1D array of RGBA pixel values. This is set on creation of the gameObject, and when changeTexture is called. 
      */
-    get pixels() {
-        return this._pixels;
+    get colorMap() {
+        return this._colorMap;
+    }
+
+    /**
+     * @description updates the colorMap based on a scrape of the Texture displayed in the current frame 
+     */
+    public updateColorMap(){
+        this._colorMap = this._extract.pixels();
     }
 
     //public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): any {
