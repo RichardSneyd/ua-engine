@@ -544,7 +544,7 @@ class EditorScene implements ILevel {
         let spinePixels: any = [];
         let spineResults: any[] = [];
         spineListFiltered.forEach((val) => {
-            let spnSrc = this._goFactory.spine(500, 500, `${val.basename}`);
+            let spnSrc = this._goFactory.spine(-500, -500, `${val.basename}`);
             spnSrc.scaleHandler.setScale(.5);
             setTimeout(() => spnSrc.alpha = 0, 50); // we don't want to show not active spine objects, this trick did the work
             spinePixels.push(spnSrc.data);
