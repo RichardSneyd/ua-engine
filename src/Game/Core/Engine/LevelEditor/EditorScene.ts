@@ -14,7 +14,6 @@ import Inspector from "./Inspector";
 import SceneEvents from "../Activities/SceneEvents";
 import ContainerObject from "../GameObjects/ContainerObject";
 import TextObject from "../GameObjects/TextObject";
-import { url } from "inspector";
 
 
 // build the visual of the editor here, like an activity level....
