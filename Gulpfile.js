@@ -219,6 +219,22 @@ function genDecs(){
 
 }
 
+function genDocs(){
+    return new Promise((resolve, reject) => {
+
+        exec('sh gendocs.sh',
+        (error, stdout, stderr) => {
+            if(stdout){
+                resolve('generated documentation');
+            }
+            console.log(stderr);
+            if (error !== null) {
+                console.log(`exec error: ${error}`);
+            }
+        });
+    });
+}
+
 function copyPatches() {
     const CopyFiles = require('./CopyFiles.js');
     let cFiles = new CopyFiles();
@@ -233,6 +249,7 @@ function copyPatches() {
     });
 }
 
+//exports.default = gulp.parallel(genDecs, watchDecs, gulp.series(gulp.parallel(copyPatches, calculateDeps), watchT));
 exports.default = gulp.parallel(genDecs, watchDecs, gulp.series(gulp.parallel(copyPatches, calculateDeps), watchT));
 exports.concat = concatT;
 exports.uglify = uglifyT;
@@ -244,3 +261,4 @@ exports.genDecs = genDecs;
 exports.watchDecs = watchDecs;
 exports.watch = watchT;
 exports.patch = copyPatches;
+exports.docs = genDocs;

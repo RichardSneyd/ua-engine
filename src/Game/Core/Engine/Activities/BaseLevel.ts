@@ -87,6 +87,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @description adds resources to the load queue, then uses a promise to download those resource, then call the start method
      */
     preload(): void {
+        this._loader.addImages(this._manager.script.fileList(['config.bgd']), 'jpg'); // bgd property is common to all types, and added in BaseLevel, so load it here too...
         if(!this._manager.script.isFalsy(this.configRow.config.char)){
             this._loader.addSpine(this.configRow.config.char);
         }
