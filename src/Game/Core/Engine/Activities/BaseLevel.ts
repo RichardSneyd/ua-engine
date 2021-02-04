@@ -36,7 +36,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         super(events, loop, goFactory, loader, game);
         this._manager = manager;
 
-      //  Debug.exposeGlobal(this, 'level'); // expose all levels globally as 'level' for debugging convenience
+        //  Debug.exposeGlobal(this, 'level'); // expose all levels globally as 'level' for debugging convenience
     }
 
     /**
@@ -68,9 +68,9 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         this._loader.loadActScript(scriptName, (script: any, data: any) => {
             if (data == null || data == undefined) Debug.error('no script data returned: ', data);
             this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
-          //  this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
-            if(script[0].hasOwnProperty('config')) {
-                if(script[0].config.includes('level_file:')){
+            //  this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
+            if (script[0].hasOwnProperty('config')) {
+                if (script[0].config.includes('level_file:')) {
                     this._loader.loadLevelFile(scriptName, (script: any) => {
                         this.manager.setLevelFile(script);
                         this.preload();
@@ -88,7 +88,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      */
     preload(): void {
         this._loader.addImages(this._manager.script.fileList(['config.bgd']), 'jpg'); // bgd property is common to all types, and added in BaseLevel, so load it here too...
-        if(!this._manager.script.isFalsy(this.configRow.config.char)){
+        if (!this._manager.script.isFalsy(this.configRow.config.char)) {
             this._loader.addSpine(this.configRow.config.char);
         }
         super.preload();
@@ -110,9 +110,14 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         else {
             Debug.error('no bgd property in config cell of first row');
         }
-     //   let char = this._loader.getResource(configRow.config.char, true);
+        //   let char = this._loader.getResource(configRow.config.char, true);
         if (configRow.config.hasOwnProperty('char') && !this._manager.script.isFalsy(configRow.config.char) && this._loader.getResource(configRow.config.char, true)) {
-            this._character = this._goFactory.spine(20, this._game.height() - 150, configRow.config.char, this._foreground); // reposition _character as needed when extending
+            let char = this.manager.script.getLevelFileObject('spines', 'char');
+            if (!char) { // Default position and scale if char is not on Level file
+                char = { x: 20, y: this._game.height() - 150, scaleX: 1 };
+            }
+            this._character = this._goFactory.spine(char.x, char.y, configRow.config.char, this._foreground);
+            this._character.scaleHandler.scale = char.scaleX;
             Debug.exposeGlobal(this._character, 'char');
         }
 
@@ -184,7 +189,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @description go to a different activity (a product is also an activity, and it's menus are levels/scenes within it)
      * @param code the code of the activity, or menu, to go to
      */
-    public goto(code: string){
+    public goto(code: string) {
         this._game.startActivity(code);
     }
 
