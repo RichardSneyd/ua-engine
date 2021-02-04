@@ -570,35 +570,24 @@ class EditorScene implements ILevel {
             }
         });
 
-        /* let sprite = this._goFactory.sprite(0, 0, 'continue_button', 'up', this._playgroundContainer);
-        Debug.info(sprite.animations.animationNames);
-        sprite.animations.importAnimations(); // this will automatically parse the frames in the json file and create animations based on the prefixes
-        sprite.animations.play(sprite.animations.animationNames[0], true);
-        Debug.info('anims: ', sprite.animations.animations); */
-
-        Debug.warn("FilteredAtlases:", atlasList);
-
-        this._accordion.addRow('Atlases', 'atlas', ...atlasList);
-
-        /* let spinePixels: any = [];
-        let spineResults: any[] = [];
-        spineListFiltered.forEach((val) => {
-            let spnSrc = this._goFactory.spine(500, 500, `${val.basename}`);
-            spnSrc.scaleHandler.setScale(.5);
-            setTimeout(() => spnSrc.alpha = 0, 50); // we don't want to show not active spine objects, this trick did the work
-            spinePixels.push(spnSrc.data);
+        let atlasPixels: any = [];
+        let atlasResults: any[] = [];
+        atlasList.forEach((val) => {
+            let atlasSrc = this._goFactory.sprite(-500, -500, `${val.name.replace(/\.[^/.]+$/, "")}`, 'up');
+            setTimeout(() => atlasSrc.alpha = 0, 50); // we don't want to show not active spine objects, this trick did the work
+            atlasPixels.push(atlasSrc.data);
         });
 
-        for (let i = 0; i < spinePixels.length; i++) {
-            let res = this._pxGame.toImgElement(spinePixels[i]);
+        for (let i = 0; i < atlasPixels.length; i++) {
+            let res = this._pxGame.toImgElement(atlasPixels[i]);
 
-            spineResults.push({ src: res.src, name: spineListFiltered[i].basename });
+            atlasResults.push({ src: res.src, name: atlasList[i].name });
 
-            if (i === spinePixels.length - 1) {
-                this._accordion.addRow('Spines', 'spine', ...spineResults);
+            if (i === atlasPixels.length - 1) {
+                this._accordion.addRow('Atlases', 'atlas', ...atlasResults);
             }
 
-        } */
+        }
     }
 
     protected _addDropzonesRow(): void {
