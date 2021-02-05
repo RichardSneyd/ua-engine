@@ -37,6 +37,7 @@ class EditorScene implements ILevel {
     protected spineList: string[] = [];
     protected _imgGameObjects: any[] = [];
     protected _spineGameObjects: any[] = [];
+    protected _atlasGameObjects: any[] = [];
     protected _dropzoneGameObjects: any[] = [];
     protected _hotspotGameObjects: any[] = [];
     protected _downloadData: any;
@@ -104,8 +105,9 @@ class EditorScene implements ILevel {
         this._accordion.createContainer();
 
         // Create rows here
-        this.addImagesRow();
-        this.addSpinesRow();
+        this._addImagesRow();
+        this._addSpinesRow();
+        this._addAtlasesRow();
         this._addDropzonesRow();
         this._addHotspotsRow();
 
@@ -235,6 +237,24 @@ class EditorScene implements ILevel {
             this._inspector.setInputReadOnly('width', true);
             this._inspector.setInputReadOnly('height', true);
         }
+        else if (type === "atlas") {
+            gameobj = this._goFactory.sprite(500, 500, `${name}`, 'up');
+            gameobj.setOrigin(.5);
+            this._playgroundContainer.addChild(gameobj);
+            gameobj.objType = `${type}`;
+            let uniqName = _tryName(this._atlasGameObjects, `${name}`, 2);
+            gameobj.uniqName = uniqName;
+            Debug.info('animnames:', gameobj.animations.animationNames);
+            gameobj.animations.importAnimations(); // this will automatically parse the frames in the json file and create animations based on the prefixes
+            gameobj.animations.play(gameobj.animations.animationNames[1], true);
+            Debug.info('anims: ', gameobj.animations.animations);
+
+            this._atlasGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
+            gameobj.objID = this._atlasGameObjects.length - 1;
+
+            this._inspector.setInputReadOnly('width', true);
+            this._inspector.setInputReadOnly('height', true);
+        }
         else if (type === "dropzone") {
             gameobj = this._goFactory.nineSlice(660, 240, name, 4, 4, 4, 4, 300, 200);
             this._zoneContainer.addChild(gameobj);
@@ -276,7 +296,7 @@ class EditorScene implements ILevel {
             this.selectedGO.uniqName = gameobj.uniqName;
             this._inspector.setInputValue("name", this.selectedGO.uniqName);
 
-            if (gameobj.objType === 'image' || gameobj.objType === 'spine') {
+            if (gameobj.objType === 'image' || gameobj.objType === 'spine' || gameobj.objType === 'atlas') {
                 this.xOffset = gameobj.x - this._manager.input.pointer.x;
                 this.yOffset = gameobj.y - this._manager.input.pointer.y;
 
@@ -333,6 +353,9 @@ class EditorScene implements ILevel {
             }
             else if (this.selectedGO.objType === "spine") {
                 this._spineGameObjects[this.selectedGO.objID].name = `${val}`;
+            }
+            else if (this.selectedGO.objType === "atlas") {
+                this._atlasGameObjects[this.selectedGO.objID].name = `${val}`;
             }
             else if (this.selectedGO.objType === "dropzone") {
                 this._dropzoneGameObjects[this.selectedGO.objID].name = `${val}`;
@@ -412,13 +435,17 @@ class EditorScene implements ILevel {
                         this._spineGameObjects.splice(this.selectedGO.objID, 1);
                         //Debug.info('SPINES:', this._spineGameObjects);
                     }
+                    if (this.selectedGO.objType === 'atlas') {
+                        this._spineGameObjects.splice(this.selectedGO.objID, 1);
+                        //Debug.info('ATLASES:', this._atlasGameObjects);
+                    }
                     if (this.selectedGO.objType === 'dropzone') {
                         this._dropzoneGameObjects.splice(this.selectedGO.objID, 1);
-                        //Debug.info('DROPZONES:', this._spineGameObjects);
+                        //Debug.info('DROPZONES:', this._dropzoneGameObjects);
                     }
                     if (this.selectedGO.objType === 'hotspot') {
                         this._hotspotGameObjects.splice(this.selectedGO.objID, 1);
-                        //Debug.info('HOTSPOTS:', this._spineGameObjects);
+                        //Debug.info('HOTSPOTS:', this._hotspotGameObjects);
                     }
                 }
             }, false);
@@ -428,6 +455,7 @@ class EditorScene implements ILevel {
         let gameObjectData: any = {
             sprites: [],
             spines: [],
+            atlases: [],
             dropzones: [],
             hotspots: []
         };
@@ -445,6 +473,14 @@ class EditorScene implements ILevel {
                 name: obj.name, filename: obj.filename, x: obj.gameObj.x, y: obj.gameObj.y,
                 originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, scaleX: obj.gameObj.scaleHandler.x, scaleY: obj.gameObj.scaleHandler.y,
                 angle: obj.gameObj.angle, hitShape: ""
+            });
+        });
+
+        this._atlasGameObjects.forEach((obj) => {
+            gameObjectData.atlases.push({
+                name: obj.name, filename: obj.filename, x: obj.gameObj.x, y: obj.gameObj.y,
+                originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, scaleX: obj.gameObj.scaleHandler.x, scaleY: obj.gameObj.scaleHandler.y,
+                angle: obj.gameObj.angle,
             });
         });
 
@@ -490,14 +526,15 @@ class EditorScene implements ILevel {
         }
     }
 
-    addImagesRow(): void {
+    protected _addImagesRow(): void {
         let imgListFiltered = this._loader.resList.filter(res => res.type === 'img' && res.ext === 'png');
         imgListFiltered.forEach(val => this.imgList.push({ src: val.url, name: val.basename }));
 
+        Debug.info('IMGD:', this.imgList);
         this._accordion.addRow('Images', 'image', ...this.imgList);
     }
 
-    addSpinesRow(): void {
+    protected _addSpinesRow(): void {
         let spineListFiltered = this._loader.resList.filter(res => res.type === 'spn');
         spineListFiltered.forEach(val => this.spineList.push(val.url));
 
@@ -506,7 +543,7 @@ class EditorScene implements ILevel {
         let spinePixels: any = [];
         let spineResults: any[] = [];
         spineListFiltered.forEach((val) => {
-            let spnSrc = this._goFactory.spine(500, 500, `${val.basename}`);
+            let spnSrc = this._goFactory.spine(-500, -500, `${val.basename}`);
             spnSrc.scaleHandler.setScale(.5);
             setTimeout(() => spnSrc.alpha = 0, 50); // we don't want to show not active spine objects, this trick did the work
             spinePixels.push(spnSrc.data);
@@ -524,14 +561,42 @@ class EditorScene implements ILevel {
         }
     }
 
-    _addDropzonesRow(): void {
+    protected _addAtlasesRow(): void {
+        let atlasList: any[] = [];
+        (<any>window).electronAtlasList.forEach((val: any) => {
+            if (val.indexOf('.png') != -1) {
+                atlasList.push({ src: `assets/atlas/${val}`, name: val.replace(/\.[^/.]+$/, "") });
+            }
+        });
+
+        let atlasPixels: any = [];
+        let atlasResults: any[] = [];
+        atlasList.forEach((val) => {
+            let atlasSrc = this._goFactory.sprite(-500, -500, `${val.name.replace(/\.[^/.]+$/, "")}`, 'up');
+            setTimeout(() => atlasSrc.alpha = 0, 50); // we don't want to show not active spine objects, this trick did the work
+            atlasPixels.push(atlasSrc.data);
+        });
+
+        for (let i = 0; i < atlasPixels.length; i++) {
+            let res = this._pxGame.toImgElement(atlasPixels[i]);
+
+            atlasResults.push({ src: res.src, name: atlasList[i].name });
+
+            if (i === atlasPixels.length - 1) {
+                this._accordion.addRow('Atlases', 'atlas', ...atlasResults);
+            }
+
+        }
+    }
+
+    protected _addDropzonesRow(): void {
         this._loader.addImage('../editor/dropzone.png', true);
         let dropzoneList: any[] = [{ src: 'assets/editor/dropzone.png', name: 'dropzone' }];
         this._accordion.addRow('Dropzones', 'dropzone', ...dropzoneList);
         //Debug.info("dropzoneList: ", dropzoneList);
     }
 
-    _addHotspotsRow(): void {
+    protected _addHotspotsRow(): void {
         this._loader.addImage('../editor/hotspot.png', true);
         this._loader.download().then(() => {
             this._accordion.removeAllSelections();
@@ -548,7 +613,7 @@ class EditorScene implements ILevel {
         if (this.dragging) {
             this.selectedGO.moveToMouse(this.xOffset, this.yOffset);
 
-            if ((this.selectedGO.objType === 'image' || this.selectedGO.objType === 'spine')) {
+            if ((this.selectedGO.objType === 'image' || this.selectedGO.objType === 'spine' || this.selectedGO.objType === 'atlas')) {
                 this.selectedGOBorder.x = this.selectedGO.x;
                 this.selectedGOBorder.y = this.selectedGO.y;
             }
@@ -576,7 +641,7 @@ class EditorScene implements ILevel {
         if (this.selectedGO && this.selectedGO.alpha !== 0) {
             this.selectedGO.scaleHandler.setScale(this._inspector.getInputValue('scale x'), this._inspector.getInputValue('scale y'));
 
-            if ((this.selectedGO.objType === 'image' || this.selectedGO.objType === 'spine')) {
+            if ((this.selectedGO.objType === 'image' || this.selectedGO.objType === 'spine' || this.selectedGO.objType === 'atlas')) {
                 this.selectedGOBorder.x = this.selectedGO.x;
                 this.selectedGOBorder.y = this.selectedGO.y;
                 this.selectedGOBorder.width = this.selectedGO.scaleHandler.x * this.selectedGO.width;
