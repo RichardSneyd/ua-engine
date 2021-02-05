@@ -92,6 +92,10 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if (!this._manager.script.isFalsy(this.configRow.config.char)) {
             this._loader.addSpine(this.configRow.config.char);
         }
+        let sfx = this._manager.script.fileList(['config.sfx']);
+        if (sfx.length > 0) {
+            this._loader.addSnds(sfx);
+        }
         super.preload();
     }
 
@@ -133,6 +137,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         Debug.info('onNewRow called for row %s: ', this.manager.script.active.id, this.manager.script.active);
         this.loadConfig();
         this.updateCharacterState();
+        this.playSfx();
         if (!this.manager.script.isFalsy(this.manager.script.active.audio_id)) {
             this.manager.audio.playInstructionArr(this.manager.script.active.audio_id, this.onInstructionAudioComplete.bind(this));
         }
@@ -159,6 +164,15 @@ abstract class BaseLevel extends BaseScene implements ILevel {
             let loop = (this.activeRow.char_loop == 'y');
             let animation = this.activeRow.char;
             if (animation && animation !== '') this._character.animations.play(animation, loop);
+        }
+    }
+
+    /**
+     * @description check the current row, and play 'out' animation in sfx spine if indicated
+     */
+    playSfx() {
+        if (this.activeRow.config && !this.manager.script.isFalsy(this.activeRow.config.sfx)) {
+            this.manager.audio.play(this.activeRow.config.sfx, () => { });
         }
     }
 
