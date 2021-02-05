@@ -19,19 +19,17 @@ class Inspector {
         this._init();
     }
 
-    _init(): void {
-        //TODO: initialize event manager through game objects
-    }
+    _init(): void { }
 
     public createInspector(): void {
         this._addContainer();
         this._addHeader('Inspector');
         this._addTextInput('name');
         this._addGroupNumberInput('x', 'y');
-        this._addGroupNumberInput('x origin', 'y origin');
         this._addGroupNumberInput('scale x', 'scale y');
+        this._addGroupNumberInput('width', 'height');
+        this._addGroupNumberInput('x origin', 'y origin');
         this._addNumberInput('angle', 0, 0, 360);
-
 
         this._drag(this._header, this._container);
     }
@@ -49,6 +47,18 @@ class Inspector {
 
         if (input) {
             (input as HTMLFormElement).value = val;
+        }
+    }
+
+    /**
+     * @description Makes any DOM element ready-only based on its id.
+     * @param id ID of the DOM element
+     * @param isReadOnly True/false statement for the DOM element
+     */
+    public setInputReadOnly(id: string, isReadOnly: boolean): void {
+        let el = <HTMLInputElement>document.getElementById(id);
+        if (el !== null || el !== undefined) {
+            el.disabled = isReadOnly;
         }
     }
 

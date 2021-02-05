@@ -60,7 +60,7 @@ class PxFactory {
 
 
   private _applyHacks() {
-    this._hitmapHack();
+  //  this._hitmapHack();
   //  this._spineHitmapHack();
   }
 

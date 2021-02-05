@@ -252,7 +252,7 @@ class ObjectCore {
     this._go.scaleHandler.shutdown.bind(this._go.scaleHandler)();
     this._events.off('shutdown', this._go.destroy, this._go); 
     //if(this._data !== undefined && this._data !== null) this._objectHandler.destroy(this._data);
-   // this._objectHandler.destroy(this._data);
+    this._objectHandler.destroy(this._data);
   }
 
   /**
@@ -330,6 +330,7 @@ class ObjectCore {
 
     let p = this._pointFactory.createNew(this._origin.x * this._scaleHandler.x, this._origin.y * this._scaleHandler.y);
     this._objectHandler.setPivot(this._data, p);
+    this.updateXY();
   }
 
   public enableInput() {

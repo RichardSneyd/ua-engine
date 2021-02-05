@@ -87,6 +87,8 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @description adds resources to the load queue, then uses a promise to download those resource, then call the start method
      */
     preload(): void {
+        this._loader.addSnds(this.manager.script.fileList(['audio_id'])); // 'audio_id' is present in all scripts
+        this._loader.addImages(this._manager.script.fileList(['config.bgd']), 'jpg'); // bgd property is common to all types, and added in BaseLevel, so load it here too...
         if (!this._manager.script.isFalsy(this.configRow.config.char)) {
             this._loader.addSpine(this.configRow.config.char);
         }
@@ -115,7 +117,12 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         }
         //   let char = this._loader.getResource(configRow.config.char, true);
         if (configRow.config.hasOwnProperty('char') && !this._manager.script.isFalsy(configRow.config.char) && this._loader.getResource(configRow.config.char, true)) {
-            this._character = this._goFactory.spine(20, this._game.height() - 150, configRow.config.char, this._foreground); // reposition _character as needed when extending
+            let char = this.manager.script.getLevelFileObject('spines', 'char');
+            if (!char) { // Default position and scale if char is not on Level file
+                char = { x: 20, y: this._game.height() - 150, scaleX: 1 };
+            }
+            this._character = this._goFactory.spine(char.x, char.y, configRow.config.char, this._foreground);
+            this._character.scaleHandler.scale = char.scaleX;
             Debug.exposeGlobal(this._character, 'char');
         }
 

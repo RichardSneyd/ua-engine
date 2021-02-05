@@ -19,6 +19,7 @@ class Button {
     }
 
     public init(x: number, y: number, atlas: string, frame: string, animNames: { up: string, down: string, over: string, out: string }, onDown: Function | null = null, context: any, onUp: Function | null = null, parent?: IParentChild) {
+        
         this.sprite = this.sprite.createNew(x, y, atlas, frame);
         this.animNames = animNames;
 
@@ -146,8 +147,6 @@ class Button {
             this._onDownCallback.bind(this._context)();
         }
     }
-
-
 
     private _onUp() {
         // Debug.info('onUp called for: ', this);

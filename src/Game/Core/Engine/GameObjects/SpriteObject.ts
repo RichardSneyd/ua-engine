@@ -31,8 +31,8 @@ class SpriteObject extends BaseGameObject {
         if (frame != null) this._core.atlas = texture;
         this._core.init(this, x, y, texture, this._update);
         super.init();
-        this._animationManager.init(this, this._core);
         this._pcHandler.init(this, this._core, parent);
+        this._animationManager.init(this, this._core);
     }
 
     public createNew(x: number, y: number, texture: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null): SpriteObject {

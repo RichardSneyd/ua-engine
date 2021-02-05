@@ -268,6 +268,7 @@ class Debug {
     public breakpoint() {
         Debug.breakpoint();
     }
+
 }
 
 export default Debug;
