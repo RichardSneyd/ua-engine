@@ -18,6 +18,7 @@ import TweenManager from './Engine/TweenManager';
 import Debug from './Engine/Debug';
 import LevelEditor from './Engine/LevelEditor/LevelEditor';
 import Activities from './Engine/Activities/Activities';
+import AbstractProductMain from './Engine/Activities/AbstractProductMain';
 
 /**
  * @description the game class. There should only ever be one of these.
@@ -29,7 +30,9 @@ class Game {
   private _loop: Loop; _loader: Loader; _gameConfig: GameConfig; _levelManager: LevelManager;
   private _goFactory: GOFactory; _geom: Geom; _utils: Utils; private _activityClasses: Activities;
 
+  protected _product: AbstractProductMain;
   protected _activities: IActivity[];
+  protected _activeActivity: IActivity;
   protected _currentActivity: IActivity;
   protected _gameStarted: boolean;
   protected _transitions = Transitions;
@@ -112,6 +115,17 @@ class Game {
     this.activities.push(act);
   }
 
+  public setProduct(product: AbstractProductMain) {
+    this._product = product;
+  }
+
+  /**
+   * @description The main product object. There can only be one of these per product. They extend AbstractProductMain.
+   */
+  get product() {
+    return this._product;
+  }
+
   /**
    * @description Removes an activity from the game/engine
    * @param act The activity type (object) to remove.
@@ -130,7 +144,8 @@ class Game {
    * @param the activity type (object) to start. Takes the object itself, or it's name in the form of a string
    */
   public startActivity(scriptName: string, act: IActivity | string | null = null) {
-    if (act == null) act = this.getActivityByCode(this.extractCode(scriptName));
+    if (scriptName.includes('menu')) { act = this.product.menuSystem }
+    else if (act == null) act = this.getActivityByCode(this.extractCode(scriptName));
 
     if (typeof act !== 'string' && act !== null) {
       this._startActivity(act, scriptName);
@@ -158,12 +173,13 @@ class Game {
     return code;
   }
 
-  public loadLevel(level: ILevel, scriptName: string) {
+  public loadLevel(level: IScene, scriptName: string) {
     this.loadScene(level, scriptName);
   }
 
   private _startActivity(act: IActivity, scriptName: string) {
     // start the new activity, with the assumption that the shutdown has been handled
+    this._activeActivity = act;
     act.startActivity(scriptName);
   }
 

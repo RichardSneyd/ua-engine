@@ -17,6 +17,21 @@ class Screen {
     return this._pxGame.renderer;
   }
 
+  /**
+   * @description this is the container to which activities are added and removed at scene load and shutdown
+   */
+  get activityCont(){
+    return this._pxGame.activityCont;
+  }
+
+  /**
+   * @description this is a container that overlays the 'activityCont', to be used for HUD elements such as toolbars, transitions etc, that exist seperate, and on top of, the
+   * levels/scenes.
+   */
+  get overlay() {
+    return this._pxGame.overlayCont;
+  }
+
   public createScreen(width: number, height: number, elementId: string): void {
     this._pxGame.init(width, height, elementId);
   }

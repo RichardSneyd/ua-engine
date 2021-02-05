@@ -38,6 +38,21 @@ class World {
     return this._initialized;
   }
 
+    /**
+   * @description this is the PIXI container to which activities are added and removed at scene load and shutdown
+   */
+  get activityCont(){
+    return this._screen.activityCont;
+  }
+
+  /**
+   * @description this is the PIXI container that overlays the 'activityCont', to be used for HUD elements such as toolbars, transitions etc, that exist seperate, and on top of, the
+   * levels/scenes.
+   */
+  get overlay() {
+    return this._screen.overlay;
+  }
+
   /**
    * @description Initialize the game world. This generates an empty screen
    * @param w The width value to initialize the world with. Defines the width of the game screen.

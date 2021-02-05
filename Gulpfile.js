@@ -57,7 +57,8 @@ const config = {
             'BaseActivity',
             'BaseLevel',
             'BaseScene',
-            'AbstractEventEmitter'
+            'AbstractEventEmitter',
+            'AbstractProductMain'
         ],
     },
     replaceAll: {

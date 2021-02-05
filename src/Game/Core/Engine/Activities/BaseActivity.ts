@@ -1,6 +1,7 @@
 import Game from "../../Game";
 import IActivity from "./IActivity";
 import ILevel from "./ILevel";
+import IScene from "./IScene";
 
 /**
  * @description Extending the BaseLevel class is the quickes, cleanest and easiest way of creaing a barebones Highwood activity
@@ -24,13 +25,13 @@ abstract class BaseActivity implements IActivity {
         return this._name;
     }
 
-    startActivity(scriptName: string, level: ILevel) {
+    startActivity(scriptName: string, scene: IScene) {
         if(this._game.gameStarted){
-            this._game.loadScene(level, scriptName);
+            this._game.loadScene(scene, scriptName);
         }
         else {
             this._game.startGame('./config.json').then(() =>{
-                this._game.loadScene(level, scriptName);
+                this._game.loadScene(scene, scriptName);
           });
         }
       }
