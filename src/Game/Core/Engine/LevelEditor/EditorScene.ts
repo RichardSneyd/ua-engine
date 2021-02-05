@@ -14,6 +14,7 @@ import Inspector from "./Inspector";
 import SceneEvents from "../Activities/SceneEvents";
 import ContainerObject from "../GameObjects/ContainerObject";
 import TextObject from "../GameObjects/TextObject";
+import ImportData from "./ImportData";
 
 
 // build the visual of the editor here, like an activity level....
@@ -27,7 +28,9 @@ class EditorScene implements ILevel {
     private _loop: Loop;
     protected _pxGame: PxGame;
     protected _inspector: Inspector;
-    _math: MathUtils;
+    protected _math: MathUtils;
+    protected _importData: ImportData;
+
 
     public bgdName: string;
     protected _bgd: SpriteObject;
@@ -59,7 +62,7 @@ class EditorScene implements ILevel {
     };
 
     constructor(loader: Loader, manager: LevelManager, loop: Loop, goFactory: GOFactory,
-        pxGame: PxGame, accordion: UIAccordion, exportData: ExportData, inspector: Inspector, events: SceneEvents, math: MathUtils) {
+        pxGame: PxGame, accordion: UIAccordion, exportData: ExportData, inspector: Inspector, events: SceneEvents, math: MathUtils, importData: ImportData) {
         this._loader = loader;
         this._manager = manager;
         this._goFactory = goFactory;
@@ -70,6 +73,7 @@ class EditorScene implements ILevel {
         this._accordion = accordion;
         this._exportData = exportData;
         this._inspector = inspector;
+        this._importData = importData;
     }
 
     init(): void {
@@ -80,6 +84,7 @@ class EditorScene implements ILevel {
 
         this._manager.globalEvents.on('gameobj_clicked', this._panelImageClicked, this);
         this._manager.globalEvents.on('input_changed', this._inputChanged, this);
+        this._manager.globalEvents.on('data_imported', this._dataImported, this);
 
         this.preload();
     }
@@ -111,8 +116,9 @@ class EditorScene implements ILevel {
         this._addDropzonesRow();
         this._addHotspotsRow();
 
-        /* Download Button */
+        /* Download & Import Buttons */
         this._exportData.createDownloadButton();
+        this._importData.createImportButton();
 
         /* Inspector UI */
         this._inspector.createInspector();
@@ -120,6 +126,7 @@ class EditorScene implements ILevel {
         /* Handle Inputs */
         this._addInputManager();
 
+        /* Containers */
         this._playgroundContainer = this._goFactory.container(0, 0);
         this._zoneContainer = this._goFactory.container(0, 0);
     }
@@ -387,6 +394,35 @@ class EditorScene implements ILevel {
             this.selectedGO.height = Number(val);
             this.selectedGO.followText.x = 30 + this.selectedGO.width / 2;
         }
+    }
+
+    protected _dataImported({ data }: { data: any }): void {
+        Debug.info("IMPORTED_DATA: ", data);
+
+        this._resetData();
+
+    }
+
+
+    /**
+     * @description Removes if there is any game object on the scene and related data
+     */
+    protected _resetData() {
+        if (this.selectedGOBorder) { this.selectedGOBorder.alpha = 0; }
+        // Destroy all the game objects inside of the scene
+        if (this._playgroundContainer.children.length > 0) {
+            for (let i = this._playgroundContainer.children.length - 1; i >= 0; i--) { this._playgroundContainer.removeChild(this._playgroundContainer.children[i]); }
+        }
+
+        if (this._zoneContainer.children.length > 0) {
+            for (let i = this._zoneContainer.children.length - 1; i >= 0; i--) { this._zoneContainer.removeChild(this._zoneContainer.children[i]); }
+        }
+
+        this._imgGameObjects = [];
+        this._spineGameObjects = [];
+        this._atlasGameObjects = [];
+        this._dropzoneGameObjects = [];
+        this._hotspotGameObjects = [];
     }
 
     private _addInputManager() {
