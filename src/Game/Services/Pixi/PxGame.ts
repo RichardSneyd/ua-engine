@@ -14,6 +14,8 @@ class PxGame {
   private _pxFactory: PxFactory; _loader: Loader; _events: Events;
   private _game: Application | null; private _levelCont: Container; private _lastLevelCont: Container;
   private _gameConfig: GameConfig;
+  private _activityCont: Container;
+  private _overlayCont: Container;
 
   constructor(pxFactory: PxFactory, loader: Loader, events: Events, gameConfig: GameConfig) {
     this._pxFactory = pxFactory;
@@ -30,6 +32,20 @@ class PxGame {
     return this._levelCont;
   }
 
+  /**
+   * @description this is the container to which activities are added and removed at scene load and shutdown
+   */
+  get activityCont(){
+    return this._activityCont;
+  }
+
+  /**
+   * @description this is a container that overlays the 'activityCont', to be used for HUD elements such as toolbars, transitions etc.
+   */
+  get overlayCont(){
+    return this._overlayCont;
+  }
+
   get renderer() {
     return this._game?.renderer;
   }
@@ -40,6 +56,10 @@ class PxGame {
 
     this._game = this._createGame(w, h, container);
     this._game.renderer.backgroundColor = 0xfafad2;
+    this._activityCont = this._pxFactory.createContainer();
+    this._overlayCont = this._pxFactory.createContainer();
+    this._game.stage.addChild(this._activityCont);
+    this._game.stage.addChild(this._overlayCont);
 
 
     if (elm != null) {
@@ -53,6 +73,18 @@ class PxGame {
 
     this._pxFactory.init(); // init factory to apply hitmap hacks
     Debug.exposeGlobal(this._game, 'game');
+  }
+
+  public newLevel() {
+    if (this._game !== null) {
+      if (this.levelCont !== null && this.levelCont !== undefined) {
+        this._lastLevelCont = this.levelCont;
+        this._lastLevelCont.destroy();
+      }
+      this._levelCont = this._pxFactory.createContainer();
+      this._activityCont.addChild(this._levelCont);
+      this.levelCont.x = 0; this.levelCont.y = 0;
+    }
   }
 
   /**
@@ -185,19 +217,6 @@ class PxGame {
     throw Error('failed to gen canvas with extract of renderTexture');
   }
 
-
-  public newLevel() {
-    if (this._game !== null) {
-      if (this.levelCont !== null && this.levelCont !== undefined) {
-        this._lastLevelCont = this.levelCont;
-        this._lastLevelCont.destroy();
-      }
-      this._levelCont = this._pxFactory.createContainer();
-      this._game.stage.addChild(this._levelCont);
-      this.levelCont.x = 0; this.levelCont.y = 0;
-    }
-  }
-
   _onMouseMove(evt: any) {
     let canvas = document.getElementsByTagName('canvas')[0];
     let rect = canvas.getBoundingClientRect();
@@ -229,7 +248,7 @@ class PxGame {
       txt.x = x;
       txt.y = y;
 
-      this._game.stage.addChild(txt.data);
+      this._addChild(txt.data);
 
       return txt;
     } else {
@@ -338,21 +357,16 @@ class PxGame {
     }
   }
 
-  private _addChild(child: DisplayObject) {
-    if (this._game != null && this.levelCont !== null && this.levelCont !== undefined) {
+  private _addChild(child: DisplayObject, parent: Container = this._levelCont) {
+    if (this._game != null && parent !== null && parent !== undefined) {
       //this._game.stage.addChild(child);
-      this.levelCont.addChild(child);
+      parent.addChild(child);
     } else {
       Debug.error("Can not add sprite before initializing the game!");
     }
   }
 
-  /**
-   * 
-   * @param baseTex the texture.baseTexture to generate the hitmap data from (does not have to be connected to the target object)
-   * @param object the target object of the hitmap
-   * @param threshold 
-   */
+/*  
   public genHitmap(baseTex: BaseTexture, object: any, threshold: number) {
     let resource: any = baseTex.resource;
     if (!baseTex.hasOwnProperty('resource')) console.error('cannot generate hitmap for %s, no baseTexture.resource property', object);
@@ -409,60 +423,8 @@ class PxGame {
     }
     // debugger;
     return true;
-  }
-  /* 
-    public genHitmap(baseTex: any, threshold: number) {
-      if (!baseTex.resource) {
-        //renderTexture
-        return false;
-      }
-      // resource = <ImageResource>baseTex.resource;
-  
-      const imgSource = baseTex.resource.source;
-      Debug.info(imgSource);
-      let canvas = null;
-      if (!imgSource) {
-        Debug.warn('no imgSource for resource: ', baseTex.resource)
-        return false;
-      }
-      let context = null;
-      if (imgSource.getContext) {
-        canvas = imgSource;
-        context = canvas.getContext('2d');
-        Debug.info(context);
-      }
-      else if (imgSource instanceof Image) {
-        canvas = document.createElement('canvas');
-        canvas.width = imgSource.width;
-        canvas.height = imgSource.height;
-        context = canvas.getContext('2d');
-        if (context) {
-          // accepts an ImageBitmap object also -- try to generate and pass, so it works for all GameObject types
-          context.drawImage(imgSource, 0, 0);
-        }
-      }
-      else {
-        //unknown source;
-        return false;
-      }
-  
-      const w = canvas.width, h = canvas.height;
-      let imageData = context.getImageData(0, 0, w, h);
-  
-      Debug.warn('building hitmap from context.getImageData, which yields: ', imageData);
-      let hitmap = baseTex.hitmap = new Uint32Array(Math.ceil(w * h / 32));
-      for (let i = 0; i < w * h; i++) {
-        let ind1 = i % 32;
-        let ind2 = i / 32 | 0;
-        if (imageData.data[i * 4 + 3] >= threshold) {
-          hitmap[ind2] = hitmap[ind2] | (1 << ind1);
-        }
-      }
-      Debug.info('hitmap is: ', hitmap);
-      Debug.info('baseTex.hitmap is: ', baseTex.hitmap);
-      // debugger;
-      return true;
-    } */
+  } */
+ 
   /**
     * @description enable mouse/pointer input for the specified object
     * @param displayObject the object to enable input for
