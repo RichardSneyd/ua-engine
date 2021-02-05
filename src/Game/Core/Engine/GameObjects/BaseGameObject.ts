@@ -433,9 +433,28 @@ abstract class BaseGameObject implements IGameObject {
         this._core.lookAt(object, offset);
     }
 
+    /**
+     * @description also recursively destroys all children
+     */
     destroy() {
-        if (this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
+       // if (this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
+        this.destroyChildren();
         this._core.destroy();
+    }
+
+    /**
+     * @description destroys all children in the children array and removes them from it
+     */
+    destroyChildren(){
+        this._pcHandler.destroyChildren();
+    }
+
+    /**
+     * @description destroys the child and removes it from the children array
+     * @param child the child to remove. Must be an IGameObject
+     */
+    destroyChild(child: IGameObject){
+        this._pcHandler.destroyChild(child);
     }
 
     addChild(child: IGameObject): void {
