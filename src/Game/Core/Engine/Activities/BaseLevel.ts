@@ -133,6 +133,22 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         Debug.info('onNewRow called for row %s: ', this.manager.script.active.id, this.manager.script.active);
         this.loadConfig();
         this.updateCharacterState();
+        if (!this.manager.script.isFalsy(this.manager.script.active.audio_id)) {
+            this.manager.audio.playInstructionArr(this.manager.script.active.audio_id, this.onInstructionAudioComplete.bind(this));
+        }
+        else if (!this.manager.script.isFalsy(this.manager.script.active.auto_next)) {
+            this.manager.script.goToAutoNext();
+        }
+    }
+
+    /**
+     * @description callback for playInstructionArr in onNewRow when the instructional audio for the current row completes. Override to change logic
+     */
+    public onInstructionAudioComplete() {
+        // override for different logic
+        if (!this.manager.script.isFalsy(this.manager.script.active.auto_next)) {
+            this.manager.script.goToAutoNext();
+        }
     }
 
     /**
