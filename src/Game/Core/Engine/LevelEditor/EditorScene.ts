@@ -15,6 +15,7 @@ import SceneEvents from "../Activities/SceneEvents";
 import ContainerObject from "../GameObjects/ContainerObject";
 import TextObject from "../GameObjects/TextObject";
 import ImportData from "./ImportData";
+import { openStdin } from "process";
 
 
 // build the visual of the editor here, like an activity level....
@@ -168,59 +169,66 @@ class EditorScene implements ILevel {
         }, true);
     }
 
-    _panelImageClicked({ src, type, name }: { src: string, type: string, name: string }) {
-        let _tryName = (arr: any[], prefix: string, index: number): string => {
-            if (arr.length > 0) {
-                let count: number = 0;
-                arr.forEach((val) => {
-                    if (val.name == prefix) {
-                        ++count;
-                    }
-                })
+    protected _tryName(arr: any[], prefix: string, index: number): string {
+        if (arr.length > 0) {
+            let count: number = 0;
+            arr.forEach((val) => {
+                if (val.name == prefix) {
+                    ++count;
+                }
+            })
 
-                let unique: boolean = true;
-                for (let t = 0; t < arr.length; t++) {
+            let unique: boolean = true;
+            for (let t = 0; t < arr.length; t++) {
 
-                    if (count === 0) {
-                        return prefix;
-                    }
-                    else {
-                        if (arr[t].name == `${prefix}_${index}`) {
-                            unique = false;
-                            break;
-                        }
+                if (count === 0) {
+                    return prefix;
+                }
+                else {
+                    if (arr[t].name == `${prefix}_${index}`) {
+                        unique = false;
+                        break;
                     }
                 }
-                if (!unique) return _tryName(arr, prefix, index + 1);
-
-                return (`${prefix}_${index}`);
             }
-            else {
-                return `${prefix}`;
-            }
-        };
+            if (!unique) return this._tryName(arr, prefix, index + 1);
 
-        let _orderName = (arr: any[], prefix: string, index: number): string => {
-            let unique: boolean = true;
+            return (`${prefix}_${index}`);
+        }
+        else {
+            return `${prefix}`;
+        }
+    }
 
-            for (let t = 0; t < arr.length; t++) {
-                if (arr[t].name == `${prefix}${index}`) {
-                    unique = false;
-                    break;
-                };
-            }
+    protected _orderName(arr: any[], prefix: string, index: number): string {
+        let unique: boolean = true;
 
-            if (!unique) return _orderName(arr, prefix, index + 1);
-            return (`${prefix}${index}`);
+        for (let t = 0; t < arr.length; t++) {
+            if (arr[t].name == `${prefix}${index}`) {
+                unique = false;
+                break;
+            };
         }
 
+        if (!unique) return this._orderName(arr, prefix, index + 1);
+        return (`${prefix}${index}`);
+    }
+
+    _panelImageClicked({ src, type, name }: { src: string, type: string, name: string }) {
+        this._addGameObject(src, type, name);
+    }
+
+    protected _addGameObject(src: string, type: string, name: string, options: any = { x: 660, y: 240, width: 300, height: 200, angle: 0, originX: 0.5, originY: 0.5, scaleX: 1, scaleY: 1 }) {
+        //Debug.warn("x y: ", name, options?.x, options?.y, options?.angle, options?.originX, options?.originY);
         let gameobj: any;
         if (type === "image") {
-            gameobj = this._goFactory.sprite(500, 500, src);
+            gameobj = this._goFactory.sprite(options.x, options.y, src);
             this._playgroundContainer.addChild(gameobj);
-            gameobj.setOrigin(.5);
+            gameobj.scaleHandler.setScale(options?.scaleX, options?.scaleY);
+            gameobj.setOrigin(options?.originX, options?.originY);
+            gameobj.angle = options.angle;
             gameobj.objType = `${type}`;
-            let uniqName = _tryName(this._imgGameObjects, `${name}`, 2);
+            let uniqName = this._tryName(this._imgGameObjects, `${name}`, 2);
             gameobj.uniqName = uniqName;
 
             this._imgGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
@@ -230,10 +238,11 @@ class EditorScene implements ILevel {
             this._inspector.setInputReadOnly('height', true);
         }
         else if (type === "spine") {
-            gameobj = this._goFactory.spine(500, 500, name);
+            gameobj = this._goFactory.spine(options.x, options.y, name);
             this._playgroundContainer.addChild(gameobj);
+            gameobj.scaleHandler.setScale(options?.scaleX, options?.scaleY);
             gameobj.objType = `${type}`;
-            let uniqName = _tryName(this._spineGameObjects, `${name}`, 2);
+            let uniqName = this._tryName(this._spineGameObjects, `${name}`, 2);
             gameobj.uniqName = uniqName;
             let defaultAnimState = gameobj.animations.animationNames[0];
             gameobj.animations.play(`${defaultAnimState}`, true);
@@ -245,16 +254,15 @@ class EditorScene implements ILevel {
             this._inspector.setInputReadOnly('height', true);
         }
         else if (type === "atlas") {
-            gameobj = this._goFactory.sprite(500, 500, `${name}`, 'up');
-            gameobj.setOrigin(.5);
+            gameobj = this._goFactory.sprite(options.x, options.y, `${name}`, 'up');
+            gameobj.scaleHandler.setScale(options?.scaleX, options?.scaleY);
+            gameobj.setOrigin(options?.originX, options?.originY);
             this._playgroundContainer.addChild(gameobj);
             gameobj.objType = `${type}`;
-            let uniqName = _tryName(this._atlasGameObjects, `${name}`, 2);
+            let uniqName = this._tryName(this._atlasGameObjects, `${name}`, 2);
             gameobj.uniqName = uniqName;
-            Debug.info('animnames:', gameobj.animations.animationNames);
             gameobj.animations.importAnimations(); // this will automatically parse the frames in the json file and create animations based on the prefixes
             gameobj.animations.play(gameobj.animations.animationNames[1], true);
-            Debug.info('anims: ', gameobj.animations.animations);
 
             this._atlasGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
             gameobj.objID = this._atlasGameObjects.length - 1;
@@ -263,15 +271,17 @@ class EditorScene implements ILevel {
             this._inspector.setInputReadOnly('height', true);
         }
         else if (type === "dropzone") {
-            gameobj = this._goFactory.nineSlice(660, 240, name, 4, 4, 4, 4, 300, 200);
+            gameobj = this._goFactory.nineSlice(options.x, options.y, 'dropzone', 4, 4, 4, 4, options.width, options.height);
             this._zoneContainer.addChild(gameobj);
             gameobj.objType = `${type}`;
-            let uniqName = _orderName(this._dropzoneGameObjects, `${name.charAt(0)}`, 1);
+            let uniqName = this._orderName(this._dropzoneGameObjects, `${name.charAt(0)}`, 1);
             gameobj.uniqName = uniqName;
 
             let followText: TextObject = this._goFactory.text(gameobj.x / 2 - gameobj.width / 2, gameobj.y / 2 - gameobj.height / 2 + 40, gameobj.uniqName, this._fontStyle, gameobj);
             followText.setOrigin(1);
             gameobj.followText = followText;
+            gameobj.followText.x = 30 + gameobj.width / 2;
+            gameobj.followText.y = 30 + gameobj.height / 2;
 
             this._dropzoneGameObjects.push({ name: gameobj.uniqName, gameObj: gameobj, type: type });
             gameobj.objID = this._dropzoneGameObjects.length - 1;
@@ -280,15 +290,17 @@ class EditorScene implements ILevel {
             this._inspector.setInputReadOnly('height', false);
         }
         else if (type === "hotspot") {
-            gameobj = this._goFactory.nineSlice(660, 240, name, 4, 4, 4, 4, 300, 200);
+            gameobj = this._goFactory.nineSlice(options.x, options.y, 'hotspot', 4, 4, 4, 4, options.width, options.height);
             this._zoneContainer.addChild(gameobj);
             gameobj.objType = `${type}`;
-            let uniqName = _orderName(this._hotspotGameObjects, `${name.charAt(0)}`, 1);
+            let uniqName = this._orderName(this._hotspotGameObjects, `${name.charAt(0)}`, 1);
             gameobj.uniqName = uniqName;
 
             let followText: TextObject = this._goFactory.text(gameobj.x / 2 - gameobj.width / 2, gameobj.y / 2 - gameobj.height / 2 + 40, gameobj.uniqName, this._fontStyle, gameobj);
             followText.setOrigin(1);
             gameobj.followText = followText;
+            gameobj.followText.x = 30 + gameobj.width / 2;
+            gameobj.followText.y = 30 + gameobj.height / 2;
 
             this._hotspotGameObjects.push({ name: gameobj.uniqName, gameObj: gameobj, type: type });
             gameobj.objID = this._hotspotGameObjects.length - 1;
@@ -397,12 +409,38 @@ class EditorScene implements ILevel {
     }
 
     protected _dataImported({ data }: { data: any }): void {
-        Debug.info("IMPORTED_DATA: ", data);
-
+        //Debug.info("IMPORTED_DATA: ", data);
         this._resetData();
-
+        this._addImportedGameObjects(data);
     }
 
+    protected _addImportedGameObjects(data: any): void {
+        if (data.sprites.length > 0) {
+            data.sprites.forEach((val: any, i: number) => {
+                this._addGameObject(val.filename, 'image', val.name, { x: val.x, y: val.y, angle: val.angle, originX: val.originX, originY: val.originY, scaleX: Number(val.scaleX), scaleY: Number(val.scaleY) });
+            });
+        }
+        if (data.spines.length > 0) {
+            data.spines.forEach((val: any, i: number) => {
+                this._addGameObject(val.filename, 'spine', val.name, { x: val.x, y: val.y, angle: val.angle, originX: val.originX, originY: val.originY, scaleX: Number(val.scaleX), scaleY: Number(val.scaleY) });
+            });
+        }
+        if (data.atlases.length > 0) {
+            data.atlases.forEach((val: any, i: number) => {
+                this._addGameObject(val.filename, 'atlas', val.name, { x: val.x, y: val.y, angle: val.angle, originX: val.originX, originY: val.originY, scaleX: Number(val.scaleX), scaleY: Number(val.scaleY) });
+            });
+        }
+        if (data.dropzones.length > 0) {
+            data.dropzones.forEach((val: any, i: number) => {
+                this._addGameObject(val.name, 'dropzone', val.name, { x: val.x, y: val.y, width: val.width, height: val.height });
+            });
+        }
+        if (data.hotspots.length > 0) {
+            data.hotspots.forEach((val: any, i: number) => {
+                this._addGameObject(val.name, 'hotspot', val.name, { x: val.x, y: val.y, width: val.width, height: val.height });
+            });
+        }
+    }
 
     /**
      * @description Removes if there is any game object on the scene and related data
@@ -410,9 +448,7 @@ class EditorScene implements ILevel {
     protected _resetData() {
         if (this.selectedGOBorder) { this.selectedGOBorder.alpha = 0; }
         // Destroy all the game objects inside of the scene
-        if (this._playgroundContainer.children.length > 0) {
-            for (let i = this._playgroundContainer.children.length - 1; i >= 0; i--) { this._playgroundContainer.removeChild(this._playgroundContainer.children[i]); }
-        }
+        for (let i = this._playgroundContainer.children.length - 1; i >= 0; i--) { this._playgroundContainer.removeChild(this._playgroundContainer.children[i]); }
 
         if (this._zoneContainer.children.length > 0) {
             for (let i = this._zoneContainer.children.length - 1; i >= 0; i--) { this._zoneContainer.removeChild(this._zoneContainer.children[i]); }
