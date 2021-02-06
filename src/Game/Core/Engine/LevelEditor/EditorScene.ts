@@ -448,11 +448,8 @@ class EditorScene implements ILevel {
     protected _resetData() {
         if (this.selectedGOBorder) { this.selectedGOBorder.alpha = 0; }
         // Destroy all the game objects inside of the scene
-        for (let i = this._playgroundContainer.children.length - 1; i >= 0; i--) { this._playgroundContainer.removeChild(this._playgroundContainer.children[i]); }
-
-        if (this._zoneContainer.children.length > 0) {
-            for (let i = this._zoneContainer.children.length - 1; i >= 0; i--) { this._zoneContainer.removeChild(this._zoneContainer.children[i]); }
-        }
+        this._playgroundContainer.destroyChildren();
+        this._zoneContainer.destroyChildren();
 
         this._imgGameObjects = [];
         this._spineGameObjects = [];
