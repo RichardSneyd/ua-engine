@@ -1,3 +1,4 @@
+import AbstractProductMain from "./AbstractProductMain";
 import BaseActivity from "./BaseActivity";
 import BaseLevel from "./BaseLevel";
 import BaseScene from "./BaseScene";
@@ -30,6 +31,12 @@ class Activities {
    */
 
   get BaseScene() { return BaseScene }
+
+  /**
+   * @description Extend this in your main.ts class to define a product object (used for managing the entire product state etc)
+   */
+
+  get AbstractProductMain() { return AbstractProductMain }
   /**
    * @description a factory for scene specific components (instance members, not singletons)
    */

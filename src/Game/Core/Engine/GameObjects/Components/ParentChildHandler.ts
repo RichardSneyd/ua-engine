@@ -92,6 +92,17 @@ class ParentChildHandler implements IParentChild{
         Debug.warn('could not remove, no such entity found in children array');
     }
 
+    destroyChild(child: IGameObject){
+       // this.removeChild(child);
+        child.destroy();
+    }
+
+    destroyChildren(){
+        for(let c = this._children.length - 1; c >= 0; c--){
+            this.destroyChild(this._children[c]);
+        }
+    }
+
     hasChild(object: IGameObject): boolean {
         if (this._children.indexOf(object) !== -1) {
             return true;

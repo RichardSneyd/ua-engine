@@ -20,13 +20,13 @@ class Button {
 
     public init(x: number, y: number, atlas: string, frame: string, animNames: { up: string, down: string, over: string, out: string }, onDown: Function | null = null, context: any, onUp: Function | null = null, parent?: IParentChild) {
         
-        this.sprite = this.sprite.createNew(x, y, atlas, frame);
+        this.sprite = this.sprite.createNew(x, y, atlas, frame, parent);
         this.animNames = animNames;
 
         this._addAnimations();
-        if (parent) {
+       /*  if (parent) {
             parent.addChild(this.sprite);
-        }
+        } */
 
         this._onDownCallback = onDown;
         this._context = context;

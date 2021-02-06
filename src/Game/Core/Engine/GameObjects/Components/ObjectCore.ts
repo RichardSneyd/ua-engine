@@ -250,6 +250,7 @@ class ObjectCore {
     this._loop.removeFunction(this.update, this);
 
     this._go.scaleHandler.shutdown.bind(this._go.scaleHandler)();
+    this._go.pcHandler.parent?.removeChild(this._go);
     this._events.off('shutdown', this._go.destroy, this._go); 
     //if(this._data !== undefined && this._data !== null) this._objectHandler.destroy(this._data);
     this._objectHandler.destroy(this._data);
