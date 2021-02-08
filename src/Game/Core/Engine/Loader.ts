@@ -511,7 +511,7 @@ class Loader {
   private _getResource(url: string, byName: boolean = false, resList?: Resource[]): Resource | null {
     let _url = url.trim();
     let resArr = this._resList;
-    if (resList) { resArr = resList }
+    if (resList && resList.length > 0) { resArr = resList }
 
     for (let c = 0; c < resArr.length; c++) {
       let currentUrl = resArr[c].url;
