@@ -314,6 +314,7 @@ class Loader {
    * @param onDone (optional) called when loading is complete
    */
   public download() {
+    if(this.loading) Debug.error('cant start new download before previous completes');
     return new Promise((resolve: Function, reject: Function) => {
       let _imgsDone: boolean = false, _sndsDone: boolean = false;
 
