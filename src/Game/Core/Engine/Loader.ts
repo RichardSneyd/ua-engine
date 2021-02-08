@@ -249,14 +249,14 @@ class Loader {
     if (hasPath) {
       if (name.indexOf('.json') == -1) name = name + '.json';
       let url = this._getPath().spn + name;
-      if (this._getResource(url, false) == null, this._spineList) {
+      if (this._getResource(url, false, this._spineList) == null) {
         let res = this._createResource();
         res.initSpine(url, false);
 
         this._resList.push(res);
         this._spineList.push(res);
         this._newResList.push(res);
-        Debug.info(this._resList);
+      //  Debug.info(this._resList);
         return this;
       }
       Debug.warn('did not add %s spine, as it already exists', name);
