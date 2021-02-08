@@ -88,6 +88,8 @@ class Loader {
     this._events = events;
 
     this._resList = [];
+    this._imgList = [];
+    this._spineList = [];
 
     this._init();
     this._loop.addFunction(this._update, this);
