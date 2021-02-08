@@ -16,6 +16,8 @@ class Loader {
   private _gameConfig: GameConfig; private _loop: Loop; private _events: Events;
   private _imgLoader: ImgLoader; _sndLoader: ISndLoader; _ajaxLoader: AjaxLoader;
   private _resList: Resource[];
+  private _spineList: Resource[];
+  private _imgList: Resource[];
   private _newResList: Resource[];
   private _downloadComplete: boolean = false;
   private _startedLoading: boolean = false;
@@ -98,6 +100,14 @@ class Loader {
     return this._resList;
   }
 
+  get spineList(){
+    return this._spineList;
+  }
+
+  get imgList(){
+    return this._imgList;
+  }
+
   private _init() {
     this._imgLoader.init(this._imgLoaded, this._imgDone, this);
     this._base = "";
@@ -160,11 +170,12 @@ class Loader {
       let url = name;
       // if the file has .json extension, it's an atlas, so change path. Won't be confused with spine assets - they are loaded via addSpine
       if (imgName?.indexOf('.json') !== -1) { url = this._getPath().atlas + name }
-      if (this._getResource(url, false) == null) {
+      if (this._getResource(url, false, this._imgList) == null) {
         let res = this._createResource();
         res.initImage(url, false);
 
         this._resList.push(res);
+        this._imgList.push(res);
         this._newResList.push(res);
         // Debug.info(this._resList);
         return this;
@@ -236,11 +247,12 @@ class Loader {
     if (hasPath) {
       if (name.indexOf('.json') == -1) name = name + '.json';
       let url = this._getPath().spn + name;
-      if (this._getResource(url, false) == null) {
+      if (this._getResource(url, false) == null, this._spineList) {
         let res = this._createResource();
         res.initSpine(url, false);
 
         this._resList.push(res);
+        this._spineList.push(res);
         this._newResList.push(res);
         Debug.info(this._resList);
         return this;
@@ -519,11 +531,12 @@ class Loader {
   }
 
   getImgResource(url: string, byName: boolean = false): Resource | null {
-    return this._getResource(url, byName, this._getImgArray());
+   // return this._getResource(url, byName, this._getImgArray());
+    return this._getResource(url, byName, this._imgList);
   }
 
   getSpnResource(url: string, byName: boolean = false): Resource | null {
-    return this._getResource(url, byName, this._getSpnArray());
+    return this._getResource(url, byName, this._spineList);
   }
 
   /**
