@@ -33,6 +33,10 @@ class Loader {
     this._base = base;
   }
 
+  get loading(){
+    return this._startedLoading;
+  }
+
   /**
    * @description Load progress as a float value between 0 and 1
    * @returns the current progress value
@@ -613,8 +617,8 @@ class Loader {
 
   private _downloadSpines() {
     let spineList = this._getSpnArray(this._newResList);
-    Debug.info('spines to load:');
-    Debug.info(spineList);
+  //  Debug.info('spines to load:');
+  //  Debug.info(spineList);
     for (let c = 0; c < spineList.length; c++) {
       let res = spineList[c];
       // the resources were already created in resList at the downloadImages phase, this is service level
