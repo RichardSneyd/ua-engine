@@ -117,7 +117,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         }
         //   let char = this._loader.getResource(configRow.config.char, true);
         if (configRow.config.hasOwnProperty('char') && !this._manager.script.isFalsy(configRow.config.char) && this._loader.getResource(configRow.config.char, true)) {
-            let char = this.manager.script.getLevelFileObject('spines', 'char');
+            let char = this.manager.script.getLevelFileObject('spines', configRow.config.char);
             if (!char) { // Default position and scale if char is not on Level file
                 char = { x: 20, y: this._game.height() - 150, scaleX: 1 };
             }

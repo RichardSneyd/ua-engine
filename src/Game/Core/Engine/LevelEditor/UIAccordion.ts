@@ -235,7 +235,14 @@ class UIAccordion {
             if (panel.style.maxHeight) {
                 panel.style.maxHeight = null as any;
             } else {
-                panel.style.maxHeight = panel.scrollHeight + "px";
+                let height: number = 0;
+                if (panel.scrollHeight > 200) {
+                    height = 250;
+                }
+                else {
+                    height = panel.scrollHeight;
+                }
+                panel.style.maxHeight = `${height}px`;
             }
         }
 
@@ -249,7 +256,14 @@ class UIAccordion {
                     panel.style.maxHeight = null || '';
 
                 } else {
-                    panel.style.maxHeight = `${panel.scrollHeight}px`;
+                    let height: number = 0;
+                    if (panel.scrollHeight > 200) {
+                        height = 250;
+                    }
+                    else {
+                        height = panel.scrollHeight;
+                    }
+                    panel.style.maxHeight = `${height}px`;
                 }
             });
         }
