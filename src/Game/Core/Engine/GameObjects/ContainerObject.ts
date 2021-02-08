@@ -10,6 +10,7 @@ import Point from "../../Geom/Point";
 import TweenComponent from "./Components/TweenComponent";
 import BaseGameObject from "./BaseGameObject";
 import ExtractComponent from "./Components/ExtractComponent";
+import { timeStamp } from "console";
 
 /**
  * @description A container object. Useful for grouping other GameObjects.
@@ -23,7 +24,7 @@ class ContainerObject extends BaseGameObject {
         this._pointFactory = point;
     }
 
-    public init(x: number, y: number, parent: IParentChild | null): void {
+    public init(x: number = 0, y: number = 0, parent: IParentChild | null): void {
         this.data = this._screen.createContainer(x, y);
         this._core.init(this, x, y, '', this._update);
         super.init();

@@ -1,11 +1,13 @@
 import { Application, Sprite, DisplayObject, Texture, RenderTexture } from 'pixi.js-legacy';
 import Debug from '../Core/Engine/Debug';
+import ContainerObject from '../Core/Engine/GameObjects/ContainerObject';
 
 //import Screen from '../Services/Screen';
 import PxGame from '../Services/Pixi/PxGame';
 
 class Screen {
   private _pxGame: PxGame;
+  protected _overlayCont: ContainerObject;
 
   constructor(pxGame: PxGame) {
     this._pxGame = pxGame;
@@ -15,13 +17,6 @@ class Screen {
 
   get renderer() {
     return this._pxGame.renderer;
-  }
-
-  /**
-   * @description this is the container to which activities are added and removed at scene load and shutdown
-   */
-  get activityCont(){
-    return this._pxGame.activityCont;
   }
 
   /**

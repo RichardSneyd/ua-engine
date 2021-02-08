@@ -75,7 +75,7 @@ class ObjectCore {
     this._updateSize();
     this._setListners();
     this._loop.addFunction(this.update, this);
-    this._events.on('shutdown', this._go.destroy, this._go); // every object has it's own 'shutdown' listener
+   // this._events.on('shutdown', this._go.destroy, this._go); // every object has it's own 'shutdown' listener
   }
 
   get objectHandler() {
@@ -251,7 +251,7 @@ class ObjectCore {
 
     this._go.scaleHandler.shutdown.bind(this._go.scaleHandler)();
     this._go.pcHandler.parent?.removeChild(this._go);
-    this._events.off('shutdown', this._go.destroy, this._go); 
+   // this._events.off('shutdown', this._go.destroy, this._go); 
     //if(this._data !== undefined && this._data !== null) this._objectHandler.destroy(this._data);
     this._objectHandler.destroy(this._data);
   }

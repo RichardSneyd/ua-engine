@@ -15,6 +15,7 @@ class FrameAnimationManager implements IAnimationManager {
   private _animations: Anim[]; private _loader: Loader;
   private _animationNames: string[];
   private _loopIndex: number; private _core: ObjectCore;
+  private _initialized: boolean;
 
   constructor(anim: Anim, loader: Loader) {
     this._anim = anim;
@@ -23,12 +24,17 @@ class FrameAnimationManager implements IAnimationManager {
     this._loopIndex = 0;
 
     this._animations = [];
-
+    this._initialized = false;
   }
 
   init(go: IFrameAnimatedGameObject, core: ObjectCore) {
     this._go = go; this._core = core;
     this._animationNames = this._importAnimationNames(); // scrapes a list of animation names by identifying alphanumeric prefixes in the frames of the atlas .json
+    this._initialized = true;
+  }
+
+  get initialized(){
+    return this._initialized;
   }
 
   /**

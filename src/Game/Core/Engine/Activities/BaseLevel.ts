@@ -22,7 +22,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     protected _background: ContainerObject;
     protected _playground: ContainerObject;
     protected _foreground: ContainerObject;
-    protected _HUD: ContainerObject;
+   // protected _HUD: ContainerObject;
 
     protected _aFiles: string[] = [];
     protected _pngFiles: string[] = [];
@@ -35,7 +35,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     constructor(manager: LevelManager, events: SceneEvents, loop: Loop, goFactory: GOFactory, loader: Loader, game: Game) {
         super(events, loop, goFactory, loader, game);
         this._manager = manager;
-
+        Debug.exposeGlobal(this, 'level');
         //  Debug.exposeGlobal(this, 'level'); // expose all levels globally as 'level' for debugging convenience
     }
 
@@ -59,7 +59,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         this._background = this._goFactory.container(0, 0);
         this._playground = this._goFactory.container(0, 0);
         this._foreground = this._goFactory.container(0, 0);
-        this._HUD = this._goFactory.container(0, 0);
+     //   this._HUD = this._goFactory.container(0, 0);
         // cookie-cutter event listeners (necessary for the functioning of activities and levels, and for avoiding memory leaks etc)
         this._manager.globalEvents.on('newRow', this.onNewRow, this);
         this._manager.globalEvents.on('shutdown', this.shutdown, this);
@@ -106,7 +106,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      */
     start(configRow?: any): void {
         Debug.info('start executed');
-
+        this._events.global.emit('show_nav_bar');
         // add anything that should be done by all levels on start
         if (!configRow) configRow = this._manager.script.rows[0];
         if (configRow.config.hasOwnProperty('bgd')) {
@@ -253,10 +253,24 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         this._ready = ready;
     }
 
+    /**
+     * @description shutdown the scene, in preperation for transition. This involves destroying objects, as well as removing loop callbacks and event listeners etc
+     */
     shutdown() {
+        this._events.global.emit('hide_nav_bar');
         this._manager.globalEvents.off('shutdown', this.shutdown, this);
         this._manager.globalEvents.off('newRow', this.onNewRow, this);
+        this.destroy();
         super.shutdown();
+    }
+
+    /**
+     * @description calls the destroy methods on all layers, effectively destroying the entire scene
+     */
+    destroy(){
+        this._playground.destroy();
+        this._background.destroy();
+        this._foreground.destroy();
     }
 }
 

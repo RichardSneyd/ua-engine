@@ -1995,13 +1995,13 @@ function () {
       throw new Error('Cannot add resources while the loader is running.');
     } // check if resource already exists.
 
-    console.trace('adding spine resource, does it already exist?...', name);
+   // console.trace('adding resource, does it already exist?...', name);
     if (this.resources[name]) {
      // throw new ("Resource named \"" + name + "\" already exists.");
       console.warn("Resource named \"" + name + "\" already exists."); // this is a patch to stop errors being thrown when we try to add a resource that already exists.
     } // add base url if this isn't an absolute url
     else {
-      console.log('no, does not exist yet');
+  //    console.log('no, does not exist yet');
     }
 
     url = this._prepareUrl(url); // create the store the resource

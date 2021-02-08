@@ -492,7 +492,7 @@ abstract class BaseGameObject implements IGameObject {
     // ALWAYS listen for core.update in events, never this one directly, as it is called from core.update.
     protected _update(time: number) {
         // this._TweenComponent.update(time);
-        if (this._animationManager) this._animationManager.update();
+        if (this._animationManager && this.data) this._animationManager.update();
     }
 
     protected _childrenWidth(): number {

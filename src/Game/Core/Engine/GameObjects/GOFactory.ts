@@ -14,6 +14,8 @@ import Camera from "./Camera";
 import { Texture } from "pixi.js-legacy";
 import HitShapes from "./Components/HitShapes/HitShapes";
 import DraggableObject from "./DraggableObject";
+import Debug from "../Debug";
+import MenuBar from "./MenuBar";
 
 /**
  * @description A factory for creating game objects of various types
@@ -32,12 +34,14 @@ class GOFactory {
     private _screen: Screen;
     private _camera: Camera;
     private _hitShapes: HitShapes;
+    private _menuBar: MenuBar;
 
     constructor(core: ObjectCore, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject,  draggable: DraggableObject,
-        container: ContainerObject, scaleManager: ScaleManager, button: Button, video: VideoObject, screen: Screen, camera: Camera, hitShapes: HitShapes) {
-        this._core = core; this._slice = slice; this._spine = spine; this._text = text; this._container = container;
+        container: ContainerObject, menuBar: MenuBar, scaleManager: ScaleManager, button: Button, video: VideoObject, screen: Screen, camera: Camera, hitShapes: HitShapes) {
+        this._core = core; this._slice = slice; this._spine = spine; this._text = text; this._container = container; this._menuBar = menuBar;
         this._sprite = sprite; this._scaleManager = scaleManager; this._button = button; this._video = video; this._screen = screen;
         this._camera = camera; this._hitShapes = hitShapes; this._draggable = draggable;
+        Debug.exposeGlobal(this, 'goFactory');
     }
 
     get hitShapes(){
@@ -166,11 +170,11 @@ class GOFactory {
     }
 
     /**
-     * @description Creates and returns an empty 'container', analogous to PIXI.Container
+     * @description Creates and returns an empty 'container', analogous to PIXI.Container. If no x or y are provided, defaults to 0,0
      * @param x the x coordinate to initialize with
      * @param y the y coordinate to initialize with
      */
-    public container(x?: number, y?: number, parent: IParentChild | null = null): ContainerObject {
+    public container(x : number = 0, y: number = 0, parent: IParentChild | null = null): ContainerObject {
 
         if (x != null && y != null) {
             // let pos = this._scaleManager.getXY(x, y);
@@ -201,6 +205,17 @@ class GOFactory {
   */
     public camera(container: ContainerObject) {
         return this._camera.createNew(container);
+    }
+
+    /**
+     * @description A menu bar with a background sprite, which houses atlas based buttons. Useful mainly for UI purposes at App level.
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param texture the texture to use
+     * @param parent the parent object/container
+     */
+    public menu(x: number, y: number, texture: string, parent: IParentChild | null){
+        return this._menuBar.createNew(x, y, texture, parent);
     }
 }
 

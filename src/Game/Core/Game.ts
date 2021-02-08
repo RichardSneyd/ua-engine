@@ -18,7 +18,7 @@ import TweenManager from './Engine/TweenManager';
 import Debug from './Engine/Debug';
 import LevelEditor from './Engine/LevelEditor/LevelEditor';
 import Activities from './Engine/Activities/Activities';
-import AbstractProductMain from './Engine/Activities/AbstractProductMain';
+import AbstractAppMain from './Engine/Activities/AbstractAppMain';
 
 /**
  * @description the game class. There should only ever be one of these.
@@ -30,11 +30,11 @@ class Game {
   private _loop: Loop; _loader: Loader; _gameConfig: GameConfig; _levelManager: LevelManager;
   private _goFactory: GOFactory; _geom: Geom; _utils: Utils; private _activityClasses: Activities;
 
-  protected _product: AbstractProductMain;
+  protected _product: AbstractAppMain;
   protected _activities: IActivity[];
   protected _activeActivity: IActivity;
   protected _currentActivity: IActivity;
-  protected _gameStarted: boolean;
+  protected _gameStarted: boolean = false;
   protected _transitions = Transitions;
   protected _tween: TweenManager;
   protected _debug: Debug;
@@ -115,7 +115,7 @@ class Game {
     this.activities.push(act);
   }
 
-  public setProduct(product: AbstractProductMain) {
+  public setProduct(product: AbstractAppMain) {
     this._product = product;
   }
 
@@ -124,6 +124,10 @@ class Game {
    */
   get product() {
     return this._product;
+  }
+
+  get world(){
+    return this._world;
   }
 
   /**
@@ -191,10 +195,10 @@ class Game {
   }
 
   /**
-  * @description Start the game. Calls game.init internally, to create the game screen.
+  * @description Start the game. Calls world.init internally, to create the game screen.
   * @param configPath the path to the config.json file, which specified Display widht, height, file paths etc
   */
-  public startGame(configPath: string) {
+  public startGame(configPath: string = './config.json') { 
     return new Promise((resolve, reject) => {
 
       this._gameConfig.loadConfig(configPath).then((data: any) => {
@@ -205,6 +209,7 @@ class Game {
         this._addListeners();
         this._onResize();
         this._gameStarted = true;
+        this._events.emit('world_initialized');
         resolve({ status: 'sucess' });
 
       });

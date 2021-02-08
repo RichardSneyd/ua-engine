@@ -3,6 +3,7 @@ import Screen from '../../Services/Screen';
 import IScene from './Activities/IScene';
 import LevelManager from './LevelManager';
 import Events from './Events';
+import GOFactory from './GameObjects/GOFactory';
 
 /**
  * @description the world class
@@ -28,21 +29,12 @@ class World {
 
     // this._objectCore;
     this._screen = screen;
-
     this._events = events;
-
     this._currentLevel = null;
   }
 
   get initialized(): boolean {
     return this._initialized;
-  }
-
-    /**
-   * @description this is the PIXI container to which activities are added and removed at scene load and shutdown
-   */
-  get activityCont(){
-    return this._screen.activityCont;
   }
 
   /**

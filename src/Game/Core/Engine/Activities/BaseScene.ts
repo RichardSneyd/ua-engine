@@ -1,3 +1,4 @@
+import UAE from "../../../UAE";
 import Game from "../../Game";
 import Debug from "../Debug";
 import GOFactory from "../GameObjects/GOFactory";

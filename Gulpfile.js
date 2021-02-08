@@ -22,6 +22,7 @@ const config = {
         //Maintain no space between commas!
         single: [
             'Loader',
+            'GOFactory',
             'Loop',
             'LevelManager',
             'ScriptHandler',
@@ -57,8 +58,9 @@ const config = {
             'BaseActivity',
             'BaseLevel',
             'BaseScene',
+            'BaseMenu',
             'AbstractEventEmitter',
-            'AbstractProductMain'
+            'AbstractAppMain'
         ],
     },
     replaceAll: {

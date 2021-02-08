@@ -9,6 +9,7 @@ import Loader from '../../Core/Engine/Loader';
 import Events from '../../Core/Engine/Events';
 import GameConfig from '../../Core/Engine/GameConfig';
 import Debug from '../../Core/Engine/Debug';
+import ContainerObject from '../../Core/Engine/GameObjects/ContainerObject';
 
 class PxGame {
   private _pxFactory: PxFactory; _loader: Loader; _events: Events;
@@ -35,14 +36,14 @@ class PxGame {
   /**
    * @description this is the container to which activities are added and removed at scene load and shutdown
    */
-  get activityCont(){
+  get activityCont() {
     return this._activityCont;
   }
 
   /**
    * @description this is a container that overlays the 'activityCont', to be used for HUD elements such as toolbars, transitions etc.
    */
-  get overlayCont(){
+  get overlayCont() {
     return this._overlayCont;
   }
 
@@ -55,9 +56,13 @@ class PxGame {
     let elm = document.getElementById(container);
 
     this._game = this._createGame(w, h, container);
+    Debug.exposeGlobal(this._game.stage, 'stage');
     this._game.renderer.backgroundColor = 0xfafad2;
-    this._activityCont = this._pxFactory.createContainer();
-    this._overlayCont = this._pxFactory.createContainer();
+    this._activityCont = this._createContainer();
+    this._overlayCont = this._createContainer();
+    this.newLevel();
+    //  activityCont.data = this._activityCont; // pass the pixi objects back into the data properties of the UAE gameObjects
+    //  overlayCont.data = this._overlayCont;  // pass the pixi objects back into the data properties of the UAE gameObjects
     this._game.stage.addChild(this._activityCont);
     this._game.stage.addChild(this._overlayCont);
 
@@ -143,7 +148,7 @@ class PxGame {
     renderTexture.destroy();
     container.x = oldX;
     container.y = oldY;
-    if(pixels && pixels.length > 0){
+    if (pixels && pixels.length > 0) {
       return pixels;
     }
     else {
@@ -202,7 +207,7 @@ class PxGame {
   /**
    * @description generate canvas syncronously via PIXI renderTexture and extract
    */
-  public canvas(container: Container): HTMLCanvasElement{
+  public canvas(container: Container): HTMLCanvasElement {
     const renderTexture = PIXI.RenderTexture.create({ width: container.width, height: container.height }); // enter your size , maybe from app.screen
     let oldX = container.x;
     let oldY = container.y;
@@ -213,7 +218,7 @@ class PxGame {
     renderTexture.destroy();
     container.x = oldX;
     container.y = oldY;
-    if(canvas) return canvas;
+    if (canvas) return canvas;
     throw Error('failed to gen canvas with extract of renderTexture');
   }
 
@@ -362,69 +367,69 @@ class PxGame {
       //this._game.stage.addChild(child);
       parent.addChild(child);
     } else {
-      Debug.error("Can not add sprite before initializing the game!");
+      Debug.warn("Can not add sprite before initializing the game!");
     }
   }
 
-/*  
-  public genHitmap(baseTex: BaseTexture, object: any, threshold: number) {
-    let resource: any = baseTex.resource;
-    if (!baseTex.hasOwnProperty('resource')) console.error('cannot generate hitmap for %s, no baseTexture.resource property', object);
-    if (resource.source == undefined) console.error('cannot generate hitmap for %s, no baseTexture.resource.source property', object);
-    // resource = <ImageResource>baseTex.resource;
-
-    const imgSource = resource.source;
-    Debug.info('hitmap image resourc.source: ', imgSource);
-    // Debug.breakpoint();
-    let canvas = null;
-    if (!imgSource) {
-      Debug.warn('no imgSource for resource: ', resource)
-      return false;
-    }
-    let context = null;
-    if (imgSource.getContext) {
-      canvas = imgSource;
-      context = canvas.getContext('2d');
-      Debug.info(context);
-    }
-    else if (imgSource instanceof Image) {
-      canvas = document.createElement('canvas');
-      canvas.width = imgSource.width;
-      canvas.height = imgSource.height;
-      context = canvas.getContext('2d');
-      if (context) {
-        // accepts an ImageBitmap object also -- try to generate and pass, so it works for all GameObject types
-        context.drawImage(imgSource, 0, 0);
+  /*  
+    public genHitmap(baseTex: BaseTexture, object: any, threshold: number) {
+      let resource: any = baseTex.resource;
+      if (!baseTex.hasOwnProperty('resource')) console.error('cannot generate hitmap for %s, no baseTexture.resource property', object);
+      if (resource.source == undefined) console.error('cannot generate hitmap for %s, no baseTexture.resource.source property', object);
+      // resource = <ImageResource>baseTex.resource;
+  
+      const imgSource = resource.source;
+      Debug.info('hitmap image resourc.source: ', imgSource);
+      // Debug.breakpoint();
+      let canvas = null;
+      if (!imgSource) {
+        Debug.warn('no imgSource for resource: ', resource)
+        return false;
       }
-    }
-    else {
-      //unknown source;
-      return false;
-    }
-
-    const w = canvas.width, h = canvas.height;
-    let imageData = context.getImageData(0, 0, w, h);
-
-    Debug.warn('building hitmap from context.getImageData, which yields: ', imageData);
-    let hitmap = new Uint32Array(Math.ceil(w * h / 32));
-    for (let i = 0; i < w * h; i++) {
-      let ind1 = i % 32;
-      let ind2 = i / 32 | 0;
-      if (imageData.data[i * 4 + 3] >= threshold) {
-        hitmap[ind2] = hitmap[ind2] | (1 << ind1);
+      let context = null;
+      if (imgSource.getContext) {
+        canvas = imgSource;
+        context = canvas.getContext('2d');
+        Debug.info(context);
       }
-    }
-    Debug.info('hitmap is: ', hitmap);
-    if (object.hasOwnProperty('skeleton')) {
-      object.hitmap = hitmap; // Spine object have no texture or baseTexture property, so hitmap must be stored on the spine object itself
-    }
-    else {
-      object.texture.baseTexure.hitmap = hitmap;
-    }
-    // debugger;
-    return true;
-  } */
- 
+      else if (imgSource instanceof Image) {
+        canvas = document.createElement('canvas');
+        canvas.width = imgSource.width;
+        canvas.height = imgSource.height;
+        context = canvas.getContext('2d');
+        if (context) {
+          // accepts an ImageBitmap object also -- try to generate and pass, so it works for all GameObject types
+          context.drawImage(imgSource, 0, 0);
+        }
+      }
+      else {
+        //unknown source;
+        return false;
+      }
+  
+      const w = canvas.width, h = canvas.height;
+      let imageData = context.getImageData(0, 0, w, h);
+  
+      Debug.warn('building hitmap from context.getImageData, which yields: ', imageData);
+      let hitmap = new Uint32Array(Math.ceil(w * h / 32));
+      for (let i = 0; i < w * h; i++) {
+        let ind1 = i % 32;
+        let ind2 = i / 32 | 0;
+        if (imageData.data[i * 4 + 3] >= threshold) {
+          hitmap[ind2] = hitmap[ind2] | (1 << ind1);
+        }
+      }
+      Debug.info('hitmap is: ', hitmap);
+      if (object.hasOwnProperty('skeleton')) {
+        object.hitmap = hitmap; // Spine object have no texture or baseTexture property, so hitmap must be stored on the spine object itself
+      }
+      else {
+        object.texture.baseTexure.hitmap = hitmap;
+      }
+      // debugger;
+      return true;
+    } */
+
   /**
     * @description enable mouse/pointer input for the specified object
     * @param displayObject the object to enable input for
