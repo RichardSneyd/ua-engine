@@ -16,8 +16,6 @@ class Loader {
   private _gameConfig: GameConfig; private _loop: Loop; private _events: Events;
   private _imgLoader: ImgLoader; _sndLoader: ISndLoader; _ajaxLoader: AjaxLoader;
   private _resList: Resource[];
-  private _spineList: Resource[];
-  private _imgList: Resource[];
   private _newResList: Resource[];
   private _downloadComplete: boolean = false;
   private _startedLoading: boolean = false;
@@ -88,8 +86,6 @@ class Loader {
     this._events = events;
 
     this._resList = [];
-    this._imgList = [];
-    this._spineList = [];
 
     this._init();
     this._loop.addFunction(this._update, this);
@@ -103,11 +99,15 @@ class Loader {
   }
 
   get spineList(){
-    return this._spineList;
+    return this._getSpnArray();
   }
 
   get imgList(){
-    return this._imgList;
+    return this._getImgArray();
+  }
+
+  get sndList(){
+    return this._getSndArray();
   }
 
   private _init() {
@@ -172,12 +172,11 @@ class Loader {
       let url = name;
       // if the file has .json extension, it's an atlas, so change path. Won't be confused with spine assets - they are loaded via addSpine
       if (imgName?.indexOf('.json') !== -1) { url = this._getPath().atlas + name }
-      if (this._getResource(url, false, this._imgList) == null) {
+      if (this._getResource(url, false, this.imgList) == null) {
         let res = this._createResource();
         res.initImage(url, false);
 
         this._resList.push(res);
-        this._imgList.push(res);
         this._newResList.push(res);
         // Debug.info(this._resList);
         return this;
@@ -249,12 +248,11 @@ class Loader {
     if (hasPath) {
       if (name.indexOf('.json') == -1) name = name + '.json';
       let url = this._getPath().spn + name;
-      if (this._getResource(url, false, this._spineList) == null) {
+      if (this._getResource(url, false, this.spineList) == null) {
         let res = this._createResource();
         res.initSpine(url, false);
 
         this._resList.push(res);
-        this._spineList.push(res);
         this._newResList.push(res);
       //  Debug.info(this._resList);
         return this;
@@ -511,7 +509,7 @@ class Loader {
   private _getResource(url: string, byName: boolean = false, resList?: Resource[]): Resource | null {
     let _url = url.trim();
     let resArr = this._resList;
-    if (resList) { resArr = resList }
+    if (resList && resList.length > 0) { resArr = resList }
 
     for (let c = 0; c < resArr.length; c++) {
       let currentUrl = resArr[c].url;
@@ -534,11 +532,11 @@ class Loader {
 
   getImgResource(url: string, byName: boolean = false): Resource | null {
    // return this._getResource(url, byName, this._getImgArray());
-    return this._getResource(url, byName, this._imgList);
+    return this._getResource(url, byName, this.imgList);
   }
 
   getSpnResource(url: string, byName: boolean = false): Resource | null {
-    return this._getResource(url, byName, this._spineList);
+    return this._getResource(url, byName, this.spineList);
   }
 
   /**

@@ -137,7 +137,7 @@ class FrameAnimationManager implements IAnimationManager {
     let atlasName = this._core.atlas;
    // Debug.info('atlasName: ', atlasName);
     if(!this.hasAtlas) return [];
-    let res = this._loader.getResource(atlasName, true);
+    let res = this._loader.getImgResource(atlasName, true);
     if (res !== null) {
       let json = res.data.data;
       // Debug.info('json: ', res);
