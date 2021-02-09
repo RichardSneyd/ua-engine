@@ -46,8 +46,13 @@ class SpineAnimationManager implements IAnimationManager {
 
     get spineData(): spine.core.SkeletonData {
         return this._core.data.spineData;
+        this._core.data
     }
 
+    get spine(): PIXI.spine.Spine {
+        return this._go.data;
+    }
+  
     init(go: SpineObject, core: ObjectCore) {
         this._go = go; this._core = core;
         this._go.events.on('pause', this.pause, this);
