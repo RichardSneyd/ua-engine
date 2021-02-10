@@ -355,7 +355,7 @@ class EditorScene implements ILevel {
             this.dragging = false;
             this._resize = false;
 
-            if (this.selectedGO.followText) {
+            if ((this.selectedGO.followText !== undefined || this.selectedGO.followText !== null) && (gameobj.objType === 'dropzone' || gameobj.objType === 'hotspot')) {
                 this.selectedGO.followText.x = 30 + this.selectedGO.width / 2;
             }
         }, this);
