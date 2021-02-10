@@ -75,6 +75,7 @@ class ObjectCore {
     this._updateSize();
     this._setListners();
     this._loop.addFunction(this.update, this);
+    this.objectHandler.setAutoSortZ(this.data, true); // auto-sort children when zIndex is updated
    // this._events.on('shutdown', this._go.destroy, this._go); // every object has it's own 'shutdown' listener
   }
 
@@ -285,6 +286,10 @@ class ObjectCore {
 
   set zIndex(index: number){
     this.objectHandler.setZIndex(this._data, index);
+  }
+
+  sortChildren(){
+    this.objectHandler.sortChildren(this.data);
   }
 
   public sort(property: string = 'bottom', desc: boolean = false){
