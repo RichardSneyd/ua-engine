@@ -30,6 +30,7 @@ class Inspector {
         this._addGroupNumberInput('width', 'height');
         this._addGroupNumberInput('x origin', 'y origin');
         this._addNumberInput('angle', 0, 0, 360);
+        this._addNumberInput('zIndex', 0, 0, 999);
 
         this._drag(this._header, this._container);
     }

@@ -314,6 +314,7 @@ class EditorScene implements ILevel {
             this.selectedGO = gameobj;
             this.selectedGO.uniqName = gameobj.uniqName;
             this._inspector.setInputValue("name", this.selectedGO.uniqName);
+            this._inspector.setInputValue("zIndex", this.selectedGO.zIndex);
 
             if (gameobj.objType === 'image' || gameobj.objType === 'spine' || gameobj.objType === 'atlas') {
                 this.xOffset = gameobj.x - this._manager.input.pointer.x;
@@ -355,6 +356,9 @@ class EditorScene implements ILevel {
             this.dragging = false;
             this._resize = false;
 
+            /* gameobj.zIndex += 1;
+            Debug.info(gameobj.zIndex); */
+
             if ((this.selectedGO.followText !== undefined || this.selectedGO.followText !== null) && (gameobj.objType === 'dropzone' || gameobj.objType === 'hotspot')) {
                 this.selectedGO.followText.x = 30 + this.selectedGO.width / 2;
             }
@@ -391,6 +395,9 @@ class EditorScene implements ILevel {
         }
         else if (prop === "angle") {
             this.selectedGO.angle = Number(val);
+        }
+        else if (prop === "zIndex") {
+            this.selectedGO.zIndex = Number(val);
         }
         else if (prop === "origin x") {
             this.selectedGO.origin.x = Number(val);
@@ -694,6 +701,7 @@ class EditorScene implements ILevel {
             this._inspector.setInputValue('scale x', this.selectedGO.scaleHandler.x);
             this._inspector.setInputValue('scale y', this.selectedGO.scaleHandler.y);
             this._inspector.setInputValue('angle', this.selectedGO.angle);
+            this._inspector.setInputValue('zIndex', this.selectedGO.zIndex);
         }
 
         if (this._resize && (this.selectedGO.objType === 'dropzone' || this.selectedGO.objType === 'hotspot')) {
