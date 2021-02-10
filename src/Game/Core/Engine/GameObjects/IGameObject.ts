@@ -41,6 +41,7 @@ interface IGameObject extends IParentChild{
     textureName: string;
     atlas: string;
     zIndex: number;
+    sort(): void;
     extract: ExtractComponent;
 }
 

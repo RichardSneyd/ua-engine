@@ -127,11 +127,11 @@ abstract class BaseGameObject implements IGameObject {
         return;
     }
 
-    get data() {
+    get data(): any {
         return this._core.data;
     }
 
-    set data(data: any) {
+    set data(data:  any) {
         this._core.data = data;
     }
 
@@ -177,6 +177,14 @@ abstract class BaseGameObject implements IGameObject {
 
     set zIndex(index: number) {
         this._core.zIndex = index;
+     //   if(this.parent) this.parent.sort();
+    }
+
+    /**
+     * @description sort children
+     */
+    sort(){
+        this._core.sortChildren();
     }
 
     /**

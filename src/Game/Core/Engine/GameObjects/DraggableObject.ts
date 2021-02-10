@@ -1,4 +1,5 @@
 import Point from "../../Geom/Point";
+import Debug from "../Debug";
 import Events from "../Events";
 import Loop from "../Loop";
 import BaseGameObject from "./BaseGameObject";
@@ -615,6 +616,10 @@ class DraggableObject implements IGameObject {
      */
     set enabled(enabled: boolean) {
         this._enabled = enabled;
+    }
+
+    sort(){
+        Debug.warn('sort not yet implement for DraggableObject...');
     }
 }
 

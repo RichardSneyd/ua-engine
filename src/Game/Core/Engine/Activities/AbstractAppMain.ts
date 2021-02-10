@@ -43,14 +43,25 @@ class AbstractAppMain {
 
     protected _init() {
         this._retrieveURLParams();
-        this._preload();
+        this._boot();
         Debug.info('about to create HUD...');
         this._HUD = this._goFactory.container(0, 0);
         Debug.info('hud cont: ', this._HUD);
         this._addToOverlay(this._HUD);
     }
 
-    protected _preload() {
+    /**
+     * @description Use this 'boot' method to pre-preload assets you need loaded at the VERY start, such as a 'load_bar' or a UI element etc. Override and call super._boot() last.
+     */
+    protected _boot() {
+        this._loader.download().then(()=>{this._preload()});
+    }
+
+     /**
+     * @description Use this preload to load assets you'll need for anything you add from the AppMain, such as menu bars and UI elements etc. If you are adding a 'loading bar'
+     * here, make sure you pre-preload those assets when you override the boot method of this class. Override and call super._preload() last.
+     */
+    protected _preload() { 
         this._loader.download().then(() => { this._start() });
         //    this._start();
     }

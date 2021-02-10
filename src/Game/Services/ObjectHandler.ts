@@ -92,6 +92,14 @@ class ObjectHandler implements IObjectHandler {
   public setAlpha(object: Container, alpha: number) {
     object.alpha = Number(alpha);
   }
+
+  public sortChildren(object: Container){
+    object.sortChildren();
+  }
+
+  public setAutoSortZ(object: Container, value: boolean){
+    object.sortableChildren = value;
+  }
 }
 
 export default ObjectHandler;
