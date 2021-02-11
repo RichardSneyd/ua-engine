@@ -532,24 +532,24 @@ class EditorScene implements ILevel {
         this._imgGameObjects.forEach((obj) => {
             gameObjectData.sprites.push({
                 name: obj.name, filename: obj.filename, x: obj.gameObj.x, y: obj.gameObj.y,
-                originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, scaleX: obj.gameObj.scaleHandler.x, scaleY: obj.gameObj.scaleHandler.y,
-                angle: obj.gameObj.angle, hitShape: ""
+                originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, scaleX: Number(obj.gameObj.scaleHandler.x), scaleY: Number(obj.gameObj.scaleHandler.y),
+                angle: obj.gameObj.angle, zIndex: Number(obj.gameObj.zIndex), hitShape: ""
             });
         });
 
         this._spineGameObjects.forEach((obj) => {
             gameObjectData.spines.push({
                 name: obj.name, filename: obj.filename, x: obj.gameObj.x, y: obj.gameObj.y,
-                originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, scaleX: obj.gameObj.scaleHandler.x, scaleY: obj.gameObj.scaleHandler.y,
-                angle: obj.gameObj.angle, hitShape: ""
+                originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, scaleX: Number(obj.gameObj.scaleHandler.x), scaleY: Number(obj.gameObj.scaleHandler.y),
+                angle: obj.gameObj.angle, zIndex: Number(obj.gameObj.zIndex), hitShape: ""
             });
         });
 
         this._atlasGameObjects.forEach((obj) => {
             gameObjectData.atlases.push({
                 name: obj.name, filename: obj.filename, x: obj.gameObj.x, y: obj.gameObj.y,
-                originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, scaleX: obj.gameObj.scaleHandler.x, scaleY: obj.gameObj.scaleHandler.y,
-                angle: obj.gameObj.angle,
+                originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, scaleX: Number(obj.gameObj.scaleHandler.x), scaleY: Number(obj.gameObj.scaleHandler.y),
+                angle: obj.gameObj.angle, zIndex: Number(obj.gameObj.zIndex)
             });
         });
 
