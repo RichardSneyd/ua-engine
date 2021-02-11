@@ -9,7 +9,7 @@ import LevelManager from "../LevelManager";
 import Loader from "../Loader";
 import IActivity from "./IActivity";
 
-class AbstractAppMain {
+abstract class AbstractAppMain {
     protected _HUD: ContainerObject;
     protected _game: Game;
     protected _loader: Loader;
@@ -59,7 +59,7 @@ class AbstractAppMain {
 
      /**
      * @description Use this preload to load assets you'll need for anything you add from the AppMain, such as menu bars and UI elements etc. If you are adding a 'loading bar'
-     * here, make sure you pre-preload those assets when you override the boot method of this class. Override and call super._preload() last.
+     * here, make sure you pre-preload those assets when you override the _boot() method of this class. Override and call super._preload() last.
      */
     protected _preload() { 
         this._loader.download().then(() => { this._start() });
