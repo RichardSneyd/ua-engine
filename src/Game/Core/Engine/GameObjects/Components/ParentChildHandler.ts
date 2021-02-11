@@ -14,7 +14,8 @@ class ParentChildHandler implements IParentChild{
     private _go: IGameObject;
 
     constructor() {
-
+        this._children = [];
+        this._parent = null;
     }
 
     createNew() {
@@ -47,8 +48,6 @@ class ParentChildHandler implements IParentChild{
     init(go: IGameObject, core: ObjectCore, parent: IParentChild | null = null) {
         this._core = core;
         this._go = go;
-        this._children = [];
-        this._parent = null;
 
         if (parent !== null) {
             parent.addChild(this._go);
