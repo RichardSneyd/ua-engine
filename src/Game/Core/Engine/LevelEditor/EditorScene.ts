@@ -222,8 +222,7 @@ class EditorScene implements ILevel {
         //Debug.warn("x y: ", name, options?.x, options?.y, options?.angle, options?.originX, options?.originY);
         let gameobj: any;
         if (type === "image") {
-            gameobj = this._goFactory.sprite(options.x, options.y, src);
-            this._playgroundContainer.addChild(gameobj);
+            gameobj = this._goFactory.sprite(options.x, options.y, src, null, this._playgroundContainer);
             gameobj.scaleHandler.setScale(options?.scaleX, options?.scaleY);
             gameobj.setOrigin(options?.originX, options?.originY);
             gameobj.angle = options.angle;
@@ -238,8 +237,7 @@ class EditorScene implements ILevel {
             this._inspector.setInputReadOnly('height', true);
         }
         else if (type === "spine") {
-            gameobj = this._goFactory.spine(options.x, options.y, name);
-            this._playgroundContainer.addChild(gameobj);
+            gameobj = this._goFactory.spine(options.x, options.y, name, this._playgroundContainer);
             gameobj.scaleHandler.setScale(options?.scaleX, options?.scaleY);
             gameobj.objType = `${type}`;
             let uniqName = this._tryName(this._spineGameObjects, `${name}`, 2);
@@ -254,15 +252,15 @@ class EditorScene implements ILevel {
             this._inspector.setInputReadOnly('height', true);
         }
         else if (type === "atlas") {
-            gameobj = this._goFactory.sprite(options.x, options.y, `${name}`, 'up');
+            gameobj = this._goFactory.sprite(options.x, options.y, `${name}`, 'up', this._playgroundContainer);
             gameobj.scaleHandler.setScale(options?.scaleX, options?.scaleY);
             gameobj.setOrigin(options?.originX, options?.originY);
-            this._playgroundContainer.addChild(gameobj);
+
             gameobj.objType = `${type}`;
             let uniqName = this._tryName(this._atlasGameObjects, `${name}`, 2);
             gameobj.uniqName = uniqName;
             gameobj.animations.importAnimations(); // this will automatically parse the frames in the json file and create animations based on the prefixes
-            gameobj.animations.play(gameobj.animations.animationNames[1], true);
+            gameobj.animations.play(gameobj.animations.animationNames[0], true);
 
             this._atlasGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
             gameobj.objID = this._atlasGameObjects.length - 1;
@@ -271,8 +269,7 @@ class EditorScene implements ILevel {
             this._inspector.setInputReadOnly('height', true);
         }
         else if (type === "dropzone") {
-            gameobj = this._goFactory.nineSlice(options.x, options.y, 'dropzone', 4, 4, 4, 4, options.width, options.height);
-            this._zoneContainer.addChild(gameobj);
+            gameobj = this._goFactory.nineSlice(options.x, options.y, 'dropzone', 4, 4, 4, 4, options.width, options.height, this._zoneContainer);
             gameobj.objType = `${type}`;
             let uniqName = this._orderName(this._dropzoneGameObjects, `${name.charAt(0)}`, 1);
             gameobj.uniqName = uniqName;
@@ -290,8 +287,7 @@ class EditorScene implements ILevel {
             this._inspector.setInputReadOnly('height', false);
         }
         else if (type === "hotspot") {
-            gameobj = this._goFactory.nineSlice(options.x, options.y, 'hotspot', 4, 4, 4, 4, options.width, options.height);
-            this._zoneContainer.addChild(gameobj);
+            gameobj = this._goFactory.nineSlice(options.x, options.y, 'hotspot', 4, 4, 4, 4, options.width, options.height, this._zoneContainer);
             gameobj.objType = `${type}`;
             let uniqName = this._orderName(this._hotspotGameObjects, `${name.charAt(0)}`, 1);
             gameobj.uniqName = uniqName;
@@ -356,10 +352,7 @@ class EditorScene implements ILevel {
             this.dragging = false;
             this._resize = false;
 
-            /* gameobj.zIndex += 1;
-            Debug.info(gameobj.zIndex); */
-
-            if ((this.selectedGO.followText !== undefined || this.selectedGO.followText !== null) && (gameobj.objType === 'dropzone' || gameobj.objType === 'hotspot')) {
+            if ((this.selectedGO.followText !== undefined) && (gameobj.objType === 'dropzone' || gameobj.objType === 'hotspot')) {
                 this.selectedGO.followText.x = 30 + this.selectedGO.width / 2;
             }
         }, this);
