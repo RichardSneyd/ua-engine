@@ -137,27 +137,24 @@ class FrameAnimationManager implements IAnimationManager {
     let atlasName = this._core.atlas;
     // Debug.info('atlasName: ', atlasName);
     if (!this.hasAtlas) {
-      Debug.warn('NO ATLAS, CANNOT PROCESS for ', this._go.data);
+    //  Debug.warn('NO ATLAS, CANNOT PROCESS for ', this._go.data);
       return [];
     }
-    Debug.info('atlasName: ', atlasName);
+ //   Debug.info('atlasName: ', atlasName);
     let res = this._loader.getImgResource(atlasName, true);
     if (res !== null) {
-      // let json = res.data.data;
-      // Debug.info('json: ', res);
-      //  let frames = json.frames;
       let frames = res.data.frameCustomList;
       let reg = new RegExp('^([0-9A-Za-z-])+');
-      Debug.info('frames: ', frames);
+   //   Debug.info('frames: ', frames);
       let frameNames: string[] = Object.keys(frames);
-      Debug.info('frameNames: ', frameNames);
+  //    Debug.info('frameNames: ', frameNames);
 
       for (let x = 0; x < frameNames.length; x++) {
         let prefix: string;
         let fname: string = frameNames[x];
-        Debug.info('fname: ', fname);
+  //     Debug.info('fname: ', fname);
         let matches = fname.match(reg);
-        Debug.info('matches: ', matches);
+    //    Debug.info('matches: ', matches);
         if (matches) {
           prefix = matches[0];
           if (animationNames.indexOf(prefix) == -1) {
