@@ -218,7 +218,7 @@ class EditorScene implements ILevel {
         this._addGameObject(src, type, name);
     }
 
-    protected _addGameObject(src: string, type: string, name: string, options: any = { x: 660, y: 240, width: 300, height: 200, angle: 0, originX: 0.5, originY: 0.5, scaleX: 1, scaleY: 1 }) {
+    protected _addGameObject(src: string, type: string, name: string, options: any = { x: 660, y: 240, width: 300, height: 200, angle: 0, originX: 0, originY: 0, scaleX: 1, scaleY: 1 }) {
         //Debug.warn("x y: ", name, options?.x, options?.y, options?.angle, options?.originX, options?.originY);
         let gameobj: any;
         if (type === "image") {
@@ -252,7 +252,7 @@ class EditorScene implements ILevel {
             this._inspector.setInputReadOnly('height', true);
         }
         else if (type === "atlas") {
-            gameobj = this._goFactory.sprite(options.x, options.y, `${name}`, 'up', this._playgroundContainer);
+            gameobj = this._goFactory.sprite(options.x, options.y, `${name}`, '', this._playgroundContainer);
             gameobj.scaleHandler.setScale(options?.scaleX, options?.scaleY);
             gameobj.setOrigin(options?.originX, options?.originY);
 
@@ -587,7 +587,7 @@ class EditorScene implements ILevel {
                 0x77FE79,
                 1
             );
-            this.selectedGOBorder.pivot.set(this.selectedGO.x + (this.selectedGO.width / 2), this.selectedGO.y + (this.selectedGO.height / 2));
+            this.selectedGOBorder.pivot.set(this.selectedGO.x, this.selectedGO.y); // + (this.selectedGO.width / 2) + (this.selectedGO.height / 2)
         }
         else {
             this.selectedGOBorder.alpha = 1;
@@ -599,7 +599,6 @@ class EditorScene implements ILevel {
         let imgListFiltered = this._loader.resList.filter(res => res.type === 'img' && res.ext === 'png');
         imgListFiltered.forEach(val => this.imgList.push({ src: val.url, name: val.basename }));
 
-        Debug.info('IMGD:', this.imgList);
         this._accordion.addRow('Images', 'image', ...this.imgList);
     }
 
@@ -641,7 +640,7 @@ class EditorScene implements ILevel {
         let atlasPixels: any = [];
         let atlasResults: any[] = [];
         atlasList.forEach((val) => {
-            let atlasSrc = this._goFactory.sprite(-500, -500, `${val.name.replace(/\.[^/.]+$/, "")}`, 'up');
+            let atlasSrc = this._goFactory.sprite(-500, -500, `${val.name.replace(/\.[^/.]+$/, "")}`, '');
             setTimeout(() => atlasSrc.alpha = 0, 50); // we don't want to show not active spine objects, this trick did the work
             atlasPixels.push(atlasSrc.data);
         });
@@ -689,8 +688,8 @@ class EditorScene implements ILevel {
 
             this._inspector.setInputValue('x', this.selectedGO.x);
             this._inspector.setInputValue('y', this.selectedGO.y);
-            this._inspector.setInputValue('origin x', this.selectedGO.origin.x);
-            this._inspector.setInputValue('origin y', this.selectedGO.origin.y);
+            /* this._inspector.setInputValue('origin x', this.selectedGO.origin.x);
+            this._inspector.setInputValue('origin y', this.selectedGO.origin.y); */
             this._inspector.setInputValue('scale x', this.selectedGO.scaleHandler.x);
             this._inspector.setInputValue('scale y', this.selectedGO.scaleHandler.y);
             this._inspector.setInputValue('angle', this.selectedGO.angle);
