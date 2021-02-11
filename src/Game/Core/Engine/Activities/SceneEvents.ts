@@ -10,7 +10,7 @@ class SceneEvents extends AbstractEventEmitter {
     constructor(events: Events){
         super();
         this._globalEvents = events;
-        Debug.info('scene events instantiated');
+     //   Debug.info('scene events instantiated');
 
         this._globalEvents.addListener('pause', this.pause, this);
         this._globalEvents.addListener('resume', this.resume, this);
