@@ -334,6 +334,7 @@ class Loader {
       Debug.info('%ctotal new resources: ' + this._newResList.length, Debug.STYLES.GOOD);
       //  Debug.info(this._newResList);
       if (this._newResList.length == 0) {
+        this._startedLoading = false;
         resolve('loading completed');
         return;
       }
@@ -353,6 +354,7 @@ class Loader {
     //Debug.info('progress: ', this.progressPercentage, '%');
     if (this._downloadComplete) {
       this._newResList = [];
+      this._startedLoading = false;
       resolve({ status: true });
       Debug.info('%cdownload complete, promise RESOLVED', Debug.STYLES.GOOD)
     } else {
@@ -646,6 +648,9 @@ class Loader {
    * @param frame optional. Specify if you are looking for a specific frome from an atlas to use as texture etc
    */
   private _extractTexture(data: any, frame: any = null) {
+  //  Debug.info('data: ', data);
+  //  Debug.breakpoint(); 
+   // if(frame !== null && frame == '') frame = data.frames[0].filename;
     return this._imgLoader.getTexture(data, frame);
   }
 
