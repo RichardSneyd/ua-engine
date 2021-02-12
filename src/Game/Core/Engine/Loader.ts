@@ -636,7 +636,7 @@ class Loader {
    * 'filename' property
    * @param level_file the level_file object to laod resources from
    */
-  loadLevelFileAssets(level_file: any){
+  addLevelFileAssets(level_file: any){
     if(level_file.hasOwnProperty('sprites') && level_file.sprites.length > 0){
       for(let x = 0; x < level_file.sprites.length; x++){
         this.addImage(level_file.sprites[x].filename);

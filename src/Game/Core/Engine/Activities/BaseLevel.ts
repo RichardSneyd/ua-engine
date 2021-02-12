@@ -253,6 +253,31 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         this._ready = ready;
     }
 
+     /**
+     * @description adds all objects from the level file to screen in the playground container. Useful for debugging purposes etc
+     */
+    addLevelFileObjects(){
+        let lFile = this._manager.script.levelFile;
+        if(this._manager.script.isFalsy(lFile)) Debug.error('no level file');
+
+        for(let x = 0; x < lFile.sprites.length; x++){
+            let obj = lFile.sprites[x];
+            this._goFactory.sprite(obj.x, obj.y, obj.filename, null, this._playground);
+        }
+
+        for(let x = 0; x < lFile.atlases.length; x++){
+            let obj = lFile.atlases[x];
+            this._goFactory.sprite(obj.x, obj.y, obj.filename, '', this._playground);
+        }
+
+        for(let x = 0; x < lFile.spines.length; x++){
+            Debug.info('adding spine..')
+            let obj = lFile.spines[x];
+            this._goFactory.spine(obj.x, obj.y, obj.filename, this._playground);
+        }
+    }
+
+
     /**
      * @description shutdown the scene, in preperation for transition. This involves destroying objects, as well as removing loop callbacks and event listeners etc
      */

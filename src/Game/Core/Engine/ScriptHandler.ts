@@ -186,8 +186,6 @@ class ScriptHandler {
         if (val !== null && val !== undefined && val !== '') return false; else return true;
     }
 
-
-
     /**
    * @description To be used at init, to convert raw json data into a more functional script, with arrays and objects 
    * instead of stringified lists and cells with 'stringified' key-value pairs into objects. The converted data is stored in the 
