@@ -620,15 +620,40 @@ class Loader {
     });
   }
 
-  loadLevelFile(file: string, callback?: Function, staticPath: boolean = false) {
+  loadLevelFile(activity_code: string, callback?: Function, staticPath: boolean = false) {
     let basePath = '';
     if (!staticPath) basePath = this._getPath().jsn;
 
-    this._ajaxLoader.loadFile(basePath + file + '_level.json', (data: any) => {
+    this._ajaxLoader.loadFile(basePath + activity_code + '_level.json', (data: any) => {
       if (callback !== undefined) {
-        callback(data.data);
+        callback(data.data, data);
       }
     });
+  }
+
+  /**
+   * @description searches through the sprites, atlases and spines arrays of the provided level file (should be parse first), and adds them to the load queue based on the 
+   * 'filename' property
+   * @param level_file the level_file object to laod resources from
+   */
+  loadLevelFileAssets(level_file: any){
+    if(level_file.hasOwnProperty('sprites') && level_file.sprites.length > 0){
+      for(let x = 0; x < level_file.sprites.length; x++){
+        this.addImage(level_file.sprites[x].filename);
+      }
+    }
+
+    if(level_file.hasOwnProperty('atlases') && level_file.atlases.length > 0){
+      for(let x = 0; x < level_file.atlases.length; x++){
+        this.addAtlas(level_file.atlases[x].filename);
+      }
+    }
+
+    if(level_file.hasOwnProperty('spines') && level_file.spines.length > 0){
+      for(let x = 0; x < level_file.spines.length; x++){
+        this.addSpine(level_file.spines[x].filename);
+      }
+    }
   }
 
   private _downloadSpines() {
