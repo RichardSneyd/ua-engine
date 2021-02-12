@@ -290,10 +290,12 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     /**
     * @description Adds a Sprite (atlas) to the scene and transforms it based on data provided from levelFile
     * @param lfObject The js data 'object' plucked from the levelFile, which provides the properties and values to adjust
+    * @param frame you have the option of specifying the default 'frame' that shows when you create the object. Otherwise, the first frame in the list will be
+    * chosen instead
     * @param parent Optional parent paremeter. Defaults to _playground.
     */
-    protected _addLevelFileAtlas(lfObject: any, parent: ContainerObject = this._playground) : SpriteObject {
-        let sprite = this._goFactory.sprite(lfObject.x, lfObject.y, lfObject.filename, '', parent);
+    protected _addLevelFileAtlas(lfObject: any, frame: string = '', parent: ContainerObject = this._playground) : SpriteObject {
+        let sprite = this._goFactory.sprite(lfObject.x, lfObject.y, lfObject.filename, frame, parent);
         this._transformLevelFileObject(sprite, lfObject);
         return sprite;
     }
