@@ -1,8 +1,10 @@
 import Game from "../../Game";
 import Debug from "../Debug";
 import Events from "../Events";
+import BaseGameObject from "../GameObjects/BaseGameObject";
 import ContainerObject from "../GameObjects/ContainerObject";
 import GOFactory from "../GameObjects/GOFactory";
+import IGameObject from "../GameObjects/IGameObject";
 import SpineObject from "../GameObjects/SpineObject";
 import SpriteObject from "../GameObjects/SpriteObject";
 import LevelManager from "../LevelManager";
@@ -22,7 +24,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     protected _background: ContainerObject;
     protected _playground: ContainerObject;
     protected _foreground: ContainerObject;
-   // protected _HUD: ContainerObject;
+    // protected _HUD: ContainerObject;
 
     protected _aFiles: string[] = [];
     protected _pngFiles: string[] = [];
@@ -59,7 +61,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         this._background = this._goFactory.container(0, 0);
         this._playground = this._goFactory.container(0, 0);
         this._foreground = this._goFactory.container(0, 0);
-     //   this._HUD = this._goFactory.container(0, 0);
+        //   this._HUD = this._goFactory.container(0, 0);
         // cookie-cutter event listeners (necessary for the functioning of activities and levels, and for avoiding memory leaks etc)
         this._manager.globalEvents.on('newRow', this.onNewRow, this);
         this._manager.globalEvents.on('shutdown', this.shutdown, this);
@@ -87,7 +89,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @description adds resources to the load queue, then uses a promise to download those resource, then call the start method
      */
     preload(): void {
-        if(!this.manager.script.isFalsy(this._manager.script.levelFile)) this._loader.addLevelFileAssets(this._manager.script.levelFile); // if level_file present, load assets
+        if (!this.manager.script.isFalsy(this._manager.script.levelFile)) this._loader.addLevelFileAssets(this._manager.script.levelFile); // if level_file present, load assets
         this._loader.addSnds(this.manager.script.fileList(['audio_id'])); // 'audio_id' is present in all scripts
         this._loader.addImages(this._manager.script.fileList(['config.bgd']), 'jpg'); // bgd property is common to all types, and added in BaseLevel, so load it here too...
         if (!this._manager.script.isFalsy(this.configRow.config.char)) {
@@ -254,30 +256,68 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         this._ready = ready;
     }
 
-     /**
-     * @description adds all objects from the level file to screen in the playground container. Useful for debugging purposes etc
-     */
-    addLevelFileObjects(){
+    /**
+    * @description adds all objects from the level file to screen in the playground container. Useful for debugging purposes etc
+    */
+    addLevelFileObjects() {
         let lFile = this._manager.script.levelFile;
-        if(this._manager.script.isFalsy(lFile)) Debug.error('no level file');
+        if (this._manager.script.isFalsy(lFile)) Debug.error('no level file');
 
-        for(let x = 0; x < lFile.sprites.length; x++){
-            let obj = lFile.sprites[x];
-            this._goFactory.sprite(obj.x, obj.y, obj.filename, null, this._playground);
+        for (let x = 0; x < lFile.sprites.length; x++) {
+            this._addLevelFileSprite(lFile.sprites[x]);
         }
 
-        for(let x = 0; x < lFile.atlases.length; x++){
-            let obj = lFile.atlases[x];
-            this._goFactory.sprite(obj.x, obj.y, obj.filename, '', this._playground);
+        for (let x = 0; x < lFile.atlases.length; x++) {
+            this._addLevelFileAtlas(lFile.atlases[x]);
         }
 
-        for(let x = 0; x < lFile.spines.length; x++){
-            Debug.info('adding spine..')
-            let obj = lFile.spines[x];
-            this._goFactory.spine(obj.x, obj.y, obj.filename, this._playground);
+        for (let x = 0; x < lFile.spines.length; x++) {
+            this._addLevelFileSpine(lFile.spines[x]);
         }
     }
 
+    /**
+     * @description Adds a sprite (static) to the scene and transforms it based on data provided from levelFile
+     * @param lfObject The js data 'object' plucked from the levelFile, which provides the properties and values to adjust
+     * @param parent Optional parent paremeter. Defaults to _playground.
+     */
+    protected _addLevelFileSprite(lfObject: any, parent: ContainerObject = this._playground) {
+        let sprite = this._goFactory.sprite(lfObject.x, lfObject.y, lfObject.filename, null, this._playground);
+        this._transformLevelFileObject(sprite, lfObject);
+    }
+
+    /**
+    * @description Adds a Sprite (atlas) to the scene and transforms it based on data provided from levelFile
+    * @param lfObject The js data 'object' plucked from the levelFile, which provides the properties and values to adjust
+    * @param parent Optional parent paremeter. Defaults to _playground.
+    */
+    protected _addLevelFileAtlas(lfObject: any, parent: ContainerObject = this._playground) {
+        let sprite = this._goFactory.sprite(lfObject.x, lfObject.y, lfObject.filename, '', this._playground);
+        this._transformLevelFileObject(sprite, lfObject);
+    }
+
+    /**
+     * @description Adds a spineObject to the scene and transforms it based on data provided from levelFile
+     * @param lfObject The js data 'object' plucked from the levelFile, which provides the properties and values to adjust
+     * @param parent Optional parent paremeter. Defaults to _playground.
+     */
+    protected _addLevelFileSpine(lfObject: any, parent: ContainerObject = this._playground) {
+        let sprite = this._goFactory.spine(lfObject.x, lfObject.y, lfObject.filename, this._playground);
+        this._transformLevelFileObject(sprite, lfObject);
+    }
+
+    /**
+     * @description Assigns all transform etc properties to the object, as read from the levelFile
+     * @param gameObject the object to transform
+     * @param lfObject The js data 'object' plucked from the levelFile, which provides the properties and values to adjust
+     */
+    protected _transformLevelFileObject(gameObject: BaseGameObject, lfObject: any) {
+        gameObject.setOrigin(lfObject.originX, lfObject.originY);
+        gameObject.angle = lfObject.angle;
+        gameObject.zIndex = lfObject.zIndex;
+        gameObject.scaleHandler.x = lfObject.scaleX;
+        gameObject.scaleHandler.y = lfObject.scaleY;
+    }
 
     /**
      * @description shutdown the scene, in preperation for transition. This involves destroying objects, as well as removing loop callbacks and event listeners etc
@@ -293,7 +333,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     /**
      * @description calls the destroy methods on all layers, effectively destroying the entire scene
      */
-    destroy(){
+    destroy() {
         this._playground.destroy();
         this._background.destroy();
         this._foreground.destroy();

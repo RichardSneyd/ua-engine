@@ -639,7 +639,7 @@ class Loader {
   addLevelFileAssets(level_file: any){
     if(level_file.hasOwnProperty('sprites') && level_file.sprites.length > 0){
       for(let x = 0; x < level_file.sprites.length; x++){
-        this.addImage(level_file.sprites[x].filename);
+        this.addImage(level_file.sprites[x].filename + '.png');
       }
     }
 

@@ -217,7 +217,7 @@ class ObjectCore {
   }
 
   get top(): number {
-    return this.y - (this.height * this.origin.y)
+    return this.y - (this.height * this.origin.y);
   }
 
   get bottom(): number {
