@@ -134,7 +134,7 @@ class EditorScene implements ILevel {
         this._zoneContainer = this._goFactory.container(0, 0);
     }
 
-    _createBackground() {
+    protected _createBackground() {
         Debug.warn("bgName:", this.bgdName);
         if (this.bgdName !== null || this.bgdName !== undefined || this.bgdName !== "") {
             this._bgd = this._goFactory.sprite(0, 0, this.bgdName);
@@ -144,7 +144,7 @@ class EditorScene implements ILevel {
         this._enableBackgroundDnd();
     }
 
-    _enableBackgroundDnd() {
+    protected _enableBackgroundDnd() {
         let canvas = document.getElementsByTagName("canvas");
 
         canvas[0]!.addEventListener("dragover", (event) => event.preventDefault(), true);
@@ -216,7 +216,7 @@ class EditorScene implements ILevel {
         return (`${prefix}${index}`);
     }
 
-    _panelImageClicked({ src, type, name }: { src: string, type: string, name: string }) {
+    protected _panelImageClicked({ src, type, name }: { src: string, type: string, name: string }) {
         this._addGameObject(src, type, name);
     }
 
@@ -244,7 +244,8 @@ class EditorScene implements ILevel {
             gameobj.objType = `${type}`;
             let uniqName = this._tryName(this._spineGameObjects, `${name}`, 2);
             gameobj.uniqName = uniqName;
-            let defaultAnimState = gameobj.animations.animationNames[0];
+            gameobj.animId = 0;
+            let defaultAnimState = gameobj.animations.animationNames[gameobj.animId];
             gameobj.animations.play(`${defaultAnimState}`, true);
 
             this._spineGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
@@ -325,6 +326,15 @@ class EditorScene implements ILevel {
 
                 this._inspector.setInputReadOnly('width', true);
                 this._inspector.setInputReadOnly('height', true);
+                this._inspector.setInputReadOnly('animations-select', true);
+
+                if (gameobj.objType === 'spine') {
+                    let animations = gameobj.animations.animationNames;
+                    this._inspector.setInputReadOnly('animations-select', false);
+                    this._inspector.clearSelectboxOptions('animations-select');
+                    this._inspector.appendOption('animations-select', animations);
+                    this._inspector.setSelectboxValue('animations-select', gameobj.animId);
+                }
             }
 
             if (gameobj.objType === 'dropzone' || gameobj.objType === 'hotspot') {
@@ -346,6 +356,7 @@ class EditorScene implements ILevel {
                 }
                 this._inspector.setInputReadOnly('width', false);
                 this._inspector.setInputReadOnly('height', false);
+                this._inspector.setInputReadOnly('animations-select', true);
             }
 
             this._inspector.setInputValue('width', this.selectedGO.width);
@@ -363,7 +374,7 @@ class EditorScene implements ILevel {
     }
 
 
-    _inputChanged({ prop, val }: { prop: string, val: number }) {
+    protected _inputChanged({ prop, val }: { prop: string, val: number }) {
         Debug.info(`prop: ${prop} val: ${val}`);
 
         if (prop === "name") {
@@ -411,6 +422,11 @@ class EditorScene implements ILevel {
         else if (prop === "height") {
             this.selectedGO.height = Number(val);
             this.selectedGO.followText.x = 30 + this.selectedGO.width / 2;
+        }
+        else if (prop === "animations") {
+            this.selectedGO.animId = Number(val);
+            let currentAnim = this.selectedGO.animations.animationNames[Number(val)];
+            this.selectedGO.animations.play(`${currentAnim}`, true);
         }
     }
 
