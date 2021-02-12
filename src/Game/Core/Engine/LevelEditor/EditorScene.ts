@@ -471,7 +471,7 @@ class EditorScene implements ILevel {
 
         window.addEventListener(
             "keydown", (input) => {
-                let moveUnit: number = 5;
+                let moveUnit: number = 2;
                 Debug.info('key: ', input.key);
                 if (this.selectedGO !== null || this.selectedGO !== undefined) {
                     if (input.key === "ArrowUp") {
