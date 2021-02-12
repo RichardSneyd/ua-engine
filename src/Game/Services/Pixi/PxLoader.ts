@@ -95,7 +95,7 @@ class PxLoader {
 
   public getTexture(resource: any, frame: any) {
     // Debug.info('frame: %s', frame);
-    Debug.info('resource: ', resource);
+  //  Debug.info('resource: ', resource);
     if((frame == undefined || frame == '') && resource.hasOwnProperty('frameCustomList')) frame = Object.keys(resource.frameCustomList)[0];
     if (frame != null) {
       return resource.frameCustomList[frame];

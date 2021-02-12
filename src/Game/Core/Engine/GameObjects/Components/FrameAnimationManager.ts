@@ -33,7 +33,7 @@ class FrameAnimationManager implements IAnimationManager {
     this._initialized = true;
   }
 
-  get initialized(){
+  get initialized() {
     return this._initialized;
   }
 
@@ -41,7 +41,7 @@ class FrameAnimationManager implements IAnimationManager {
    * @description does this animation manager have an atlas? (read only)
    */
   get hasAtlas(): boolean {
-    if(this._core.atlas) return true;
+    if (this._core.atlas) return true;
     return false;
   }
 
@@ -68,7 +68,7 @@ class FrameAnimationManager implements IAnimationManager {
    */
   public pause(name?: string) {
     let anim: Anim | null = this.current;
-    if(name) anim = this._getAnim(name);
+    if (name) anim = this._getAnim(name);
 
     if (anim != null) {
       anim.pause();
@@ -76,8 +76,8 @@ class FrameAnimationManager implements IAnimationManager {
   }
 
   public resume(name?: string) {
-    let anim : Anim | null = this.current;
-    if(name) anim = this._getAnim(name);
+    let anim: Anim | null = this.current;
+    if (name) anim = this._getAnim(name);
 
     if (anim != null) {
       anim.resume();
@@ -122,7 +122,7 @@ class FrameAnimationManager implements IAnimationManager {
   }
 
   /**
-   * @description returns a list of all the animation names pulled using REGEX from the json file (These animations must be added seperately using addAnimation, 
+   * @description returns a list of all the animation names pulled using regex from the json file (These animations must be added seperately using addAnimation, 
    * or importAnimations)
    */
   get animationNames(): string[] {
@@ -130,28 +130,38 @@ class FrameAnimationManager implements IAnimationManager {
   }
 
   /**
-   * @description import all animations from the atlas .json based on the _animationNames array (used as prefixes to identify the various frames i.e 'idle, idle1, idle_2' etc)
+   * @description import all animationNames from the atlas .json based on the _animationNames array (used as prefixes to identify the various frames i.e 'idle, idle_1, idle_2' etc)
    */
   private _importAnimationNames() {
     let animationNames: string[] = [];
     let atlasName = this._core.atlas;
-   // Debug.info('atlasName: ', atlasName);
-    if(!this.hasAtlas) return [];
+    // Debug.info('atlasName: ', atlasName);
+    if (!this.hasAtlas) {
+    //  Debug.warn('NO ATLAS, CANNOT PROCESS for ', this._go.data);
+      return [];
+    }
+ //   Debug.info('atlasName: ', atlasName);
     let res = this._loader.getImgResource(atlasName, true);
     if (res !== null) {
-      let json = res.data.data;
-      // Debug.info('json: ', res);
-      let frames = json.frames;
-      let frameNames: string[] = [];
-      let reg = new RegExp('([a-zA-Z-])+');
+      let frames = res.data.frameCustomList;
+      let reg = new RegExp('^([0-9A-Za-z-])+');
+   //   Debug.info('frames: ', frames);
+      let frameNames: string[] = Object.keys(frames);
+  //    Debug.info('frameNames: ', frameNames);
 
-      for (let x = 0; x < frames.length; x++) {
-        let fname: string = frames[x].filename;
-        let prefix = fname.match(reg)![0];
-
-        if (animationNames.indexOf(prefix) == -1) {
-          animationNames.push(prefix);
+      for (let x = 0; x < frameNames.length; x++) {
+        let prefix: string;
+        let fname: string = frameNames[x];
+  //     Debug.info('fname: ', fname);
+        let matches = fname.match(reg);
+    //    Debug.info('matches: ', matches);
+        if (matches) {
+          prefix = matches[0];
+          if (animationNames.indexOf(prefix) == -1) {
+            animationNames.push(prefix);
+          }
         }
+
       }
     }
 
@@ -181,7 +191,8 @@ class FrameAnimationManager implements IAnimationManager {
 
       for (let x = 0; x < frames.length; x++) {
         let fname: string = frames[x].filename;
-        let reg = new RegExp(name + '[-_]' + '[0-9]|' + name + '[0-9]');
+        //  let reg = new RegExp(name + '[-_]' + '[0-9]|' + name + '[0-9]');
+        let reg = new RegExp(name + '[_]' + '[0-9]');
 
         if (fname == name) {
           frameNames.push(fname);
@@ -264,7 +275,7 @@ class FrameAnimationManager implements IAnimationManager {
       if (anim.name == name) return anim;
     }
 
-   // Debug.error('no animation with name %s', name);
+    // Debug.error('no animation with name %s', name);
     return null;
   }
 }
