@@ -282,7 +282,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @param parent Optional parent paremeter. Defaults to _playground.
      */
     protected _addLevelFileSprite(lfObject: any, parent: ContainerObject = this._playground): SpriteObject {
-        let sprite = this._goFactory.sprite(lfObject.x, lfObject.y, lfObject.filename, null, this._playground);
+        let sprite = this._goFactory.sprite(lfObject.x, lfObject.y, lfObject.filename, null, parent);
         this._transformLevelFileObject(sprite, lfObject);
         return sprite;
     }
@@ -293,7 +293,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     * @param parent Optional parent paremeter. Defaults to _playground.
     */
     protected _addLevelFileAtlas(lfObject: any, parent: ContainerObject = this._playground) : SpriteObject {
-        let sprite = this._goFactory.sprite(lfObject.x, lfObject.y, lfObject.filename, '', this._playground);
+        let sprite = this._goFactory.sprite(lfObject.x, lfObject.y, lfObject.filename, '', parent);
         this._transformLevelFileObject(sprite, lfObject);
         return sprite;
     }
@@ -304,7 +304,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @param parent Optional parent paremeter. Defaults to _playground.
      */
     protected _addLevelFileSpine(lfObject: any, parent: ContainerObject = this._playground): SpineObject {
-        let spine = this._goFactory.spine(lfObject.x, lfObject.y, lfObject.filename, this._playground);
+        let spine = this._goFactory.spine(lfObject.x, lfObject.y, lfObject.filename, parent);
         this._transformLevelFileObject(spine, lfObject);
         return spine;
     }
