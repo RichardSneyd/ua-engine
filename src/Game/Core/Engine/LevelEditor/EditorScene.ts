@@ -311,6 +311,8 @@ class EditorScene implements ILevel {
             this.selectedGO.uniqName = gameobj.uniqName;
             this._inspector.setInputValue("name", this.selectedGO.uniqName);
             this._inspector.setInputValue("zIndex", this.selectedGO.zIndex);
+            this._inspector.setInputValue("x origin", this.selectedGO.origin.x);
+            this._inspector.setInputValue("y origin", this.selectedGO.origin.y);
 
             if (gameobj.objType === 'image' || gameobj.objType === 'spine' || gameobj.objType === 'atlas') {
                 this.xOffset = gameobj.x - this._manager.input.pointer.x;
@@ -392,11 +394,14 @@ class EditorScene implements ILevel {
         else if (prop === "zIndex") {
             this.selectedGO.zIndex = Number(val);
         }
-        else if (prop === "origin x") {
-            this.selectedGO.origin.x = Number(val);
+        else if (prop === "x origin") {
+            this.selectedGO.setOrigin(Number(val), Number(this.selectedGO.origin.y));
+            //this.selectedGOBorder.setOrigin(Number(val), Number(this.selectedGO.origin.y));
+            this.selectedGOBorder.pivot.set(Number(this.selectedGO.origin.x), Number(val));
         }
-        else if (prop === "origin y") {
-            this.selectedGO.origin.y = Number(val);
+        else if (prop === "y origin") {
+            this.selectedGO.setOrigin(Number(this.selectedGO.origin.x), Number(val));
+            this.selectedGOBorder.pivot.set(Number(this.selectedGO.origin.x), Number(val));
         }
         else if (prop === "width") {
             this.selectedGO.width = Number(val);
