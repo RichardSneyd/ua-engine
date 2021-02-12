@@ -281,9 +281,10 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @param lfObject The js data 'object' plucked from the levelFile, which provides the properties and values to adjust
      * @param parent Optional parent paremeter. Defaults to _playground.
      */
-    protected _addLevelFileSprite(lfObject: any, parent: ContainerObject = this._playground) {
+    protected _addLevelFileSprite(lfObject: any, parent: ContainerObject = this._playground): SpriteObject {
         let sprite = this._goFactory.sprite(lfObject.x, lfObject.y, lfObject.filename, null, this._playground);
         this._transformLevelFileObject(sprite, lfObject);
+        return sprite;
     }
 
     /**
@@ -291,9 +292,10 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     * @param lfObject The js data 'object' plucked from the levelFile, which provides the properties and values to adjust
     * @param parent Optional parent paremeter. Defaults to _playground.
     */
-    protected _addLevelFileAtlas(lfObject: any, parent: ContainerObject = this._playground) {
+    protected _addLevelFileAtlas(lfObject: any, parent: ContainerObject = this._playground) : SpriteObject {
         let sprite = this._goFactory.sprite(lfObject.x, lfObject.y, lfObject.filename, '', this._playground);
         this._transformLevelFileObject(sprite, lfObject);
+        return sprite;
     }
 
     /**
@@ -301,9 +303,10 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @param lfObject The js data 'object' plucked from the levelFile, which provides the properties and values to adjust
      * @param parent Optional parent paremeter. Defaults to _playground.
      */
-    protected _addLevelFileSpine(lfObject: any, parent: ContainerObject = this._playground) {
-        let sprite = this._goFactory.spine(lfObject.x, lfObject.y, lfObject.filename, this._playground);
-        this._transformLevelFileObject(sprite, lfObject);
+    protected _addLevelFileSpine(lfObject: any, parent: ContainerObject = this._playground): SpineObject {
+        let spine = this._goFactory.spine(lfObject.x, lfObject.y, lfObject.filename, this._playground);
+        this._transformLevelFileObject(spine, lfObject);
+        return spine;
     }
 
     /**
