@@ -593,8 +593,11 @@ class EditorScene implements ILevel {
     }
 
     protected _addImagesRow(): void {
-        let imgListFiltered = this._loader.resList.filter(res => res.type === 'img' && res.ext === 'png');
-        imgListFiltered.forEach(val => this.imgList.push({ src: val.url, name: val.basename }));
+        (<any>window).electronImgList.forEach((val: any) => {
+            if (val.indexOf('.png') != -1) {
+                this.imgList.push({ src: `assets/img/${val}`, name: val.replace(/\.[^/.]+$/, "") });
+            }
+        });
 
         this._accordion.addRow('Images', 'image', ...this.imgList);
     }
