@@ -15,7 +15,7 @@ import SceneEvents from "../Activities/SceneEvents";
 import ContainerObject from "../GameObjects/ContainerObject";
 import TextObject from "../GameObjects/TextObject";
 import ImportData from "./ImportData";
-import { openStdin } from "process";
+import SliceObject from "../GameObjects/SliceObject";
 
 
 // build the visual of the editor here, like an activity level....
@@ -35,6 +35,7 @@ class EditorScene implements ILevel {
 
     public bgdName: string;
     protected _bgd: SpriteObject;
+    protected _foregroundContainer: ContainerObject;
     protected _zoneContainer: ContainerObject;
     protected _playgroundContainer: ContainerObject;
     protected imgList: any[] = [];
@@ -50,7 +51,7 @@ class EditorScene implements ILevel {
     protected xOffset: number = 0;
     protected yOffset: number = 0;
     protected dragging: boolean = false;
-    protected selectedGOBorder: PIXI.Graphics;
+    protected selectedGOBorder: SliceObject;
 
     protected _resize: boolean = false;
     protected _resizeOffsetX: number = 0;
@@ -128,6 +129,7 @@ class EditorScene implements ILevel {
         this._addInputManager();
 
         /* Containers */
+        this._foregroundContainer = this._goFactory.container(0, 0);
         this._playgroundContainer = this._goFactory.container(0, 0);
         this._zoneContainer = this._goFactory.container(0, 0);
     }
@@ -396,12 +398,11 @@ class EditorScene implements ILevel {
         }
         else if (prop === "x origin") {
             this.selectedGO.setOrigin(Number(val), Number(this.selectedGO.origin.y));
-            //this.selectedGOBorder.setOrigin(Number(val), Number(this.selectedGO.origin.y));
-            this.selectedGOBorder.pivot.set(Number(this.selectedGO.origin.x), Number(val));
+            this.selectedGOBorder.setOrigin(Number(val), Number(this.selectedGO.origin.y));
         }
         else if (prop === "y origin") {
             this.selectedGO.setOrigin(Number(this.selectedGO.origin.x), Number(val));
-            this.selectedGOBorder.pivot.set(Number(this.selectedGO.origin.x), Number(val));
+            this.selectedGOBorder.setOrigin(Number(this.selectedGO.origin.x), Number(val));
         }
         else if (prop === "width") {
             this.selectedGO.width = Number(val);
@@ -581,20 +582,11 @@ class EditorScene implements ILevel {
 
     addGameObjSelectionBorder(x: number, y: number, width: number, height: number): void {
         if (this.selectedGOBorder === null || this.selectedGOBorder === undefined) {
-            this.selectedGOBorder = this._pxGame.addRectangle(
-                x,
-                y,
-                width,
-                height,
-                0xCF19B9,
-                0,
-                2,
-                0x77FE79,
-                1
-            );
-            this.selectedGOBorder.pivot.set(this.selectedGO.x, this.selectedGO.y); // + (this.selectedGO.width / 2) + (this.selectedGO.height / 2)
+            this.selectedGOBorder = this._goFactory.nineSlice(x, y, 'active_object', 4, 4, 4, 4, width, height, this._foregroundContainer);
+            this.selectedGOBorder.setOrigin(Number(this.selectedGO.origin.x), Number(this.selectedGO.origin.y));
         }
         else {
+            this.selectedGOBorder.setOrigin(Number(this.selectedGO.origin.x), Number(this.selectedGO.origin.y));
             this.selectedGOBorder.alpha = 1;
             this.selectedGOBorder.visible = true;
         }
