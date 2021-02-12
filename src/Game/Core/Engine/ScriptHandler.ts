@@ -67,7 +67,7 @@ class ScriptHandler {
      * @param key Property that identifies the object, 'name' by default
      */
     getLevelFileObject(rootObject: string, value: string, key: string = 'name'): any {
-        Debug.info('in getLevel file');
+      //  Debug.info('in getLevel file');
         if(!this.levelFile.hasOwnProperty(rootObject)) Debug.error('no rootObject called %s in levelFile', rootObject);
     
         for(let object of this.levelFile[rootObject]) {
@@ -185,8 +185,6 @@ class ScriptHandler {
     public isFalsy(val: any): boolean {
         if (val !== null && val !== undefined && val !== '') return false; else return true;
     }
-
-
 
     /**
    * @description To be used at init, to convert raw json data into a more functional script, with arrays and objects 
