@@ -220,7 +220,7 @@ class EditorScene implements ILevel {
         this._addGameObject(src, type, name);
     }
 
-    protected _addGameObject(src: string, type: string, name: string, options: any = { x: 660, y: 240, width: 300, height: 200, angle: 0, originX: 0, originY: 0, scaleX: 1, scaleY: 1 }) {
+    protected _addGameObject(src: string, type: string, name: string, options: any = { x: 660, y: 240, width: 300, height: 200, angle: 0, originX: 0, originY: 0, scaleX: 1, scaleY: 1, zIndex: 0 }) {
         //Debug.warn("x y: ", name, options?.x, options?.y, options?.angle, options?.originX, options?.originY);
         let gameobj: any;
         if (type === "image") {
@@ -228,6 +228,8 @@ class EditorScene implements ILevel {
             gameobj.scaleHandler.setScale(options?.scaleX, options?.scaleY);
             gameobj.setOrigin(options?.originX, options?.originY);
             gameobj.angle = options.angle;
+            gameobj.zIndex = options.zIndex;
+
             gameobj.objType = `${type}`;
             let uniqName = this._tryName(this._imgGameObjects, `${name}`, 2);
             gameobj.uniqName = uniqName;
@@ -241,6 +243,10 @@ class EditorScene implements ILevel {
         else if (type === "spine") {
             gameobj = this._goFactory.spine(options.x, options.y, name, this._playgroundContainer);
             gameobj.scaleHandler.setScale(options?.scaleX, options?.scaleY);
+            gameobj.setOrigin(options?.originX, options?.originY);
+            gameobj.zIndex = options.zIndex;
+            gameobj.angle = options.angle;
+
             gameobj.objType = `${type}`;
             let uniqName = this._tryName(this._spineGameObjects, `${name}`, 2);
             gameobj.uniqName = uniqName;
@@ -259,6 +265,8 @@ class EditorScene implements ILevel {
             gameobj = this._goFactory.sprite(options.x, options.y, `${name}`, '', this._playgroundContainer);
             gameobj.scaleHandler.setScale(options?.scaleX, options?.scaleY);
             gameobj.setOrigin(options?.originX, options?.originY);
+            gameobj.zIndex = options.zIndex;
+            gameobj.angle = options.angle;
 
             gameobj.objType = `${type}`;
             let uniqName = this._tryName(this._atlasGameObjects, `${name}`, 2);
@@ -470,17 +478,17 @@ class EditorScene implements ILevel {
     protected _addImportedGameObjects(data: any): void {
         if (data.sprites.length > 0) {
             data.sprites.forEach((val: any, i: number) => {
-                this._addGameObject(val.filename, 'image', val.name, { x: val.x, y: val.y, angle: val.angle, originX: val.originX, originY: val.originY, scaleX: Number(val.scaleX), scaleY: Number(val.scaleY) });
+                this._addGameObject(val.filename, 'image', val.name, { x: val.x, y: val.y, angle: val.angle, originX: val.originX, originY: val.originY, scaleX: Number(val.scaleX), scaleY: Number(val.scaleY), zIndex: Number(val.zIndex) });
             });
         }
         if (data.spines.length > 0) {
             data.spines.forEach((val: any, i: number) => {
-                this._addGameObject(val.filename, 'spine', val.name, { x: val.x, y: val.y, angle: val.angle, originX: val.originX, originY: val.originY, scaleX: Number(val.scaleX), scaleY: Number(val.scaleY) });
+                this._addGameObject(val.filename, 'spine', val.name, { x: val.x, y: val.y, angle: val.angle, originX: val.originX, originY: val.originY, scaleX: Number(val.scaleX), scaleY: Number(val.scaleY), zIndex: Number(val.zIndex) });
             });
         }
         if (data.atlases.length > 0) {
             data.atlases.forEach((val: any, i: number) => {
-                this._addGameObject(val.filename, 'atlas', val.name, { x: val.x, y: val.y, angle: val.angle, originX: val.originX, originY: val.originY, scaleX: Number(val.scaleX), scaleY: Number(val.scaleY) });
+                this._addGameObject(val.filename, 'atlas', val.name, { x: val.x, y: val.y, angle: val.angle, originX: val.originX, originY: val.originY, scaleX: Number(val.scaleX), scaleY: Number(val.scaleY), zIndex: Number(val.zIndex) });
             });
         }
         if (data.dropzones.length > 0) {
