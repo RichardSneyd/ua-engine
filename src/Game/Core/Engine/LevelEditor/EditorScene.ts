@@ -245,8 +245,8 @@ class EditorScene implements ILevel {
             let uniqName = this._tryName(this._spineGameObjects, `${name}`, 2);
             gameobj.uniqName = uniqName;
             gameobj.animId = 0;
-            let defaultAnimState = gameobj.animations.animationNames[gameobj.animId];
-            gameobj.animations.play(`${defaultAnimState}`, true);
+            let animations = gameobj.animations.animationNames;
+            this._updateAnimations(animations, gameobj.animId);
 
             this._spineGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
             gameobj.objID = this._spineGameObjects.length - 1;
@@ -264,7 +264,8 @@ class EditorScene implements ILevel {
             gameobj.uniqName = uniqName;
             gameobj.animId = 0;
             gameobj.animations.importAnimations(); // this will automatically parse the frames in the json file and create animations based on the prefixes
-            gameobj.animations.play(gameobj.animations.animationNames[gameobj.animId], true);
+            let animations = gameobj.animations.animationNames;
+            this._updateAnimations(animations, gameobj.animId);
 
             this._atlasGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
             gameobj.objID = this._atlasGameObjects.length - 1;
@@ -309,20 +310,16 @@ class EditorScene implements ILevel {
             this._inspector.setInputReadOnly('height', false);
         }
 
+        this._activateObject(gameobj);
+
         gameobj.input.enableInput();
         gameobj.input.addInputListener('pointerdown', () => {
-            this.selectedGO = gameobj;
-            this.selectedGO.uniqName = gameobj.uniqName;
-            this._inspector.setInputValue("name", this.selectedGO.uniqName);
-            this._inspector.setInputValue("zIndex", this.selectedGO.zIndex);
-            this._inspector.setInputValue("x origin", this.selectedGO.origin.x);
-            this._inspector.setInputValue("y origin", this.selectedGO.origin.y);
+            this._activateObject(gameobj);
 
             if (gameobj.objType === 'image' || gameobj.objType === 'spine' || gameobj.objType === 'atlas') {
                 this.xOffset = gameobj.x - this._manager.input.pointer.x;
                 this.yOffset = gameobj.y - this._manager.input.pointer.y;
 
-                this.addGameObjSelectionBorder(gameobj.x, gameobj.y, gameobj.width, gameobj.height);
                 this.dragging = true;
 
                 this._inspector.setInputReadOnly('width', true);
@@ -331,10 +328,7 @@ class EditorScene implements ILevel {
 
                 if (gameobj.objType === 'spine' || gameobj.objType === 'atlas') {
                     let animations = gameobj.animations.animationNames;
-                    this._inspector.setInputReadOnly('animations-select', false);
-                    this._inspector.clearSelectboxOptions('animations-select');
-                    this._inspector.appendOption('animations-select', animations);
-                    this._inspector.setSelectboxValue('animations-select', gameobj.animId);
+                    this._updateAnimations(animations, gameobj.animId);
                 }
             }
 
@@ -374,6 +368,38 @@ class EditorScene implements ILevel {
         }, this);
     }
 
+    protected _activateObject(gameobj: any) {
+        this.selectedGO = gameobj;
+        this.selectedGO.uniqName = gameobj.uniqName;
+        this._inspector.setInputValue("name", this.selectedGO.uniqName);
+        this._inspector.setInputValue("x", this.selectedGO.x);
+        this._inspector.setInputValue("y", this.selectedGO.y);
+        this._inspector.setInputValue("scale x", this.selectedGO.scaleHandler.x);
+        this._inspector.setInputValue("scale y", this.selectedGO.scaleHandler.y);
+        this._inspector.setInputValue("zIndex", this.selectedGO.zIndex);
+        this._inspector.setInputValue("angle", this.selectedGO.angle);
+        this._inspector.setInputValue("x origin", this.selectedGO.origin.x);
+        this._inspector.setInputValue("y origin", this.selectedGO.origin.y);
+        this._inspector.setInputValue('width', this.selectedGO.width);
+        this._inspector.setInputValue('height', this.selectedGO.height);
+
+        this.addGameObjSelectionBorder(gameobj.x, gameobj.y, gameobj.width, gameobj.height);
+
+        if (gameobj.objType === "spine" || gameobj.objType === 'atlas') {
+            this._inspector.setInputReadOnly('animations-select', false);
+        }
+        else {
+            this._inspector.setInputReadOnly('animations-select', true);
+        }
+    }
+
+    protected _updateAnimations(animations: string[], animId: number) {
+        this._inspector.setInputReadOnly('animations-select', false);
+        this._inspector.clearSelectboxOptions('animations-select');
+        this._inspector.appendOption('animations-select', animations);
+        this._inspector.setSelectboxValue('animations-select', animId);
+    }
+
 
     protected _inputChanged({ prop, val }: { prop: string, val: number }) {
         Debug.info(`prop: ${prop} val: ${val}`);
@@ -404,6 +430,7 @@ class EditorScene implements ILevel {
         }
         else if (prop === "angle") {
             this.selectedGO.angle = Number(val);
+            this.selectedGOBorder.angle = Number(val);
         }
         else if (prop === "zIndex") {
             this.selectedGO.zIndex = Number(val);
@@ -601,9 +628,11 @@ class EditorScene implements ILevel {
         if (this.selectedGOBorder === null || this.selectedGOBorder === undefined) {
             this.selectedGOBorder = this._goFactory.nineSlice(x, y, 'active_object', 4, 4, 4, 4, width, height, this._foregroundContainer);
             this.selectedGOBorder.setOrigin(Number(this.selectedGO.origin.x), Number(this.selectedGO.origin.y));
+            this.selectedGOBorder.angle = this.selectedGO.angle;
         }
         else {
             this.selectedGOBorder.setOrigin(Number(this.selectedGO.origin.x), Number(this.selectedGO.origin.y));
+            this.selectedGOBorder.angle = this.selectedGO.angle;
             this.selectedGOBorder.alpha = 1;
             this.selectedGOBorder.visible = true;
         }
