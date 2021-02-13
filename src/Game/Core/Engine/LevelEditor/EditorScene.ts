@@ -246,7 +246,8 @@ class EditorScene implements ILevel {
             gameobj.uniqName = uniqName;
             gameobj.animId = 0;
             let animations = gameobj.animations.animationNames;
-            this._updateAnimations(animations, gameobj.animId);
+            gameobj.animations.play(`${animations[gameobj.animId]}`, true);
+            this._updateAnimationsInput(animations, gameobj.animId);
 
             this._spineGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
             gameobj.objID = this._spineGameObjects.length - 1;
@@ -265,7 +266,8 @@ class EditorScene implements ILevel {
             gameobj.animId = 0;
             gameobj.animations.importAnimations(); // this will automatically parse the frames in the json file and create animations based on the prefixes
             let animations = gameobj.animations.animationNames;
-            this._updateAnimations(animations, gameobj.animId);
+            gameobj.animations.play(`${animations[gameobj.animId]}`, true);
+            this._updateAnimationsInput(animations, gameobj.animId);
 
             this._atlasGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
             gameobj.objID = this._atlasGameObjects.length - 1;
@@ -328,14 +330,11 @@ class EditorScene implements ILevel {
 
                 if (gameobj.objType === 'spine' || gameobj.objType === 'atlas') {
                     let animations = gameobj.animations.animationNames;
-                    this._updateAnimations(animations, gameobj.animId);
+                    this._updateAnimationsInput(animations, gameobj.animId);
                 }
             }
 
             if (gameobj.objType === 'dropzone' || gameobj.objType === 'hotspot') {
-                //Debug.info("selectBorder:", this.selectedGOBorder);
-                if (this.selectedGOBorder) { this.selectedGOBorder.alpha = 0; }
-
                 let mouseX = this._manager.input.pointer.x;
                 let mouseY = this._manager.input.pointer.y;
 
@@ -391,9 +390,13 @@ class EditorScene implements ILevel {
         else {
             this._inspector.setInputReadOnly('animations-select', true);
         }
+
+        if (gameobj.objType === 'dropzone' || gameobj.objType === 'hotspot') {
+            if (this.selectedGOBorder) { this.selectedGOBorder.alpha = 0; }
+        }
     }
 
-    protected _updateAnimations(animations: string[], animId: number) {
+    protected _updateAnimationsInput(animations: string[], animId: number) {
         this._inspector.setInputReadOnly('animations-select', false);
         this._inspector.clearSelectboxOptions('animations-select');
         this._inspector.appendOption('animations-select', animations);
