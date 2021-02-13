@@ -262,8 +262,9 @@ class EditorScene implements ILevel {
             gameobj.objType = `${type}`;
             let uniqName = this._tryName(this._atlasGameObjects, `${name}`, 2);
             gameobj.uniqName = uniqName;
+            gameobj.animId = 0;
             gameobj.animations.importAnimations(); // this will automatically parse the frames in the json file and create animations based on the prefixes
-            gameobj.animations.play(gameobj.animations.animationNames[0], true);
+            gameobj.animations.play(gameobj.animations.animationNames[gameobj.animId], true);
 
             this._atlasGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
             gameobj.objID = this._atlasGameObjects.length - 1;
@@ -328,7 +329,7 @@ class EditorScene implements ILevel {
                 this._inspector.setInputReadOnly('height', true);
                 this._inspector.setInputReadOnly('animations-select', true);
 
-                if (gameobj.objType === 'spine') {
+                if (gameobj.objType === 'spine' || gameobj.objType === 'atlas') {
                     let animations = gameobj.animations.animationNames;
                     this._inspector.setInputReadOnly('animations-select', false);
                     this._inspector.clearSelectboxOptions('animations-select');
@@ -527,7 +528,7 @@ class EditorScene implements ILevel {
                         //Debug.info('SPINES:', this._spineGameObjects);
                     }
                     if (this.selectedGO.objType === 'atlas') {
-                        this._spineGameObjects.splice(this.selectedGO.objID, 1);
+                        this._atlasGameObjects.splice(this.selectedGO.objID, 1);
                         //Debug.info('ATLASES:', this._atlasGameObjects);
                     }
                     if (this.selectedGO.objType === 'dropzone') {
