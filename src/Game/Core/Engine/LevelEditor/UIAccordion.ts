@@ -18,6 +18,7 @@ class UIAccordion {
     protected _container: HTMLDivElement;
     protected _images: HTMLImageElement[] = [];
     protected _labels: HTMLButtonElement[] = [];
+    protected _arrows: HTMLSpanElement[] = [];
     protected _panels: HTMLDivElement[] = [];
     protected _imgList: any[] = [];
 
@@ -63,13 +64,25 @@ class UIAccordion {
      * @param name Label shown as panel text
      */
     addLabel(name: string): void {
+        //<span style="float: right; margin-right: 7px; transform: rotate(180deg);" class="" onclick="alert('kek')">V</span>
         let label = document.createElement('button');
         label.setAttribute('class', 'accordion');
         label.innerHTML = name;
         this._container.appendChild(label);
         this._labels.push(label);
 
+        let arrow = document.createElement('button');
+        arrow.setAttribute('class', 'collapse-btn');
+        arrow.innerHTML = 'V';
+        label.appendChild(arrow);
+        this._arrows.push(arrow);
+
+
         this.dragPanel(label, this._container);
+    }
+
+    addArrow() {
+
     }
 
     addPanelContent(): void {
@@ -247,9 +260,11 @@ class UIAccordion {
         }
 
         // add click events for toggling
-        for (let i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function () {
-                acc[i].classList.toggle("active");
+        const arr = document.getElementsByClassName("collapse-btn");
+
+        for (let i = 0; i < arr.length; i++) {
+            arr[i].addEventListener("click", function () {
+                arr[i].classList.toggle("collapse-btn-reverse");
                 let panel = acc[i].nextElementSibling as HTMLElement;
 
                 if (panel.style.maxHeight) {
