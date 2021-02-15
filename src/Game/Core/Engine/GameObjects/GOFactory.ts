@@ -16,6 +16,8 @@ import HitShapes from "./Components/HitShapes/HitShapes";
 import DraggableObject from "./DraggableObject";
 import Debug from "../Debug";
 import MenuBar from "./MenuBar";
+import ScriptHandler from "../ScriptHandler";
+import BaseGameObject from "./BaseGameObject";
 
 /**
  * @description A factory for creating game objects of various types
@@ -35,16 +37,17 @@ class GOFactory {
     private _camera: Camera;
     private _hitShapes: HitShapes;
     private _menuBar: MenuBar;
+    private _script: ScriptHandler;
 
-    constructor(core: ObjectCore, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject,  draggable: DraggableObject,
+    constructor(core: ObjectCore, script: ScriptHandler, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject, draggable: DraggableObject,
         container: ContainerObject, menuBar: MenuBar, scaleManager: ScaleManager, button: Button, video: VideoObject, screen: Screen, camera: Camera, hitShapes: HitShapes) {
-        this._core = core; this._slice = slice; this._spine = spine; this._text = text; this._container = container; this._menuBar = menuBar;
+        this._core = core; this._script = script; this._slice = slice; this._spine = spine; this._text = text; this._container = container; this._menuBar = menuBar;
         this._sprite = sprite; this._scaleManager = scaleManager; this._button = button; this._video = video; this._screen = screen;
         this._camera = camera; this._hitShapes = hitShapes; this._draggable = draggable;
         Debug.exposeGlobal(this, 'goFactory');
     }
 
-    get hitShapes(){
+    get hitShapes() {
         return this._hitShapes;
     }
 
@@ -70,12 +73,22 @@ class GOFactory {
      * @param y the y coordinate to initialize with
      * @param textureName the name of the texture to initialize the sprite with
      * @param frame the default frame for the Sprite. Optional. Provide this if working with an atlas animation
+     * @param lFile levelFile object? If true, the 'texture' will be the 'filename' property of the respective levelFile data object. Will be 'transformed' automatically.
      */
-    public sprite(x?: number, y?: number, texture?: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null): SpriteObject {
+    public sprite(x?: number, y?: number, texture?: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null, lFile: boolean = false): SpriteObject {
+        let lfObj: any;
+        if (lFile && typeof texture == 'string') {
+            let root = (frame == null) ? 'sprites' : 'atlases';
+            lfObj = this._script.getLevelFileObject(root, texture, 'name');
+            Debug.info('lfObj: ', lfObj);
+            texture = lfObj.filename;
+        }
         if (x != null && y != null && texture != null) {
             //  let pos = this._scaleManager.getXY(x, y);
             //  Debug.info('pos: ', pos);
-            return this._sprite.createNew(x, y, texture, frame, parent);
+            let go = this._sprite.createNew(x, y, texture, frame, parent);
+            if(lfObj && lFile) this._transformLevelFileObject(go, lfObj);
+            return go;
         } else {
             return this._sprite.createEmpty();
         }
@@ -102,10 +115,19 @@ class GOFactory {
      * @param textureName the name of the texture to initialize the sprite with
      * @param frame the default frame for the Sprite. Optional. Provide this if working with an atlas animation
      * @param parent the container it should be a child of. Optional
+     * @param lFile levelFile object? If true, the 'texture' will be the 'filename' property of the respective levelFile data object. Will be 'transformed' automatically.
      */
-    public draggable(x?: number, y?: number, texture?: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null): DraggableObject {
+    public draggable(x?: number, y?: number, texture?: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null, lFile: boolean = false): DraggableObject {
+        let lfObj: any;
+        if (lFile && typeof texture == 'string') {
+            let root = (frame == null) ? 'sprites' : 'atlases';
+            lfObj = this._script.getLevelFileObject(root, texture, 'name');
+            texture = lfObj.filename;
+        }
         if (x != null && y != null && texture != null) {
-            return this._draggable.createNew(x, y, texture, frame, parent);
+            let go = this._draggable.createNew(x, y, texture, frame, parent);
+            if (lfObj && go.firstSprite) this._transformLevelFileObject(go.firstSprite, lfObj);
+            return go;
         } else {
             return this._draggable.createEmpty();
         }
@@ -133,12 +155,22 @@ class GOFactory {
      * @param context the context for callbacks
      * @param onUp (optional) an onUp callback
      * @param parent (optional) a parent to add this object to
+     * @param lFile levelFile object? If true, the 'texture' will be the 'filename' property of the respective levelFile data object. Will be 'transformed' automatically.
      */
-    public button(x?: number, y?: number, atlas?: string, frame?: string, anims?: { up: string, down: string, over: string, out: string }, onDown?: Function, context?: any, onUp?: Function, parent?: IParentChild): Button {
-        if (x != null && y != null && atlas != null && frame && onDown) {
+    public button(x?: number, y?: number, texture?: string, frame?: string, anims?: { up: string, down: string, over: string, out: string }, onDown?: Function,
+        context?: any, onUp?: Function, parent?: IParentChild, lFile: boolean = false): Button {
+        let lfObj: any;
+        if (lFile && typeof texture == 'string') {
+            let root = (frame == null) ? 'sprites' : 'atlases';
+            lfObj = this._script.getLevelFileObject(root, texture, 'name');
+            texture = lfObj.filename;
+        }
+        if (x != null && y != null && texture != null && frame && onDown) {
             // let pos = this._scaleManager.getXY(x, y);
             // Debug.info('pos: ', pos);
-            return this._button.createNew(x, y, atlas, frame, anims, onDown, context, onUp, parent);
+            let go = this._button.createNew(x, y, texture, frame, anims, onDown, context, onUp, parent);
+            if (lFile) this._transformLevelFileObject(go.sprite, lfObj);
+            return go;
         } else {
             return this._button.createEmpty();
         }
@@ -174,7 +206,7 @@ class GOFactory {
      * @param x the x coordinate to initialize with
      * @param y the y coordinate to initialize with
      */
-    public container(x : number = 0, y: number = 0, parent: IParentChild | null = null): ContainerObject {
+    public container(x: number = 0, y: number = 0, parent: IParentChild | null = null): ContainerObject {
 
         if (x != null && y != null) {
             // let pos = this._scaleManager.getXY(x, y);
@@ -189,11 +221,20 @@ class GOFactory {
      * @param x the x coordinate to initialize with
      * @param y the y coordinate to initialize with
      * @param spineName the name of the spine file to initialize with
+     * @param lFile levelFile object? If true, the 'texture' will be the 'filename' property of the respective levelFile data object. Will be 'transformed' automatically.
      */
-    public spine(x: number | null, y?: number, spineName?: string, parent: IParentChild | null = null): SpineObject {
+    public spine(x: number | null, y?: number, spineName?: string, parent: IParentChild | null = null, lFile: boolean = false): SpineObject {
+        let lfObj: any;
+        if (lFile && spineName) {
+            let root = 'spines';
+            lfObj = this._script.getLevelFileObject(root, spineName, 'name');
+            spineName = lfObj.filename;
+        }
         if (x != null && y != null && spineName != null) {
             // let pos = this._scaleManager.getXY(x, y);
-            return this._spine.createNew(x, y, spineName, null, parent);
+            let go = this._spine.createNew(x, y, spineName, null, parent);
+            if (lfObj) this._transformLevelFileObject(go, lfObj);
+            return go;
         } else {
             return this._spine.createEmpty();
         }
@@ -214,9 +255,60 @@ class GOFactory {
      * @param texture the texture to use
      * @param parent the parent object/container
      */
-    public menu(x: number, y: number, texture: string, parent: IParentChild | null){
+    public menu(x: number, y: number, texture: string, parent: IParentChild | null, lFile: boolean = false) {
         return this._menuBar.createNew(x, y, texture, parent);
     }
+
+    /**
+* @description adds all objects from the level file to screen, and also returns them in 2 arrays (sprites and spines). Useful for debugging purposes etc
+* @param parent an optional default parent. Otherwise, goes in 'global' container
+*/
+    addLevelFileObjects(parent: IParentChild | null = null) : {sprites: SpriteObject[], spines: SpineObject[]} {
+        let goArrays:  {sprites: SpriteObject[], spines: SpineObject[]} = {'sprites': [], 'spines': []}
+        let lFile = this._script.levelFile;
+        if(!lFile) Debug.error('script.levelFile is undefined');
+
+        for (let x = 0; x < lFile.sprites.length; x++) {
+            let lfObj = lFile.sprites[x];
+            Debug.info('lfObj: ', lfObj);
+            let go = this.sprite(lfObj.x, lfObj.y, lfObj.filename, null, parent);
+            goArrays.sprites.push(go);
+            this._transformLevelFileObject(go, lfObj);
+        }
+
+        for (let x = 0; x < lFile.atlases.length; x++) {
+            let lfObj = lFile.atlases[x];
+            Debug.info('lfObj: ', lfObj);
+            let go = this.sprite(lfObj.x, lfObj.y, lfObj.filename, '', parent);
+            goArrays.sprites.push(go);
+            this._transformLevelFileObject(go, lfObj);
+        }
+
+        for (let x = 0; x < lFile.spines.length; x++) {
+            let lfObj = lFile.spines[x];
+            Debug.info('lfObj: ', lfObj);
+            let go = this.spine(lfObj.x, lfObj.y, lfObj.filename, parent);
+            goArrays.spines.push(go);
+            this._transformLevelFileObject(go, lfObj);
+        }
+
+        return goArrays;
+    }
+
+    /**
+    * @description Assigns all transform etc properties to the object, as read from the levelFile
+    * @param gameObject the object to transform
+    * @param lfObject The js data 'object' plucked from the levelFile, which provides the properties and values to adjust
+    */
+    protected _transformLevelFileObject(gameObject: BaseGameObject, lfObject: any) {
+        gameObject.setOrigin(lfObject.originX, lfObject.originY);
+        gameObject.angle = lfObject.angle;
+        gameObject.zIndex = lfObject.zIndex;
+        gameObject.scaleHandler.x = lfObject.scaleX;
+        gameObject.scaleHandler.y = lfObject.scaleY;
+    }
+
+
 }
 
 export default GOFactory;

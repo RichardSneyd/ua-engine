@@ -1,7 +1,11 @@
-import UAE from "../../../UAE";
 import Game from "../../Game";
 import Debug from "../Debug";
+import BaseGameObject from "../GameObjects/BaseGameObject";
+import Button from "../GameObjects/Button";
+import ContainerObject from "../GameObjects/ContainerObject";
 import GOFactory from "../GameObjects/GOFactory";
+import SpineObject from "../GameObjects/SpineObject";
+import SpriteObject from "../GameObjects/SpriteObject";
 import Loader from "../Loader";
 import Loop from "../Loop";
 import IScene from "./IScene";
@@ -11,11 +15,16 @@ import SceneEvents from "./SceneEvents";
  * @description Extending the BaseScene class is the quickes, cleanest and easiest way of creaing a barebones Highwood scene
  */
 abstract class BaseScene implements IScene {
+    protected _name: string;
     protected _events: SceneEvents;
     protected _loop: Loop;
     protected _goFactory: GOFactory;
     protected _loader: Loader;
     protected _game: Game;
+    protected _background: ContainerObject;
+    protected _playground: ContainerObject;
+    protected _foreground: ContainerObject;
+    // protected _HUD: ContainerObject;
 
     constructor(events: SceneEvents, loop: Loop, goFactory: GOFactory, loader: Loader, game: Game) {
         this._events = events;
@@ -31,13 +40,19 @@ abstract class BaseScene implements IScene {
     }
 
     init(...args: any): void {
-        // do init stuff for all scenes
-      //  Debug.info('init called');
-     //   Debug.info(this);
+        if (args.sceneName) this._name = args.name;
+
+        this._background = this._goFactory.container(0, 0);
+        this._playground = this._goFactory.container(0, 0);
+        this._foreground = this._goFactory.container(0, 0);
         this._loop.addFunction(this.update, this);
         this._loop.start(); // just in case the loop hasn't been started yet - if it has, this will do nothing.
 
         // remember to call preload from the subclass
+    }
+
+    get name(): string {
+        return this._name;
     }
 
     preload(): void {
