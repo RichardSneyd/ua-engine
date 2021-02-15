@@ -19,12 +19,7 @@ import SceneEvents from "./SceneEvents";
  */
 abstract class BaseLevel extends BaseScene implements ILevel {
     protected _manager: LevelManager;
-    protected _bgd: SpriteObject;
-
-    protected _aFiles: string[] = [];
-    protected _pngFiles: string[] = [];
-    protected _jpgFiles: string[] = [];
-
+    protected _bgd: SpriteObject
     protected _ready: boolean = false;
 
     protected _character: SpineObject;
