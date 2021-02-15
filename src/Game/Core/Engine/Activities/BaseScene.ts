@@ -40,8 +40,8 @@ abstract class BaseScene implements IScene {
     }
 
     init(...args: any): void {
-        if (args.sceneName) this._name = args.name;
-
+        Debug.info('scene args: ', args);
+        this._name = args[0];
         this._background = this._goFactory.container(0, 0);
         this._playground = this._goFactory.container(0, 0);
         this._foreground = this._goFactory.container(0, 0);

@@ -260,7 +260,7 @@ class GOFactory {
     }
 
     /**
-* @description adds all objects from the level file to screen, and also returns them in 2 arrays (sprites and spines). Useful for debugging purposes etc
+* @description adds all objects from the level file to screen, and also returns them in an obj with 2 arrays (sprites and spines). Useful for debugging purposes etc
 * @param parent an optional default parent. Otherwise, goes in 'global' container
 */
     addLevelFileObjects(parent: IParentChild | null = null) : {sprites: SpriteObject[], spines: SpineObject[]} {
@@ -302,6 +302,8 @@ class GOFactory {
     */
     protected _transformLevelFileObject(gameObject: BaseGameObject, lfObject: any) {
         gameObject.setOrigin(lfObject.originX, lfObject.originY);
+        gameObject.x = lfObject.x;
+        gameObject.y = lfObject.y;
         gameObject.angle = lfObject.angle;
         gameObject.zIndex = lfObject.zIndex;
         gameObject.scaleHandler.x = lfObject.scaleX;
