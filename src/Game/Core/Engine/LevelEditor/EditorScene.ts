@@ -15,7 +15,7 @@ import SceneEvents from "../Activities/SceneEvents";
 import ContainerObject from "../GameObjects/ContainerObject";
 import TextObject from "../GameObjects/TextObject";
 import ImportData from "./ImportData";
-import { openStdin } from "process";
+import SliceObject from "../GameObjects/SliceObject";
 
 
 // build the visual of the editor here, like an activity level....
@@ -35,6 +35,7 @@ class EditorScene implements ILevel {
 
     public bgdName: string;
     protected _bgd: SpriteObject;
+    protected _foregroundContainer: ContainerObject;
     protected _zoneContainer: ContainerObject;
     protected _playgroundContainer: ContainerObject;
     protected imgList: any[] = [];
@@ -50,7 +51,7 @@ class EditorScene implements ILevel {
     protected xOffset: number = 0;
     protected yOffset: number = 0;
     protected dragging: boolean = false;
-    protected selectedGOBorder: PIXI.Graphics;
+    protected selectedGOBorder: SliceObject;
 
     protected _resize: boolean = false;
     protected _resizeOffsetX: number = 0;
@@ -128,11 +129,12 @@ class EditorScene implements ILevel {
         this._addInputManager();
 
         /* Containers */
+        this._foregroundContainer = this._goFactory.container(0, 0);
         this._playgroundContainer = this._goFactory.container(0, 0);
         this._zoneContainer = this._goFactory.container(0, 0);
     }
 
-    _createBackground() {
+    protected _createBackground() {
         Debug.warn("bgName:", this.bgdName);
         if (this.bgdName !== null || this.bgdName !== undefined || this.bgdName !== "") {
             this._bgd = this._goFactory.sprite(0, 0, this.bgdName);
@@ -142,7 +144,7 @@ class EditorScene implements ILevel {
         this._enableBackgroundDnd();
     }
 
-    _enableBackgroundDnd() {
+    protected _enableBackgroundDnd() {
         let canvas = document.getElementsByTagName("canvas");
 
         canvas[0]!.addEventListener("dragover", (event) => event.preventDefault(), true);
@@ -214,16 +216,15 @@ class EditorScene implements ILevel {
         return (`${prefix}${index}`);
     }
 
-    _panelImageClicked({ src, type, name }: { src: string, type: string, name: string }) {
+    protected _panelImageClicked({ src, type, name }: { src: string, type: string, name: string }) {
         this._addGameObject(src, type, name);
     }
 
-    protected _addGameObject(src: string, type: string, name: string, options: any = { x: 660, y: 240, width: 300, height: 200, angle: 0, originX: 0.5, originY: 0.5, scaleX: 1, scaleY: 1 }) {
+    protected _addGameObject(src: string, type: string, name: string, options: any = { x: 660, y: 240, width: 300, height: 200, angle: 0, originX: 0, originY: 0, scaleX: 1, scaleY: 1 }) {
         //Debug.warn("x y: ", name, options?.x, options?.y, options?.angle, options?.originX, options?.originY);
         let gameobj: any;
         if (type === "image") {
-            gameobj = this._goFactory.sprite(options.x, options.y, src);
-            this._playgroundContainer.addChild(gameobj);
+            gameobj = this._goFactory.sprite(options.x, options.y, src, null, this._playgroundContainer);
             gameobj.scaleHandler.setScale(options?.scaleX, options?.scaleY);
             gameobj.setOrigin(options?.originX, options?.originY);
             gameobj.angle = options.angle;
@@ -238,13 +239,13 @@ class EditorScene implements ILevel {
             this._inspector.setInputReadOnly('height', true);
         }
         else if (type === "spine") {
-            gameobj = this._goFactory.spine(options.x, options.y, name);
-            this._playgroundContainer.addChild(gameobj);
+            gameobj = this._goFactory.spine(options.x, options.y, name, this._playgroundContainer);
             gameobj.scaleHandler.setScale(options?.scaleX, options?.scaleY);
             gameobj.objType = `${type}`;
             let uniqName = this._tryName(this._spineGameObjects, `${name}`, 2);
             gameobj.uniqName = uniqName;
-            let defaultAnimState = gameobj.animations.animationNames[0];
+            gameobj.animId = 0;
+            let defaultAnimState = gameobj.animations.animationNames[gameobj.animId];
             gameobj.animations.play(`${defaultAnimState}`, true);
 
             this._spineGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
@@ -254,15 +255,16 @@ class EditorScene implements ILevel {
             this._inspector.setInputReadOnly('height', true);
         }
         else if (type === "atlas") {
-            gameobj = this._goFactory.sprite(options.x, options.y, `${name}`, 'up');
+            gameobj = this._goFactory.sprite(options.x, options.y, `${name}`, '', this._playgroundContainer);
             gameobj.scaleHandler.setScale(options?.scaleX, options?.scaleY);
             gameobj.setOrigin(options?.originX, options?.originY);
-            this._playgroundContainer.addChild(gameobj);
+
             gameobj.objType = `${type}`;
             let uniqName = this._tryName(this._atlasGameObjects, `${name}`, 2);
             gameobj.uniqName = uniqName;
+            gameobj.animId = 0;
             gameobj.animations.importAnimations(); // this will automatically parse the frames in the json file and create animations based on the prefixes
-            gameobj.animations.play(gameobj.animations.animationNames[1], true);
+            gameobj.animations.play(gameobj.animations.animationNames[gameobj.animId], true);
 
             this._atlasGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
             gameobj.objID = this._atlasGameObjects.length - 1;
@@ -271,8 +273,7 @@ class EditorScene implements ILevel {
             this._inspector.setInputReadOnly('height', true);
         }
         else if (type === "dropzone") {
-            gameobj = this._goFactory.nineSlice(options.x, options.y, 'dropzone', 4, 4, 4, 4, options.width, options.height);
-            this._zoneContainer.addChild(gameobj);
+            gameobj = this._goFactory.nineSlice(options.x, options.y, 'dropzone', 4, 4, 4, 4, options.width, options.height, this._zoneContainer);
             gameobj.objType = `${type}`;
             let uniqName = this._orderName(this._dropzoneGameObjects, `${name.charAt(0)}`, 1);
             gameobj.uniqName = uniqName;
@@ -290,8 +291,7 @@ class EditorScene implements ILevel {
             this._inspector.setInputReadOnly('height', false);
         }
         else if (type === "hotspot") {
-            gameobj = this._goFactory.nineSlice(options.x, options.y, 'hotspot', 4, 4, 4, 4, options.width, options.height);
-            this._zoneContainer.addChild(gameobj);
+            gameobj = this._goFactory.nineSlice(options.x, options.y, 'hotspot', 4, 4, 4, 4, options.width, options.height, this._zoneContainer);
             gameobj.objType = `${type}`;
             let uniqName = this._orderName(this._hotspotGameObjects, `${name.charAt(0)}`, 1);
             gameobj.uniqName = uniqName;
@@ -314,6 +314,9 @@ class EditorScene implements ILevel {
             this.selectedGO = gameobj;
             this.selectedGO.uniqName = gameobj.uniqName;
             this._inspector.setInputValue("name", this.selectedGO.uniqName);
+            this._inspector.setInputValue("zIndex", this.selectedGO.zIndex);
+            this._inspector.setInputValue("x origin", this.selectedGO.origin.x);
+            this._inspector.setInputValue("y origin", this.selectedGO.origin.y);
 
             if (gameobj.objType === 'image' || gameobj.objType === 'spine' || gameobj.objType === 'atlas') {
                 this.xOffset = gameobj.x - this._manager.input.pointer.x;
@@ -324,6 +327,15 @@ class EditorScene implements ILevel {
 
                 this._inspector.setInputReadOnly('width', true);
                 this._inspector.setInputReadOnly('height', true);
+                this._inspector.setInputReadOnly('animations-select', true);
+
+                if (gameobj.objType === 'spine' || gameobj.objType === 'atlas') {
+                    let animations = gameobj.animations.animationNames;
+                    this._inspector.setInputReadOnly('animations-select', false);
+                    this._inspector.clearSelectboxOptions('animations-select');
+                    this._inspector.appendOption('animations-select', animations);
+                    this._inspector.setSelectboxValue('animations-select', gameobj.animId);
+                }
             }
 
             if (gameobj.objType === 'dropzone' || gameobj.objType === 'hotspot') {
@@ -345,6 +357,7 @@ class EditorScene implements ILevel {
                 }
                 this._inspector.setInputReadOnly('width', false);
                 this._inspector.setInputReadOnly('height', false);
+                this._inspector.setInputReadOnly('animations-select', true);
             }
 
             this._inspector.setInputValue('width', this.selectedGO.width);
@@ -355,14 +368,14 @@ class EditorScene implements ILevel {
             this.dragging = false;
             this._resize = false;
 
-            if (this.selectedGO.followText) {
+            if ((this.selectedGO.followText !== undefined) && (gameobj.objType === 'dropzone' || gameobj.objType === 'hotspot')) {
                 this.selectedGO.followText.x = 30 + this.selectedGO.width / 2;
             }
         }, this);
     }
 
 
-    _inputChanged({ prop, val }: { prop: string, val: number }) {
+    protected _inputChanged({ prop, val }: { prop: string, val: number }) {
         Debug.info(`prop: ${prop} val: ${val}`);
 
         if (prop === "name") {
@@ -392,11 +405,16 @@ class EditorScene implements ILevel {
         else if (prop === "angle") {
             this.selectedGO.angle = Number(val);
         }
-        else if (prop === "origin x") {
-            this.selectedGO.origin.x = Number(val);
+        else if (prop === "zIndex") {
+            this.selectedGO.zIndex = Number(val);
         }
-        else if (prop === "origin y") {
-            this.selectedGO.origin.y = Number(val);
+        else if (prop === "x origin") {
+            this.selectedGO.setOrigin(Number(val), Number(this.selectedGO.origin.y));
+            this.selectedGOBorder.setOrigin(Number(val), Number(this.selectedGO.origin.y));
+        }
+        else if (prop === "y origin") {
+            this.selectedGO.setOrigin(Number(this.selectedGO.origin.x), Number(val));
+            this.selectedGOBorder.setOrigin(Number(this.selectedGO.origin.x), Number(val));
         }
         else if (prop === "width") {
             this.selectedGO.width = Number(val);
@@ -405,6 +423,11 @@ class EditorScene implements ILevel {
         else if (prop === "height") {
             this.selectedGO.height = Number(val);
             this.selectedGO.followText.x = 30 + this.selectedGO.width / 2;
+        }
+        else if (prop === "animations") {
+            this.selectedGO.animId = Number(val);
+            let currentAnim = this.selectedGO.animations.animationNames[Number(val)];
+            this.selectedGO.animations.play(`${currentAnim}`, true);
         }
     }
 
@@ -465,7 +488,7 @@ class EditorScene implements ILevel {
 
         window.addEventListener(
             "keydown", (input) => {
-                let moveUnit: number = 5;
+                let moveUnit: number = 2;
                 Debug.info('key: ', input.key);
                 if (this.selectedGO !== null || this.selectedGO !== undefined) {
                     if (input.key === "ArrowUp") {
@@ -505,7 +528,7 @@ class EditorScene implements ILevel {
                         //Debug.info('SPINES:', this._spineGameObjects);
                     }
                     if (this.selectedGO.objType === 'atlas') {
-                        this._spineGameObjects.splice(this.selectedGO.objID, 1);
+                        this._atlasGameObjects.splice(this.selectedGO.objID, 1);
                         //Debug.info('ATLASES:', this._atlasGameObjects);
                     }
                     if (this.selectedGO.objType === 'dropzone') {
@@ -532,24 +555,24 @@ class EditorScene implements ILevel {
         this._imgGameObjects.forEach((obj) => {
             gameObjectData.sprites.push({
                 name: obj.name, filename: obj.filename, x: obj.gameObj.x, y: obj.gameObj.y,
-                originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, scaleX: obj.gameObj.scaleHandler.x, scaleY: obj.gameObj.scaleHandler.y,
-                angle: obj.gameObj.angle, hitShape: ""
+                originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, scaleX: Number(obj.gameObj.scaleHandler.x), scaleY: Number(obj.gameObj.scaleHandler.y),
+                angle: obj.gameObj.angle, zIndex: Number(obj.gameObj.zIndex), hitShape: ""
             });
         });
 
         this._spineGameObjects.forEach((obj) => {
             gameObjectData.spines.push({
                 name: obj.name, filename: obj.filename, x: obj.gameObj.x, y: obj.gameObj.y,
-                originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, scaleX: obj.gameObj.scaleHandler.x, scaleY: obj.gameObj.scaleHandler.y,
-                angle: obj.gameObj.angle, hitShape: ""
+                originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, scaleX: Number(obj.gameObj.scaleHandler.x), scaleY: Number(obj.gameObj.scaleHandler.y),
+                angle: obj.gameObj.angle, zIndex: Number(obj.gameObj.zIndex), hitShape: ""
             });
         });
 
         this._atlasGameObjects.forEach((obj) => {
             gameObjectData.atlases.push({
                 name: obj.name, filename: obj.filename, x: obj.gameObj.x, y: obj.gameObj.y,
-                originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, scaleX: obj.gameObj.scaleHandler.x, scaleY: obj.gameObj.scaleHandler.y,
-                angle: obj.gameObj.angle,
+                originX: obj.gameObj.origin.x, originY: obj.gameObj.origin.y, scaleX: Number(obj.gameObj.scaleHandler.x), scaleY: Number(obj.gameObj.scaleHandler.y),
+                angle: obj.gameObj.angle, zIndex: Number(obj.gameObj.zIndex)
             });
         });
 
@@ -576,30 +599,23 @@ class EditorScene implements ILevel {
 
     addGameObjSelectionBorder(x: number, y: number, width: number, height: number): void {
         if (this.selectedGOBorder === null || this.selectedGOBorder === undefined) {
-            this.selectedGOBorder = this._pxGame.addRectangle(
-                x,
-                y,
-                width,
-                height,
-                0xCF19B9,
-                0,
-                2,
-                0x77FE79,
-                1
-            );
-            this.selectedGOBorder.pivot.set(this.selectedGO.x + (this.selectedGO.width / 2), this.selectedGO.y + (this.selectedGO.height / 2));
+            this.selectedGOBorder = this._goFactory.nineSlice(x, y, 'active_object', 4, 4, 4, 4, width, height, this._foregroundContainer);
+            this.selectedGOBorder.setOrigin(Number(this.selectedGO.origin.x), Number(this.selectedGO.origin.y));
         }
         else {
+            this.selectedGOBorder.setOrigin(Number(this.selectedGO.origin.x), Number(this.selectedGO.origin.y));
             this.selectedGOBorder.alpha = 1;
             this.selectedGOBorder.visible = true;
         }
     }
 
     protected _addImagesRow(): void {
-        let imgListFiltered = this._loader.resList.filter(res => res.type === 'img' && res.ext === 'png');
-        imgListFiltered.forEach(val => this.imgList.push({ src: val.url, name: val.basename }));
+        (<any>window).electronImgList.forEach((val: any) => {
+            if (val.indexOf('.png') != -1) {
+                this.imgList.push({ src: `assets/img/${val}`, name: val.replace(/\.[^/.]+$/, "") });
+            }
+        });
 
-        Debug.info('IMGD:', this.imgList);
         this._accordion.addRow('Images', 'image', ...this.imgList);
     }
 
@@ -641,7 +657,7 @@ class EditorScene implements ILevel {
         let atlasPixels: any = [];
         let atlasResults: any[] = [];
         atlasList.forEach((val) => {
-            let atlasSrc = this._goFactory.sprite(-500, -500, `${val.name.replace(/\.[^/.]+$/, "")}`, 'up');
+            let atlasSrc = this._goFactory.sprite(-500, -500, `${val.name.replace(/\.[^/.]+$/, "")}`, '');
             setTimeout(() => atlasSrc.alpha = 0, 50); // we don't want to show not active spine objects, this trick did the work
             atlasPixels.push(atlasSrc.data);
         });
@@ -689,11 +705,12 @@ class EditorScene implements ILevel {
 
             this._inspector.setInputValue('x', this.selectedGO.x);
             this._inspector.setInputValue('y', this.selectedGO.y);
-            this._inspector.setInputValue('origin x', this.selectedGO.origin.x);
-            this._inspector.setInputValue('origin y', this.selectedGO.origin.y);
+            /* this._inspector.setInputValue('origin x', this.selectedGO.origin.x);
+            this._inspector.setInputValue('origin y', this.selectedGO.origin.y); */
             this._inspector.setInputValue('scale x', this.selectedGO.scaleHandler.x);
             this._inspector.setInputValue('scale y', this.selectedGO.scaleHandler.y);
             this._inspector.setInputValue('angle', this.selectedGO.angle);
+            this._inspector.setInputValue('zIndex', this.selectedGO.zIndex);
         }
 
         if (this._resize && (this.selectedGO.objType === 'dropzone' || this.selectedGO.objType === 'hotspot')) {

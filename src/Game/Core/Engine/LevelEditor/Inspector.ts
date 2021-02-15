@@ -29,7 +29,9 @@ class Inspector {
         this._addGroupNumberInput('scale x', 'scale y');
         this._addGroupNumberInput('width', 'height');
         this._addGroupNumberInput('x origin', 'y origin');
+        this._addSelectbox('animations', []);
         this._addNumberInput('angle', 0, 0, 360);
+        this._addNumberInput('zIndex', 0, 0, 999);
 
         this._drag(this._header, this._container);
     }
@@ -48,6 +50,11 @@ class Inspector {
         if (input) {
             (input as HTMLFormElement).value = val;
         }
+    }
+
+    public setSelectboxValue(name: string, val: number) {
+        let selectedOption: any = document.getElementById(`${name}`);
+        selectedOption.selectedIndex = Number(val);
     }
 
     /**
@@ -121,6 +128,42 @@ class Inspector {
         span.appendChild(input);
 
         input.addEventListener('input', () => this._events.emit('input_changed', { prop: `${name}`, val: (input as HTMLInputElement).value }));
+    }
+
+    protected _addSelectbox(name: string, optionList: string[]): void {
+        let span = document.createElement('span');
+        span.setAttribute('class', 'inspector-input');
+        span.innerHTML = `${name}: `;
+        this._container.appendChild(span);
+
+        let selectList = document.createElement("select");
+        selectList.setAttribute("id", `${name}-select`);
+        span.appendChild(selectList);
+
+        for (let i = 0; i < optionList.length; i++) {
+            let option = document.createElement("option");
+            option.setAttribute("value", optionList[i]);
+            option.text = optionList[i];
+            selectList.appendChild(option);
+        }
+
+        selectList.onchange = () => this._events.emit('input_changed', { prop: `${name}`, val: selectList.selectedIndex });
+    }
+
+    public clearSelectboxOptions(name: string) {
+        let selectbox: any = document.getElementById(`${name}`);
+        selectbox.innerHTML = '';
+    }
+
+    public appendOption(name: string, newOptions: string[]) {
+        let selectbox: any = document.getElementById(`${name}`);
+
+        for (let i = 0; i < newOptions.length; i++) {
+            let option = document.createElement("option");
+            option.setAttribute("value", newOptions[i]);
+            option.text = newOptions[i];
+            selectbox.appendChild(option);
+        }
     }
 
     private _drag(label: HTMLDivElement, dragContainer: HTMLDivElement): void {
