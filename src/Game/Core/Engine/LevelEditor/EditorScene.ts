@@ -16,6 +16,7 @@ import ContainerObject from "../GameObjects/ContainerObject";
 import TextObject from "../GameObjects/TextObject";
 import ImportData from "./ImportData";
 import SliceObject from "../GameObjects/SliceObject";
+//import GameConfig from '../GameConfig';
 
 
 // build the visual of the editor here, like an activity level....
@@ -136,11 +137,19 @@ class EditorScene implements ILevel {
 
     protected _createBackground() {
         Debug.warn("bgName:", this.bgdName);
-        if (this.bgdName !== null || this.bgdName !== undefined || this.bgdName !== "") {
+
+        Debug.exposeGlobal(this.bgdName, 'bgdName');
+        if ((this.bgdName !== null) && (this.bgdName !== undefined) && this.bgdName !== "") {
             this._bgd = this._goFactory.sprite(0, 0, this.bgdName);
             this._bgd.setOrigin(0);
         }
+        else {
+            let bgdFiltered = this._loader.resList.filter(res => res.ext === 'jpg');
+            this._bgd = this._goFactory.sprite(0, 0, bgdFiltered[0].name);
+            this._bgd.setOrigin(0);
+        }
 
+        this._forceBackgroundSize();
         this._enableBackgroundDnd();
     }
 
@@ -163,12 +172,20 @@ class EditorScene implements ILevel {
                             this._loader.download().then(() => {
                                 let texture = this._loader.getTexture(`${reader.result}`, null, false);
                                 this._bgd.changeTexture(texture);
+                                this._forceBackgroundSize();
                             });
                         }
                     }
                 }
             }
         }, true);
+    }
+
+    protected _forceBackgroundSize(): void {
+        if (this._bgd) {
+            this._bgd.width = 1920;
+            this._bgd.height = 1080;
+        }
     }
 
     protected _tryName(arr: any[], prefix: string, index: number): string {
