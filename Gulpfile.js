@@ -49,7 +49,6 @@ const config = {
             'GameConfig',
             'ScaleManager',
             'Game',
-            'TweenManager',
             'LevelEditor',
             'EditorScene'
         ],

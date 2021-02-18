@@ -2,25 +2,29 @@ import Tween from "../Data/Tween";
 import Easing from './GameObjects/Components/Easing';
 import Debug from "./Debug";
 import Loop from "./Loop";
+import Events from "./Events";
 
 /**
  * @description responsible for managing tweens.
  */
 class TweenManager {
-    private _tween: Tween;
+    private _tweenFact: Tween;
+    protected _events: Events;
     private _tweens: Tween[];
     private _easing = Easing;
     private _loop: Loop;
 
-    constructor(tween: Tween, loop: Loop) {
-        this._tween = tween;
+    constructor(tween: Tween, loop: Loop, events: Events) {
+        this._tweenFact = tween;
         this._loop = loop;
+        this._events = events;
         this._tweens = [];
         loop.addFunction(this.update, this); // TweenManager is singleton, so adding looping call directly makes most sense
+        this._events.on('shutdown', this._shutdown, this);
     }
 
     createNew() {
-        return new TweenManager(this._tween.createNew(), this._loop);
+        return new TweenManager(this._tweenFact, this._loop, this._events);
     }
 
     get Easing() {
@@ -42,7 +46,7 @@ class TweenManager {
             Debug.error('cannot create 2 tweens with same name. cancel adding ', tweenName);
             return tween;
         }
-        tween = this._tween.createNew();
+        tween = this._tweenFact.createNew();
         tween.init(tweenName, easing, object, repeat, delay);
         Debug.info('created and initiated ', tweenName);
         this._tweens.push(tween);
@@ -91,7 +95,7 @@ class TweenManager {
         let tween = this._getTween(name);
         if (tween != null) return tween;
         Debug.error('cannot return a nonexistant tween of name: ', name);
-        return this._tween.createNew();
+        return this._tweenFact.createNew();
     }
 
     /**
@@ -190,6 +194,10 @@ class TweenManager {
 
         Debug.warn('no tween found with name: ', name);
         return null; // just to satisfy the lint
+    }
+
+    protected _shutdown(){
+        this._tweens = [];
     }
 
 }

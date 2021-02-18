@@ -158,7 +158,7 @@ class GOFactory {
      * @param lFile levelFile object? If true, the 'texture' will be the 'filename' property of the respective levelFile data object. Will be 'transformed' automatically.
      */
     public button(x?: number, y?: number, texture?: string, frame?: string, anims?: { up: string, down: string, over: string, out: string }, onDown?: Function,
-        context?: any, onUp?: Function, parent?: IParentChild, lFile: boolean = false): Button {
+        context?: any, onUp?: Function, onOver?: Function, parent?: IParentChild, lFile: boolean = false): Button {
         let lfObj: any;
         if (lFile && typeof texture == 'string') {
             let root = (frame == null) ? 'sprites' : 'atlases';
@@ -168,7 +168,7 @@ class GOFactory {
         if (x != null && y != null && texture != null && frame && onDown) {
             // let pos = this._scaleManager.getXY(x, y);
             // Debug.info('pos: ', pos);
-            let go = this._button.createNew(x, y, texture, frame, anims, onDown, context, onUp, parent);
+            let go = this._button.createNew(x, y, texture, frame, anims, onDown, context, onUp, onOver, parent);
             if (lFile) this._transformLevelFileObject(go.sprite, lfObj);
             return go;
         } else {

@@ -12,13 +12,15 @@ class Button {
     protected _onDownCallback: Function | null;
     protected _context: any;
     protected _onUpCallback: Function | null;
+    protected _onOverCallback: Function | null;
     protected animNames: any;
 
     constructor(sprite: SpriteObject) {
         this.sprite = sprite;
     }
 
-    public init(x: number, y: number, atlas: string, frame: string, animNames: { up: string, down: string, over: string, out: string }, onDown: Function | null = null, context: any, onUp: Function | null = null, parent?: IParentChild) {
+    public init(x: number, y: number, atlas: string, frame: string, animNames: { up: string, down: string, over: string, out: string }, onDown: Function | null = null, 
+        context: any, onUp: Function | null = null, onOver: Function | null = null, parent?: IParentChild) {
         
         this.sprite = this.sprite.createNew(x, y, atlas, frame, parent);
         this.animNames = animNames;
@@ -31,6 +33,7 @@ class Button {
         this._onDownCallback = onDown;
         this._context = context;
         this._onUpCallback = onUp;
+        this._onOverCallback = onOver;
 
         this.enableInput();
         this.addInputListener('pointerdown', this._onDown, this);
@@ -98,9 +101,9 @@ class Button {
         this.sprite.animations.addAnimation(name, this.sprite.animations.autoGenFrames(name));
     }
 
-    public createNew(x: number, y: number, atlas: string, frame: string, animNames: any, onDown: Function, context: any, onUp: Function | null = null, parent?: IParentChild): Button {
+    public createNew(x: number, y: number, atlas: string, frame: string, animNames: any, onDown: Function, context: any, onUp: Function | null = null, onOver: Function | null = null, parent?: IParentChild): Button {
         let button = this.createEmpty();
-        button.init(x, y, atlas, frame, animNames, onDown, context, onUp, parent);
+        button.init(x, y, atlas, frame, animNames, onDown, context, onUp, onOver, parent);
         return button;
     }
 
@@ -161,6 +164,11 @@ class Button {
     private _onOver() {
         // Debug.info('onOver called for: ', this);
         this.playAnimation(this.animNames.over);
+        if (this._onOverCallback !== null) {
+            //  Debug.info('onUpCallback not null');
+            Debug.info('onOver: ', this._onOverCallback);
+            this._onOverCallback.bind(this._context)();
+        }
     }
 
     private _onOut() {
