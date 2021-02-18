@@ -16,6 +16,7 @@
     padding: 10px;
     width: 100%;
     border: none;
+    text-indent: 30px;
     text-align: center;
     outline: none;
     font-size: 18px;
@@ -26,6 +27,23 @@
 
 .active, .accordion:hover {
     background-color: #46abee;
+}
+
+.collapse-btn {
+    float: right;
+    cursor: pointer;
+    transition-duration: 0.3s;
+    transition-property: transform;
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+}
+
+.collapse-btn-reverse {
+    float: right;
+    transition-duration: 0.3s;
+    transition-property: transform;
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
 }
 
 .panel {
