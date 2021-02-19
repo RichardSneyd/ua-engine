@@ -48,8 +48,14 @@ abstract class BaseMenu extends BaseScene {
     }
 
     start() {
-        this._goFactory.sprite(0, 0, this._bgdName, null, this._background);
+        this._bgd = this._goFactory.sprite(0, 0, this._bgdName, null, this._background);
+        this._bgd.width = this._game.width();
+        this._bgd.height = this._game.height();
         super.start();
+    }
+
+    shutdown(){
+        super.shutdown();
     }
 }
 

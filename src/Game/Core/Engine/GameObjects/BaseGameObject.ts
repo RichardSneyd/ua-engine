@@ -21,6 +21,7 @@ import IPoint from "../../Geom/IPoint";
  * @description A sprite game object class. 
  */
 abstract class BaseGameObject implements IGameObject {
+    protected _name: string;
     protected _screen: Screen;
     protected _core: ObjectCore;
     protected _input: InputHandler;
@@ -48,6 +49,14 @@ abstract class BaseGameObject implements IGameObject {
        /*  this._extract.toPixels().then((pixels)=>{
             this._pixels = pixels;
         }) */
+    }
+
+    get name(): string {
+        return this._name;
+    }
+
+    set name(name: string) {
+        this._name = name;
     }
 
     /**

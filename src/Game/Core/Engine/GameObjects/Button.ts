@@ -143,10 +143,10 @@ class Button {
     }
 
     private _onDown() {
-        Debug.info('onDown called for: ', this);
+       // Debug.info('onDown called for: ', this);
         this.playAnimation(this.animNames.down);
         if(this._onDownCallback !== null) {
-            Debug.info('onDownCallback not null');
+           // Debug.info('onDownCallback not null');
             this._onDownCallback.bind(this._context)();
         }
     }

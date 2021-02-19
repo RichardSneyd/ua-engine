@@ -145,7 +145,8 @@ class Game {
 
   /**
    * @description Starts the specified activity. Calls 'shutdown' event first.
-   * @param the activity type (object) to start. Takes the object itself, or it's name in the form of a string
+   * @param scriptName the activity to start. Takes the object itself, or it's name in the form of a string
+   * @param act optional. The specific activity to call (actual object or name of)
    */
   public startActivity(scriptName: string, act: IActivity | string | null = null) {
     if (scriptName.includes('menu')) { act = this.product.menuSystem }

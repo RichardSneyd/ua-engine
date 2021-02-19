@@ -84,6 +84,15 @@ abstract class BaseScene implements IScene {
         this._loop.removeFunction(this.update, this);
     }
 
+    /**
+    * 
+    * @param code the name of the scene to go to
+    */
+    protected _goto(code: string) {
+        //   Debug.info('clicked on ' + code);
+        this._game.startActivity(code);
+    }
+
 }
 
 export default BaseScene;

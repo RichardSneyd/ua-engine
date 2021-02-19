@@ -85,7 +85,7 @@ abstract class AbstractAppMain {
      * @param texture the name of the img resource to use for the texture
      */
     protected _buildNavBar(x: number, y: number, texture: string){
-        this._bottomBar = this._goFactory.menu(x, y, texture, this._HUD);
+        this._bottomBar = this._goFactory.menu(x, y, texture, this._HUD, false);
     }
 
     showNavBar() {

@@ -101,6 +101,8 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if (!configRow) configRow = this._manager.script.rows[0];
         if (configRow.config.hasOwnProperty('bgd')) {
             this._bgd = this._goFactory.sprite(0, 0, configRow.config.bgd, null, this._background);
+            this._bgd.width = this._game.width();
+            this._bgd.height = this._game.height();
         }
         else {
             Debug.error('no bgd property in config cell of first row');

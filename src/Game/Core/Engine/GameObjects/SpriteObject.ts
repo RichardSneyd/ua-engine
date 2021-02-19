@@ -19,6 +19,7 @@ import ExtractComponent from "./Components/ExtractComponent";
  */
 class SpriteObject extends BaseGameObject {
     protected _animationManager: FrameAnimationManager;
+    protected _name: string;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
         scaleHandler: ScaleHandler, animationManager: FrameAnimationManager, tweenComponent: TweenComponent, extract: ExtractComponent) {
@@ -28,6 +29,7 @@ class SpriteObject extends BaseGameObject {
 
     public init(x: number, y: number, texture: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null): void {
         this.data = this._screen.createSprite(x, y, texture, frame);
+        if(typeof texture == 'string') this._name = texture;
         if (frame != null) this._core.atlas = texture;
         this._core.init(this, x, y, texture, this._update);
         super.init();

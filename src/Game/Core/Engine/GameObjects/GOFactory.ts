@@ -169,7 +169,7 @@ class GOFactory {
             // let pos = this._scaleManager.getXY(x, y);
             // Debug.info('pos: ', pos);
             let go = this._button.createNew(x, y, texture, frame, anims, onDown, context, onUp, onOver, parent);
-            if (lFile) this._transformLevelFileObject(go.sprite, lfObj);
+            if (lFile) {}this._transformLevelFileObject(go.sprite, lfObj);
             return go;
         } else {
             return this._button.createEmpty();
@@ -302,6 +302,7 @@ class GOFactory {
     */
     protected _transformLevelFileObject(gameObject: BaseGameObject, lfObject: any) {
         gameObject.setOrigin(lfObject.originX, lfObject.originY);
+        gameObject.name = lfObject.name;
         gameObject.x = lfObject.x;
         gameObject.y = lfObject.y;
         gameObject.angle = lfObject.angle;
