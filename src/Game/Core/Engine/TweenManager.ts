@@ -4,6 +4,7 @@ import Debug from "./Debug";
 import Loop from "./Loop";
 import Events from "./Events";
 
+
 /**
  * @description responsible for managing tweens.
  */
@@ -31,6 +32,7 @@ class TweenManager {
         return this._easing;
     }
 
+
     /**
      * @description Add a new tween
      * @param tweenName the name of the tween. You will referense this when playing it in future
@@ -54,6 +56,7 @@ class TweenManager {
         return tween;
     }
 
+
     /**
      * @description Remove a tween
      * @param tween the tween to remove (name of the tween, or the actual object)
@@ -69,6 +72,7 @@ class TweenManager {
         tween.remove();
         this._tweens.splice(this._tweens.indexOf(tween), 1);
     }
+
 
     /**
      * @description Play a tween (via the tweens name)
@@ -98,6 +102,7 @@ class TweenManager {
         return this._tweenFact.createNew();
     }
 
+    
     /**
      * @description A method that creates a tween, plays it once, and deletes it all all-in-one
      * @param easing the type of easing to use

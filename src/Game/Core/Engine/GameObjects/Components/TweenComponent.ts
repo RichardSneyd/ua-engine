@@ -1,6 +1,7 @@
 import TweenManager from "../../TweenManager";
 import Tween from "../../../Data/Tween";
 
+
 /**
  * @description Handles all tweening operations for the attached GameObject. Interfaces with TweenManager under the hood.
  */
@@ -26,6 +27,7 @@ class TweenComponent {
         return this._tweenManager.Easing;
     }
 
+
     /**
      * @description add a tween to this GameObject
      * @param easing The easing Algorithm to use.
@@ -38,6 +40,7 @@ class TweenComponent {
         return this._tweenManager.add(easing, this._go, repeat, delay, tweenName);
     }
 
+
     /**
      * @description remove a tween
      * @param tween the tween to remove (name of the tween, or the actual object)
@@ -45,6 +48,7 @@ class TweenComponent {
     public remove(tween: string | Tween) {
        this._tweenManager.remove(tween);
     }
+
 
     /**
      * @description Play a tween (via the tweens name)
@@ -61,6 +65,7 @@ class TweenComponent {
        return this._tweenManager.getTween(name);
     }
 
+    
     /**
      * @description a method that creates a tween, plays it once, and deletes it all all-in-one
      * @param easing the type of easing to use
