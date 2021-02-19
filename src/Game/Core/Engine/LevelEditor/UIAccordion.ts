@@ -300,7 +300,13 @@ class UIAccordion {
             val.imgEl.addEventListener("click", () => {
                 removeAllFirst();
                 //img[i].classList.toggle("selected");
-                this._events.emit('gameobj_clicked', { src: val.src, type: val.type, name: val.name });
+                if (val.type === 'atlas' || val.type === 'spine') { // we dont want src as base64 code
+                    this._events.emit('gameobj_clicked', { src: val.name, type: val.type, name: val.name });
+                }
+                else {
+                    this._events.emit('gameobj_clicked', { src: val.src, type: val.type, name: val.name });
+                }
+
             });
         });
     }

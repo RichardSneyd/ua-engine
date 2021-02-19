@@ -241,6 +241,7 @@ class EditorScene implements ILevel {
         //Debug.warn("x y: ", name, options?.x, options?.y, options?.angle, options?.originX, options?.originY);
         let gameobj: any;
         if (type === "image") {
+            Debug.info(src, name);
             gameobj = this._goFactory.sprite(options.x, options.y, src, null, this._playgroundContainer);
             gameobj.scaleHandler.setScale(options?.scaleX, options?.scaleY);
             gameobj.setOrigin(options?.originX, options?.originY);
@@ -258,7 +259,8 @@ class EditorScene implements ILevel {
             this._inspector.setInputReadOnly('height', true);
         }
         else if (type === "spine") {
-            gameobj = this._goFactory.spine(options.x, options.y, name, this._playgroundContainer);
+            //Debug.info(src, name);
+            gameobj = this._goFactory.spine(options.x, options.y, `${src}`, this._playgroundContainer);
             gameobj.scaleHandler.setScale(options?.scaleX, options?.scaleY);
             gameobj.setOrigin(options?.originX, options?.originY);
             gameobj.zIndex = options.zIndex;
@@ -279,7 +281,8 @@ class EditorScene implements ILevel {
             this._inspector.setInputReadOnly('height', true);
         }
         else if (type === "atlas") {
-            gameobj = this._goFactory.sprite(options.x, options.y, `${name}`, '', this._playgroundContainer);
+            //Debug.info(src, name);
+            gameobj = this._goFactory.sprite(options.x, options.y, `${src}`, '', this._playgroundContainer);
             gameobj.scaleHandler.setScale(options?.scaleX, options?.scaleY);
             gameobj.setOrigin(options?.originX, options?.originY);
             gameobj.zIndex = options.zIndex;
