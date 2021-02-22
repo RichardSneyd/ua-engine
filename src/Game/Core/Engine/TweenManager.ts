@@ -5,9 +5,7 @@ import Loop from "./Loop";
 import Events from "./Events";
 
 
-/**
- * @description responsible for managing tweens.
- */
+
 class TweenManager {
     private _tweenFact: Tween;
     protected _events: Events;
