@@ -2,9 +2,7 @@ import TweenManager from "../../TweenManager";
 import Tween from "../../../Data/Tween";
 
 
-/**
- * @description Handles all tweening operations for the attached GameObject. Interfaces with TweenManager under the hood.
- */
+
 class TweenComponent {
     private _tweenManager: TweenManager;
     private _tween: Tween; private _go: any; private _initialized: boolean;

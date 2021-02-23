@@ -326,7 +326,7 @@ class Loader {
    * @param onDone (optional) called when loading is complete
    */
   public download() {
-    if(this.loading) Debug.error('cant start new download before previous completes');
+    if(this.loading) {Debug.error('cant start new download before previous completes')};
     return new Promise((resolve: Function, reject: Function) => {
       let _imgsDone: boolean = false, _sndsDone: boolean = false;
 
@@ -335,7 +335,8 @@ class Loader {
       //  Debug.info(this._newResList);
       if (this._newResList.length == 0) {
         this._startedLoading = false;
-        resolve('loading completed');
+        Debug.info('%cno new resources, skipping, resolve promise...', Debug.STYLES.GOOD)
+        resolve({ status: true });
         return;
       }
 
@@ -355,8 +356,9 @@ class Loader {
     if (this._downloadComplete) {
       this._newResList = [];
       this._startedLoading = false;
+      Debug.info('%cdownload complete, resolve promise...', Debug.STYLES.GOOD)
       resolve({ status: true });
-      Debug.info('%cdownload complete, promise RESOLVED', Debug.STYLES.GOOD)
+      
     } else {
       setTimeout(() => {
         this._sendAllDone(resolve, reject);
