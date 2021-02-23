@@ -16,7 +16,7 @@ abstract class AbstractAppMain {
     protected _loader: Loader;
     protected _levelManager: LevelManager;
     protected _goFactory: GOFactory;
-    protected _bottomBar: MenuBar;
+    protected _activityBar: MenuBar;
     protected _defaultActivity: IActivity;
     protected _urlParams: URLSearchParams;
     protected _loadCont: ContainerObject;
@@ -34,21 +34,18 @@ abstract class AbstractAppMain {
         this._game.addActivity(defaultActivity);
 
         Debug.exposeGlobal(this, 'product');
-
-        
-            this._game.startGame().then(() => {
-              //  this._init();
-            });
-        
+        this._game.startGame().then(() => {
+            //  this._init(); // don't call init here, it's triggered by 'world_initialized' event
+        });
         this._levelManager.globalEvents.once('world_initialized', this._init, this);
     }
 
     protected _init() {
-        Debug.info('init called in AbstractAppMain');
+      //  Debug.info('init called in AbstractAppMain');
         this._retrieveURLParams();
-        Debug.info('about to create HUD...');
+      //  Debug.info('about to create HUD...');
         this._HUD = this._goFactory.container(0, 0);
-        Debug.info('hud cont: ', this._HUD);
+     //   Debug.info('hud cont: ', this._HUD);
         this._addToOverlay(this._HUD);
         this._initialized = true;
         this._boot();
@@ -58,12 +55,12 @@ abstract class AbstractAppMain {
      * @description Use this 'boot' method to pre-preload assets you need loaded at the VERY start, such as a 'load_bar' or a UI element etc. Override and call super._boot() last.
      */
     protected _boot() {
-        Debug.info('called _boot in AbstractAppMain');
-        this._loader.download().then(() => { 
-            this._levelManager.globalEvents.timer(()=>{
-                this._levelManager.globalEvents.emit('shutdown'); 
+     //   Debug.info('called _boot in AbstractAppMain');
+        this._loader.download().then(() => {
+         //   this._levelManager.globalEvents.timer(() => {
+                this._levelManager.globalEvents.emit('shutdown');
                 this._preload();
-            } , 200, this); // try delaying to see if that fixes loader issue
+         //   }, 200, this); // try delaying to see if that fixes loader issue
         });
     }
 
@@ -73,22 +70,21 @@ abstract class AbstractAppMain {
     */
     protected _preload() {
         this._loader.download().then(() => { this._start() });
-        //    this._start();
     }
 
     /**
      * @description 'start' the app. If there is a scene property in URL, load that. Otherwise, load 'main_menu'.
      */
     protected _start() {
-        this._levelManager.globalEvents.on('show_nav_bar', this.showNavBar, this);
-        this._levelManager.globalEvents.on('hide_nav_bar', this.hideNavBar, this);
+        this._levelManager.globalEvents.on('show_nav_bar', this.showActivityBar, this);
+        this._levelManager.globalEvents.on('hide_nav_bar', this.hideActivityBar, this);
         let scene = this.getURLSceneCode();
         if (scene == null) scene = 'main_menu';
         if (scene.includes('menu')) this._game.startActivity(scene, this._defaultActivity);
         else this._game.startActivity(scene);
     }
 
-    createLoadScreen(bgd: string, loadStatic: string, loadBar: string, yScreenOffset: number = 200, xOffset: number = 20, yOffset: -5){
+    createLoadScreen(bgd: string, loadStatic: string, loadBar: string, yScreenOffset: number = 200, xOffset: number = 20, yOffset: -5) {
         this._loadCont = this._goFactory.container(0, 0, this._HUD);
         this._goFactory.sprite(0, 0, bgd, null, this._loadCont);
         let staticBar = this._goFactory.sprite(this._game.width() / 2, this._game.height() / 2 + yScreenOffset, loadStatic, null, this._loadCont);
@@ -99,19 +95,19 @@ abstract class AbstractAppMain {
         this._levelManager.globalEvents.on('download_complete', this.hideLoadScreen, this);
         this._levelManager.globalEvents.on('download_progress', this.updateLoadBar, this);
         Debug.exposeGlobal(this._loadCont, 'loadScreen');
-       // this.showLoadScreen();
+        // this.showLoadScreen();
     }
 
-    showLoadScreen(){
+    showLoadScreen() {
         this._loadCont.visible = true;
     }
 
-    hideLoadScreen(){
+    hideLoadScreen() {
         this._loadCont.visible = false;
     }
 
-    updateLoadBar(){
-        if(this._loadBar) this._loadBar.scaleHandler.x = this._loader.progressPercentage / 100;
+    updateLoadBar() {
+        if (this._loadBar) this._loadBar.scaleHandler.x = this._loader.progressPercentage / 100;
     }
 
     /**
@@ -120,16 +116,16 @@ abstract class AbstractAppMain {
      * @param y the y coordinate
      * @param texture the name of the img resource to use for the texture
      */
-    protected _buildNavBar(x: number, y: number, texture: string) {
-        this._bottomBar = this._goFactory.menu(x, y, texture, this._HUD, false);
+    protected _buildActivityBar(x: number, y: number, texture: string) {
+        this._activityBar = this._goFactory.menu(x, y, texture, this._HUD, false);
     }
 
-    showNavBar() {
-        if (this._bottomBar) { this._bottomBar.show(); } else Debug.warn('bottomBar is undefined');
+    showActivityBar() {
+        if (this._activityBar) { this._activityBar.show(); } else Debug.warn('bottomBar is undefined');
     }
 
-    hideNavBar() {
-        if (this._bottomBar) { this._bottomBar.hide(); } else Debug.warn('bottomBar is undefined');
+    hideActivityBar() {
+        if (this._activityBar) { this._activityBar.hide(); } else Debug.warn('bottomBar is undefined');
     }
 
     prevAct() {

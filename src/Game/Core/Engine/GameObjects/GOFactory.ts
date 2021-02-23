@@ -169,7 +169,7 @@ class GOFactory {
             // let pos = this._scaleManager.getXY(x, y);
             // Debug.info('pos: ', pos);
             let go = this._button.createNew(x, y, texture, frame, anims, onDown, context, onUp, onOver, parent);
-            if (lFile) {}this._transformLevelFileObject(go.sprite, lfObj);
+            if (lFile) {this._transformLevelFileObject(go.sprite, lfObj)};
             return go;
         } else {
             return this._button.createEmpty();

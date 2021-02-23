@@ -332,7 +332,7 @@ class Loader {
       let _imgsDone: boolean = false, _sndsDone: boolean = false;
 
       // if no new resource being loaded for this activity, just resolve, as there is nothing to wait for
-      Debug.trace('%ctotal new resources: ' + this._newResList.length, Debug.STYLES.GOOD);
+      Debug.info('%ctotal new resources: ' + this._newResList.length, Debug.STYLES.GOOD);
       //  Debug.info(this._newResList);
       if (this._newResList.length == 0) {
         this._startedLoading = false;
