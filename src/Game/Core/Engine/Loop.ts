@@ -43,7 +43,7 @@ class Loop {
     if (fObj == null) {
       let o = this._newFunObj(f, context);
       this._fList.push(o);
-      Debug.info(`%csuccessfully added listener with context %s to Loop`, Debug.STYLES.GOOD, context);
+    //  Debug.info(`%csuccessfully added listener with context %s to Loop`, Debug.STYLES.GOOD, context);
     } else {
       Debug.error("trying to add same function %s and context %s to loop twice: ", f, context);
     }
@@ -120,7 +120,7 @@ class Loop {
       if (f == this._fList[c].function && this._fList[c].context == context) return this._fList[c];
     }
 
-    Debug.info("No existing loop listener with context %s...", context);
+   // Debug.info("No existing loop listener with context %s...", context);
     return null;
   }
 

@@ -325,13 +325,14 @@ class Loader {
    * @description Download everything in the load queue. This must be done before the activity can start.
    * @param onDone (optional) called when loading is complete
    */
-  public download() {
+  public download() : Promise<any>  {
     if(this.loading) {Debug.error('cant start new download before previous completes')};
     return new Promise((resolve: Function, reject: Function) => {
+      this._events.emit('download_start');
       let _imgsDone: boolean = false, _sndsDone: boolean = false;
 
       // if no new resource being loaded for this activity, just resolve, as there is nothing to wait for
-      Debug.info('%ctotal new resources: ' + this._newResList.length, Debug.STYLES.GOOD);
+      Debug.trace('%ctotal new resources: ' + this._newResList.length, Debug.STYLES.GOOD);
       //  Debug.info(this._newResList);
       if (this._newResList.length == 0) {
         this._startedLoading = false;
@@ -399,6 +400,7 @@ class Loader {
 
     if (this._downloadComplete == false && this._startedLoading == true) {
       //  Debug.info('downloading');
+      this._events.emit('download_progress');
       for (let c = 0; c < this._resList.length; c++) {
         let res = this._resList[c];
 
@@ -410,6 +412,7 @@ class Loader {
       }
       this._downloadComplete = isLoaded;
       if (this._downloadComplete) {
+        this._events.emit('download_complete');
         Debug.info('%cdownload complete!', Debug.STYLES.GOOD);
         this._startedLoading = false;
       }

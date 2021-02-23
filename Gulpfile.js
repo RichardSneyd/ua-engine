@@ -50,7 +50,7 @@ const config = {
             'ScaleManager',
             'Game',
             'LevelEditor',
-            'EditorScene'
+            'EditorScene',
         ],
         ignore: [
             'UAENGINE',

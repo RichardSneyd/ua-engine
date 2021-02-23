@@ -21,6 +21,7 @@ abstract class AbstractAppMain {
     protected _urlParams: URLSearchParams;
     protected _loadCont: ContainerObject;
     protected _loadBar: SpriteObject;
+    protected _initialized: boolean;
 
     constructor(game: Game, defaultActivity: IActivity, goFactory: GOFactory, loader: Loader, levelManager: LevelManager) {
         this._game = game;
@@ -28,36 +29,42 @@ abstract class AbstractAppMain {
         this._loader = loader;
         this._levelManager = levelManager;
         this._defaultActivity = defaultActivity;
+        this._initialized = false;
         this._game.setProduct(this);
         this._game.addActivity(defaultActivity);
 
         Debug.exposeGlobal(this, 'product');
 
-        if (this._game.gameStarted) {
-            this._init();
-        }
-        else {
+        
             this._game.startGame().then(() => {
-                this._init();
+              //  this._init();
             });
-        }
-
+        
+        this._levelManager.globalEvents.once('world_initialized', this._init, this);
     }
 
     protected _init() {
+        Debug.info('init called in AbstractAppMain');
         this._retrieveURLParams();
-        this._boot();
         Debug.info('about to create HUD...');
         this._HUD = this._goFactory.container(0, 0);
         Debug.info('hud cont: ', this._HUD);
         this._addToOverlay(this._HUD);
+        this._initialized = true;
+        this._boot();
     }
 
     /**
      * @description Use this 'boot' method to pre-preload assets you need loaded at the VERY start, such as a 'load_bar' or a UI element etc. Override and call super._boot() last.
      */
     protected _boot() {
-        this._loader.download().then(() => { this._preload() });
+        Debug.info('called _boot in AbstractAppMain');
+        this._loader.download().then(() => { 
+            this._levelManager.globalEvents.timer(()=>{
+                this._levelManager.globalEvents.emit('shutdown'); 
+                this._preload();
+            } , 200, this); // try delaying to see if that fixes loader issue
+        });
     }
 
     /**

@@ -1992,7 +1992,8 @@ function () {
 
 
     if (this.loading && (!options || !options.parentResource)) {
-      throw new Error('Cannot add resources while the loader is running.');
+         throw new Error('Cannot add resources while the loader is running: ' + name);
+    // console.warn("shouldn't add resources while the loader is running: ", name); // this is a patch to stop errors being thrown when we try to add a resource that already exists.
     } // check if resource already exists.
 
    // console.trace('adding resource, does it already exist?...', name);
