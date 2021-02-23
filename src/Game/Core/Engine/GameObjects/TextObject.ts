@@ -68,6 +68,10 @@ class TextObject extends BaseGameObject {
             return this._letters;
         }
     }
+
+    destroy(){
+        super.destroy();
+    }
 }
 
 export default TextObject;
