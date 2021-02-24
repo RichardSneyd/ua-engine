@@ -18,6 +18,7 @@ class InputManager {
     private _events: Events; private _loader: Loader; private _screen: Screen; private _scaleManager: ScaleManager;
     private _pointer: Point; // the mouse/pointer x, y
     private _pointerMovement: Point; // the number of pixels the mouse x and y have moved since the last mousemove/pointermove event
+    private _pointerDown: boolean;
     private _keyDownListeners: KeyListener[];
     private _keyUpListeners: KeyListener[];
     private _keyPressListeners: KeyListener[];
@@ -31,6 +32,14 @@ class InputManager {
         this._pointer = this._pointFactory.createNew(0, 0);
         this._pointerMovement = this._pointFactory.createNew(0, 0);
         this._events.on('pointermove', this._onPointerMove, this);
+
+        this._pointerDown = false;
+        document.addEventListener('pointerdown', (event) => {
+            this._pointerDown = true;
+        });
+        document.addEventListener('pointerup', (event) => {
+            this._pointerDown = false;
+        });
 
         this._keyDownListeners = [];
         this._keyUpListeners = [];
@@ -82,6 +91,13 @@ class InputManager {
     }
 
     /**
+     * @description is the pointer/mouse down?
+     */
+    get pointerDown(): boolean {
+        return this._pointerDown;
+    }
+
+    /**
     * @description Get the amount the pointer moved since the last tick as a Point object (x, y). In game-units (auto-corrected for scale)
     */
     get pointerMovement() {
@@ -113,15 +129,15 @@ class InputManager {
      */
     public addListener(event: string, callback: Function, go: IGameObject, context: any) {
         let pixiData: any = this._getData(go);
-       
+
         this._screen.addListener(event, pixiData, (evt: any) => {
             if (go.hitShape == null) {
-                if(go.input.pixelPerfect){
-                    if(go.input.pixelHit(this._pointer)) callback.bind(context)(evt);
-                  // callback.bind(context)(evt);
+                if (go.input.pixelPerfect) {
+                    if (go.input.pixelHit(this._pointer)) callback.bind(context)(evt);
+                    // callback.bind(context)(evt);
                 }
                 else callback.bind(context)(evt);
-            } 
+            }
             else if (go.hitShape.containsPoint(this._pointer)) callback.bind(context)(evt);
         }, context);
     }

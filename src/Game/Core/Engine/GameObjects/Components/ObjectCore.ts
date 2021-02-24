@@ -254,6 +254,7 @@ class ObjectCore {
       this._go.scaleHandler.shutdown.bind(this._go.scaleHandler)();
       this._go.pcHandler.parent?.removeChild(this._go);
     }
+    
     this._objectHandler.destroy(this._data);
   /*   if(this.data._data){
       this.data.destroy();
