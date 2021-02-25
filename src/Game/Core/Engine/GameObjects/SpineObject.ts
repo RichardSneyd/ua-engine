@@ -19,7 +19,6 @@ import ExtractComponent from "./Components/ExtractComponent";
  */
 class SpineObject extends BaseGameObject {
     protected _animationManager: SpineAnimationManager;
-    protected _frame: string | null;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
         scaleHandler: ScaleHandler, animationManager: SpineAnimationManager, tweenComponent: TweenComponent, extract: ExtractComponent) {
@@ -31,7 +30,6 @@ class SpineObject extends BaseGameObject {
         this.data = this._screen.createSpine(textureName);
         if(typeof textureName == 'string') this._name = textureName;
         if (frame != null) this._core.atlas = textureName;
-        this._frame = frame;
         this._core.init(this, x, y, textureName, this._update);
         super.init();
         this._animationManager.init(this, this._core);
@@ -51,10 +49,6 @@ class SpineObject extends BaseGameObject {
 
     get animations() : SpineAnimationManager {
         return this._animationManager;
-    }
-
-    get frame(): string | null {
-        return this._frame;
     }
 
 }
