@@ -1,24 +1,43 @@
 
 import Debug from "../Debug";
 import Button from "./Button";
+import ContainerObject from "./ContainerObject";
 import GOFactory from "./GOFactory";
 import IParentChild from "./IParentChild";
 import SpriteObject from "./SpriteObject";
+import GOStateMachine from "./State/GOStateMachine";
 
 class MenuBar {
+    public _containerFact: ContainerObject;
+    public _group: ContainerObject;
     public _spriteFact: SpriteObject;
     public sprite: SpriteObject;
     protected _buttons: Button[] = [];
-    protected _states: any;
-    protected _state: string;
+    protected _stateMachineFact: GOStateMachine;
+    protected _states: GOStateMachine;
 
-    constructor(spriteFact: SpriteObject){
+    constructor(spriteFact: SpriteObject, stateMachineFact: GOStateMachine, containerFact: ContainerObject){
         this._spriteFact = spriteFact;
+        this._stateMachineFact = stateMachineFact;
+        this._containerFact = containerFact;
         Debug.exposeGlobal(this, 'bar');
     }
 
+    get group(){
+        return this._group;
+    }
+
+    get states(){
+        return this._states;
+    }
+
     init(x: number, y: number, texture: string, parent: IParentChild | null){
-        this.sprite = this._spriteFact.createNew(x, y, texture, null, parent);
+        // keeping all elements in a 'group' (cont) allows to apply state to elements, but still tween and move them via the 'group' wrapper, which is unaffected by state
+        // objects that must have state tracked should be added as children to the sprite. addButton does this automatically
+        // objects that should not have state tracked should be added to 'group'
+        this._group = this._containerFact.createNew(x, y, parent); 
+        this.sprite = this._spriteFact.createNew(0, 0, texture, null, this._group);
+        this._states = this._stateMachineFact.createNew(this.sprite);
         this.sprite.setOrigin(0, 0);
         this._buttons = [];
       //  this.y -= this.height;
@@ -80,7 +99,7 @@ class MenuBar {
     }
 
     createNew(x: number, y: number, texture: string, parent: IParentChild | null): MenuBar{
-        let bar = new MenuBar(this._spriteFact);
+        let bar = new MenuBar(this._spriteFact, this._stateMachineFact, this._containerFact);
         bar.init(x, y, texture, parent);
         return bar;
     }
@@ -93,7 +112,7 @@ class MenuBar {
     }
 
     setState(state: any){
-        
+
     }
 }
 
