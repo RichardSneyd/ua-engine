@@ -34,6 +34,7 @@ class DraggableObject implements IGameObject {
     private _doBeforeDragging: Function;
     private _doAfterDropping: Function;
     private _initialPosition: Point;
+    private _currentPosition: Point;
     private _currentDropzone: Dropzone | null;
     private _id: string;
 
@@ -155,10 +156,13 @@ class DraggableObject implements IGameObject {
     /**
      * @description Adds a named dropzone where the draggable can be dropped. Internally it will create a Dropzone object
      * @param name dropzone name. It doesn't need to be unique, but `getZone()` searchs by name
-     * @param zone x1, y1: top left corner; x2, y2: bottom right corner; x3, y3: Optional center of the zone, calculated if missing.
+     * @param zone x1, y1: top left corner; x2, y2: bottom right corner; x3, y3: Optional center of the zone, calculated if missing
+     * @param vertical If to sort dropped dragged vertically or horizontally. If undefined it'll always use the center
+     * @param gap Space between dropped draggables. It can be a negative number
      */
-    addZone(name: string, zone: { x1: number, y1: number, x2: number, y2: number, x3?: number, y3?: number }): Dropzone {
-        let dropzone = this._dropzone.createNew(name, zone);
+    addZone(name: string, zone: { x1: number, y1: number, x2: number, y2: number, x3?: number, y3?: number },
+        vertical?: boolean, gap: number = 0): Dropzone {
+        let dropzone = this._dropzone.createNew(name, zone, vertical, gap);
         this._dropzones.push(dropzone);
         return dropzone;
     }
@@ -258,6 +262,13 @@ class DraggableObject implements IGameObject {
         }
     }
 
+    /**
+     * @description Returns the coordinates the draggable is currently in
+     */
+    get currentPosition(): Point {
+        return this._currentPosition;
+    }
+
     private _determinePosition(x: number, y: number): Point {
         if (this._background) {
             return this._point.createNew(this._background.width / 2, this._background.height / 2);
@@ -270,6 +281,7 @@ class DraggableObject implements IGameObject {
             this._background = go;
 
             this._initialPosition = this._point.createNew(go.x, go.y);
+            this._currentPosition = this._initialPosition;
             this._initListeners();
         } else {
             this._background.addChild(go);
@@ -307,12 +319,13 @@ class DraggableObject implements IGameObject {
             this._beingDragged = false;
 
             if (this._dropzones.length > 0) {
+                if (this._currentDropzone) this._currentDropzone.remove(this);
                 let moveTo;
                 for (let dropzone of this._dropzones) {
-                    if (this.isInside(dropzone)) {
+                    if (dropzone.pointerIsInside()) {
                         this._currentDropzone = dropzone;
-                        moveTo = dropzone.center;
-                        this.moveTo(moveTo);
+                        dropzone.add(this);
+                        moveTo = true;
                         break;
                     }
                 }
@@ -327,21 +340,13 @@ class DraggableObject implements IGameObject {
     }
 
     /**
-     * @description If the draggable is inside a given Dropzone
-     * @param dropzone Object created when adding a zone with `addZone()`
-     */
-    isInside(dropzone: Dropzone): boolean {
-        return (this.x >= dropzone.topLeft.x && this.x <= dropzone.bottomRight.x
-            && this.y >= dropzone.topLeft.y && this.y <= dropzone.bottomRight.y);
-    }
-
-    /**
      * @description Moves the draggable to a specific coordinate
      * @param point Point to move to
      * @param easing Optional easing method. Use Easing enum
      * @param time Optional time for the animation
      */
     moveTo(point: Point, easing: string = Easing.Elastic.InOut, time: number = 600) {
+        this._currentPosition = point;
         this._background?.tweens.add(easing)
             .to({ x: point.x, y: point.y }, time)
             .start();
