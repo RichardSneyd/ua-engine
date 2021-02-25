@@ -9,6 +9,8 @@ class MenuBar {
     public _spriteFact: SpriteObject;
     public sprite: SpriteObject;
     protected _buttons: Button[] = [];
+    protected _states: any;
+    protected _state: string;
 
     constructor(spriteFact: SpriteObject){
         this._spriteFact = spriteFact;
@@ -81,6 +83,17 @@ class MenuBar {
         let bar = new MenuBar(this._spriteFact);
         bar.init(x, y, texture, parent);
         return bar;
+    }
+
+    /**
+     * @description generate a 'state' object based on the current positions of all elements
+     */
+    genState(){
+
+    }
+
+    setState(state: any){
+        
     }
 }
 

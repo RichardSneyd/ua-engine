@@ -18,6 +18,7 @@ import Debug from "../Debug";
 import MenuBar from "./MenuBar";
 import ScriptHandler from "../ScriptHandler";
 import BaseGameObject from "./BaseGameObject";
+import States from "./State/States";
 
 /**
  * @description A factory for creating game objects of various types
@@ -38,12 +39,14 @@ class GOFactory {
     private _hitShapes: HitShapes;
     private _menuBar: MenuBar;
     private _script: ScriptHandler;
+    private _states: States;
 
     constructor(core: ObjectCore, script: ScriptHandler, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject, draggable: DraggableObject,
-        container: ContainerObject, menuBar: MenuBar, scaleManager: ScaleManager, button: Button, video: VideoObject, screen: Screen, camera: Camera, hitShapes: HitShapes) {
+        container: ContainerObject, menuBar: MenuBar, scaleManager: ScaleManager, button: Button, video: VideoObject, screen: Screen, camera: Camera, hitShapes: HitShapes,
+        states: States) {
         this._core = core; this._script = script; this._slice = slice; this._spine = spine; this._text = text; this._container = container; this._menuBar = menuBar;
         this._sprite = sprite; this._scaleManager = scaleManager; this._button = button; this._video = video; this._screen = screen;
-        this._camera = camera; this._hitShapes = hitShapes; this._draggable = draggable;
+        this._camera = camera; this._hitShapes = hitShapes; this._draggable = draggable; this._states = states;
         Debug.exposeGlobal(this, 'goFactory');
     }
 
@@ -311,7 +314,9 @@ class GOFactory {
         gameObject.scaleHandler.y = lfObject.scaleY;
     }
 
-
+    get states(){
+        return this._states;
+    }
 }
 
 export default GOFactory;

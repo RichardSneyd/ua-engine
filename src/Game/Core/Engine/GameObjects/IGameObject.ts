@@ -15,6 +15,7 @@ import IHitShape from "./Components/HitShapes/IHitShape";
  */
 interface IGameObject extends IParentChild{
     hitShape: IHitShape | null;
+    angle: number;
     input: InputHandler;
     scaleHandler: ScaleHandler;
     pcHandler: ParentChildHandler;
@@ -43,6 +44,7 @@ interface IGameObject extends IParentChild{
     zIndex: number;
     sort(): void;
     extract: ExtractComponent;
+    name: string;
 }
 
 export default IGameObject;

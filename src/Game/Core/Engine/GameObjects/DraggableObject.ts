@@ -458,6 +458,10 @@ class DraggableObject implements IGameObject {
         return this._id;
     }
 
+    get name(): string {
+        return this.id;
+    }
+
     /**
      * @description Firt GO's extract
      */
