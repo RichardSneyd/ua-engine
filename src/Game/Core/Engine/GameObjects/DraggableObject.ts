@@ -1,6 +1,7 @@
 import Point from "../../Geom/Point";
 import Debug from "../Debug";
 import Events from "../Events";
+import InputManager from "../InputManager";
 import Loop from "../Loop";
 import BaseGameObject from "./BaseGameObject";
 import Easing from "./Components/Easing";
@@ -22,7 +23,7 @@ import TextObject from "./TextObject";
  */
 class DraggableObject implements IGameObject {
     private _slice: SliceObject; private _spine: SpineObject; private _sprite: SpriteObject; private _text: TextObject;
-    private _loop: Loop; private _dropzone: Dropzone; private _point: Point; private _events: Events;
+    private _loop: Loop; private _dropzone: Dropzone; private _point: Point; private _events: Events; private _input: InputManager;
     private _layers: BaseGameObject[];
     private _background: BaseGameObject;
     private _dropzones: Dropzone[];
@@ -37,9 +38,9 @@ class DraggableObject implements IGameObject {
     private _id: string;
 
     constructor(slice: SliceObject, spine: SpineObject, sprite: SpriteObject, text: TextObject,
-        loop: Loop, dropzone: Dropzone, point: Point, events: Events) {
+        loop: Loop, dropzone: Dropzone, point: Point, events: Events, input: InputManager) {
         this._slice = slice; this._spine = spine; this._sprite = sprite; this._text = text;
-        this._loop = loop; this._dropzone = dropzone; this._point = point; this._events = events;
+        this._loop = loop; this._dropzone = dropzone; this._point = point; this._events = events; this._input = input;
         this._layers = [];
         this._dropzones = [];
         this._enabled = true;
@@ -50,11 +51,6 @@ class DraggableObject implements IGameObject {
 
         this._loop.addFunction(this._update, this);
         this._loop.start();
-    }
-
-    // added this to avoid IGameObject implementation error
-    get hitShape() {
-        return null;
     }
 
     init(x: number, y: number, texture: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null): void {
@@ -68,7 +64,7 @@ class DraggableObject implements IGameObject {
     }
 
     createEmpty(): DraggableObject {
-        return new DraggableObject(this._slice.createEmpty(), this._spine.createEmpty(), this._sprite.createEmpty(), this._text.createEmpty(), this._loop, this._dropzone.createEmpty(), this._point, this._events);
+        return new DraggableObject(this._slice.createEmpty(), this._spine.createEmpty(), this._sprite.createEmpty(), this._text.createEmpty(), this._loop, this._dropzone.createEmpty(), this._point, this._events, this._input);
     }
 
     /**
@@ -221,6 +217,11 @@ class DraggableObject implements IGameObject {
         return this.id;
     }
 
+    // added this to avoid IGameObject implementation error
+    get hitShape() {
+        return null;
+    }
+
     /**
      * @description Returns the first slice added to the draggable if there is one
      */
@@ -288,19 +289,21 @@ class DraggableObject implements IGameObject {
         if (this._beingDragged && this._background) {
             this._background.moveToMouse(this._xOffset, this._yOffset);
         }
+
+        if (this._beingDragged && !this._input.pointerDown) this._drop();
     }
 
     private _startDragging() {
         if (this._background) {
             this._beingDragged = true;
-            this._xOffset = this._background.x - this._background.input.manager.pointer.x;
-            this._yOffset = this._background.y - this._background.input.manager.pointer.y;
+            this._xOffset = this._background.x - this._input.pointer.x;
+            this._yOffset = this._background.y - this._input.pointer.y;
             this._doBeforeDragging();
         }
     }
 
     private _drop() {
-        if (this._background) {
+        if (this._background && this._beingDragged) {
             this._beingDragged = false;
 
             if (this._dropzones.length > 0) {
@@ -317,9 +320,8 @@ class DraggableObject implements IGameObject {
                     this.moveTo(this._initialPosition);
                     this._currentDropzone = null;
                 }
-
-                this._events.emit('draggable_dropped', { draggable: this });
             }
+            this._events.emit('draggable_dropped', { draggable: this });
             this._doAfterDropping();
         }
     }
@@ -396,6 +398,13 @@ class DraggableObject implements IGameObject {
         if (this._isInitialized()) {
             this._background.changeTexture(textureName);
         }
+    }
+
+    /**
+     * @description Returns the first position the draggable was set to
+     */
+    get initialPosition(): Point {
+        return this._initialPosition;
     }
 
     /**
@@ -622,7 +631,7 @@ class DraggableObject implements IGameObject {
         this._enabled = enabled;
     }
 
-    sort(){
+    sort() {
         Debug.warn('sort not yet implement for DraggableObject...');
     }
 }
