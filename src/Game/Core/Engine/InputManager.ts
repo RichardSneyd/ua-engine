@@ -37,7 +37,7 @@ class InputManager {
         document.addEventListener('pointerdown', (event) => {
             this._pointerDown = true;
         });
-        document.addEventListener('pointerup', (event) => {
+        document.addEventListener('onpointerup', (event) => {
             this._pointerDown = false;
         });
 
@@ -59,10 +59,43 @@ class InputManager {
         this._keyUpListeners.push(this._keyListener.createNew(callback, context, keyCode))
     }
 
-
     public onKeyPress(keyCode: number, callback: Function, context: any) {
         this._keyPressListeners.push(this._keyListener.createNew(callback, context, keyCode))
     }
+
+    public offKeyDown(keyCode: number, callback: Function, context: any) {
+      //  this._keyDownListeners.push(this._keyListener.createNew(callback, context, keyCode))
+      let listener 
+    }
+
+    public offKeyUp(keyCode: number, callback: Function, context: any) {
+      //  this._keyUpListeners.push(this._keyListener.createNew(callback, context, keyCode))
+    }
+
+    public offKeyPress(keyCode: number, callback: Function, context: any) {
+       // this._keyPressListeners.push(this._keyListener.createNew(callback, context, keyCode))
+    }
+
+    protected _findKeyListener(arr: KeyListener[], keyCode: number, callback: Function, context: any): KeyListener | null{
+        for(let x = 0; x < arr.length; x++){
+            if(arr[x].context == context && arr[x].callback == callback && arr[x].keyCode == keyCode){
+                return arr[x];
+            }
+        }
+        Debug.warn('no KeyListener found for key ' + keyCode + ' with context ' + context + ' and callback: ', callback);
+        return null;
+    }
+
+    protected _removeKeyListener(arr: KeyListener[], keyCode: number, callback: Function, context: any){
+        let listener = this._findKeyListener(arr, keyCode, callback, context);
+        if(listener !== null){
+            arr.splice(arr.indexOf(listener));
+            return;
+        }
+        Debug.error('cannot remove a null KeyListener');
+    }
+
+
 
     private _onKeyDown(evt: any) {
         this._callKeyListenersForAll(this._keyDownListeners, { evt: evt });

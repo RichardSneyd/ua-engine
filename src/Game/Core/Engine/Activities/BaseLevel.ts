@@ -50,6 +50,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         // create 4 basic layers for positioning objects on. More can be added in the subclass where needed
         //   this._HUD = this._goFactory.container(0, 0);
         // cookie-cutter event listeners (necessary for the functioning of activities and levels, and for avoiding memory leaks etc)
+        this._manager.globalEvents.emit('level_init');
         this._manager.globalEvents.on('newRow', this.onNewRow, this);
         this._manager.globalEvents.on('shutdown', this.shutdown, this);
 
@@ -95,8 +96,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @param configRow optionally pass a config row. If not passed, it will be read from the first row of the script
      */
     start(configRow?: any): void {
-        Debug.info('start executed');
-        this._events.global.emit('show_nav_bar');
+        this._events.global.emit('level_start');
         // add anything that should be done by all levels on start
         if (!configRow) configRow = this._manager.script.rows[0];
         if (configRow.config.hasOwnProperty('bgd')) {
@@ -119,7 +119,12 @@ abstract class BaseLevel extends BaseScene implements ILevel {
             Debug.exposeGlobal(this._character, 'char');
         }
 
+        this._manager.input.onKeyDown(this._manager.input.keys.O, this._virtualOKPress, this);
         this._waitForFirstInput();
+    }
+
+    protected _virtualOKPress(){
+        this._manager.globalEvents.emit('ok_pressed');
     }
 
     /**
@@ -250,9 +255,11 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @description shutdown the scene, in preperation for transition. This involves destroying objects, as well as removing loop callbacks and event listeners etc
      */
     shutdown() {
+        this._events.global.emit('level_shutdown');
         this._events.global.emit('hide_nav_bar');
         this._manager.globalEvents.off('shutdown', this.shutdown, this);
         this._manager.globalEvents.off('newRow', this.onNewRow, this);
+        this._manager.input.offKeyDown(this._manager.input.keys.O, this._virtualOKPress, this);
         this.destroy();
         super.shutdown();
     }

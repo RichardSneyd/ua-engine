@@ -40,6 +40,7 @@ abstract class BaseScene implements IScene {
     }
 
     init(...args: any): void {
+        this._events.global.emit('scene_init');
         Debug.info('scene args: ', args);
         this._name = args[0];
         this._background = this._goFactory.container(0, 0);
@@ -67,6 +68,7 @@ abstract class BaseScene implements IScene {
      * @description used to build the scene. override me.
      */
     start() {
+        this._events.global.emit('scene_start');
         // build the scene
     }
 
@@ -81,6 +83,7 @@ abstract class BaseScene implements IScene {
      * @description shutdown the level before loading another one. By default, it removes the UAE.Loop listener, and turns of fthe shutdown listener
      */
     shutdown(): void {
+        this._events.global.emit('scene_shutdown');
         this._loop.removeFunction(this.update, this);
     }
 

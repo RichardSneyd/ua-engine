@@ -1,6 +1,7 @@
 import Game from "../../Game";
 import Debug from "../Debug";
 import Events from "../Events";
+import Button from "../GameObjects/Button";
 import ContainerObject from "../GameObjects/ContainerObject";
 import GOFactory from "../GameObjects/GOFactory";
 import IGameObject from "../GameObjects/IGameObject";
@@ -17,11 +18,13 @@ abstract class AbstractAppMain {
     protected _levelManager: LevelManager;
     protected _goFactory: GOFactory;
     protected _activityBar: MenuBar;
+    protected _okButton: Button;
     protected _defaultActivity: IActivity;
     protected _urlParams: URLSearchParams;
     protected _loadCont: ContainerObject;
     protected _loadBar: SpriteObject;
     protected _initialized: boolean;
+    protected _scripts: string[];
 
     constructor(game: Game, defaultActivity: IActivity, goFactory: GOFactory, loader: Loader, levelManager: LevelManager) {
         this._game = game;
@@ -40,12 +43,13 @@ abstract class AbstractAppMain {
         this._levelManager.globalEvents.once('world_initialized', this._init, this);
     }
 
-    protected _init() {
-      //  Debug.info('init called in AbstractAppMain');
+    protected _init(scripts: string[]) {
+        //  Debug.info('init called in AbstractAppMain');
+        this._scripts = scripts;
         this._retrieveURLParams();
-      //  Debug.info('about to create HUD...');
+        //  Debug.info('about to create HUD...');
         this._HUD = this._goFactory.container(0, 0);
-     //   Debug.info('hud cont: ', this._HUD);
+        //   Debug.info('hud cont: ', this._HUD);
         this._addToOverlay(this._HUD);
         this._initialized = true;
         this._boot();
@@ -55,12 +59,12 @@ abstract class AbstractAppMain {
      * @description Use this 'boot' method to pre-preload assets you need loaded at the VERY start, such as a 'load_bar' or a UI element etc. Override and call super._boot() last.
      */
     protected _boot() {
-     //   Debug.info('called _boot in AbstractAppMain');
+        //   Debug.info('called _boot in AbstractAppMain');
         this._loader.download().then(() => {
-         //   this._levelManager.globalEvents.timer(() => {
-                this._levelManager.globalEvents.emit('shutdown');
-                this._preload();
-         //   }, 200, this); // try delaying to see if that fixes loader issue
+            //   this._levelManager.globalEvents.timer(() => {
+            this._levelManager.globalEvents.emit('shutdown');
+            this._preload();
+            //   }, 200, this); // try delaying to see if that fixes loader issue
         });
     }
 
@@ -76,23 +80,45 @@ abstract class AbstractAppMain {
      * @description 'start' the app. If there is a scene property in URL, load that. Otherwise, load 'main_menu'.
      */
     protected _start() {
-        this._levelManager.globalEvents.on('show_nav_bar', this.showActivityBar, this);
-        this._levelManager.globalEvents.on('hide_nav_bar', this.hideActivityBar, this);
+        this._levelManager.globalEvents.on('level_start', this.showActivityBar, this);
+        this._levelManager.globalEvents.on('level_shutdown', this.hideActivityBar, this);
         let scene = this.getURLSceneCode();
         if (scene == null) scene = 'main_menu';
         if (scene.includes('menu')) this._game.startActivity(scene, this._defaultActivity);
         else this._game.startActivity(scene);
     }
 
+    
+    /**
+     * @description  returns a string array of all script files in the assets/scripts folder. excludes level files
+     */
+    get scripts(){
+        return this._scripts;
+    }
+
+    /**
+     * @description find the activity script based on a substring that only it contains. The substring must be specific enough that no other script in the scripts
+     * array will contain it. Basically, the name of the script, minus the type code at the end, i.e 'k1_t1_l1_s1' instead of 'k1_t1_l1_s1_i4'
+     * @param includes the substring to test against
+     */
+    getScript(includes: string): string{
+        for(let x = 0; x < this._scripts.length; x++){
+            if(this._scripts[x].includes(includes)) return this._scripts[x];
+        }
+        Debug.warn('no script in scripts array that includes ', includes);
+        return '';
+    }
+
     createLoadScreen(bgd: string, loadStatic: string, loadBar: string, yScreenOffset: number = 200, xOffset: number = 20, yOffset: -5) {
         this._loadCont = this._goFactory.container(0, 0, this._HUD);
+        this._loadCont.zIndex = 100;
         this._goFactory.sprite(0, 0, bgd, null, this._loadCont);
         let staticBar = this._goFactory.sprite(this._game.width() / 2, this._game.height() / 2 + yScreenOffset, loadStatic, null, this._loadCont);
         staticBar.setOrigin(0.5, 0);
         this._loadBar = this._goFactory.sprite(staticBar.left + xOffset, (staticBar.top + staticBar.height / 2) + yOffset, loadBar, null, this._loadCont);
         this._loadBar.setOrigin(0, 0.5);
         this._levelManager.globalEvents.on('download_start', this.showLoadScreen, this);
-        this._levelManager.globalEvents.on('download_complete', this.hideLoadScreen, this);
+        this._levelManager.globalEvents.on('scene_start', this.hideLoadScreen, this);
         this._levelManager.globalEvents.on('download_progress', this.updateLoadBar, this);
         Debug.exposeGlobal(this._loadCont, 'loadScreen');
         // this.showLoadScreen();

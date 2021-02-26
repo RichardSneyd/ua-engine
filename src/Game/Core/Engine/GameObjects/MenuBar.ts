@@ -12,7 +12,8 @@ class MenuBar {
     public _group: ContainerObject;
     public _spriteFact: SpriteObject;
     public sprite: SpriteObject;
-    protected _buttons: Button[] = [];
+    protected _buttons: Button[];
+    protected _subSprites: SpriteObject[];
     protected _stateMachineFact: GOStateMachine;
     protected _states: GOStateMachine;
 
@@ -40,16 +41,17 @@ class MenuBar {
         this._states = this._stateMachineFact.createNew(this.sprite);
         this.sprite.setOrigin(0, 0);
         this._buttons = [];
-      //  this.y -= this.height;
+        this._subSprites = [];
+      //  this.y -= this.height;g
     }
 
     show(){
-        Debug.info('show nav bar');
+     //   Debug.info('show nav bar');
         this.sprite.visible = true;
     }
 
     hide(){
-        Debug.info('hide nav bar');
+     //   Debug.info('hide nav bar');
         this.sprite.visible = false;
     }
 
@@ -87,14 +89,40 @@ class MenuBar {
         return this;
     }
 
+    addSubSprite(sprite: SpriteObject){
+        this._subSprites.push(sprite);
+        this.sprite.addChild(sprite);
+    }
+
+    getSprite(name: string){
+        this._subSprites.forEach((sprite)=>{
+            if(sprite.name == name){ return sprite}
+        })
+        Debug.error('no subSrite called ' + name);
+    }
+
+    getButton(name: string){
+        this._buttons.forEach((button)=>{
+            if(button.sprite.name == name){ return button}
+        })
+        Debug.error('no button called ' + name);
+    }
+
     destroy(){
         this._destroyButtons();
+        this._destroySprites();
         this.sprite.destroy();
     }
 
     private _destroyButtons(){
         for(let x = 0; x < this._buttons.length; x++){
             this._buttons[x].destroy();
+        }
+    }
+
+    private _destroySprites(){
+        for(let x = 0; x < this._subSprites.length; x++){
+            this._subSprites[x].destroy();
         }
     }
 

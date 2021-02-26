@@ -25,7 +25,7 @@ abstract class BaseMenu extends BaseScene {
 
     init(sceneName: string, bgdName: string, hasLevelFile: boolean = true) {
         this._bgdName = bgdName;
-        this._events.global.emit('hide_nav_bar');
+        this._events.global.emit('menu_init');
         super.init(sceneName);
         this._manager.init(sceneName, [], [], []);
         if (!hasLevelFile) {
@@ -48,6 +48,7 @@ abstract class BaseMenu extends BaseScene {
     }
 
     start() {
+        this._events.global.emit('menu_start');
         this._bgd = this._goFactory.sprite(0, 0, this._bgdName, null, this._background);
         this._bgd.width = this._game.width();
         this._bgd.height = this._game.height();
@@ -55,6 +56,7 @@ abstract class BaseMenu extends BaseScene {
     }
 
     shutdown(){
+        this._events.global.emit('menu_shutdown');
         super.shutdown();
     }
 }
