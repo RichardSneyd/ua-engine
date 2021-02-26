@@ -246,7 +246,7 @@ class PxGame {
 
   }
 
-  public addText(x: number, y: number, text: string, style: any = undefined): PxText {
+  public addText(x: number, y: number, text: string, style: any = {}): PxText {
     if (this._game != null) {
       let txt = this._pxFactory.createText(text, this._game.renderer, style);
 
