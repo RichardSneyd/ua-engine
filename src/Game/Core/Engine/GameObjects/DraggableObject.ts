@@ -137,7 +137,7 @@ class DraggableObject implements IGameObject {
      * @param parent Optional parent for the Draggable. Only used for the first GO added, ignored for the rest
      * @param scale Optional scale for the text
      */
-    addText(x: number, y: number, text: string, style: any = undefined, parent: IParentChild | null = null, scale: number = 1): TextObject {
+    addText(x: number, y: number, text: string, style: any = {}, parent: IParentChild | null = null, scale: number = 1): TextObject {
         let finalPosition = this._determinePosition(x, y);
         let textObject = this._text.createNew(finalPosition.x, finalPosition.y, text, style, parent);
         this._addGO(textObject, scale);

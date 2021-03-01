@@ -107,9 +107,9 @@ class PxText {
     return new PxText(this._pxPoint.createNew(1, 1, () => {}, () => {}));
   }
 
-  public init(text: string, renderer: Renderer, style: any = { font: 'gothic' }) {
+  public init(text: string, renderer: Renderer, style: any = { fontFamily: 'gothic' }) {
     this._renderer = renderer;
-    if (!style.font) style.font = 'gothic';
+    if (!style.fontFamily) style.fontFamily = 'gothic';
     this._style = style;
     this._fill = style.fill;
     this._rawText = new Text(text, style);
