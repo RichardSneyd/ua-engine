@@ -101,7 +101,7 @@ class Screen {
     this._pxGame.removeUpListeners;
   } */
 
-  public createText(x: number, y: number, text: string, style: any = undefined): any {
+  public createText(x: number, y: number, text: string, style: any = {}): any {
     return this._pxGame.addText(x, y, text, style);
   }
 
