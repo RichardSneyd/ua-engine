@@ -160,7 +160,7 @@ class DraggableObject implements IGameObject {
      * @param vertical If to sort dropped dragged vertically or horizontally. If undefined it'll always use the center
      * @param gap Space between dropped draggables. It can be a negative number
      */
-    addZone(name: string, zone: { x1: number, y1: number, x2: number, y2: number, x3?: number, y3?: number },
+    addZone(name: string, zone: { x: number, y: number, width: number, height: number },
         vertical?: boolean, gap: number = 0): Dropzone {
         let dropzone = this._dropzone.createNew(name, zone, vertical, gap);
         this._dropzones.push(dropzone);
