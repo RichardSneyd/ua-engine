@@ -25,7 +25,7 @@ class TextObject extends BaseGameObject {
         this._letters = '$$$$____$$$$'; //default uninitialized string
     }
 
-    public init(x: number, y: number, text: string, style: any = undefined, parent: IParentChild | null = null): void {
+    public init(x: number, y: number, text: string, style: any = {}, parent: IParentChild | null = null): void {
         this._letters = text;
         this.data = this._screen.createText(x, y, text, style);
         this._core.init(this, x, y, '', this._update);

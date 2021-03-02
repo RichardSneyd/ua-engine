@@ -137,7 +137,7 @@ class DraggableObject implements IGameObject {
      * @param parent Optional parent for the Draggable. Only used for the first GO added, ignored for the rest
      * @param scale Optional scale for the text
      */
-    addText(x: number, y: number, text: string, style: any = undefined, parent: IParentChild | null = null, scale: number = 1): TextObject {
+    addText(x: number, y: number, text: string, style: any = {}, parent: IParentChild | null = null, scale: number = 1): TextObject {
         let finalPosition = this._determinePosition(x, y);
         let textObject = this._text.createNew(finalPosition.x, finalPosition.y, text, style, parent);
         this._addGO(textObject, scale);
@@ -160,7 +160,7 @@ class DraggableObject implements IGameObject {
      * @param vertical If to sort dropped dragged vertically or horizontally. If undefined it'll always use the center
      * @param gap Space between dropped draggables. It can be a negative number
      */
-    addZone(name: string, zone: { x1: number, y1: number, x2: number, y2: number, x3?: number, y3?: number },
+    addZone(name: string, zone: { x: number, y: number, width: number, height: number },
         vertical?: boolean, gap: number = 0): Dropzone {
         let dropzone = this._dropzone.createNew(name, zone, vertical, gap);
         this._dropzones.push(dropzone);
