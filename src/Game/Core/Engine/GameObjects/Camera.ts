@@ -298,6 +298,7 @@ class Camera {
     }
 
     public addDebugControls(camera: Camera) {
+        //if(!camera) camera = this;
         let moveSpeed = 6;
         let inc = 0.1;
         this._input.onKeyDown(this._input.keys.A, function () { camera.x -= moveSpeed }, this); // move left

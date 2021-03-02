@@ -29,6 +29,7 @@ class PxFactory {
     let app = new Application({
       width: w,
       height: h,
+      antialias: true
     });
     app.renderer = _renderer;
     return app;
