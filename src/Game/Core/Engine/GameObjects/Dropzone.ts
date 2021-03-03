@@ -73,15 +73,18 @@ class Dropzone {
         if (this._vertical === undefined) {
             draggable.moveTo(this._center);
         } else {
-            let draggablesIn = this._draggables.length;
             let length = (this._vertical) ? draggable.height : draggable.width;
             let start = (this._vertical) ? this.topLeft.y : this.topLeft.x;
-            let coordinate = start + draggablesIn * (length + this._gap) + length / 2;
+            let origin = (this._vertical) ? draggable.origin.y : draggable.origin.x;
+            let draggablesIn = this._draggables.length;
+            let coordinate = start + draggablesIn * (length + this._gap) + length * origin;
 
             if (this._vertical) {
-                draggable.moveTo(this._point.createNew(this._center.x, coordinate));
+                let x = this._topLeft.x + draggable.origin.x * draggable.width;
+                draggable.moveTo(this._point.createNew(x, coordinate));
             } else {
-                draggable.moveTo(this._point.createNew(coordinate, this._center.y));
+                let y = this._topLeft.y + draggable.origin.y * draggable.height;
+                draggable.moveTo(this._point.createNew(coordinate, y));
             }
             this._draggables.push(draggable);
         }
