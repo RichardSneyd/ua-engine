@@ -25,6 +25,9 @@ abstract class AbstractAppMain {
     protected _loadBar: SpriteObject;
     protected _initialized: boolean;
     protected _scripts: string[];
+    protected _activityBarIsDown: boolean;
+
+    
 
     constructor(game: Game, defaultActivity: IActivity, goFactory: GOFactory, loader: Loader, levelManager: LevelManager) {
         this._game = game;
@@ -32,6 +35,7 @@ abstract class AbstractAppMain {
         this._loader = loader;
         this._levelManager = levelManager;
         this._defaultActivity = defaultActivity;
+        this._activityBarIsDown = false;
         this._initialized = false;
         this._game.setProduct(this);
         this._game.addActivity(defaultActivity);
@@ -147,11 +151,32 @@ abstract class AbstractAppMain {
     }
 
     showActivityBar() {
-        if (this._activityBar) { this._activityBar.show(); } else Debug.warn('bottomBar is undefined');
+        if (this._activityBar) { 
+            this._activityBar.show(); 
+        } else Debug.warn('bottomBar is undefined');
     }
 
     hideActivityBar() {
         if (this._activityBar) { this._activityBar.hide(); } else Debug.warn('bottomBar is undefined');
+    }
+
+    protected _activityBarDown(){
+        this._activityBarIsDown = true;
+        this._activityBar.y = 400;
+    }
+
+    protected _activityBarUp(){
+        this._activityBarIsDown = false;
+        this._activityBar.y = 0;
+    }
+
+    protected _toggleActivityBar(){
+        if(this._activityBarIsDown){
+            this._activityBarUp();
+        }
+        else {
+            this._activityBarDown();
+        }
     }
 
     prevAct() {

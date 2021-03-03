@@ -328,7 +328,7 @@ class PxGame {
       // spine.spineData.imagesPath;
       this._addChild(spine);
     } else {
-      Debug.warn('spine resource named "%s" not found', name);
+      Debug.error('spine resource named "%s" not found, so cannot create', name);
     }
 
     return spine;
@@ -480,7 +480,14 @@ class PxGame {
     /* if(frame == 'default') {
       frame = this._loader.
     } */
-    if (typeof texture == 'string') { textureObj = this._loader.getTexture(texture, frame); }
+    if (typeof texture == 'string') { 
+      if(this._loader.getImgResource(texture, true)){
+        textureObj = this._loader.getTexture(texture, frame); 
+      }
+      else {
+        Debug.error('cannot create sprite "' + texture + '" as resource img does not exist');
+      }
+    }
 
     let sprite = this._pxFactory.createSprite(textureObj);
     sprite.x = x;
