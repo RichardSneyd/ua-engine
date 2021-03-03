@@ -229,6 +229,14 @@ abstract class AbstractAppMain {
         this._game.world.overlay.addChild(gameObject.data);
         //     Debug.info('overlay layer: ', this._game.world.overlay);
     }
+
+    protected _showOK(){
+        this._okButton.show();
+    }
+
+    protected _hideOK(){
+        this._okButton.hide();
+    }
 }
 
 export default AbstractAppMain;

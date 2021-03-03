@@ -83,7 +83,7 @@ class GOFactory {
         if (lFile && typeof texture == 'string') {
             let root = (frame == null) ? 'sprites' : 'atlases';
             lfObj = this._script.getLevelFileObject(root, texture, 'name');
-            Debug.info('lfObj: ', lfObj);
+          //  Debug.info('lfObj: ', lfObj);
             texture = lfObj.filename;
         }
         if (x != null && y != null && texture != null) {
