@@ -128,7 +128,7 @@ class GOFactory {
             texture = lfObj.filename;
         }
         if (x != null && y != null && texture != null) {
-            let go = this._draggable.createNew(x, y, texture, frame, parent);
+            let go = this._draggable.createNew((lfObj) ? lfObj.x : x, (lfObj) ? lfObj.y : y, texture, frame, parent);
             if (lfObj && go.firstSprite) this._transformLevelFileObject(go.firstSprite, lfObj);
             return go;
         } else {
@@ -266,10 +266,10 @@ class GOFactory {
 * @description adds all objects from the level file to screen, and also returns them in an obj with 2 arrays (sprites and spines). Useful for debugging purposes etc
 * @param parent an optional default parent. Otherwise, goes in 'global' container
 */
-    addLevelFileObjects(parent: IParentChild | null = null) : {sprites: SpriteObject[], spines: SpineObject[]} {
-        let goArrays:  {sprites: SpriteObject[], spines: SpineObject[]} = {'sprites': [], 'spines': []}
-        let lFile = this._script.levelFile;
-        if(!lFile) Debug.error('script.levelFile is undefined');
+addLevelFileObjects(parent: IParentChild | null = null) : {sprites: SpriteObject[], spines: SpineObject[]} {
+    let goArrays:  {sprites: SpriteObject[], spines: SpineObject[]} = {'sprites': [], 'spines': []}
+    let lFile = this._script.levelFile;
+    if(!lFile) Debug.error('script.levelFile is undefined');
 
         for (let x = 0; x < lFile.sprites.length; x++) {
             let lfObj = lFile.sprites[x];
