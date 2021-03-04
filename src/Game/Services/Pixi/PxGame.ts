@@ -485,7 +485,7 @@ class PxGame {
         textureObj = this._loader.getTexture(texture, frame); 
       }
       else {
-        Debug.error('cannot create sprite "' + texture + '" as resource img does not exist');
+        Debug.error('cannot create sprite "' + texture + '" as resource does not exist');
       }
     }
 

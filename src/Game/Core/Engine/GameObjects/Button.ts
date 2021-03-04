@@ -166,7 +166,7 @@ class Button {
         this.playAnimation(this.animNames.over);
         if (this._onOverCallback !== null) {
             //  Debug.info('onUpCallback not null');
-            Debug.info('onOver: ', this._onOverCallback);
+        //    Debug.info('onOver: ', this._onOverCallback);
             this._onOverCallback.bind(this._context)();
         }
     }
