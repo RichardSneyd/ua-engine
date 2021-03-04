@@ -123,7 +123,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         this._waitForFirstInput();
     }
 
-    protected _virtualOKPress(){
+    protected _virtualOKPress() {
         this._manager.globalEvents.emit('ok_pressed');
     }
 
@@ -161,7 +161,12 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if (this._character) {
             let loop = (this.activeRow.char_loop == 'y');
             let animation = this.activeRow.char;
-            if (animation && animation !== '') this._character.animations.play(animation, loop);
+            if (animation && animation !== '') this._character.animations.addAnimation(animation, loop);
+            if (this._character.animations.animationNames.includes('idle')) {
+                this._character.animations.addAnimation('idle', true);
+            } else {
+                Debug.error('Character %s has no "idle" animation', this._character.name);
+            }
         }
     }
 
