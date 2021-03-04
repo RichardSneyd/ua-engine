@@ -320,16 +320,16 @@ class DraggableObject implements IGameObject {
 
             if (this._dropzones.length > 0) {
                 if (this._currentDropzone) this._currentDropzone.remove(this);
-                let moveTo;
+                let movedToDropzone;
                 for (let dropzone of this._dropzones) {
                     if (dropzone.pointerIsInside()) {
                         this._currentDropzone = dropzone;
                         dropzone.add(this);
-                        moveTo = true;
+                        movedToDropzone = true;
                         break;
                     }
                 }
-                if (!moveTo) {
+                if (!movedToDropzone) {
                     this.moveTo(this._initialPosition);
                     this._currentDropzone = null;
                 }
@@ -403,6 +403,14 @@ class DraggableObject implements IGameObject {
         if (this._isInitialized()) {
             this._background.changeTexture(textureName);
         }
+    }
+
+    /**
+     * @description Simulates the draggable was dragged and dropped to the current pointer position
+     */
+    simulateDrop() {
+        this._beingDragged = true;
+        this._drop();
     }
 
     /**
