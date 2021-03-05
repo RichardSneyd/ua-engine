@@ -122,17 +122,6 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         else {
             Debug.error('no bgd property in config cell of first row');
         }
-        //   let char = this._loader.getResource(configRow.config.char, true);
-        if (configRow.config.hasOwnProperty('char') && !this._manager.script.isFalsy(configRow.config.char) && this._loader.getResource(configRow.config.char, true)) {
-            let char;
-            if (this.manager.script.levelFile) char = this.manager.script.getLevelFileObject('spines', configRow.config.char);
-            if (!char) { // Default position and scale if char is not on Level file
-                char = { x: 20, y: this._game.height() - 150, scaleX: 1 };
-            }
-            this._character = this._goFactory.spine(char.x, char.y, configRow.config.char, this._foreground);
-            this._character.scaleHandler.scale = char.scaleX;
-            Debug.exposeGlobal(this._character, 'char');
-        }
 
         this._manager.input.onKeyDown(this._manager.input.keys.O, this._virtualOKPress, this);
         this._waitForFirstInput();
@@ -173,6 +162,16 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @description check the current row, and play animation if one is indicated for the character
      */
     public updateCharacterState() {
+        if (this.activeRow.config.hasOwnProperty('char') && !this._manager.script.isFalsy(this.activeRow.config.char) && this._loader.getResource(this.activeRow.config.char, true)) {
+            let char;
+            if (this.manager.script.levelFile) char = this.manager.script.getLevelFileObject('spines', this.activeRow.config.char);
+            if (!char) { // Default position and scale if char is not on Level file
+                char = { x: 20, y: this._game.height() - 150, scaleX: 1 };
+            }
+            this._character = this._goFactory.spine(char.x, char.y, this.activeRow.config.char, this._foreground);
+            this._character.scaleHandler.scale = char.scaleX;
+            Debug.exposeGlobal(this._character, 'char');
+        }
         if (this._character) {
             let loop = (this.activeRow.char_loop == 'y');
             let animation = this.activeRow.char;
