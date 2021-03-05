@@ -61,30 +61,30 @@ abstract class BaseLevel extends BaseScene implements ILevel {
             this._onActivityScriptInitialized(scriptName, script);
         });
     }
-    
+
     /**
      * @description this method triggers when the activity script is initialized -- trying to access the script in init() directly will 
      * result in errors because it uses async to load script
      * @param scriptName the name of the script to load (needed to load the level file within BaseLevel itself)
      * @param script the script object
      */
-    protected _onActivityScriptInitialized(scriptName: string, script: any){
-       //  this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
-       if (script[0].hasOwnProperty('config')) {
-        if (script[0].config.includes('level_file:')) {
-            this._loader.loadLevelFile(scriptName, (script: any) => {
-                this.manager.setLevelFile(script);
-                this._onLevelFileInitialized();
-            });
+    protected _onActivityScriptInitialized(scriptName: string, script: any) {
+        //  this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
+        if (script[0].hasOwnProperty('config')) {
+            if (script[0].config.includes('level_file:')) {
+                this._loader.loadLevelFile(scriptName, (script: any) => {
+                    this.manager.setLevelFile(script);
+                    this._onLevelFileInitialized();
+                });
+            }
+            else {
+                this.preload();
+            }
         }
-        else {
-            this.preload();
-        }
-    }
 
     }
 
-    protected _onLevelFileInitialized(){
+    protected _onLevelFileInitialized() {
         this.preload();
     }
 
@@ -176,11 +176,13 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if (this._character) {
             let loop = (this.activeRow.char_loop == 'y');
             let animation = this.activeRow.char;
-            if (animation && animation !== '') this._character.animations.addAnimation(animation, loop);
-            if (this._character.animations.animationNames.includes('idle')) {
-                if (!loop) this._character.animations.addAnimation('idle', true);
-            } else {
-                Debug.error('Character %s has no "idle" animation', this._character.name);
+            if (animation && animation !== '') this._character.animations.play(animation, loop);
+            if (!loop) {
+                if (this._character.animations.animationNames.includes('idle')) {
+                    this._character.animations.addAnimation('idle', true);
+                } else {
+                    Debug.error('Character "%s" has no "idle" animation', this._character.name);
+                }
             }
         }
     }
