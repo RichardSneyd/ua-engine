@@ -58,19 +58,34 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         this._loader.loadActScript(scriptName, (script: any, data: any) => {
             if (data == null || data == undefined) Debug.error('no script data returned: ', data);
             this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
-            //  this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
-            if (script[0].hasOwnProperty('config')) {
-                if (script[0].config.includes('level_file:')) {
-                    this._loader.loadLevelFile(scriptName, (script: any) => {
-                        this.manager.setLevelFile(script);
-                        this.preload();
-                    });
-                }
-                else {
-                    this.preload();
-                }
-            }
+            this._onActivityScriptInitialized(scriptName, script);
         });
+    }
+    
+    /**
+     * @description this method triggers when the activity script is initialized -- trying to access the script in init() directly will 
+     * result in errors because it uses async to load script
+     * @param scriptName the name of the script to load (needed to load the level file within BaseLevel itself)
+     * @param script the script object
+     */
+    protected _onActivityScriptInitialized(scriptName: string, script: any){
+       //  this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
+       if (script[0].hasOwnProperty('config')) {
+        if (script[0].config.includes('level_file:')) {
+            this._loader.loadLevelFile(scriptName, (script: any) => {
+                this.manager.setLevelFile(script);
+                this._onLevelFileInitialized();
+            });
+        }
+        else {
+            this.preload();
+        }
+    }
+
+    }
+
+    protected _onLevelFileInitialized(){
+        this.preload();
     }
 
     /**
