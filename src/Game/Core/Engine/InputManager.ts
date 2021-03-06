@@ -37,7 +37,7 @@ class InputManager {
         document.addEventListener('pointerdown', (event) => {
             this._pointerDown = true;
         });
-        document.addEventListener('onpointerup', (event) => {
+        document.addEventListener('pointerup', (event) => {
             this._pointerDown = false;
         });
 

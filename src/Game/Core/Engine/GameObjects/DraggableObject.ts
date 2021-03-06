@@ -54,8 +54,11 @@ class DraggableObject implements IGameObject {
 
     init(x: number, y: number, texture: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null): void {
         this.addSprite(x, y, texture, frame, parent);
-        this._loop.addFunction(this._update, this);
-        this._loop.start();
+        this._initLoop();
+    }
+
+    protected _initLoop(){
+        this._loop.addFunction(this._update, this);        
     }
 
     createNew(x: number, y: number, texture: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null): DraggableObject {
@@ -65,7 +68,9 @@ class DraggableObject implements IGameObject {
     }
 
     createEmpty(): DraggableObject {
-        return new DraggableObject(this._slice.createEmpty(), this._spine.createEmpty(), this._sprite.createEmpty(), this._text.createEmpty(), this._loop, this._dropzone.createEmpty(), this._point, this._events, this._input);
+        let draggable = new DraggableObject(this._slice.createEmpty(), this._spine.createEmpty(), this._sprite.createEmpty(), this._text.createEmpty(), this._loop, this._dropzone.createEmpty(), this._point, this._events, this._input);
+        draggable._initLoop();
+        return draggable;
     }
 
     /**
@@ -279,6 +284,7 @@ class DraggableObject implements IGameObject {
     private _addGO(go: BaseGameObject, scale: number = 1) {
         if (!this._background) {
             this._background = go;
+          //  this._initLoop();
 
             this._initialPosition = this._point.createNew(go.x, go.y);
             this._currentPosition = this._initialPosition;
@@ -293,12 +299,12 @@ class DraggableObject implements IGameObject {
 
     private _initListeners() {
         this._background.input.enableInput();
-        this._background.input.addInputListener('pointerup', () => { if (this._enabled) this._drop() }, this);
+      //  this._background.input.addInputListener('pointerup', () => { if (this._enabled) this._drop() }, this);
         this._background.input.addInputListener('pointerdown', () => { if (this._enabled) this._startDragging() }, this);
     }
 
     private _update() {
-       // Debug.info(this.name + ' update');
+      //  Debug.info(this.name + ' update, pointerdown: ', this._input.pointerDown);
         if (this._beingDragged && this._background) {
             this._background.moveToMouse(this._xOffset, this._yOffset);
         }
