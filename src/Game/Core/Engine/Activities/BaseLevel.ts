@@ -163,15 +163,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      */
     public updateCharacterState() {
         if (this.activeRow.config && this.activeRow.config.hasOwnProperty('char') && !this._manager.script.isFalsy(this.activeRow.config.char) && this._loader.getResource(this.activeRow.config.char, true)) {
-            let char;
-            if (this.manager.script.levelFile) char = this.manager.script.getLevelFileObject('spines', this.activeRow.config.char);
-            if (!char) { // Default position and scale if char is not on Level file
-                char = { x: 20, y: this._game.height() - 150, scaleX: 1 };
-            }
-            if(this._character) this._character.destroy();
-            this._character = this._goFactory.spine(char.x, char.y, this.activeRow.config.char, this._foreground);
-            this._character.scaleHandler.scale = char.scaleX;
-            Debug.exposeGlobal(this._character, 'char');
+           this._addCharacter();
         }
         if (this._character) {
             let loop = (this.activeRow.char_loop == 'y');
@@ -185,6 +177,18 @@ abstract class BaseLevel extends BaseScene implements ILevel {
                 }
             }
         }
+    }
+
+    protected _addCharacter(){
+        let char;
+        if (this.manager.script.levelFile) char = this.manager.script.getLevelFileObject('spines', this.activeRow.config.char);
+        if (!char) { // Default position and scale if char is not on Level file
+            char = { x: 20, y: this._game.height() - 150, scaleX: 1 };
+        }
+        if(this._character) this._character.destroy();
+        this._character = this._goFactory.spine(char.x, char.y, this.activeRow.config.char, this._foreground);
+        this._character.scaleHandler.scale = char.scaleX;
+        Debug.exposeGlobal(this._character, 'char');
     }
 
     /**
