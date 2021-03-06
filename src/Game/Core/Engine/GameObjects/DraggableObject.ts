@@ -298,7 +298,7 @@ class DraggableObject implements IGameObject {
     }
 
     private _update() {
-        Debug.info(this.name + ' update');
+       // Debug.info(this.name + ' update');
         if (this._beingDragged && this._background) {
             this._background.moveToMouse(this._xOffset, this._yOffset);
         }
@@ -319,7 +319,7 @@ class DraggableObject implements IGameObject {
     }
 
     private _drop() {
-        Debug.  info(this.name + ' _drop');
+      //  Debug.  info(this.name + ' _drop');
         if (this._background && this._beingDragged) {
             this._beingDragged = false;
 
