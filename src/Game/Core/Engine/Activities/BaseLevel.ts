@@ -162,7 +162,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @description check the current row, and play animation if one is indicated for the character
      */
     public updateCharacterState() {
-        if (this.activeRow.config.hasOwnProperty('char') && !this._manager.script.isFalsy(this.activeRow.config.char) && this._loader.getResource(this.activeRow.config.char, true)) {
+        if (this.activeRow.config && this.activeRow.config.hasOwnProperty('char') && !this._manager.script.isFalsy(this.activeRow.config.char) && this._loader.getResource(this.activeRow.config.char, true)) {
             let char;
             if (this.manager.script.levelFile) char = this.manager.script.getLevelFileObject('spines', this.activeRow.config.char);
             if (!char) { // Default position and scale if char is not on Level file
