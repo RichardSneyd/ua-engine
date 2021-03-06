@@ -50,12 +50,12 @@ class DraggableObject implements IGameObject {
         this._doAfterDropping = () => { };
         this._currentDropzone = null;
 
-        this._loop.addFunction(this._update, this);
-        this._loop.start();
     }
 
     init(x: number, y: number, texture: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null): void {
         this.addSprite(x, y, texture, frame, parent);
+        this._loop.addFunction(this._update, this);
+        this._loop.start();
     }
 
     createNew(x: number, y: number, texture: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null): DraggableObject {
@@ -298,11 +298,15 @@ class DraggableObject implements IGameObject {
     }
 
     private _update() {
+        Debug.info(this.name + ' update');
         if (this._beingDragged && this._background) {
             this._background.moveToMouse(this._xOffset, this._yOffset);
         }
 
-        if (this._beingDragged && !this._input.pointerDown) this._drop();
+        if (this._beingDragged && !this._input.pointerDown) 
+        {
+            this._drop();
+        }
     }
 
     private _startDragging() {
@@ -315,6 +319,7 @@ class DraggableObject implements IGameObject {
     }
 
     private _drop() {
+        Debug.  info(this.name + ' _drop');
         if (this._background && this._beingDragged) {
             this._beingDragged = false;
 
