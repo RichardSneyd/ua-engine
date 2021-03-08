@@ -223,7 +223,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     _waitForFirstInput(): void {
         let canvas = document.getElementsByTagName('canvas')[0];
         canvas.addEventListener('pointerdown', () => {
-            if(this.ready){
+            if(!this.ready){
                 this.manager.script.goTo(this.manager.script.rows[0]);
                 this.ready = true;
             }
