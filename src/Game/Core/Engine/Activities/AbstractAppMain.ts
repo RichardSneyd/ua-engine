@@ -86,6 +86,7 @@ abstract class AbstractAppMain {
     protected _start() {
         this._levelManager.globalEvents.on('level_start', this.showActivityBar, this);
         this._levelManager.globalEvents.on('level_shutdown', this.hideActivityBar, this);
+     //   this._levelManager.globalEvents.on('pause', this.hideActivityBar, this);
         let scene = this.getURLSceneCode();
         if (scene == null) scene = 'main_menu';
         if (scene.includes('menu')) this._game.startActivity(scene, this._defaultActivity);

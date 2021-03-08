@@ -125,6 +125,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
 
         this._manager.input.onKeyDown(this._manager.input.keys.O, this._virtualOKPress, this);
         this._waitForFirstInput();
+        super.start();
     }
 
     protected _virtualOKPress() {
@@ -188,6 +189,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if(this._character) this._character.destroy();
         this._character = this._goFactory.spine(char.x, char.y, this.activeRow.config.char, this._foreground);
         this._character.scaleHandler.scale = char.scaleX;
+        if(!this._manager.script.levelFile) this._character.setOrigin(0.5, 1);
         Debug.exposeGlobal(this._character, 'char');
     }
 

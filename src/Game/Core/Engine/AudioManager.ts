@@ -23,6 +23,8 @@ class AudioManager {
         this._music = '';
         this._events = events;
         this._events.on('shutdown', this._stopInstPlaying, this);
+        this._events.on('pause', this._pause, this);
+        this._events.on('resume', this._resume, this);
     }
 
     get filesPlaying() {
@@ -117,6 +119,7 @@ class AudioManager {
     }
 
     private _pause() {
+        // debug pausing
         for (let x = 0; x < this._playing.length; x++) {
             this._pauseFile(this._playing[x]);
         }
