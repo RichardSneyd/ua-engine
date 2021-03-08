@@ -20,14 +20,14 @@ import SceneEvents from "./SceneEvents";
 abstract class BaseLevel extends BaseScene implements ILevel {
     protected _manager: LevelManager;
     protected _bgd: SpriteObject;
-    protected _ready: boolean = false;
+    protected _ready: boolean;
 
     protected _character: SpineObject;
 
     constructor(manager: LevelManager, events: SceneEvents, loop: Loop, goFactory: GOFactory, loader: Loader, game: Game) {
         super(events, loop, goFactory, loader, game);
         this._manager = manager;
-        Debug.exposeGlobal(this, 'level');
+        this._ready = false;
         //  Debug.exposeGlobal(this, 'level'); // expose all levels globally as 'level' for debugging convenience
     }
 
@@ -164,7 +164,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      */
     public updateCharacterState() {
         if (this.activeRow.config && this.activeRow.config.hasOwnProperty('char') && !this._manager.script.isFalsy(this.activeRow.config.char) && this._loader.getResource(this.activeRow.config.char, true)) {
-           this._addCharacter();
+            this._addCharacter();
         }
         if (this._character) {
             let loop = (this.activeRow.char_loop == 'y');
@@ -180,17 +180,17 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         }
     }
 
-    protected _addCharacter(){
+    protected _addCharacter() {
         let char;
         if (this.manager.script.levelFile) char = this.manager.script.getLevelFileObject('spines', this.activeRow.config.char);
         if (!char) { // Default position and scale if char is not on Level file
-            char = { x: 20, y: this._game.height() - 50, scaleX: 1, originX: 0, originY: 1};
+            char = { x: 20, y: this._game.height() - 50, scaleX: 1, originX: 0, originY: 1 };
         }
-        if(this._character) this._character.destroy();
+        if (this._character) this._character.destroy();
         this._character = this._goFactory.spine(char.x, char.y, this.activeRow.config.char, this._foreground);
         this._character.scaleHandler.scale = char.scaleX;
         this._character.setOrigin(char.originX, char.originY);
-      //  if(!this._manager.script.levelFile || !this._manager.script.getLevelFileObject('spines', this._manager.script.active.config.char)) 
+        //  if(!this._manager.script.levelFile || !this._manager.script.getLevelFileObject('spines', this._manager.script.active.config.char)) 
         Debug.exposeGlobal(this._character, 'char');
     }
 
@@ -212,7 +212,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if (this.activeRow.hasOwnProperty('config') && this.activeRow.config.hasOwnProperty('bgd') && this.activeRow.config.bgd !== '') {
             this._bgd.changeTexture(this.manager.script.active.config.bgd);
         }
-        if(this.activeRow.hasOwnProperty('config') && this.activeRow.config.hasOwnProperty('go_to')){
+        if (this.activeRow.hasOwnProperty('config') && this.activeRow.config.hasOwnProperty('go_to')) {
             this._goto(this.activeRow.config.go_to);
         }
     }
@@ -221,13 +221,17 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @description a method which waits for the first user gesture, before calling the first row in the activityScript
      */
     _waitForFirstInput(): void {
-        let canvas = document.getElementsByTagName('canvas')[0];
-        canvas.addEventListener('pointerdown', () => {
-            if(!this.ready){
-                this.manager.script.goTo(this.manager.script.rows[0]);
-                this.ready = true;
-            }
-        }, { once: true });
+        if (!this.ready) {
+            let canvas = document.getElementsByTagName('canvas')[0];
+            canvas.addEventListener('pointerdown', () => {
+                this._onFirstInput();
+            }, { once: true });
+        }
+    }
+
+    protected _onFirstInput() {
+        this.manager.script.goTo(this.manager.script.rows[0]);
+        this.ready = true;
     }
 
     /**
