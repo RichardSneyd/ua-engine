@@ -8,7 +8,6 @@ class Dropzone {
     private _name: string;
     private _topLeft: Point;
     private _bottomRight: Point;
-    private _center: Point;
     private _vertical: boolean | undefined;
     private _gap: number;
     private _draggables: DraggableObject[];
@@ -27,7 +26,6 @@ class Dropzone {
 
         this._topLeft = this._point.createNew(zone.x, zone.y);
         this._bottomRight = this._point.createNew(zone.x + zone.width, zone.y + zone.height);
-        this._center = this._point.createNew(zone.x + zone.width / 2, zone.y + zone.height / 2);
     }
 
     createNew(name: string, zone: { x: number, y: number, width: number, height: number },
@@ -53,10 +51,6 @@ class Dropzone {
         return this._bottomRight;
     }
 
-    get center(): Point {
-        return this._center;
-    }
-
     set topLeft(topLeft: Point) {
         this._topLeft = topLeft;
     }
@@ -65,13 +59,11 @@ class Dropzone {
         this._bottomRight = bottomRight;
     }
 
-    set center(center: Point) {
-        this._center = center;
-    }
-
     add(draggable: DraggableObject) {
+        let x = this._topLeft.x + draggable.origin.x * draggable.width;
+        let y = this._topLeft.y + draggable.origin.y * draggable.height;
         if (this._vertical === undefined) {
-            draggable.moveTo(this._center);
+            draggable.moveTo(this._point.createNew(x, y));
         } else {
             let length = (this._vertical) ? draggable.height : draggable.width;
             let start = (this._vertical) ? this.topLeft.y : this.topLeft.x;
@@ -80,10 +72,8 @@ class Dropzone {
             let coordinate = start + draggablesIn * (length + this._gap) + length * origin;
 
             if (this._vertical) {
-                let x = this._topLeft.x + draggable.origin.x * draggable.width;
                 draggable.moveTo(this._point.createNew(x, coordinate));
             } else {
-                let y = this._topLeft.y + draggable.origin.y * draggable.height;
                 draggable.moveTo(this._point.createNew(coordinate, y));
             }
             this._draggables.push(draggable);
