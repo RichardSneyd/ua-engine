@@ -57,8 +57,8 @@ class DraggableObject implements IGameObject {
         this._initLoop();
     }
 
-    protected _initLoop(){
-        this._loop.addFunction(this._update, this);        
+    protected _initLoop() {
+        this._loop.addFunction(this._update, this);
     }
 
     createNew(x: number, y: number, texture: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null): DraggableObject {
@@ -284,7 +284,7 @@ class DraggableObject implements IGameObject {
     private _addGO(go: BaseGameObject, scale: number = 1) {
         if (!this._background) {
             this._background = go;
-          //  this._initLoop();
+            //  this._initLoop();
 
             this._initialPosition = this._point.createNew(go.x, go.y);
             this._currentPosition = this._initialPosition;
@@ -299,18 +299,17 @@ class DraggableObject implements IGameObject {
 
     private _initListeners() {
         this._background.input.enableInput();
-      //  this._background.input.addInputListener('pointerup', () => { if (this._enabled) this._drop() }, this);
+        //  this._background.input.addInputListener('pointerup', () => { if (this._enabled) this._drop() }, this);
         this._background.input.addInputListener('pointerdown', () => { if (this._enabled) this._startDragging() }, this);
     }
 
     private _update() {
-      //  Debug.info(this.name + ' update, pointerdown: ', this._input.pointerDown);
+        //  Debug.info(this.name + ' update, pointerdown: ', this._input.pointerDown);
         if (this._beingDragged && this._background) {
             this._background.moveToMouse(this._xOffset, this._yOffset);
         }
 
-        if (this._beingDragged && !this._input.pointerDown) 
-        {
+        if (this._beingDragged && !this._input.pointerDown) {
             this._drop();
         }
     }
@@ -325,7 +324,7 @@ class DraggableObject implements IGameObject {
     }
 
     private _drop() {
-      //  Debug.  info(this.name + ' _drop');
+        //  Debug.  info(this.name + ' _drop');
         if (this._background && this._beingDragged) {
             this._beingDragged = false;
 
@@ -404,6 +403,17 @@ class DraggableObject implements IGameObject {
         for (let object of this._layers) object.destroy();
         this._background.destroy();
         this._loop.removeFunction(this._update, this);
+    }
+
+    /**
+     * @description Change the origin without moving the object on-screen
+     * @param x the new x origin to set
+     * @param y the new y origin to set. If not provided, the x value will be used
+     */
+    shiftOrigin(x: number, y?: number | undefined) {
+        if (this._isInitialized()) {
+            this._background.shiftOrigin(x, y);
+        }
     }
 
     /**
