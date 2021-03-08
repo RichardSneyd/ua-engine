@@ -212,12 +212,12 @@ abstract class BaseGameObject implements IGameObject {
      */
     shiftOrigin(x: number, y?: number){
         if(!y) y = x;
-        let xOrigDiff = x - this.origin.x;
-        let yOrigDiff = y - this.origin.y;
+        let xOrigDiff = x - this._core.origin.x;
+        let yOrigDiff = y - this._core.origin.y;
         let xDiff = this.childlessWidth * xOrigDiff;
         let yDiff = this.childlessHeight * yOrigDiff;
-        this.moveBy(xDiff, yDiff);
-        this.setOrigin(x, y);
+        this._core.moveBy(xDiff, yDiff);
+        this._core.setOrigin(x, y);
     }
 
     get origin(): Point {

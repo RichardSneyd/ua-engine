@@ -26,6 +26,7 @@ abstract class BaseMenu extends BaseScene {
     init(sceneName: string, bgdName: string, hasLevelFile: boolean = true) {
         this._bgdName = bgdName;
         this._events.global.emit('menu_init');
+        this._events.global.on('shutdown', this.shutdown, this);
         super.init(sceneName);
         this._manager.init(sceneName, [], [], []);
         if (!hasLevelFile) {
