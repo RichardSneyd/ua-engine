@@ -212,6 +212,9 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if (this.activeRow.hasOwnProperty('config') && this.activeRow.config.hasOwnProperty('bgd') && this.activeRow.config.bgd !== '') {
             this._bgd.changeTexture(this.manager.script.active.config.bgd);
         }
+        if(this.activeRow.hasOwnProperty('config') && this.activeRow.config.hasOwnProperty('go_to')){
+            this._goto(this.activeRow.config.go_to);
+        }
     }
 
     /**

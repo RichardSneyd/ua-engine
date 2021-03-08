@@ -41,6 +41,7 @@ class AudioManager {
         let _name = name;
         let res = this._loader.getResource(name, true);
         if (res !== null && res.data._state == 'loaded') { // when the file doesn't exists, the res is still created in loader, but data._state says 'loading'
+            this._playing.push(name);
             this._hwPlayer.play(name, res, () => {
                 //   Debug.info('callback received for %s in AudioManager', _name)
                 this._playing.splice(this._playing.indexOf(name), 1);
@@ -123,6 +124,7 @@ class AudioManager {
         for (let x = 0; x < this._playing.length; x++) {
             this._pauseFile(this._playing[x]);
         }
+        this
     }
 
     private _resume() {

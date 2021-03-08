@@ -269,7 +269,7 @@ class Loader {
 
         this._resList.push(res);
         this._newResList.push(res);
-        Debug.info(this._resList);
+    //    Debug.info(this._resList);
         return this;
       }
       Debug.warn('did not add %s spine, as it already exists', name);

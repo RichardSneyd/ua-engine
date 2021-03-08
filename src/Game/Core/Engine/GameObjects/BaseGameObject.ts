@@ -205,6 +205,21 @@ abstract class BaseGameObject implements IGameObject {
         return this._core.setOrigin.bind(this._core);
     }
 
+    /**
+     * @description Change the origin without moving the object on-screen
+     * @param x the new x origin to set
+     * @param y the new y origin to set. If not provided, the x value will be used in both cases instead
+     */
+    shiftOrigin(x: number, y?: number){
+        if(!y) y = x;
+        let xOrigDiff = x - this.origin.x;
+        let yOrigDiff = y - this.origin.y;
+        let xDiff = this.childlessWidth * xOrigDiff;
+        let yDiff = this.childlessHeight * yOrigDiff;
+        this.moveBy(xDiff, yDiff);
+        this.setOrigin(x, y);
+    }
+
     get origin(): Point {
         return this._core.origin;
     }
