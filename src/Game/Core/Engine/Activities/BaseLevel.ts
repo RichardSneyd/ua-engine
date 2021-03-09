@@ -1,3 +1,4 @@
+import UAE from "../../../UAE";
 import Game from "../../Game";
 import Debug from "../Debug";
 import Events from "../Events";
@@ -217,8 +218,9 @@ abstract class BaseLevel extends BaseScene implements ILevel {
                 this._goto(this.activeRow.config.go_to);
             }
             if(this.activeRow.config.hasOwnProperty('trans_sfx')){
+                this._manager.globalEvents.emit('transition_start'); // start the 'curtain fall'
                 this._manager.audio.play(this.activeRow.config.trans_sfx, ()=>{
-                    // yo
+                    this._manager.globalEvents.emit('transition_finish'); // curtain fall complete, signal this
                 });
             }
             if(this.activeRow.config.hasOwnProperty('sfx')){
@@ -233,12 +235,13 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @description a method which waits for the first user gesture, before calling the first row in the activityScript
      */
     _waitForFirstInput(): void {
-        if (!this.ready) {
+      //  if (!this.ready) {
             let canvas = document.getElementsByTagName('canvas')[0];
             canvas.addEventListener('pointerdown', () => {
+             //   canvas.removeEventListener('pointerdown', this._onFirstInput);
                 this._onFirstInput();
             }, { once: true });
-        }
+      //  }
     }
 
     protected _onFirstInput() {
