@@ -1,3 +1,4 @@
+import UAE from "../../../UAE";
 import Game from "../../Game";
 import Debug from "../Debug";
 import BaseGameObject from "../GameObjects/BaseGameObject";
@@ -48,7 +49,7 @@ abstract class BaseScene implements IScene {
         this._foreground = this._goFactory.container(0, 0);
         this._loop.addFunction(this.update, this);
         this._loop.start(); // just in case the loop hasn't been started yet - if it has, this will do nothing.
-
+        Debug.exposeGlobal(this, 'scene');
         // remember to call preload from the subclass
     }
 
