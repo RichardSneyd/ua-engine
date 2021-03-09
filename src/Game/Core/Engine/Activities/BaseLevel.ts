@@ -125,8 +125,8 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         }
 
         this._manager.input.onKeyDown(this._manager.input.keys.O, this._virtualOKPress, this);
-        this._waitForFirstInput();
         super.start();
+        this._waitForFirstInput();
     }
 
     protected _virtualOKPress() {
@@ -238,7 +238,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
       //  if (!this.ready) {
             let canvas = document.getElementsByTagName('canvas')[0];
             canvas.addEventListener('pointerdown', () => {
-             //   canvas.removeEventListener('pointerdown', this._onFirstInput);
+                canvas.removeEventListener('pointerdown', this._onFirstInput);
                 this._onFirstInput();
             }, { once: true });
       //  }
