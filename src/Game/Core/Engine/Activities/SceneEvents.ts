@@ -14,6 +14,7 @@ class SceneEvents extends AbstractEventEmitter {
 
         this._globalEvents.addListener('pause', this.pause, this);
         this._globalEvents.addListener('resume', this.resume, this);
+        this._globalEvents.on('shutdown', this.shutdown, this);
     }
 
     get global(){
@@ -24,6 +25,10 @@ class SceneEvents extends AbstractEventEmitter {
         return new SceneEvents(this._globalEvents);
     }
 
+    shutdown(){
+        this._globalEvents.off('pause', this.pause, this);
+        this._globalEvents.off('resume', this.resume, this);
+    }
 }
 
 export default SceneEvents;
