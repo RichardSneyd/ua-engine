@@ -284,7 +284,7 @@ class DraggableObject implements IGameObject {
     private _addGO(go: BaseGameObject, scale: number = 1) {
         if (!this._background) {
             this._background = go;
-            //  this._initLoop();
+            this.shiftOrigin(.5);
 
             this._initialPosition = this._point.createNew(go.x, go.y);
             this._currentPosition = this._initialPosition;
