@@ -98,7 +98,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if (!this._manager.script.isFalsy(this.configRow.config.char)) {
             this._loader.addSpine(this.configRow.config.char);
         }
-        let sfx = this._manager.script.fileList(['config.sfx']);
+        let sfx = this._manager.script.fileList(['config.sfx', 'config.trans_sfx']);
         if (sfx.length > 0) {
             this._loader.addSnds(sfx);
         }
@@ -209,11 +209,23 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * from row to row, gives control to the IDs). Called in BaseLevel.onNewRow by defeault. Override onNewRow to change this.
      */
     loadConfig(): void {
-        if (this.activeRow.hasOwnProperty('config') && this.activeRow.config.hasOwnProperty('bgd') && this.activeRow.config.bgd !== '') {
-            this._bgd.changeTexture(this.manager.script.active.config.bgd);
-        }
-        if (this.activeRow.hasOwnProperty('config') && this.activeRow.config.hasOwnProperty('go_to')) {
-            this._goto(this.activeRow.config.go_to);
+        if (this.activeRow.hasOwnProperty('config')){
+            if (this.activeRow.config.hasOwnProperty('bgd') && this.activeRow.config.bgd !== '') {
+                this._bgd.changeTexture(this.manager.script.active.config.bgd);
+            }
+            if (this.activeRow.config.hasOwnProperty('go_to')) {
+                this._goto(this.activeRow.config.go_to);
+            }
+            if(this.activeRow.config.hasOwnProperty('trans_sfx')){
+                this._manager.audio.play(this.activeRow.config.trans_sfx, ()=>{
+                    // yo
+                });
+            }
+            if(this.activeRow.config.hasOwnProperty('sfx')){
+                this._manager.audio.play(this.activeRow.config.trans_sfx, ()=>{
+                    // yo
+                });
+            }
         }
     }
 
