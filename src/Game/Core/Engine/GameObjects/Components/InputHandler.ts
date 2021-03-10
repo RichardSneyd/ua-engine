@@ -86,8 +86,8 @@ class InputHandler {
 
   public pixelHit(point: Point): boolean {
     // get pixel index formula: (x + y * width )* 4
-    let x = Math.round(point.x - this._go.childlessLeft);
-    let y = Math.round(point.y - this._go.childlessTop);
+    let x = Math.round(point.x - (this._go.globalX - (this._go.childlessWidth * this._go.origin.x)));
+    let y = Math.round(point.y - (this._go.globalY - (this._go.childlessHeight * this._go.origin.y)));
     let index: number = Math.round(x + (y * this._go.childlessWidth));
   //  Debug.info('x: ', x, 'y: ', y, 'width: ', this._go.childlessWidth);
  //   Debug.info('RGBA index: ', index, ', val: ', this._go.hitMap[index]);
