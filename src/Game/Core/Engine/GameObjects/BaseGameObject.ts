@@ -89,7 +89,7 @@ abstract class BaseGameObject implements IGameObject {
             hitPixels.push(this._colorMap[i]);
         }
         this._hitMap = new Uint8Array(hitPixels);
-        Debug.info(this.name + ' hMap length: ', this._hitMap.length, ', number pixels: ', this.childlessWidth * this.childlessHeight);
+      //  Debug.info(this.name + ' hMap length: ', this._hitMap.length, ', number pixels: ', this.childlessWidth * this.childlessHeight);
     }
 
     //public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): any {

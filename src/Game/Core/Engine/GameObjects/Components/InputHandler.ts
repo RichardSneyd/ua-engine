@@ -89,8 +89,8 @@ class InputHandler {
     let x = Math.round(point.x - this._go.childlessLeft);
     let y = Math.round(point.y - this._go.childlessTop);
     let index: number = Math.round(x + (y * this._go.childlessWidth));
-    Debug.info('x: ', x, 'y: ', y, 'width: ', this._go.childlessWidth);
-    Debug.info('RGBA index: ', index, ', val: ', this._go.hitMap[index]);
+  //  Debug.info('x: ', x, 'y: ', y, 'width: ', this._go.childlessWidth);
+ //   Debug.info('RGBA index: ', index, ', val: ', this._go.hitMap[index]);
 
     if (this._go.hitMap[index] > this._pixelPerfectThreshold) return true;
     return false;
