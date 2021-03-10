@@ -293,8 +293,8 @@ class DraggableObject implements IGameObject {
         } else {
             this._background.addChild(go);
             this._layers.push(go);
+            go.setOrigin(.5);
         }
-        go.setOrigin(.5);
         go.scaleHandler.scale = scale;
     }
 
@@ -660,11 +660,13 @@ class DraggableObject implements IGameObject {
     }
 
     get globalX(){
-        return this._sprite.globalX;
+        this._isInitialized();
+        return this._background.globalX;
     }
 
     get globalY(){
-        return this._sprite.globalY;
+        this._isInitialized();
+        return this._background.globalY;
     }
 
     /**
