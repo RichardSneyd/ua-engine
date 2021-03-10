@@ -45,7 +45,9 @@ class InputHandler {
     // this._screen.addHitMap(this._core.data, threshold);
     this._pixelPerfect = true;
     this._pixelPerfectThreshold = threshold;
-    this._go.updateColorMap();
+    this._go.width = Math.round(this._go.childlessWidth);
+    this._go.height = Math.round(this._go.childlessHeight);
+    this._go.updateHitmap();
     return true;
   }
 
@@ -84,13 +86,13 @@ class InputHandler {
 
   public pixelHit(point: Point): boolean {
     // get pixel index formula: (x + y * width )* 4
-    let x = Math.abs(point.x - this._go.left);
-    let y = Math.abs(point.y - this._go.top);
-    let index: number = Math.round((x + (y * this._go.width)) * 4);
-    Debug.info('x: ', x, 'y: ', y, 'width: ', this._go.width);
-    Debug.info('RGBA index: ', index, ', val: ', this._go.colorMap[index]);
+    let x = Math.round(point.x - this._go.childlessLeft);
+    let y = Math.round(point.y - this._go.childlessTop);
+    let index: number = Math.round(x + (y * this._go.childlessWidth));
+    Debug.info('x: ', x, 'y: ', y, 'width: ', this._go.childlessWidth);
+    Debug.info('RGBA index: ', index, ', val: ', this._go.hitMap[index]);
 
-    if (this._go.colorMap[index] > this._pixelPerfectThreshold) return true;
+    if (this._go.hitMap[index] > this._pixelPerfectThreshold) return true;
     return false;
   }
 

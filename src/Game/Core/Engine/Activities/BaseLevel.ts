@@ -238,7 +238,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
       //  if (!this.ready) {
             let canvas = document.getElementsByTagName('canvas')[0];
             canvas.addEventListener('pointerdown', () => {
-                canvas.removeEventListener('pointerdown', this._onFirstInput);
+              //  canvas.removeEventListener('pointerdown', this._onFirstInput);
                 this._onFirstInput();
             }, { once: true });
       //  }

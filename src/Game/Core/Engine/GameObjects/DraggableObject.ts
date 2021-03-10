@@ -659,6 +659,14 @@ class DraggableObject implements IGameObject {
         this._background.parent = parent;
     }
 
+    get globalX(){
+        return this._sprite.globalX;
+    }
+
+    get globalY(){
+        return this._sprite.globalY;
+    }
+
     /**
      * @description Sets if this draggable can be moved
      */

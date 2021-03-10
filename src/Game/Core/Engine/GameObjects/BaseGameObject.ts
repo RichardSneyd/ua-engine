@@ -32,6 +32,7 @@ abstract class BaseGameObject implements IGameObject {
     protected _extract: ExtractComponent;
     protected _hitShape: IHitShape | null;
     protected _colorMap: Uint8Array | Uint8ClampedArray; // 1D array of 8 bit (1 byte) unsigned (0 or positive) integers, in format RGBA
+    protected _hitMap: Uint8Array | Uint8ClampedArray;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
         scaleHandler: ScaleHandler, tweenComponent: TweenComponent, extract: ExtractComponent) {
@@ -66,11 +67,29 @@ abstract class BaseGameObject implements IGameObject {
         return this._colorMap;
     }
 
+    
+    /**
+     * @description a 1D array of just alpha pixel values (1 per pixel). This is set on creation of the gameObject, and when changeTexture is called. 
+     */
+    get hitMap(){
+        return this._hitMap;
+    }
+
     /**
      * @description updates the colorMap based on a scrape of the Texture displayed in the current frame 
      */
     public updateColorMap(){
         this._colorMap = this._extract.pixels();
+    }
+
+    public updateHitmap(){
+        this.updateColorMap();
+        let hitPixels = [];
+        for(let i = 3; i < this._colorMap.length; i+=4){
+            hitPixels.push(this._colorMap[i]);
+        }
+        this._hitMap = new Uint8Array(hitPixels);
+        Debug.info(this.name + ' hMap length: ', this._hitMap.length, ', number pixels: ', this.childlessWidth * this.childlessHeight);
     }
 
     //public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): any {
@@ -583,6 +602,24 @@ abstract class BaseGameObject implements IGameObject {
         }
 
         return left;
+    }
+
+    get globalX(){
+        if(this.parent){
+            return this.x - this.parent.globalX;
+        }
+        else {
+            return this.x;
+        }
+    }
+
+    get globalY(){
+        if(this.parent){
+            return this.y - this.parent.globalY;
+        }
+        else {
+            return this.y;
+        }
     }
 }
 

@@ -45,6 +45,8 @@ interface IGameObject extends IParentChild{
     sort(): void;
     extract: ExtractComponent;
     name: string;
+    globalX: number;
+    globalY: number;
 }
 
 export default IGameObject;
