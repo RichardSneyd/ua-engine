@@ -61,8 +61,8 @@ class PxFactory {
 
 
   private _applyHacks() {
-  //  this._hitmapHack();
-  //  this._spineHitmapHack();
+   // this._hitmapHack();
+//    this._spineHitmapHack();
   }
 
   private _hitmapHack() {
@@ -71,7 +71,7 @@ class PxFactory {
     const tempPoint = new PIXI.Point();
     /* Sprite.prototype.containsPoint = function (point: Point) : boolean {
       Debug.info('containsPoint hack');
-      return false;
+      return false;this.containsPixelPerfect.bind(this)(point);
     } */
     Sprite.prototype.containsPoint = function (point: Point): boolean {
       // Debug.info('in overridden containsPoint hack method...');

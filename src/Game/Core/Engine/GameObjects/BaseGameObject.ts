@@ -47,9 +47,9 @@ abstract class BaseGameObject implements IGameObject {
         this._input.init(this, this._core);
         this._tweenComponent.init(this);
         this._extract.init(this);
-       /*  this._extract.toPixels().then((pixels)=>{
-            this._pixels = pixels;
-        }) */
+        /*  this._extract.toPixels().then((pixels)=>{
+             this._pixels = pixels;
+         }) */
     }
 
     get name(): string {
@@ -67,29 +67,30 @@ abstract class BaseGameObject implements IGameObject {
         return this._colorMap;
     }
 
-    
+
     /**
      * @description a 1D array of just alpha pixel values (1 per pixel). This is set on creation of the gameObject, and when changeTexture is called. 
      */
-    get hitMap(){
+    get hitMap() {
         return this._hitMap;
     }
 
     /**
      * @description updates the colorMap based on a scrape of the Texture displayed in the current frame 
      */
-    public updateColorMap(){
+    public updateColorMap() {
         this._colorMap = this._extract.pixels();
     }
 
-    public updateHitmap(){
+    public updateHitmap() {
         this.updateColorMap();
         let hitPixels = [];
-        for(let i = 3; i < this._colorMap.length; i+=4){
+        for (let i = 3; i < this._colorMap.length; i += 4) {
             hitPixels.push(this._colorMap[i]);
         }
         this._hitMap = new Uint8Array(hitPixels);
-      //  Debug.info(this.name + ' hMap length: ', this._hitMap.length, ', number pixels: ', this.childlessWidth * this.childlessHeight);
+        //  this._core.data.hitMap = this._hitMap;
+        //  Debug.info(this.name + ' hMap length: ', this._hitMap.length, ', number pixels: ', this.childlessWidth * this.childlessHeight);
     }
 
     //public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null = null): any {
@@ -148,6 +149,9 @@ abstract class BaseGameObject implements IGameObject {
         return this._pcHandler;
     }
 
+    get core() {
+        return this._core;
+    }
     // override this
     get animations(): any {
         //  return this._animationManager;
@@ -159,7 +163,7 @@ abstract class BaseGameObject implements IGameObject {
         return this._core.data;
     }
 
-    set data(data:  any) {
+    set data(data: any) {
         this._core.data = data;
     }
 
@@ -205,13 +209,13 @@ abstract class BaseGameObject implements IGameObject {
 
     set zIndex(index: number) {
         this._core.zIndex = index;
-     //   if(this.parent) this.parent.sort();
+        //   if(this.parent) this.parent.sort();
     }
 
     /**
      * @description sort children
      */
-    sort(){
+    sort() {
         this._core.sortChildren();
     }
 
@@ -229,14 +233,35 @@ abstract class BaseGameObject implements IGameObject {
      * @param x the new x origin to set
      * @param y the new y origin to set. If not provided, the x value will be used in both cases instead
      */
-    shiftOrigin(x: number, y?: number){
-        if(!y) y = x;
+    shiftOrigin(x: number, y?: number) {
+        if (!y) y = x;
         let xOrigDiff = x - this._core.origin.x;
         let yOrigDiff = y - this._core.origin.y;
         let xDiff = this.childlessWidth * xOrigDiff;
         let yDiff = this.childlessHeight * yOrigDiff;
         this._core.moveBy(xDiff, yDiff);
         this._core.setOrigin(x, y);
+    }
+
+    /**
+     * @description checks if the global point is within the screen bounds of the object
+     * @param point the global point to check 
+     */
+    inBounds(point: Point): boolean {
+        if (point.x > this.globalLeft && point.x < this.globalLeft + this.childlessWidth) {
+            if (point.y > this.globalTop && point.y < this.globalTop + this.childlessHeight) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    get globalLeft() {
+        return this.globalX - (this.childlessWidth * this.origin.x);
+    }
+
+    get globalTop() {
+        return this.globalY - (this.childlessHeight * this.origin.y);
     }
 
     get origin(): Point {
@@ -488,7 +513,7 @@ abstract class BaseGameObject implements IGameObject {
      * @description also recursively destroys all children
      */
     destroy() {
-       // if (this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
+        // if (this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
         this.destroyChildren();
         this._core.destroy();
     }
@@ -496,7 +521,7 @@ abstract class BaseGameObject implements IGameObject {
     /**
      * @description destroys all children in the children array and removes them from it
      */
-    destroyChildren(){
+    destroyChildren() {
         this._pcHandler.destroyChildren();
     }
 
@@ -504,7 +529,7 @@ abstract class BaseGameObject implements IGameObject {
      * @description destroys the child and removes it from the children array
      * @param child the child to remove. Must be an IGameObject
      */
-    destroyChild(child: IGameObject){
+    destroyChild(child: IGameObject) {
         this._pcHandler.destroyChild(child);
     }
 
@@ -532,11 +557,11 @@ abstract class BaseGameObject implements IGameObject {
         return this._pcHandler.children;
     }
 
-    set opacity(value: number){
+    set opacity(value: number) {
         this._core.alpha = value;
     }
 
-    get opacity(){
+    get opacity() {
         return this._core.alpha;
     }
 
@@ -604,22 +629,76 @@ abstract class BaseGameObject implements IGameObject {
         return left;
     }
 
-    get globalX(){
-        if(this.parent){
-            return this.x - this.parent.globalX;
+    get globalX() {
+        if (this.parent) {
+            return this.x + this.parent.globalX;
         }
         else {
             return this.x;
         }
     }
 
-    get globalY(){
-        if(this.parent){
-            return this.y - this.parent.globalY;
+    get globalY() {
+        if (this.parent) {
+            return this.y + this.parent.globalY;
         }
         else {
             return this.y;
         }
+    }
+
+    /**
+     * 
+     * @param val converts a global x coordinate to a local x coordinate
+     * @returns a local x coordinate
+     */
+    toLocalX(val: number) : number{
+        return val - this.globalX;
+    }
+    
+     /**
+     * 
+     * @param val converts a global y coordinate to a local y coordinate
+     * @returns a local x coordinate
+     */
+    toLocalY(val: number) : number{
+        return val - this.globalY;
+    }
+
+     /**
+     * 
+     * @param val converts a local x coordinate to a global x coordinate
+     * @returns a global x coordinate
+     */
+    toGlobalX(val: number) : number{
+        return val + this.globalX;
+    }
+
+      /**
+     * 
+     * @param val converts a local y coordinate to a global y coordinate
+     * @returns a global y coordinate
+     */
+    toGlobalY(val: number) : number{
+        return val + this.globalY;
+    }
+
+      /**
+     * 
+     * @param val converts a global point to a global point
+     * @returns a local point
+     */
+    toLocal(point: IPoint): IPoint{
+        return {x: this.toLocalX(point.x), y: this.toLocalY(point.y)}
+    }
+
+    /**
+     * 
+     * @param point converts a local point to a global point
+     * @returns a global point
+     */
+    toGlobal(point: IPoint): IPoint{
+        return {x: this.toGlobalX(point.x), y: this.toGlobalY(point.y)}
     }
 }
 

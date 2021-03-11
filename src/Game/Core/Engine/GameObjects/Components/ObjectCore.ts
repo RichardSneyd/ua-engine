@@ -60,6 +60,7 @@ class ObjectCore {
   // keep this one for GENERIC initializations 
   public init(go: IGameObject, x: number, y: number, texture: string | PIXI.Texture = '', updateCallback: Function) {
     this._go = go;
+    this.data.go = this._go;
     this._scaleHandler = go.scaleHandler;
     this.x = x;
     this.y = y;
@@ -282,6 +283,7 @@ class ObjectCore {
 
   set data(data: any) {
     this._data = data;
+    data.go = this._go;
   }
 
   get zIndex(){

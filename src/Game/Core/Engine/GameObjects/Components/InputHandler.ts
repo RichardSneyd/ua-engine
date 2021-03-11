@@ -41,14 +41,52 @@ class InputHandler {
      return true;
    } */
 
-  public makePixelPerfect(threshold: number = 127): boolean {
+  public makePixelPerfect(threshold: number = 127) {
     // this._screen.addHitMap(this._core.data, threshold);
     this._pixelPerfect = true;
     this._pixelPerfectThreshold = threshold;
     this._go.width = Math.round(this._go.childlessWidth);
     this._go.height = Math.round(this._go.childlessHeight);
-    this._go.updateHitmap();
-    return true;
+    this._go.updateHitmap.bind(this._go)();
+   // Debug.info('pixi data: ', this._go.core.data);
+    if(this._go.data.containsPoint){
+     // this._go.data.containsPointOld = this._go.core.data.containsPoint.bind(this._go.data);
+    }
+     this._go.data.containsPoint = (point: Point)=>{
+      this.containsPixelPerfect.bind(this)(point);
+    };   // this gets called by spines 2!
+
+  //  return true;
+  }
+
+  containsPixelPerfect(point: Point): boolean{
+  //  Debug.info(point + 'for ' + this._go.name);
+  //  Debug.info('called for ', this._go.name, ' at ', new Date().toTimeString()); // confirmed this is calling fine for spines. Going wrong somewhere else
+    let factor = this._go.scaleHandler.scaleFactor;
+    point.x = point.x / factor;
+    point.y = point.y / factor;
+    if(this.inBounds(point)){
+    //  Debug.info('in bounds for ', this._go.name, ' at ', new Date());
+     // return true; // returning bounds slightly down and to the rigth?
+      return this.pixelHit(point);
+    }
+    return false;
+  }
+
+  public inBounds(point: Point): boolean{
+    return this._go.inBounds.bind(this._go)(point);
+  }
+
+  public pixelHit(point: Point): boolean {
+    // get pixel index formula: (x + y * width )* 4
+    let x = Math.round(point.x - this._go.globalLeft);
+    let y = Math.round(point.y - this._go.globalTop);
+    let index: number = Math.round(x + (y * this._go.childlessWidth));
+  //  Debug.info('x: ', x, 'y: ', y, 'width: ', this._go.childlessWidth);
+ //   Debug.info('RGBA index: ', index, ', val: ', this._go.hitMap[index]);
+
+    if (this._go.hitMap[index] > this._pixelPerfectThreshold) return true;
+    return false;
   }
 
   get data() {
@@ -82,18 +120,6 @@ class InputHandler {
 
   public removeInputListener(event: string, callback: Function) {
     this._inputManager.removeListener(event, callback, this._go);
-  }
-
-  public pixelHit(point: Point): boolean {
-    // get pixel index formula: (x + y * width )* 4
-    let x = Math.round(point.x - (this._go.globalX - (this._go.childlessWidth * this._go.origin.x)));
-    let y = Math.round(point.y - (this._go.globalY - (this._go.childlessHeight * this._go.origin.y)));
-    let index: number = Math.round(x + (y * this._go.childlessWidth));
-  //  Debug.info('x: ', x, 'y: ', y, 'width: ', this._go.childlessWidth);
- //   Debug.info('RGBA index: ', index, ', val: ', this._go.hitMap[index]);
-
-    if (this._go.hitMap[index] > this._pixelPerfectThreshold) return true;
-    return false;
   }
 
   createNew(): InputHandler {

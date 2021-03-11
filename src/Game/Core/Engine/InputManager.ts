@@ -162,14 +162,15 @@ class InputManager {
      */
     public addListener(event: string, callback: Function, go: IGameObject, context: any) {
         let pixiData: any = this._getData(go);
-
+      //  if(!pixiData.hasOwnProperty('containsPoint')) pixiData = go;
         this._screen.addListener(event, pixiData, (evt: any) => {
             if (go.hitShape == null) {
-                if (go.input.pixelPerfect) {
+                /* if (go.input.pixelPerfect) {
                     if (go.input.pixelHit(this._pointer)) callback.bind(context)(evt);
                     // callback.bind(context)(evt);
                 }
-                else callback.bind(context)(evt);
+                else callback.bind(context)(evt); */
+                callback.bind(context)(evt);
             }
             else if (go.hitShape.containsPoint(this._pointer)) callback.bind(context)(evt);
         }, context);
