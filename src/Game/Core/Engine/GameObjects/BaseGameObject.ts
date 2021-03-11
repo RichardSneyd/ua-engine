@@ -117,6 +117,30 @@ abstract class BaseGameObject implements IGameObject {
         this.scaleHandler.y = scaleY;
     }
 
+    get moveBy(): (x: number, y: number) => void {
+        return this._core.moveBy.bind(this._core);
+    }
+
+    get moveTo(): (x: number, y: number) => void {
+        return this._core.moveTo.bind(this._core);
+    }
+
+    get moveToMouse() {
+        return this._core.moveToMouse.bind(this._core);
+    }
+
+    get enableMask(): (x: number, y: number, width: number, height: number) => void {
+        return this._core.enableMask.bind(this._core);
+    }
+
+    get alpha() {
+        return this._core.alpha;
+    }
+
+    set alpha(alpha: number) {
+        this._core.alpha = alpha;
+    }
+
     get hitShape(): IHitShape | null {
         return this._hitShape;
     }
@@ -247,7 +271,7 @@ abstract class BaseGameObject implements IGameObject {
      * @description checks if the global point is within the screen bounds of the object
      * @param point the global point to check 
      */
-    inBounds(point: Point): boolean {
+    inBounds(point: IPoint): boolean {
         if (point.x > this.globalLeft && point.x < this.globalLeft + this.childlessWidth) {
             if (point.y > this.globalTop && point.y < this.globalTop + this.childlessHeight) {
                 return true;
@@ -343,7 +367,7 @@ abstract class BaseGameObject implements IGameObject {
      * @description the greatest left value of any child object
      */
     get childrenLeft(): number {
-        return this._childrenLeft();
+        return this.child();
     }
 
     /**
@@ -422,30 +446,9 @@ abstract class BaseGameObject implements IGameObject {
         return { x: this.childlessLeft, y: this.childlessTop, width: this.childlessWidth, height: this.childlessHeight }
     }
 
-    get moveBy(): (x: number, y: number) => void {
-        return this._core.moveBy.bind(this._core);
-    }
-
-    get moveTo(): (x: number, y: number) => void {
-        return this._core.moveTo.bind(this._core);
-    }
-
-    get moveToMouse() {
-        return this._core.moveToMouse.bind(this._core);
-    }
-
-    get enableMask(): (x: number, y: number, width: number, height: number) => void {
-        return this._core.enableMask.bind(this._core);
-    }
-
-    get alpha() {
-        return this._core.alpha;
-    }
-
-    set alpha(alpha: number) {
-        this._core.alpha = alpha;
-    }
-
+       /**
+     * @description the width of the gameObject/container, also factoring in positions and dimensions of its child objects
+     */
     get width() {
         let width = this._childrenWidth() > this._core.width ? this._childrenWidth() : this._core.width;
         return width;
@@ -466,6 +469,9 @@ abstract class BaseGameObject implements IGameObject {
         this._core.width = width;
     }
 
+      /**
+     * @description the height of the gameObject/container, also factoring in positions and dimensions of its child objects
+     */
     get height() {
         let height = this._childrenHeight() > this._core.height ? this._childrenHeight() : this._core.height;
         return height;
@@ -498,6 +504,75 @@ abstract class BaseGameObject implements IGameObject {
     */
     get containerHeight(): number {
         return this._childrenHeight();
+    }
+
+    
+    /**
+     * @description the distance between the the left extremity of the furthest-left child, and the right-extremity of the  
+     * the furthest-right child of this container/gameObject
+     * @returns a local x coordinate
+     */
+     protected _childrenWidth(): number {
+        return this._childrenRight() - this.child();
+    }
+
+     /**
+     * @description the distance between the the lowest extremity of the furthest-down child, and the highest-extremity of the  
+     * the furthest-up child of this container/gameObject
+     * @returns a local y coordinate
+     */
+    protected _childrenHeight(): number {
+        return this._childrenBottom() - this._childrenTop();
+    }
+
+      /**
+     * @description the lowest point of any child of this gameObject, in local space
+     * @returns a local y coordinate
+     */
+    protected _childrenBottom(): number {
+        // Debug.info('in BaseGameObject._chilrenBottom')
+        let bottom = 0;
+        let children = this.pcHandler._children;
+        for (let c = 0; c < children.length; c++) {
+            //    Debug.info('looping child ', c);
+            let child = children[c];
+            if (c == 0) bottom = child.bottom;
+            if (child.bottom > bottom) bottom = child.bottom;
+        }
+
+        return bottom;
+    }
+
+      /**
+     * @description the highest point of any child of this gameObject, in local space
+     * @returns a local y coordinate
+     */
+    protected _childrenTop() {
+        let top = 0;
+        let children = this.pcHandler.children;
+        for (let c = 0; c < children.length; c++) {
+            let child = children[c];
+            if (c == 0) top = child.top;
+            if (child.top < top) top = child.top;
+        }
+
+        return top;
+    }
+
+      /**
+     * @description the furthest right position of any child of this gameObject, in local space
+     * @returns a local x coordinate
+     */
+    protected _childrenRight() {
+        let right = 0;
+        let children = this._pcHandler.children;
+        for (let c = 0; c < children.length; c++) {
+            let child = children[c];
+            if (c == 0) right = child.right;
+            if (child.right > right) right = child.right;
+        }
+
+        return right;
     }
 
     /**
@@ -571,53 +646,12 @@ abstract class BaseGameObject implements IGameObject {
         if (this._animationManager && this.data) this._animationManager.update();
     }
 
-    protected _childrenWidth(): number {
-        return this._childrenRight() - this._childrenLeft();
-    }
 
-    protected _childrenHeight(): number {
-        return this._childrenBottom() - this._childrenTop();
-    }
-
-    protected _childrenBottom(): number {
-        // Debug.info('in BaseGameObject._chilrenBottom')
-        let bottom = 0;
-        let children = this.pcHandler._children;
-        for (let c = 0; c < children.length; c++) {
-            //    Debug.info('looping child ', c);
-            let child = children[c];
-            if (c == 0) bottom = child.bottom;
-            if (child.bottom > bottom) bottom = child.bottom;
-        }
-
-        return bottom;
-    }
-
-    protected _childrenTop() {
-        let top = 0;
-        let children = this.pcHandler.children;
-        for (let c = 0; c < children.length; c++) {
-            let child = children[c];
-            if (c == 0) top = child.top;
-            if (child.top < top) top = child.top;
-        }
-
-        return top;
-    }
-
-    protected _childrenRight() {
-        let right = 0;
-        let children = this._pcHandler.children;
-        for (let c = 0; c < children.length; c++) {
-            let child = children[c];
-            if (c == 0) right = child.right;
-            if (child.right > right) right = child.right;
-        }
-
-        return right;
-    }
-
-    protected _childrenLeft() {
+      /**
+     * @description the furthest left position of any child of this gameObject, in local space
+     * @returns a local x coordinate
+     */
+    protected child() {
         let left = 0;
         let children = this._pcHandler.children;
         for (let c = 0; c < children.length; c++) {

@@ -5,6 +5,7 @@ import Screen from "../../../../Services/Screen";
 import Point from "../../../Geom/Point";
 import BaseGameObject from "../BaseGameObject";
 import Debug from "../../Debug";
+import IPoint from "../../../Geom/IPoint";
 
 /**
  * @description handles mouse and touch input for the attached IGameObject.
@@ -48,44 +49,64 @@ class InputHandler {
     this._go.width = Math.round(this._go.childlessWidth);
     this._go.height = Math.round(this._go.childlessHeight);
     this._go.updateHitmap.bind(this._go)();
-   // Debug.info('pixi data: ', this._go.core.data);
-    if(this._go.data.containsPoint){
-     // this._go.data.containsPointOld = this._go.core.data.containsPoint.bind(this._go.data);
+    // Debug.info('pixi data: ', this._go.core.data);
+    if (!this._go.data.containsPoint) {
+        this._go.data.children.forEach((c: any) => {
+          c.children.forEach((c2: any) => {
+           // console.log('add containsPoint for child level 2', c2);
+            c2.containsPoint = () => {
+              return false;
+            }
+          });
+        });
+    
+      
     }
-     this._go.data.containsPoint = (point: Point)=>{
-      this.containsPixelPerfect.bind(this)(point);
-    };   // this gets called by spines 2!
-
-  //  return true;
+    this._go.data.containsPoint = (point: IPoint)=>{
+     // Debug.info('containsPoint called for ', this._go.name);
+      let factor = this._go.scaleHandler.scaleFactor;
+      let _point = {x: point.x / factor, y: point.y / factor}
+      if (this.inBounds(_point)) {
+        //  Debug.info('in bounds for ', this._go.name, ' at ', new Date());
+        // return true; // returning bounds slightly down and to the rigth?
+        return this.pixelHit(_point);
+      }
+      return false;
+    };
+    //  return true;
   }
 
-  containsPixelPerfect(point: Point): boolean{
-  //  Debug.info(point + 'for ' + this._go.name);
-  //  Debug.info('called for ', this._go.name, ' at ', new Date().toTimeString()); // confirmed this is calling fine for spines. Going wrong somewhere else
+
+
+ /*  containsPixelPerfect(point: IPoint): boolean {
+    //  Debug.info(point + 'for ' + this._go.name);
+    //  Debug.info('called for ', this._go.name, ' at ', new Date().toTimeString()); // confirmed this is calling fine for spines. Going wrong somewhere else
     let factor = this._go.scaleHandler.scaleFactor;
-    point.x = point.x / factor;
-    point.y = point.y / factor;
-    if(this.inBounds(point)){
-    //  Debug.info('in bounds for ', this._go.name, ' at ', new Date());
-     // return true; // returning bounds slightly down and to the rigth?
-      return this.pixelHit(point);
+    let _point = {x: point.x / factor, y: point.y / factor}
+    if (this.inBounds(_point)) {
+      //  Debug.info('in bounds for ', this._go.name, ' at ', new Date());
+      // return true; // returning bounds slightly down and to the rigth?
+      return this.pixelHit(_point);
     }
     return false;
-  }
+  } */
 
-  public inBounds(point: Point): boolean{
+  public inBounds(point: IPoint): boolean {
     return this._go.inBounds.bind(this._go)(point);
   }
 
-  public pixelHit(point: Point): boolean {
+  public pixelHit(point: IPoint): boolean {
     // get pixel index formula: (x + y * width )* 4
     let x = Math.round(point.x - this._go.globalLeft);
     let y = Math.round(point.y - this._go.globalTop);
     let index: number = Math.round(x + (y * this._go.childlessWidth));
-  //  Debug.info('x: ', x, 'y: ', y, 'width: ', this._go.childlessWidth);
- //   Debug.info('RGBA index: ', index, ', val: ', this._go.hitMap[index]);
+    //  Debug.info('x: ', x, 'y: ', y, 'width: ', this._go.childlessWidth);
+    //   Debug.info('RGBA index: ', index, ', val: ', this._go.hitMap[index]);
 
-    if (this._go.hitMap[index] > this._pixelPerfectThreshold) return true;
+    if (this._go.hitMap[index] > this._pixelPerfectThreshold){
+    //  Debug.info('pixel it for ', this._go.name);
+      return true;
+    } 
     return false;
   }
 
