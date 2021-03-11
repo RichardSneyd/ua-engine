@@ -49,23 +49,25 @@ class InputHandler {
     this._go.width = Math.round(this._go.childlessWidth);
     this._go.height = Math.round(this._go.childlessHeight);
     this._go.updateHitmap.bind(this._go)();
-    // Debug.info('pixi data: ', this._go.core.data);
+
     if (!this._go.data.containsPoint) {
-        this._go.data.children.forEach((c: any) => {
-          c.children.forEach((c2: any) => {
-           // console.log('add containsPoint for child level 2', c2);
-            c2.containsPoint = () => {
-              return false;
-            }
-          });
+     /*  this._go.data.children.forEach((c: any) => {
+        c.children.forEach((c2: any) => {
+          // console.log('add containsPoint for child level 2', c2);
+          c2.containsPoint = () => {
+            return false;
+          }
         });
-    
-      
+      }); */
+
+      // possibly simpler method:
+      this._go.data.interactiveChildren = false;
     }
-    this._go.data.containsPoint = (point: IPoint)=>{
-     // Debug.info('containsPoint called for ', this._go.name);
+
+    this._go.data.containsPoint = (point: IPoint) => {
+      // Debug.info('containsPoint called for ', this._go.name);
       let factor = this._go.scaleHandler.scaleFactor;
-      let _point = {x: point.x / factor, y: point.y / factor}
+      let _point = { x: point.x / factor, y: point.y / factor }
       if (this.inBounds(_point)) {
         //  Debug.info('in bounds for ', this._go.name, ' at ', new Date());
         // return true; // returning bounds slightly down and to the rigth?
@@ -78,18 +80,18 @@ class InputHandler {
 
 
 
- /*  containsPixelPerfect(point: IPoint): boolean {
-    //  Debug.info(point + 'for ' + this._go.name);
-    //  Debug.info('called for ', this._go.name, ' at ', new Date().toTimeString()); // confirmed this is calling fine for spines. Going wrong somewhere else
-    let factor = this._go.scaleHandler.scaleFactor;
-    let _point = {x: point.x / factor, y: point.y / factor}
-    if (this.inBounds(_point)) {
-      //  Debug.info('in bounds for ', this._go.name, ' at ', new Date());
-      // return true; // returning bounds slightly down and to the rigth?
-      return this.pixelHit(_point);
-    }
-    return false;
-  } */
+  /*  containsPixelPerfect(point: IPoint): boolean {
+     //  Debug.info(point + 'for ' + this._go.name);
+     //  Debug.info('called for ', this._go.name, ' at ', new Date().toTimeString()); // confirmed this is calling fine for spines. Going wrong somewhere else
+     let factor = this._go.scaleHandler.scaleFactor;
+     let _point = {x: point.x / factor, y: point.y / factor}
+     if (this.inBounds(_point)) {
+       //  Debug.info('in bounds for ', this._go.name, ' at ', new Date());
+       // return true; // returning bounds slightly down and to the rigth?
+       return this.pixelHit(_point);
+     }
+     return false;
+   } */
 
   public inBounds(point: IPoint): boolean {
     return this._go.inBounds.bind(this._go)(point);
@@ -103,10 +105,10 @@ class InputHandler {
     //  Debug.info('x: ', x, 'y: ', y, 'width: ', this._go.childlessWidth);
     //   Debug.info('RGBA index: ', index, ', val: ', this._go.hitMap[index]);
 
-    if (this._go.hitMap[index] > this._pixelPerfectThreshold){
-    //  Debug.info('pixel it for ', this._go.name);
+    if (this._go.hitMap[index] > this._pixelPerfectThreshold) {
+      //  Debug.info('pixel it for ', this._go.name);
       return true;
-    } 
+    }
     return false;
   }
 
