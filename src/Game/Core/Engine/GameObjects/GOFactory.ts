@@ -129,7 +129,7 @@ class GOFactory {
         }
         if (x != null && y != null && texture != null) {
             let go = this._draggable.createNew((lfObj) ? lfObj.x : x, (lfObj) ? lfObj.y : y, texture, frame, parent);
-            if (lfObj && go.firstSprite) this._transformLevelFileObject(go.firstSprite, lfObj);
+            if (lfObj) this._transformLevelFileObject(go, lfObj);
             return go;
         } else {
             return this._draggable.createEmpty();
@@ -303,7 +303,7 @@ addLevelFileObjects(parent: IParentChild | null = null) : {sprites: SpriteObject
     * @param gameObject the object to transform
     * @param lfObject The js data 'object' plucked from the levelFile, which provides the properties and values to adjust
     */
-    protected _transformLevelFileObject(gameObject: BaseGameObject, lfObject: any) {
+    protected _transformLevelFileObject(gameObject: IGameObject, lfObject: any) {
         gameObject.setOrigin(lfObject.originX, lfObject.originY);
         gameObject.name = lfObject.name;
         gameObject.x = lfObject.x;

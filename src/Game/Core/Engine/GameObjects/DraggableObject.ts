@@ -503,7 +503,8 @@ class DraggableObject implements IGameObject {
     }
 
     get name(): string {
-        return this.id;
+        this._isInitialized();
+        return this._background.name;
     }
 
     /**
@@ -599,6 +600,11 @@ class DraggableObject implements IGameObject {
      */
     get enabled(): boolean {
         return this._enabled;
+    }
+
+    set name(name: string) {
+        this._isInitialized();
+        this._background.name = name;
     }
 
     set x(x: number) {
