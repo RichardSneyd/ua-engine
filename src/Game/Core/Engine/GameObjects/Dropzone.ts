@@ -1,3 +1,4 @@
+import PxGame from "../../../Services/Pixi/PxGame";
 import Point from "../../Geom/Point";
 import InputManager from "../InputManager";
 import DraggableObject from "./DraggableObject";
@@ -5,6 +6,7 @@ import DraggableObject from "./DraggableObject";
 class Dropzone {
     private _point: Point;
     private _input: InputManager;
+    private _pxGame: PxGame;
     private _name: string;
     private _topLeft: Point;
     private _bottomRight: Point;
@@ -12,10 +14,15 @@ class Dropzone {
     private _vertical: boolean | undefined;
     private _gap: number;
     private _draggables: DraggableObject[];
+    private _x: number;
+    private _y: number;
+    private _width: number;
+    private _height: number;
 
-    constructor(point: Point, input: InputManager) {
+    constructor(point: Point, input: InputManager, pxGame: PxGame) {
         this._point = point;
         this._input = input;
+        this._pxGame = pxGame;
         this._draggables = [];
     }
 
@@ -33,12 +40,18 @@ class Dropzone {
     createNew(name: string, zone: { x: number, y: number, width: number, height: number },
         vertical?: boolean, gap: number = 0): Dropzone {
         let dropzone = this.createEmpty();
+
+        this._x = zone.x;
+        this._y = zone.y;
+        this._width = zone.width;
+        this._height = zone.height;
+
         dropzone.init(name, zone, vertical, gap);
         return dropzone;
     }
 
     createEmpty(): Dropzone {
-        return new Dropzone(this._point, this._input);
+        return new Dropzone(this._point, this._input, this._pxGame);
     }
 
     get name(): string {
@@ -107,6 +120,13 @@ class Dropzone {
     pointerIsInside(): boolean {
         return (this._input.pointer.x >= this.topLeft.x && this._input.pointer.x <= this.bottomRight.x
             && this._input.pointer.y >= this.topLeft.y && this._input.pointer.y <= this.bottomRight.y);
+    }
+
+    /**
+   * @description Draws visual version of the dropzone
+   */
+    enableDebug() {
+        this._pxGame.addRectangle(this._x, this._y, this._width, this._height, 0x34eb4c, 1, 4, 0x34eb4c, 1);
     }
 }
 
