@@ -141,14 +141,14 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         Debug.info('onNewRow called for row %s: ', this.manager.script.active.id, this.manager.script.active);
         this.loadConfig();
         this.updateCharacterState();
-        this.playSfx();
+       // this.playSfx(); // this is already being done elsewhere
         if (!this.manager.script.isFalsy(this.manager.script.active.audio_id)) {
             this.manager.audio.playInstructionArr(this.manager.script.active.audio_id, this.onInstructionAudioComplete.bind(this));
         }
         else if (!this.manager.script.isFalsy(this.manager.script.active.auto_next)) {
             this.manager.script.goToAutoNext();
         }
-        if (this.activeRow.config.hasOwnProperty('go_to')) {
+        if (this.activeRow.config && this.activeRow.config.hasOwnProperty('go_to')) {
             this._goto(this.activeRow.config.go_to);
         }
     }
@@ -224,7 +224,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
                 });
             }
             if(this.activeRow.config.hasOwnProperty('sfx')){
-                this._manager.audio.play(this.activeRow.config.trans_sfx, ()=>{
+                this._manager.audio.play(this.activeRow.config.sfx, ()=>{
                     // yo
                 });
             }
