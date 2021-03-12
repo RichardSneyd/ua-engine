@@ -35,13 +35,6 @@ class InputHandler {
     this._screen = this._core.screen;
   }
 
-  // this method will likely be deprecated soon, as it only works for static sprites properly
-  /*  public makePixelPerfect(threshold: number = 127): boolean {
-     this._screen.addHitMap(this._core.data, threshold);
-     this._pixelPerfect = true;
-     return true;
-   } */
-
   public makePixelPerfect(threshold: number = 127) {
     // this._screen.addHitMap(this._core.data, threshold);
     this._pixelPerfect = true;
@@ -60,7 +53,7 @@ class InputHandler {
         });
       }); */
 
-      // possibly simpler method:
+      // turns out this also works:
       this._go.data.interactiveChildren = false;
     }
 
@@ -78,21 +71,6 @@ class InputHandler {
     //  return true;
   }
 
-
-
-  /*  containsPixelPerfect(point: IPoint): boolean {
-     //  Debug.info(point + 'for ' + this._go.name);
-     //  Debug.info('called for ', this._go.name, ' at ', new Date().toTimeString()); // confirmed this is calling fine for spines. Going wrong somewhere else
-     let factor = this._go.scaleHandler.scaleFactor;
-     let _point = {x: point.x / factor, y: point.y / factor}
-     if (this.inBounds(_point)) {
-       //  Debug.info('in bounds for ', this._go.name, ' at ', new Date());
-       // return true; // returning bounds slightly down and to the rigth?
-       return this.pixelHit(_point);
-     }
-     return false;
-   } */
-
   public inBounds(point: IPoint): boolean {
     return this._go.inBounds.bind(this._go)(point);
   }
@@ -106,7 +84,6 @@ class InputHandler {
     //   Debug.info('RGBA index: ', index, ', val: ', this._go.hitMap[index]);
 
     if (this._go.hitMap[index] > this._pixelPerfectThreshold) {
-      //  Debug.info('pixel it for ', this._go.name);
       return true;
     }
     return false;

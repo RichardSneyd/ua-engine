@@ -1,6 +1,7 @@
 import Text from './Text';
 import * as _ from 'lodash';
 import Collections from './Collections';
+import Debug from '../Debug';
 
 /**
  * @description utility methods for interfacing with raw activity script json files. Mainly used in ScriptHandler.
@@ -116,8 +117,9 @@ class ActScripts {
      * but not for anything with methods.
      * @param script 
      */
-    public clone(script: any): any {
-        return JSON.parse(JSON.stringify(script)); // create a pure clone of an object, array, or array of objects. 
+    public clone(data: any): any {
+        Debug.info('clone data: ', data);
+        return JSON.parse(JSON.stringify(data)); // create a pure clone of an object, array, or array of objects. 
     }
 
     public toLines(text: string): string[] {

@@ -25,6 +25,7 @@ class AudioManager {
         this._events.on('shutdown', this._stopInstPlaying, this);
         this._events.on('pause', this._pause, this);
         this._events.on('resume', this._resume, this);
+        this._events.on('stop_all_audio', this._stopAll, this);
     }
 
     get filesPlaying() {
@@ -99,6 +100,12 @@ class AudioManager {
         this._stop(this._music);
     }
 
+    public _stopAll(){
+        for (let x = 0; x < this._playing.length; x++) {
+            this._stop(this._playing[x]);
+        }
+    }
+
     /**
      * @description stop playback for specified file
      * @param name the name of the file to stop playback for
@@ -124,7 +131,6 @@ class AudioManager {
         for (let x = 0; x < this._playing.length; x++) {
             this._pauseFile(this._playing[x]);
         }
-        this
     }
 
     private _resume() {

@@ -27,6 +27,7 @@ class ScriptHandler {
         this._rows = [];
         this._active = [];
         this._last = [];
+        Debug.exposeGlobal(this, 'script');
     }
 
     /**
@@ -40,8 +41,6 @@ class ScriptHandler {
       * @param processText (optional) the column names to convert into lines and _words of text. Mainly useful in passage (reading) types.
       */
     init(name: string, raw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]) {
-       // this._level = level;
-      // this._events = level.events;
         this._name = name;
         this._raw = raw;
        // this._checkIfColumnNamesValid(parseCols.concat(objectifyCols)); // check if column names provided for processing are valid before proceeding
@@ -169,6 +168,13 @@ class ScriptHandler {
         return this._fileList(cols);
     }
 
+    /**
+     * @description Searches through all arrays in the specified columns, and returns every unique value. Duplicates
+     * are removed.
+     * @param cols the columns to search for files in i.e ['images', 'correct_image']; you may also specify a property within an 'object' 
+     * cell with dot syntax; i.e ['config.bgd'] will find all values of the bgd field for all pre-converted config cells.
+      * 
+     */
     public valueList(cols: string[]): number[] {
         return this._fileList(cols);
     }
