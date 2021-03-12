@@ -443,6 +443,13 @@ class DraggableObject implements IGameObject {
     }
 
     /**
+    * @description Allows to define initial position for the draggable
+    */
+    set initialPosition(initialPosition: Point) {
+        this._initialPosition = initialPosition;
+    }
+
+    /**
      * @description Returns all Dropzones added
      */
     get dropzones(): Dropzone[] {
