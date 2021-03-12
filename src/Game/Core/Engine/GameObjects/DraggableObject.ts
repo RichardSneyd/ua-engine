@@ -54,7 +54,7 @@ class DraggableObject implements IGameObject {
 
     init(x: number, y: number, texture: string | PIXI.Texture, frame: string | null = null, parent: IParentChild | null = null): void {
         this.addSprite(x, y, texture, frame, parent);
-     //   this._initLoop();
+        //   this._initLoop();
     }
 
     protected _initLoop() {
@@ -69,7 +69,7 @@ class DraggableObject implements IGameObject {
 
     createEmpty(): DraggableObject {
         let draggable = new DraggableObject(this._slice.createEmpty(), this._spine.createEmpty(), this._sprite.createEmpty(), this._text.createEmpty(), this._loop, this._dropzone.createEmpty(), this._point, this._events, this._input);
-     //   draggable._initLoop();
+        //   draggable._initLoop();
         return draggable;
     }
 
@@ -665,12 +665,12 @@ class DraggableObject implements IGameObject {
         this._background.parent = parent;
     }
 
-    get globalX(){
+    get globalX() {
         this._isInitialized();
         return this._background.globalX;
     }
 
-    get globalY(){
+    get globalY() {
         this._isInitialized();
         return this._background.globalY;
     }
@@ -684,6 +684,10 @@ class DraggableObject implements IGameObject {
 
     sort() {
         Debug.warn('sort not yet implement for DraggableObject...');
+    }
+
+    enableDebug() {
+        this._dropzone.enableDebug();
     }
 }
 
