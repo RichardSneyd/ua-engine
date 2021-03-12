@@ -26,6 +26,7 @@ class AudioManager {
         this._events.on('pause', this._pause, this);
         this._events.on('resume', this._resume, this);
         this._events.on('stop_all_audio', this._stopAll, this);
+        this._events.on('stop_instructional_audio', this._stopInstPlaying, this);
     }
 
     get filesPlaying() {

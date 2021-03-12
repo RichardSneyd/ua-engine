@@ -118,7 +118,7 @@ class ActScripts {
      * @param script 
      */
     public clone(data: any): any {
-        Debug.info('clone data: ', data);
+       // Debug.info('clone data: ', data);
         return JSON.parse(JSON.stringify(data)); // create a pure clone of an object, array, or array of objects. 
     }
 

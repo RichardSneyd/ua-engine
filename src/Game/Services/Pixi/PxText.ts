@@ -90,6 +90,11 @@ class PxText {
     this.updateTexture();
   }
 
+  setTextColor(color: string){
+    if(this._rawText) this._rawText.style.fill = color;
+    this._updateTexture();
+  }
+
   set fill(fill: string){
     this._style.fill = fill;
     this._fill = this._style.fill;
@@ -226,6 +231,7 @@ class PxText {
       this._rawText.destroy();
     }
   }
+  
 }
 
 export default PxText;

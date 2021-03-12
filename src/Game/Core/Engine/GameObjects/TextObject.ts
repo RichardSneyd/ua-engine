@@ -52,12 +52,21 @@ class TextObject extends BaseGameObject {
         }
     }
 
-    setStyle(style: any) {
-        this._core._objectHandler.setStyle(this._core.data, style);
+    set style(style: any){
+        this._core.dataPure.style = style;
     }
 
+    get style(): any{
+        return this._core.dataPure.style;
+    }
+
+   /*  setStyle(style: any) {
+        this._core._objectHandler.setStyle(this._core.data, style);
+    } */
+
     setTextColor(color: string) {
-        this._core._objectHandler.setTextColor(this._core.data, color);
+        Debug.info(this.core.data);
+       this.core.dataPure.setTextColor(color);
     }
 
     get text(): string {

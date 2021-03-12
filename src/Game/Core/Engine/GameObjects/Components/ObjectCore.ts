@@ -281,6 +281,10 @@ class ObjectCore {
     return cont;
   }
 
+  get dataPure(): any {
+    return this._data;
+  }
+
   set data(data: any) {
     this._data = data;
     data.go = this._go;
