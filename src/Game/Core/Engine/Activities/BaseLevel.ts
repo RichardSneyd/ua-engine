@@ -148,6 +148,9 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         else if (!this.manager.script.isFalsy(this.manager.script.active.auto_next)) {
             this.manager.script.goToAutoNext();
         }
+        if (this.activeRow.config.hasOwnProperty('go_to')) {
+            this._goto(this.activeRow.config.go_to);
+        }
     }
 
     /**
@@ -213,9 +216,6 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if (this.activeRow.hasOwnProperty('config')){
             if (this.activeRow.config.hasOwnProperty('bgd') && this.activeRow.config.bgd !== '') {
                 this._bgd.changeTexture(this.manager.script.active.config.bgd);
-            }
-            if (this.activeRow.config.hasOwnProperty('go_to')) {
-                this._goto(this.activeRow.config.go_to);
             }
             if(this.activeRow.config.hasOwnProperty('trans_sfx')){
                 this._manager.globalEvents.emit('transition_start'); // start the 'curtain fall'
