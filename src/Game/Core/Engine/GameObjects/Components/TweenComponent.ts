@@ -67,14 +67,13 @@ class TweenComponent {
     /**
      * @description a method that creates a tween, plays it once, and deletes it all all-in-one
      * @param easing the type of easing to use
-     * @param object the object to tween
      * @param toObject the object that specifies the tween values
-     * @param duration duration of the tween
+     * @param duration duration of the tween in milliseconds
      * @param delay optional delay
      * @param updateFunction optional update function
      */
-    public once(easing: string, object: any, toObject: any, duration: number, delay: number = 0, updateFunction?: Function): TweenManager {
-      return this._tweenManager.once(easing, object, toObject, duration, delay, updateFunction)
+    public once(easing: string, toObject: any, duration: number, delay: number = 0, updateFunction?: Function): TweenManager {
+      return this._tweenManager.once(easing, this._go, toObject, duration, delay, updateFunction);
     }
 
     public pause(tweenName: string | Tween): TweenManager {

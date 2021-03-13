@@ -83,7 +83,7 @@ class TweenManager {
         let tween = this._getTween(tweenName);
         if (tween != null) {
             // Debug.info("Tween", tween);
-            tween.to(toObject, duration, updateFunction);
+            tween.to(toObject, duration, updateFunction).start();
             return this;
         }
 

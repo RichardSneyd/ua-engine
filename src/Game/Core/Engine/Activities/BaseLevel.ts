@@ -103,6 +103,12 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if (sfx.length > 0) {
             this._loader.addSnds(sfx);
         }
+        
+        let firstRow = this._manager.script.rows[0];
+        if(firstRow.hasOwnProperty('config') && firstRow.config.hasOwnProperty('graph_trans_in')){
+            Debug.info(' ')
+            this._loader.addImages([this._manager.script.rows[0].config.graph_trans_in], 'png');
+        }
         super.preload();
     }
 
@@ -112,6 +118,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @param configRow optionally pass a config row. If not passed, it will be read from the first row of the script
      */
     start(configRow?: any): void {
+        this._inTransition(); // call in transition if there is one - handled via event emitter
         this._events.global.emit('level_start');
         // add anything that should be done by all levels on start
         if (!configRow) configRow = this._manager.script.rows[0];
@@ -150,6 +157,9 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         }
         if (this.activeRow.config && this.activeRow.config.hasOwnProperty('go_to')) {
             this._goto(this.activeRow.config.go_to);
+        }
+        if(this.activeRow.label == 'forward_tapped'){
+            this._outTransition();
         }
     }
 
@@ -218,9 +228,8 @@ abstract class BaseLevel extends BaseScene implements ILevel {
                 this._bgd.changeTexture(this.manager.script.active.config.bgd);
             }
             if(this.activeRow.config.hasOwnProperty('trans_sfx')){
-                this._manager.globalEvents.emit('transition_start'); // start the 'curtain fall'
                 this._manager.audio.play(this.activeRow.config.trans_sfx, ()=>{
-                    this._manager.globalEvents.emit('transition_finish'); // curtain fall complete, signal this
+                   // this._manager.globalEvents.emit('transition_finish'); // curtain fall complete, signal this
                 });
             }
             if(this.activeRow.config.hasOwnProperty('sfx')){
@@ -228,7 +237,26 @@ abstract class BaseLevel extends BaseScene implements ILevel {
                     // yo
                 });
             }
+           
         }
+    }
+
+    protected _inTransition(){
+        let row = this._manager.script.rows[0];
+            let graphic: string = '';
+            if (row.config.graph_trans_in){
+                graphic = row.config.graph_trans_in; // attempting to keep it generic as possible, not coupled to particular projects
+            }
+            this._manager.globalEvents.emit('enter_transition', {graphic: graphic}); // start the 'curtain fall'
+    }
+
+    protected _outTransition(){
+        let row = this._manager.script.rows[0];
+            let graphic: string = '';
+            if (row.config.graph_trans_in){
+                graphic = row.config.graph_trans_in; // attempting to keep it generic as possible, not coupled to particular projects
+            }
+            this._manager.globalEvents.emit('exit_transition', {graphic: graphic}); // start the 'curtain fall'
     }
 
     /**
