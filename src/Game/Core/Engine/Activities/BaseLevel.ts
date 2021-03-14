@@ -158,8 +158,8 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if (this.activeRow.config && this.activeRow.config.hasOwnProperty('go_to')) {
             this._goto(this.activeRow.config.go_to);
         }
-        if(this.activeRow.label == 'forward_tapped'){
-            this._outTransition();
+        if(this.activeRow.id !== 0 && 'forward_tapped'){
+          //  this._outTransition();
         }
     }
 
