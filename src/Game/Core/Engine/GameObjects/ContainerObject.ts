@@ -44,6 +44,35 @@ class ContainerObject extends BaseGameObject {
     public changeTexture(textureName: string) {
         this._core.changeTexture(textureName);
     }   
+
+     /**
+     * @description set the origin for the container. This is modified version of the method for use with containers, which uses a custom setPivot implementation
+     * @param x the x value
+     * @param y the y value. If no y value is provided, the x value will be used for y as well.
+     */
+      public setOrigin(x: number, y?: number) {
+        // console.log('setOrigin this: ', this);
+        let yVal: number;
+        let xVal = x;
+        if (y !== undefined) {
+          yVal = y;
+        }
+        else {
+          yVal = xVal;
+        }
+
+        this._core.origin = this._pointFactory.createNew(xVal, yVal);
+        this._setPivot();
+      }
+
+      /**
+       * @description slightly hacky custom setPivot method, because we can't use the built in height and width properties, which are always 0,
+       * and thus useless
+       */
+      private _setPivot() {
+        this._core.data.pivot.set(Math.floor(this.origin.x * this._childrenWidth()), Math.floor(this.origin.y * this._childrenHeight()));
+      }
+
 }
 
 export default ContainerObject;
