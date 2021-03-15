@@ -274,7 +274,7 @@ class EditorScene implements ILevel {
             gameobj.animations.play(`${animations[gameobj.animId]}`, true);
             this._updateAnimationsInput(animations, gameobj.animId);
 
-            this._spineGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
+            this._spineGameObjects.push({ name: gameobj.uniqName, filename: src, gameObj: gameobj, type: type });
             gameobj.objID = this._spineGameObjects.length - 1;
 
             this._inspector.setInputReadOnly('width', true);
@@ -297,7 +297,7 @@ class EditorScene implements ILevel {
             gameobj.animations.play(`${animations[gameobj.animId]}`, true);
             this._updateAnimationsInput(animations, gameobj.animId);
 
-            this._atlasGameObjects.push({ name: gameobj.uniqName, filename: name, gameObj: gameobj, type: type });
+            this._atlasGameObjects.push({ name: gameobj.uniqName, filename: src, gameObj: gameobj, type: type });
             gameobj.objID = this._atlasGameObjects.length - 1;
 
             this._inspector.setInputReadOnly('width', true);
