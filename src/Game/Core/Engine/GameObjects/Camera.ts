@@ -224,7 +224,7 @@ class Camera {
      * @description Set the zoom level of the camera. Sets the x and scaleY of the container
      */
     set zoom(zoom: number) {
-        let _clampZoom = this._math.clamp(zoom, 0, 10);
+        let _clampZoom = this._math.clamp(zoom,-20, 20);
         this._container.scaleHandler.x = _clampZoom;
         this._container.scaleHandler.y = _clampZoom;
         this._updateContOrigin();
