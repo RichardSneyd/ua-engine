@@ -15,7 +15,9 @@ import ExtractComponent from "./Components/ExtractComponent";
 /**
  * @description A text game object class. Converts text to sprite object under the hood.
  */
-class TextObject extends BaseGameObject {
+class TextSpriteObject extends BaseGameObject {
+
+ //   private _letters: string;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
         scaleHandler: ScaleHandler, tweenComponent: TweenComponent, extract: ExtractComponent) {
@@ -23,66 +25,61 @@ class TextObject extends BaseGameObject {
     }
 
     public init(x: number, y: number, text: string, style: any = {}, parent: IParentChild | null = null): void {
-        this.data = this._screen.createText(x, y, text, style);
+        
+        this.data = this._screen.createTextSprite(x, y, text, style);
         this._core.init(this, x, y, '', this._update);
         super.init();
         this._pcHandler.init(this, this._core, parent);
     }
 
-  /*   protected _updateSize() {
-        this._objectHandler.setSize(this._data, this._width * this._go.scaleHandler.x, this._height * this._go.scaleHandler.y);
-        //   this._objectHandler.setSize(this._data, this._width * scaleX, this._height * scaleY);
-    }
- */
-    public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null): TextObject {
+    public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null): TextSpriteObject {
         let textObj = this.createEmpty();
         textObj.init(x, y, textureName, frame, parent);
         return textObj;
     }
 
-    public createEmpty(): TextObject {
-        let textObj = new TextObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenComponent.createNew(), this._extract.createEmpty());
+    public createEmpty(): TextSpriteObject {
+        let textObj = new TextSpriteObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenComponent.createNew(), this._extract.createEmpty());
         return textObj;
     }
 
     set text(lett: string) {
-        this.core.data.text = lett;
-       // this.core.data.
+        this.core.dataPure.text = lett;
     }
 
-    get text() {
-        return this.core.data.text;
+    get text(){
+        return this.core.dataPure.text;
     }
 
-    set style(style: any) {
-        this._core.data.style = style;
+    set style(style: any){
+        this._core.dataPure.style = style;
     }
 
-    get style(): any {
-        return this._core.data.style;
+    get style(): any{
+        return this._core.dataPure.style;
     }
 
-    /*    get width(): number {
-           return this._core.width;
-       }
-   
-       get height(): number {
-           return this._core.height;
-       } */
+    get width(): number {
+        return this._core.dataPure.width;
+    }
 
+    get height(): number {
+        return this._core.dataPure.height;
+    }
+    
 
-    setStyle(style: any) {
+   /*  setStyle(style: any) {
         this._core._objectHandler.setStyle(this._core.data, style);
-    }
+    } */
 
     setTextColor(color: string) {
         Debug.info(this.core.data);
-        this.core.dataPure.setTextColor(color);
+       this.core.dataPure.setTextColor(color);
     }
 
-    destroy() {
+    destroy(){
         super.destroy();
     }
 }
 
-export default TextObject;
+export default TextSpriteObject;

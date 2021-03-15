@@ -105,6 +105,10 @@ class Screen {
     return this._pxGame.addText(x, y, text, style);
   }
 
+  public createTextSprite(x: number, y: number, text: string, style: any = {}): any {
+    return this._pxGame.addTextSprite(x, y, text, style);
+  }
+
   public changeTexture(sprite: Sprite, texture: string | any, frame: string | null = null): void {
     this._pxGame.updateTexture(sprite, texture, frame);
   }

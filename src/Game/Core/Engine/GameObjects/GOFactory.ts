@@ -19,6 +19,7 @@ import MenuBar from "./MenuBar";
 import ScriptHandler from "../ScriptHandler";
 import BaseGameObject from "./BaseGameObject";
 import States from "./State/States";
+import TextSpriteObject from "./TextSpriteObject";
 
 /**
  * @description A factory for creating game objects of various types
@@ -29,6 +30,7 @@ class GOFactory {
     private _slice: SliceObject;
     private _spine: SpineObject;
     private _text: TextObject;
+    private _textSprite: TextSpriteObject;
     private _draggable: DraggableObject;
     private _button: Button;
     private _container: ContainerObject;
@@ -41,11 +43,11 @@ class GOFactory {
     private _script: ScriptHandler;
     private _states: States;
 
-    constructor(core: ObjectCore, script: ScriptHandler, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject, draggable: DraggableObject,
-        container: ContainerObject, menuBar: MenuBar, scaleManager: ScaleManager, button: Button, video: VideoObject, screen: Screen, camera: Camera, hitShapes: HitShapes,
-        states: States) {
+    constructor(core: ObjectCore, script: ScriptHandler, sprite: SpriteObject, slice: SliceObject, spine: SpineObject, text: TextObject, textSprite: TextSpriteObject, 
+        draggable: DraggableObject, container: ContainerObject, menuBar: MenuBar, scaleManager: ScaleManager, button: Button, video: VideoObject, screen: Screen, 
+        camera: Camera, hitShapes: HitShapes, states: States) {
         this._core = core; this._script = script; this._slice = slice; this._spine = spine; this._text = text; this._container = container; this._menuBar = menuBar;
-        this._sprite = sprite; this._scaleManager = scaleManager; this._button = button; this._video = video; this._screen = screen;
+        this._sprite = sprite; this._scaleManager = scaleManager; this._button = button; this._video = video; this._screen = screen; this._textSprite = textSprite;
         this._camera = camera; this._hitShapes = hitShapes; this._draggable = draggable; this._states = states;
         Debug.exposeGlobal(this, 'goFactory');
     }
@@ -67,6 +69,22 @@ class GOFactory {
             return this._text.createNew(x, y, text, style, parent);
         } else {
             return this._text.createEmpty();
+        }
+    }
+
+     /**
+     * @description Creates and returns a text object
+     * @param x the x coordinate to initialize with
+     * @param y the y coordinate to initialize with
+     * @param text the text value to initialize with
+     * @param style a css style object to apply to the text
+     */
+      public textSprite(x?: number, y?: number, text?: string, style?: any, parent: IParentChild | null = null): TextSpriteObject {
+        if (x != null && y != null && text != null && style != null) {
+            //  let pos = this._scaleManager.getXY(x, y);
+            return this._textSprite.createNew(x, y, text, style, parent);
+        } else {
+            return this._textSprite.createEmpty();
         }
     }
 

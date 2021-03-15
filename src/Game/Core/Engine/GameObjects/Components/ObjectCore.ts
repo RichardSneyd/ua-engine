@@ -73,7 +73,7 @@ class ObjectCore {
 
     }
     this._importSize();
-    this._updateSize();
+  //  this._updateSize(); // experimentally removing this, to see if it fixes text width height issues
     this._setListners();
     this._loop.addFunction(this.update, this);
     this.objectHandler.setAutoSortZ(this.data, true); // auto-sort children when zIndex is updated
@@ -399,14 +399,14 @@ class ObjectCore {
     this._objectHandler.setXy(this._data, target.x, target.y);
   }
 
-  private _importSize() {
+  protected _importSize() {
     this._width = this._objectHandler.getSize(this._data).width / this._scaleHandler.x;
     this._height = this._objectHandler.getSize(this._data).height / this._scaleHandler.y;
   }
 
-  private _updateSize() {
+  protected _updateSize() {
     this._objectHandler.setSize(this._data, this._width * this._go.scaleHandler.x, this._height * this._go.scaleHandler.y);
-    //   this._objectHandler.setSize(this._data, this._width * scaleX, this._height * scaleY);
+    // this._objectHandler.setSize(this._data, this._width * scaleX, this._height * scaleY);
   }
 
   private _setListners() {
