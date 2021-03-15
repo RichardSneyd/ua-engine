@@ -29,11 +29,11 @@ class TextObject extends BaseGameObject {
         this._pcHandler.init(this, this._core, parent);
     }
 
-  /*   protected _updateSize() {
-        this._objectHandler.setSize(this._data, this._width * this._go.scaleHandler.x, this._height * this._go.scaleHandler.y);
-        //   this._objectHandler.setSize(this._data, this._width * scaleX, this._height * scaleY);
-    }
- */
+    /*   protected _updateSize() {
+          this._objectHandler.setSize(this._data, this._width * this._go.scaleHandler.x, this._height * this._go.scaleHandler.y);
+          //   this._objectHandler.setSize(this._data, this._width * scaleX, this._height * scaleY);
+      }
+   */
     public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null): TextObject {
         let textObj = this.createEmpty();
         textObj.init(x, y, textureName, frame, parent);
@@ -47,7 +47,7 @@ class TextObject extends BaseGameObject {
 
     set text(lett: string) {
         this.core.data.text = lett;
-       // this.core.data.
+        // this.core.data.
     }
 
     get text() {
@@ -62,13 +62,15 @@ class TextObject extends BaseGameObject {
         return this._core.data.style;
     }
 
-    /*    get width(): number {
-           return this._core.width;
-       }
-   
-       get height(): number {
-           return this._core.height;
-       } */
+    get width(): number {
+        this._core.importSize();
+        return this._core.width;
+    }
+
+    get height(): number {
+        this._core.importSize();
+        return this._core.height;
+    }
 
 
     setStyle(style: any) {

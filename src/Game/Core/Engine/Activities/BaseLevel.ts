@@ -131,9 +131,19 @@ abstract class BaseLevel extends BaseScene implements ILevel {
             Debug.error('no bgd property in config cell of first row');
         }
 
+        // allows you to test 'ok button' functionality by tapping the O key
         this._manager.input.onKeyDown(this._manager.input.keys.O, this._virtualOKPress, this);
+        // allows you skip to next row by tapping the S key, if auto_next is set for active row. faster testing.
+        this._manager.input.onKeyDown(this._manager.input.keys.S, this._skipToNextRow, this); 
+
         super.start();
         this._waitForFirstInput();
+    }
+
+    protected _skipToNextRow(){
+        if(this.activeRow && !this._manager.script.isFalsy(this.activeRow.auto_next)){
+            this._manager.script.goToAutoNext();
+        }
     }
 
     protected _virtualOKPress() {
@@ -341,6 +351,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         this._manager.globalEvents.off('shutdown', this.shutdown, this);
         this._manager.globalEvents.off('newRow', this.onNewRow, this);
         this._manager.input.offKeyDown(this._manager.input.keys.O, this._virtualOKPress, this);
+        this._manager.input.offKeyDown(this._manager.input.keys.S, this._skipToNextRow, this);
         this.destroy();
         super.shutdown();
     }
