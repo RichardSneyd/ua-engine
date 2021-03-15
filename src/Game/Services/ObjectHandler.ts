@@ -1,6 +1,7 @@
 import IObjectHandler from './IObjectHandler';
 import Point from '../Core/Geom/Point';
 import { Container, DisplayObject } from 'pixi.js-legacy';
+import Debug from '../Core/Engine/Debug';
 
 class ObjectHandler implements IObjectHandler {
   constructor() {
@@ -59,6 +60,7 @@ class ObjectHandler implements IObjectHandler {
 
   public destroy(object: any) {
     if(object !== undefined && object !== null && object.destroyed == false) {
+      Debug.info('destroying ', object.name);
       object.destroyed = true;
       object.destroy({children: true, baseTexture: true, texture: true});
     } // true destroys texture, baseTexture, and calls destroy() on all children  
