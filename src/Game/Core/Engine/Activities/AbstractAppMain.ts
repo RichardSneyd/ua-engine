@@ -26,8 +26,7 @@ abstract class AbstractAppMain {
     protected _initialized: boolean;
     protected _scripts: string[];
     protected _activityBarIsDown: boolean;
-
-    
+    protected _defaultScene: string = 'main_menu';
 
     constructor(game: Game, defaultActivity: IActivity, goFactory: GOFactory, loader: Loader, levelManager: LevelManager) {
         this._game = game;
@@ -37,9 +36,9 @@ abstract class AbstractAppMain {
         this._defaultActivity = defaultActivity;
         this._activityBarIsDown = false;
         this._initialized = false;
+        this._defaultScene = 'main_menu';
         this._game.setProduct(this);
         this._game.addActivity(defaultActivity);
-
         Debug.exposeGlobal(this, 'product');
         this._game.startGame().then(() => {
             //  this._init(); // don't call init here, it's triggered by 'world_initialized' event
@@ -88,7 +87,8 @@ abstract class AbstractAppMain {
         this._levelManager.globalEvents.on('level_shutdown', this.hideActivityBar, this);
      //   this._levelManager.globalEvents.on('pause', this.hideActivityBar, this);
         let scene = this.getURLSceneCode();
-        if (scene == null) scene = 'main_menu';
+        if (scene == null || scene == undefined) scene = this._defaultScene;
+        Debug.info('scene default ', this._defaultScene);
         if (scene.includes('menu')) this._game.startActivity(scene, this._defaultActivity);
         else this._game.startActivity(scene);
     }
