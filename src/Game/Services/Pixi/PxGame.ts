@@ -246,9 +246,28 @@ class PxGame {
 
   }
 
-  public addText(x: number, y: number, text: string, style: any = {}): PxText {
+  public addText(x: number, y: number, text: string, style: any = {}): PIXI.Text {
     if (this._game != null) {
-      let txt = this._pxFactory.createText(text, this._game.renderer, style);
+      let txt = this._pxFactory.createText(text, style);
+
+      txt.x = x;
+      txt.y = y;
+
+      this._addChild(txt);
+
+      return txt;
+    } else {
+      Debug.error("Can't add text before starting game!");
+
+      let t: any;
+
+      return <PIXI.Text>t;
+    }
+  }
+
+  public addTextSprite(x: number, y: number, text: string, style: any = {}): PxText {
+    if (this._game != null) {
+      let txt = this._pxFactory.createTextSprite(text, this._game.renderer, style);
 
       txt.x = x;
       txt.y = y;
@@ -257,7 +276,7 @@ class PxGame {
 
       return txt;
     } else {
-      Debug.error("Can't add text before starting game!");
+      Debug.error("Can't add textSprite before starting game!");
 
       let t: any;
 

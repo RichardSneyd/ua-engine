@@ -16,20 +16,24 @@ import ExtractComponent from "./Components/ExtractComponent";
  * @description A text game object class. Converts text to sprite object under the hood.
  */
 class TextObject extends BaseGameObject {
-    
+
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
         scaleHandler: ScaleHandler, tweenComponent: TweenComponent, extract: ExtractComponent) {
         super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent, extract);
     }
 
     public init(x: number, y: number, text: string, style: any = {}, parent: IParentChild | null = null): void {
-        
         this.data = this._screen.createText(x, y, text, style);
         this._core.init(this, x, y, '', this._update);
         super.init();
         this._pcHandler.init(this, this._core, parent);
     }
 
+  /*   protected _updateSize() {
+        this._objectHandler.setSize(this._data, this._width * this._go.scaleHandler.x, this._height * this._go.scaleHandler.y);
+        //   this._objectHandler.setSize(this._data, this._width * scaleX, this._height * scaleY);
+    }
+ */
     public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null): TextObject {
         let textObj = this.createEmpty();
         textObj.init(x, y, textureName, frame, parent);
@@ -42,40 +46,41 @@ class TextObject extends BaseGameObject {
     }
 
     set text(lett: string) {
-        this.core.dataPure.text = lett;
+        this.core.data.text = lett;
+       // this.core.data.
     }
 
-    get text(){
-        return this.core.dataPure.text;
+    get text() {
+        return this.core.data.text;
     }
 
-    set style(style: any){
-        this._core.dataPure.style = style;
+    set style(style: any) {
+        this._core.data.style = style;
     }
 
-    get style(): any{
-        return this._core.dataPure.style;
+    get style(): any {
+        return this._core.data.style;
     }
 
-    get width(): number {
-        return this._core.dataPure.width;
-    }
+    /*    get width(): number {
+           return this._core.width;
+       }
+   
+       get height(): number {
+           return this._core.height;
+       } */
 
-    get height(): number {
-        return this._core.dataPure.height;
-    }
-    
 
-   /*  setStyle(style: any) {
+    setStyle(style: any) {
         this._core._objectHandler.setStyle(this._core.data, style);
-    } */
+    }
 
     setTextColor(color: string) {
         Debug.info(this.core.data);
-       this.core.dataPure.setTextColor(color);
+        this.core.dataPure.setTextColor(color);
     }
 
-    destroy(){
+    destroy() {
         super.destroy();
     }
 }

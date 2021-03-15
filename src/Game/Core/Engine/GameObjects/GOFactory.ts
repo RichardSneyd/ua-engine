@@ -79,7 +79,7 @@ class GOFactory {
      * @param text the text value to initialize with
      * @param style a css style object to apply to the text
      */
-      public textSprite(x?: number, y?: number, text?: string, style?: any, parent: IParentChild | null = null): TextObject {
+      public textSprite(x?: number, y?: number, text?: string, style?: any, parent: IParentChild | null = null): TextSpriteObject {
         if (x != null && y != null && text != null && style != null) {
             //  let pos = this._scaleManager.getXY(x, y);
             return this._textSprite.createNew(x, y, text, style, parent);

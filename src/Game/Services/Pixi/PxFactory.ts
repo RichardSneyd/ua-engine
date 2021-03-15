@@ -48,7 +48,11 @@ class PxFactory {
     return new NineSlicePlane(texture, leftWidth, topHeight, rightWidth, bottomHeight);
   }
 
-  public createText(text: string, renderer: any, style: any = {}): PxText {
+  public createText(text: string, style: any = {}): PIXI.Text {
+    return new PIXI.Text(text, style);
+  }
+
+  public createTextSprite(text: string, renderer: any, style: any = {}): PxText {
     let pxt = this._pxText.createNew();
     pxt.init(text, renderer, style);
 

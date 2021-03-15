@@ -26,7 +26,7 @@ class TextSpriteObject extends BaseGameObject {
 
     public init(x: number, y: number, text: string, style: any = {}, parent: IParentChild | null = null): void {
         
-        this.data = this._screen.createText(x, y, text, style);
+        this.data = this._screen.createTextSprite(x, y, text, style);
         this._core.init(this, x, y, '', this._update);
         super.init();
         this._pcHandler.init(this, this._core, parent);
