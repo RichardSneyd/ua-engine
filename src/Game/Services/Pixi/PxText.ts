@@ -108,6 +108,18 @@ class PxText {
     return this._fill;
   }
 
+  set text(text: string){
+    if(this._rawText) this._rawText.text = text;
+    else Debug.error('cannot update text for unitiatied text object');
+    this._updateTexture();
+  }
+
+  get text(){
+   if(this._rawText) return this._rawText.text;
+   else Debug.error('cannot retrieve text value from undefined object');
+   return '';
+  }
+
   createNew(): PxText {
     return new PxText(this._pxPoint.createNew(1, 1, () => {}, () => {}));
   }
@@ -217,7 +229,10 @@ class PxText {
 
   private _updateTexture() {
     if (this._data != null && this._renderer != null && this._rawText != null) {
-      this._data.texture = this._renderer.generateTexture(this._rawText, SCALE_MODES.LINEAR, 1);
+      let texture = this._renderer.generateTexture(this._rawText, SCALE_MODES.LINEAR, 1);
+      this._data.texture = texture;
+      this._data.width = texture.width;
+      this._data.height = texture.height;
     } else {
       Debug.error("Can not update text texture before init!");
     }

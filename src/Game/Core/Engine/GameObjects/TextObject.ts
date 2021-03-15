@@ -17,16 +17,16 @@ import ExtractComponent from "./Components/ExtractComponent";
  */
 class TextObject extends BaseGameObject {
 
-    private _letters: string;
+ //   private _letters: string;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
         scaleHandler: ScaleHandler, tweenComponent: TweenComponent, extract: ExtractComponent) {
         super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent, extract);
-        this._letters = '$$$$____$$$$'; //default uninitialized string
+       // this._letters = '$$$$____$$$$'; //default uninitialized string
     }
 
     public init(x: number, y: number, text: string, style: any = {}, parent: IParentChild | null = null): void {
-        this._letters = text;
+        
         this.data = this._screen.createText(x, y, text, style);
         this._core.init(this, x, y, '', this._update);
         super.init();
@@ -45,11 +45,11 @@ class TextObject extends BaseGameObject {
     }
 
     set text(lett: string) {
-        if (this._letters == '$$$$____$$$$') {
-            Debug.error("this is not a text ObjectCore, can't change letters!");
-        } else {
-            this._letters = lett;
-        }
+        this.core.dataPure.text = lett;
+    }
+
+    get text(){
+        return this.core.dataPure.text;
     }
 
     set style(style: any){
@@ -60,6 +60,15 @@ class TextObject extends BaseGameObject {
         return this._core.dataPure.style;
     }
 
+    get width(): number {
+        return this._core.dataPure.width;
+    }
+
+    get height(): number {
+        return this._core.dataPure.height;
+    }
+    
+
    /*  setStyle(style: any) {
         this._core._objectHandler.setStyle(this._core.data, style);
     } */
@@ -67,15 +76,6 @@ class TextObject extends BaseGameObject {
     setTextColor(color: string) {
         Debug.info(this.core.data);
        this.core.dataPure.setTextColor(color);
-    }
-
-    get text(): string {
-        if (this._letters == '$$$$____$$$$') {
-            Debug.error("this is not a text ObjectCore, can't change letters!");
-            return '';
-        } else {
-            return this._letters;
-        }
     }
 
     destroy(){

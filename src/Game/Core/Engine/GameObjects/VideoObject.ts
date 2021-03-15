@@ -19,11 +19,13 @@ import ExtractComponent from "./Components/ExtractComponent";
 class VideoObject extends BaseGameObject {
     private _gameConfig: GameConfig;
     private _vidElement: HTMLVideoElement;
+    private _events: Events;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
-        scaleHandler: ScaleHandler, tweenComponent: TweenComponent, gameConfig: GameConfig, extract: ExtractComponent) {
+        scaleHandler: ScaleHandler, tweenComponent: TweenComponent, gameConfig: GameConfig, extract: ExtractComponent, events: Events) {
             super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent, extract);
             this._gameConfig = gameConfig;
+            this._events = events;
     }
 
     public init(x: number, y: number, videoName: string, frame: string | null = null, parent: IParentChild | null = null): void {
@@ -46,6 +48,16 @@ class VideoObject extends BaseGameObject {
         this._core.setOrigin(0.5);
         this.input.enableInput();
         this.input.addInputListener('pointerdown', this._togglePause, this);
+        this._events.on('pause', this._pause, this);
+        this._events.on('resume', this._resume, this);
+    }
+
+    private _pause(){
+        this._vidElement.pause();
+    }
+
+    private _resume(){
+        this._vidElement.play();
     }
 
     private _togglePause() {
@@ -64,11 +76,13 @@ class VideoObject extends BaseGameObject {
     }
 
     public createEmpty(): VideoObject {
-        return new VideoObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenComponent.createNew(), this._gameConfig, this._extract.createEmpty());
+        return new VideoObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenComponent.createNew(), this._gameConfig, this._extract.createEmpty(), this._events);
     }
 
     destroy(): void {
         this.input.removeInputListener('pointerdown', this._togglePause);
+        this._events.off('pause', this._pause, this);
+        this._events.off('resume', this._resume, this);
         super.destroy();
     }
 

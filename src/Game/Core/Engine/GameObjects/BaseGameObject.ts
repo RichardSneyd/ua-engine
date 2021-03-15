@@ -248,8 +248,8 @@ abstract class BaseGameObject implements IGameObject {
      * @param x the origin value for the x axis. A value between 0 and 1.
      * @param y the origin value for the y axis. A value between 0 and 1. 
      */
-    get setOrigin(): (x: number, y?: number) => void {
-        return this._core.setOrigin.bind(this._core);
+    public setOrigin(x: number, y?: number): void {
+        this._core.setOrigin.bind(this._core)(x, y);
     }
 
     /**
