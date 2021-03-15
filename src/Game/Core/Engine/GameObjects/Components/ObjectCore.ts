@@ -399,6 +399,10 @@ class ObjectCore {
     this._objectHandler.setXy(this._data, target.x, target.y);
   }
 
+  importSize(){
+    this._importSize();
+  }
+
   protected _importSize() {
     this._width = this._objectHandler.getSize(this._data).width / this._scaleHandler.x;
     this._height = this._objectHandler.getSize(this._data).height / this._scaleHandler.y;
