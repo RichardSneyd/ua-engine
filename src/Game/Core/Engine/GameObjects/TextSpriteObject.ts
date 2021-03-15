@@ -15,8 +15,10 @@ import ExtractComponent from "./Components/ExtractComponent";
 /**
  * @description A text game object class. Converts text to sprite object under the hood.
  */
-class TextObject extends BaseGameObject {
-    
+class TextSpriteObject extends BaseGameObject {
+
+ //   private _letters: string;
+
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
         scaleHandler: ScaleHandler, tweenComponent: TweenComponent, extract: ExtractComponent) {
         super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent, extract);
@@ -30,14 +32,14 @@ class TextObject extends BaseGameObject {
         this._pcHandler.init(this, this._core, parent);
     }
 
-    public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null): TextObject {
+    public createNew(x: number, y: number, textureName: string, frame: string | null = null, parent: IParentChild | null): TextSpriteObject {
         let textObj = this.createEmpty();
         textObj.init(x, y, textureName, frame, parent);
         return textObj;
     }
 
-    public createEmpty(): TextObject {
-        let textObj = new TextObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenComponent.createNew(), this._extract.createEmpty());
+    public createEmpty(): TextSpriteObject {
+        let textObj = new TextSpriteObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenComponent.createNew(), this._extract.createEmpty());
         return textObj;
     }
 
@@ -80,4 +82,4 @@ class TextObject extends BaseGameObject {
     }
 }
 
-export default TextObject;
+export default TextSpriteObject;
