@@ -15,7 +15,6 @@ import SpineObject from '../SpineObject';
 import Loop from '../../Loop';
 import { Container, RenderTexture } from 'pixi.js-legacy';
 import Debug from '../../Debug';
-import UAE from '../../../../UAE';
 
 /**
  * @description a core component on all IGameObjects.
@@ -249,7 +248,7 @@ class ObjectCore {
   // ONLY to be called by gameObject this component attaches to -- always listen for the destroy method on 
   // the gameObject itself.
   public destroy() {
-    UAE.debug.info('in objectcore.destroy...')
+    Debug.info('in objectcore.destroy...')
     // remember to ALWAYS remove event listeners when destroying a GameObject
     this._loop.removeFunction(this.update, this);
     this._objectHandler.destroy(this._data);
