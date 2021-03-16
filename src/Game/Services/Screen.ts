@@ -86,8 +86,8 @@ class Screen {
     this._pxGame.addListener(event, sprite, callback, context);
   }
 
-  public removeListener(event: string, sprite: any, callback: Function) {
-    this._pxGame.removeListener(event, sprite, callback);
+  public removeListener(event: string, sprite: any, callback: Function, context: any) {
+    this._pxGame.removeListener(event, sprite, callback, context);
   }
 
   /*  public addHitMap(obj: Sprite, threshold: number = 127) {    

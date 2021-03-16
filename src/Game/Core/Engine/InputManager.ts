@@ -161,9 +161,9 @@ class InputManager {
      * @param context the context of the callback
      */
     public addListener(event: string, callback: Function, go: IGameObject, context: any) {
-        let pixiData: any = this._getData(go);
+       //let pixiData: any = this._getData(go);
       //  if(!pixiData.hasOwnProperty('containsPoint')) pixiData = go;
-        this._screen.addListener(event, pixiData, (evt: any) => {
+        this._screen.addListener(event, go.data, (evt: any) => {
             if (go.hitShape == null) {
                 /* if (go.input.pixelPerfect) {
                     if (go.input.pixelHit(this._pointer)) callback.bind(context)(evt);
@@ -182,17 +182,17 @@ class InputManager {
      * @param callback the callback on the listener
      * @param sprite 
      */
-    public removeListener(event: string, callback: Function, go: IGameObject) {
-        let data = this._getData(go);
-        this._screen.removeListener(event, data, callback);
+    public removeListener(event: string, callback: Function, go: IGameObject, context: any) {
+        let pixiData = go.data;
+        this._screen.removeListener(event, pixiData, callback, context);
     }
 
-    private _getData(go: IGameObject): any {
+ /*    private _getData(go: IGameObject): any {
         if (go.data.data) {
             return go.data.data;
         }
         return go.data;
-    }
+    } */
 
     private _onPointerMove(data: any) {
         //  Debug.info('this: ', this);

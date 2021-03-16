@@ -588,8 +588,12 @@ abstract class BaseGameObject implements IGameObject {
      * @description also recursively destroys all children
      */
     destroy() {
+        Debug.info('in baseGameObject.destroy...')
+
         // if (this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
         this.destroyChildren();
+       Debug.info('children destroyed, now call core.destroy...')
+
         this._core.destroy();
     }
 

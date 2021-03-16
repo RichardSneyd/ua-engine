@@ -118,8 +118,8 @@ class InputHandler {
     this._inputManager.addListener(event, callback, this._go, context)
   }
 
-  public removeInputListener(event: string, callback: Function) {
-    this._inputManager.removeListener(event, callback, this._go);
+  public removeInputListener(event: string, callback: Function, context: any) {
+    this._inputManager.removeListener(event, callback, this._go, context);
   }
 
   createNew(): InputHandler {

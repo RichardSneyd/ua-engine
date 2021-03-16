@@ -461,9 +461,9 @@ class PxGame {
     sprite.interactive = false;
   }
 
-  public removeListener(event: string, sprite: DisplayObject, callback: Function) {
+  public removeListener(event: string, sprite: DisplayObject, callback: Function, context: any) {
     // sprite.removeAllListeners('mouseup');
-    sprite.removeListener(event, callback);
+    sprite.removeListener(event, callback, context);
   }
 
   public addListener(event: string, sprite: DisplayObject, callback: Function, context: any) {

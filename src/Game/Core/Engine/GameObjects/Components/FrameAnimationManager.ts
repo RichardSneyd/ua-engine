@@ -182,7 +182,7 @@ class FrameAnimationManager implements IAnimationManager {
   public autoGenFrames(name: string): string[] {
     // Debug.info('trying to gen frames for %s on %s', name, this._go.textureName);
     let atlasName = this._core.atlas;
-    let res = this._loader.getResource(atlasName, true);
+    let res = this._loader.getImgResource(atlasName, true);
     if (res !== null) {
       let json = res.data.data;
       // Debug.info('json: ', res);
