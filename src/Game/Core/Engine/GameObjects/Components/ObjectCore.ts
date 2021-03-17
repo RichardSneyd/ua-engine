@@ -248,10 +248,10 @@ class ObjectCore {
   // ONLY to be called by gameObject this component attaches to -- always listen for the destroy method on 
   // the gameObject itself.
   public destroy() {
-    Debug.info('in objectcore.destroy...')
+   // Debug.info('in objectcore.destroy...')
     // remember to ALWAYS remove event listeners when destroying a GameObject
-    this._loop.removeFunction(this.update, this);
     this._objectHandler.destroy(this._data);
+    this._loop.removeFunction(this.update, this);
 
     if (this._go) {
       this._go.scaleHandler.shutdown.bind(this._go.scaleHandler)();

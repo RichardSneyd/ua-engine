@@ -79,7 +79,7 @@ class TextObject extends BaseGameObject {
 
     setTextColor(color: string) {
         Debug.info(this.core.data);
-        this.core.dataPure.setTextColor(color);
+        this.core.data.style.fill = color;
     }
 
     destroy() {

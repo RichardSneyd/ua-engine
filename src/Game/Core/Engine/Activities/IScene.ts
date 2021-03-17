@@ -12,6 +12,7 @@ interface IScene {
   start(): void;
   shutdown(): void;
   events: SceneEvents;
+  name: string;
 }
 
 export default IScene;

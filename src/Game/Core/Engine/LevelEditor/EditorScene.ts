@@ -33,7 +33,6 @@ class EditorScene implements ILevel {
     protected _math: MathUtils;
     protected _importData: ImportData;
 
-
     public bgdName: string;
     protected _bgd: SpriteObject;
     protected _foregroundContainer: ContainerObject;
@@ -77,6 +76,10 @@ class EditorScene implements ILevel {
         this._exportData = exportData;
         this._inspector = inspector;
         this._importData = importData;
+    }
+
+    get name(){
+        return 'editor';
     }
 
     init(): void {
