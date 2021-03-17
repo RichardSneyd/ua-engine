@@ -47,6 +47,8 @@ abstract class BaseScene implements IScene {
         this._background = this._goFactory.container(0, 0);
         this._playground = this._goFactory.container(0, 0);
         this._foreground = this._goFactory.container(0, 0);
+        this._events.global.on('shutdown', this.shutdown, this);
+
         this._loop.addFunction(this.update, this);
         this._loop.start(); // just in case the loop hasn't been started yet - if it has, this will do nothing.
         Debug.exposeGlobal(this, 'scene');
@@ -86,6 +88,8 @@ abstract class BaseScene implements IScene {
     shutdown(): void {
         this._events.global.emit('scene_shutdown');
         this._loop.removeFunction(this.update, this);
+        this._events.global.off('shutdown', this.shutdown, this);
+        this.destroy();
     }
 
     /**
@@ -97,6 +101,16 @@ abstract class BaseScene implements IScene {
         this._game.startActivity(code);
     }
 
+    /**
+    * @description calls the destroy methods on all layers, effectively destroying the entire scene
+    */
+    destroy() {
+        Debug.trace('scene destroy called');
+    /*     this._playground.destroy();
+        this._background.destroy();
+        this._foreground.destroy(); */
+        Debug.trace('scene destroy finished');
+    }
 }
 
 export default BaseScene;

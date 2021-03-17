@@ -53,7 +53,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         // cookie-cutter event listeners (necessary for the functioning of activities and levels, and for avoiding memory leaks etc)
         this._manager.globalEvents.emit('level_init');
         this._manager.globalEvents.on('newRow', this.onNewRow, this);
-        this._manager.globalEvents.on('shutdown', this.shutdown, this);
+      //  this._manager.globalEvents.on('shutdown', this.shutdown, this);
 
         // load activity script, then call manager.init to preprocess the activity script, then call preload
         this._loader.loadActScript(scriptName, (script: any, data: any) => {
@@ -348,21 +348,11 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     shutdown() {
         this._events.global.emit('level_shutdown');
         this._events.global.emit('hide_nav_bar');
-        this._manager.globalEvents.off('shutdown', this.shutdown, this);
+       // this._manager.globalEvents.off('shutdown', this.shutdown, this);
         this._manager.globalEvents.off('newRow', this.onNewRow, this);
         this._manager.input.offKeyDown(this._manager.input.keys.O, this._virtualOKPress, this);
         this._manager.input.offKeyDown(this._manager.input.keys.S, this._skipToNextRow, this);
-        this.destroy();
         super.shutdown();
-    }
-
-    /**
-     * @description calls the destroy methods on all layers, effectively destroying the entire scene
-     */
-    destroy() {
-        this._playground.destroy();
-        this._background.destroy();
-        this._foreground.destroy();
     }
 }
 
