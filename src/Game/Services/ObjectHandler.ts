@@ -2,6 +2,7 @@ import IObjectHandler from './IObjectHandler';
 import Point from '../Core/Geom/Point';
 import { Container, DisplayObject } from 'pixi.js-legacy';
 import Debug from '../Core/Engine/Debug';
+import { truncate } from 'lodash';
 
 class ObjectHandler implements IObjectHandler {
   constructor() {
