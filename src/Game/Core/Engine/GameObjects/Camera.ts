@@ -207,10 +207,10 @@ class Camera {
     }
 
     _updateContOrigin() {
-        Debug.info('camera.centerX: ', this.centerX, ' camera.centerY: ', this.centerY);
+      //  Debug.info('camera.centerX: ', this.centerX, ' camera.centerY: ', this.centerY);
         let originX = ((this.pivotPoint.x / this._container.width));
         let originY = ((this.pivotPoint.y / this._container.height));
-        Debug.info('origin x: ', originX, ', y: ', originY);
+      //  Debug.info('origin x: ', originX, ', y: ', originY);
         this._container.setOrigin(originX, originY);
     }
 
