@@ -276,7 +276,8 @@ class ScriptHandler {
     }
 
     private _parseList(text: string): string[] | string{
-        if(this._utils.getValsFromCell(text).length > 1)  return this._utils.getValsFromCell(text);
+     //   if(this._utils.getValsFromCell(text).length > 1)  return this._utils.getValsFromCell(text);
+        if(text.split(',').length > 1)  return text.split(',');
         return text; // if there is only one element, skip this step and just return the original value
     }
 

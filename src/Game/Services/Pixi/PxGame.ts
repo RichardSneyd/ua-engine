@@ -83,8 +83,8 @@ class PxGame {
   public newLevel() {
     if (this._game !== null) {
       if (this.levelCont !== null && this.levelCont !== undefined) {
-      //  this._lastLevelCont = this.levelCont;
-        this._levelCont.destroy({children: true, texture: false, baseTexture: false});
+        //  this._lastLevelCont = this.levelCont;
+        this._levelCont.destroy({ children: true, texture: false, baseTexture: false });
       }
       this._levelCont = this._pxFactory.createContainer();
       this._activityCont.addChild(this._levelCont);
@@ -466,8 +466,9 @@ class PxGame {
     sprite.removeListener(event, callback, context);
   }
 
-  public addListener(event: string, sprite: DisplayObject, callback: Function, context: any) {
-    sprite.on(event, callback, context);
+  public addListener(event: string, sprite: DisplayObject, callback: Function, context: any, once: boolean = false) {
+    if (once) sprite.once(event, callback, context);
+    else sprite.on(event, callback, context);
     //  sprite.on('touchend', callback, context);
   }
 
@@ -499,9 +500,9 @@ class PxGame {
     /* if(frame == 'default') {
       frame = this._loader.
     } */
-    if (typeof texture == 'string') { 
-      if(this._loader.getImgResource(texture, true)){
-        textureObj = this._loader.getTexture(texture, frame); 
+    if (typeof texture == 'string') {
+      if (this._loader.getImgResource(texture, true)) {
+        textureObj = this._loader.getTexture(texture, frame);
       }
       else {
         Debug.error('cannot create sprite "' + texture + '" as resource does not exist');

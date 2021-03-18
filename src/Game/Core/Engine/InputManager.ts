@@ -160,7 +160,7 @@ class InputManager {
      * @param sprite the sprite this event lisener is being associated with
      * @param context the context of the callback
      */
-    public addListener(event: string, callback: Function, go: IGameObject, context: any) {
+    public addListener(event: string, callback: Function, go: IGameObject, context: any, once: boolean = false) {
        //let pixiData: any = this._getData(go);
       //  if(!pixiData.hasOwnProperty('containsPoint')) pixiData = go;
         this._screen.addListener(event, go.data, (evt: any) => {
@@ -173,7 +173,7 @@ class InputManager {
                 callback.bind(context)(evt);
             }
             else if (go.hitShape.containsPoint(this._pointer)) callback.bind(context)(evt);
-        }, context);
+        }, context, once);
     }
 
     /**

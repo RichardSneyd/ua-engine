@@ -35,7 +35,9 @@ class Text {
      * @param seperator the seperator substring
      */
     public unstringifyArray(txt: string, seperator: string): string[] {
-        return _.compact(txt.replace(' ', '').split(seperator));
+        // may revise to a simple split(), causes issues now, and illegal characters are stripped my macros now anyway
+        //return _.compact(txt.replace(' ', '').split(seperator)); 
+        return txt.split(seperator); 
     }
 
     public propertiesFromString(rawText: string, lineSeperator: string, valueAssigner: string, valueSeperator: string): object {

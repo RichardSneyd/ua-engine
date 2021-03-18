@@ -82,8 +82,8 @@ class Screen {
     this._pxGame.disableInput(sprite);
   }
 
-  public addListener(event: string, sprite: any, callback: Function, context: any) {
-    this._pxGame.addListener(event, sprite, callback, context);
+  public addListener(event: string, sprite: any, callback: Function, context: any, once: boolean) {
+    this._pxGame.addListener(event, sprite, callback, context, once);
   }
 
   public removeListener(event: string, sprite: any, callback: Function, context: any) {
