@@ -63,8 +63,8 @@ class ObjectHandler implements IObjectHandler {
     if(object !== undefined && object !== null && !object.destroyed) {
       Debug.info('destroying ', object);
       object.destroyed = true;
-      object.destroy({children: true, texture: false, baseTexture: false});
-      Debug.trace('destroyed')
+      object.destroy({children: true, texture: false, baseTexture: false}); // wasn't destroying children, caused memory leak...
+      Debug.trace('destroyed');
     } 
     else {
       Debug.trace('tried to destroy this object again: ', object);

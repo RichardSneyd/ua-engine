@@ -593,8 +593,8 @@ abstract class BaseGameObject implements IGameObject {
         // if (this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
         //   Debug.info('children destroyed, now call core.destroy for...  ', this.name);
         
-        this._core.destroy();
         this.destroyChildren();
+        this._core.destroy();
     }
 
     /**

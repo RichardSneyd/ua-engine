@@ -27,6 +27,7 @@ class AudioManager {
         this._events.on('resume', this._resume, this);
         this._events.on('stop_all_audio', this._stopAll, this);
         this._events.on('stop_instructional_audio', this._stopInstPlaying, this);
+        Debug.exposeGlobal(this, 'audio');
     }
 
     get filesPlaying() {
@@ -41,7 +42,7 @@ class AudioManager {
      */
     public play(name: string, onStop: Function, loop: boolean = false) {
         let _name = name;
-        let res = this._loader.getResource(name, true);
+        let res = this._loader.getSndResource(name, true);
         if (res !== null && res.data._state == 'loaded') { // when the file doesn't exists, the res is still created in loader, but data._state says 'loading'
             this._playing.push(name);
             this._hwPlayer.play(name, res, () => {
