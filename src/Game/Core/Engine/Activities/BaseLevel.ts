@@ -194,7 +194,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
             let loop = (this.activeRow.char_loop == 'y');
             let animation = this.activeRow.char;
             if (animation && animation !== '') this._character.animations.play(animation, loop);
-            if (animation && !loop) {
+            if (!loop) {
                 if (this._character.animations.animationNames.includes('idle')) {
                     this._character.animations.addAnimation('idle', true);
                 } else {
@@ -210,6 +210,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if (!char) { // Default position and scale if char is not on Level file
             char = { x: 20, y: this._game.height() - 50, scaleX: 1, originX: 0, originY: 1 };
         }
+        if (this._character) this._character.destroy();
         this._character = this._goFactory.spine(char.x, char.y, this.activeRow.config.char, this._foreground);
         this._character.scaleHandler.scale = char.scaleX;
         this._character.setOrigin(char.originX, char.originY);
