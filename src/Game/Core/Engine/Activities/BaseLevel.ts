@@ -210,7 +210,6 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if (!char) { // Default position and scale if char is not on Level file
             char = { x: 20, y: this._game.height() - 50, scaleX: 1, originX: 0, originY: 1 };
         }
-        if (this._character) this._character.destroy();
         this._character = this._goFactory.spine(char.x, char.y, this.activeRow.config.char, this._foreground);
         this._character.scaleHandler.scale = char.scaleX;
         this._character.setOrigin(char.originX, char.originY);
