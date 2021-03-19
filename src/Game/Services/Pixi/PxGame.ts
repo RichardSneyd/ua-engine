@@ -84,8 +84,10 @@ class PxGame {
     if (this._game !== null) {
       if (this.levelCont !== null && this.levelCont !== undefined) {
         //  this._lastLevelCont = this.levelCont;
-        this._levelCont.destroy({ children: true, texture: false, baseTexture: false });
+       // this._levelCont.destroy({ children: true, texture: false, baseTexture: false });
+
       }
+      this._activityCont.removeChild(this._levelCont);
       this._levelCont = this._pxFactory.createContainer();
       this._activityCont.addChild(this._levelCont);
       this.levelCont.x = 0; this.levelCont.y = 0;

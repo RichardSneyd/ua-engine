@@ -106,9 +106,9 @@ abstract class BaseScene implements IScene {
     */
     destroy() {
         Debug.trace('scene destroy called');
-    /*     this._playground.destroy();
+        this._playground.destroy();
         this._background.destroy();
-        this._foreground.destroy(); */
+        this._foreground.destroy(); 
         Debug.trace('scene destroy finished');
     }
 }
