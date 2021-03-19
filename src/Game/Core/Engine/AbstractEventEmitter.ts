@@ -271,7 +271,7 @@ abstract class AbstractEventEmitter {
                 return;
             }
             else {
-                Debug.warn("cannot remove listener for %s with context of %s because it doesn't exist", eventName, context);
+                Debug.info("cannot remove listener for %s with context of %s because it doesn't exist", eventName, context);
             }
         }
         else {

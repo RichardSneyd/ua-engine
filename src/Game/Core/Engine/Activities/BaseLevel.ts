@@ -22,6 +22,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     protected _manager: LevelManager;
     protected _bgd: SpriteObject;
     protected _ready: boolean;
+  //  protected _started: boolean;
 
     protected _character: SpineObject;
 
@@ -283,8 +284,8 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     }
 
     protected _onFirstInput() {
-        this.manager.script.goTo(this.manager.script.rows[0]);
         this.ready = true;
+        this.manager.script.goTo(this.manager.script.rows[0]);
     }
 
     /**
