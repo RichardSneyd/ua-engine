@@ -508,7 +508,7 @@ class Loader {
       res.data = data;
     } else {
       //   let res = this._createResource()
-      Debug.warn("Injection failed: no resource exists in Loader.resList with name %s & url %s", data.name, url);
+      Debug.info("%c Injection failed: no resource exists in Loader.resList with name %s & url %s", Debug.STYLES.CURIOUS, data.name, url);
     }
 
   }

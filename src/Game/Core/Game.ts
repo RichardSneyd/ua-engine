@@ -299,6 +299,13 @@ class Game {
 
   private _addListeners(): void {
     this._events.addListener('resize', this._onResize, this);
+    
+    window.addEventListener('blur', ()=>{
+      this._events.emit('pause')
+    });
+    window.addEventListener('focus', ()=>{
+      this._events.emit('resume');
+    });
 
     window.addEventListener('resize', () => {
       this._events.fire('resize');
