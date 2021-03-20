@@ -73,6 +73,7 @@ class World {
     // this._screen.clearScreen();
     this._screen.newLevel();
     this._currentLevel = level;
+ //   this._currentLevel = level.createNew();
     this._currentLevel.init(scriptName);
   }
 

@@ -55,6 +55,10 @@ abstract class BaseScene implements IScene {
         // remember to call preload from the subclass
     }
 
+ /*    createNew(){
+        return new BaseScene(this._events, this._loop, this._goFactory, this_loader, this._game);
+    } */
+
     get name(): string {
         return this._name;
     }

@@ -51,6 +51,11 @@ class SpineObject extends BaseGameObject {
         return this._animationManager;
     }
 
+    
+    destroy(){
+        this.animations.destroy();
+        super.destroy();
+    }
 }
 
 export default SpineObject;
