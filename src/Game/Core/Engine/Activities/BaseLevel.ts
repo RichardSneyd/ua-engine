@@ -195,7 +195,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
             let loop = (this.activeRow.char_loop == 'y');
             let animation = this.activeRow.char;
             if (animation && animation !== '') this._character.animations.play(animation, loop);
-            if (!loop) {
+            if (animation && !loop) {
                 if (this._character.animations.animationNames.includes('idle')) {
                     this._character.animations.addAnimation('idle', true);
                 } else {
