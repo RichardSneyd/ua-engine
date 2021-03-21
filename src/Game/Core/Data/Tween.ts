@@ -1,5 +1,6 @@
 import Debug from '../Engine/Debug';
 import * as TWEEN from '@tweenjs/tween.js';
+import Events from '../Engine/Events';
 
 /**
  * @description A wrapper for a Tween.tween, essentially -- enables encapsulation, so in theory, it would be easier to implement a different tweening
@@ -12,8 +13,10 @@ class Tween {
   private _onUpdateListeners: Function[];
   private _onRepeatListeners: Function[];
   private _onStartListeners: Function[];
+  protected _events: Events;
 
-  constructor() {
+  constructor(events: Events) {
+    this._events = events;
     this._name = '';
     this._easing = '';
     this._object = null;
@@ -156,12 +159,15 @@ class Tween {
     this._data.onRepeat(() => { this._callOnRepeat() });
     this._data.onStart(() => { this._callOnStart() });
     this._data.onUpdate(this._callOnUpdate.bind(this));
-
+    this._events.on('pause', this.pause, this);
+    this._events.on('resume', this.resume, this);
     if (this._easing.split('.').length != 2) Debug.error("invalid easing: %s", easing);
     this.reset();
   }
 
   remove(tweenName?: string) {
+    this._events.off('pause', this.pause, this);
+    this._events.off('resume', this.resume, this);
     if (this._data) {
       TWEEN.remove(this._data);
       this._data = null;
@@ -190,7 +196,7 @@ class Tween {
   }
 
   createNew(): Tween {
-    return new Tween();
+    return new Tween(this._events);
   }
 
   update(time: number) {

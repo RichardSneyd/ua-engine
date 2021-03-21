@@ -35,7 +35,6 @@ abstract class BaseScene implements IScene {
         this._game = game;
     }
 
-
     get events() {
         return this._events;
     }

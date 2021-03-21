@@ -200,6 +200,9 @@ class TweenManager {
     }
 
     protected _shutdown(){
+        this._tweens.forEach((tween: Tween)=>{
+            tween.remove();
+        })
         this._tweens = [];
     }
 

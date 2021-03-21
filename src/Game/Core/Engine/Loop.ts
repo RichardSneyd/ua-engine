@@ -140,8 +140,8 @@ class Loop {
   }
 
   private _addListeners() {
-    this._events.addListener('pause', this._pause, this);
-    this._events.addListener('resume', this._resume, this);
+   // this._events.addListener('pause', this._pause, this);
+   // this._events.addListener('resume', this._resume, this);
   }
 }
 
