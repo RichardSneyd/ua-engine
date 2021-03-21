@@ -45,12 +45,18 @@ class HwPlayer {
 
     pause(res: Resource) {
         let howl = <Howl>res.data;
-        howl.pause();
+        if(howl.playing()){
+            howl.pause();
+            (<any>howl).paused = true;
+        }
     }
 
     resume(res: Resource) {
         let howl = <Howl>res.data;
-        howl.play();
+        if((<any>howl).paused){
+            howl.play();
+            (<any>howl).paused = false;
+        }
     }
 
     stop(res: Resource) {
