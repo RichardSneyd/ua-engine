@@ -81,6 +81,8 @@ class VideoObject extends BaseGameObject {
 
     destroy(): void {
         this.input.removeInputListener('pointerdown', this._togglePause, this);
+        this._pause();
+        this._vidElement.parentNode?.removeChild(this._vidElement);
         this._events.off('pause', this._pause, this);
      //   this._events.off('resume', this._resume, this);
         super.destroy();

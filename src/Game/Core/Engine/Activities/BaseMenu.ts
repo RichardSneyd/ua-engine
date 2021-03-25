@@ -23,18 +23,20 @@ abstract class BaseMenu extends BaseScene {
         this._manager = manager;
     }
 
-    init(sceneName: string, bgdName: string, hasLevelFile: boolean = true) {
+    init(sceneName: string, bgdName: string, levelFile: boolean | string = true) {
         this._bgdName = bgdName;
         this._events.global.emit('menu_init');
      //   this._events.global.on('shutdown', this.shutdown, this);
         super.init(sceneName);
         this._manager.init(sceneName, [], [], []);
-        if (!hasLevelFile) {
+        if (this._manager.script.isFalsy(levelFile)) {
             this.preload();
             return;
         }
         //Debug.info('scene.name: ', this.name)
-        this._loader.loadLevelFile(sceneName, (data: any) => {
+        let level = sceneName;
+        if(typeof levelFile == 'string') level = levelFile;
+        this._loader.loadLevelFile(level, (data: any) => {
             Debug.info('this: ', this);
             this._manager.setLevelFile(data);
             this.preload();

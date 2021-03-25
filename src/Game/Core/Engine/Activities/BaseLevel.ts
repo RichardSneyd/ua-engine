@@ -258,6 +258,9 @@ abstract class BaseLevel extends BaseScene implements ILevel {
             if (row.config.graph_trans_in){
                 graphic = row.config.graph_trans_in; // attempting to keep it generic as possible, not coupled to particular projects
             }
+            else {
+                Debug.warn('no graph_trans_in property on id 0 config');
+            }
             this._manager.globalEvents.emit('enter_transition', {graphic: graphic}); // start the 'curtain fall'
     }
 

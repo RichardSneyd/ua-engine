@@ -160,8 +160,8 @@ class GOFactory {
      * @param y the y position of the video sprite
      * @param videoName the name of the video sprite, including the file extension. The path will be read from config.json.
      */
-    public video(x: number, y: number, videoName: string): VideoObject {
-        return this._video.createNew(x, y, videoName);
+    public video(x: number, y: number, videoName: string, parent: IParentChild | null = null): VideoObject {
+        return this._video.createNew(x, y, videoName, parent);
     }
 
     /**

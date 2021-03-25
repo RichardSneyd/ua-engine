@@ -625,11 +625,12 @@ class Loader {
     });
   }
 
-  loadLevelFile(activity_code: string, callback?: Function, staticPath: boolean = false) {
+  loadLevelFile(code: string, callback?: Function, staticPath: boolean = false) {
     let basePath = '';
     if (!staticPath) basePath = this._getPath().jsn;
-
-    this._ajaxLoader.loadFile(basePath + activity_code + '_level.json', (data: any) => {
+    let path = code;
+    if(!path.includes('_level')) path = path + '_level';
+    this._ajaxLoader.loadFile(basePath + path + '.json', (data: any) => {
       if (callback !== undefined) {
         callback(data.data, data);
       }
@@ -637,7 +638,7 @@ class Loader {
   }
 
   /**
-   * @description searches through the sprites, atlases and spines arrays of the provided level file (should be parse first), and adds them to the load queue based on the 
+   * @description searches through the sprites, atlases and spines arrays of the provided level file (should be parsed first), and adds them to the load queue based on the 
    * 'filename' property
    * @param level_file the level_file object to laod resources from
    */
