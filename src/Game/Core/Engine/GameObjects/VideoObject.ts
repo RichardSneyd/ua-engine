@@ -37,6 +37,7 @@ class VideoObject extends BaseGameObject {
 
         //@ts-ignore
         this._vidElement = this.data.texture.baseTexture.resource.source;
+        this._vidElement.currentTime = 0;
         this._vidElement.addEventListener('canplay', () => {
             // Debug.info('new width: ', this._vidElement.videoWidth);
             // Debug.info('new height: ', this._vidElement.videoHeight);
