@@ -73,6 +73,7 @@ class AudioManager {
      * @param onDone Called when the entire array has been played.
      */
     public playInstructionArr(arr: string[] | string, onDone: Function) {
+        this._events.emit('pause_video');
         if (typeof arr == 'string') arr = [arr];
 
         this._stopInstPlaying(); // clean the palette

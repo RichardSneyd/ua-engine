@@ -48,15 +48,16 @@ class VideoObject extends BaseGameObject {
         this._core.setOrigin(0.5);
         this.input.enableInput();
         this.input.addInputListener('pointerdown', this._togglePause, this);
-        this._events.on('pause', this._pause, this);
+        this._events.on('pause', this.pause, this);
+        this._events.on('pause_video', this.pause, this);
       //  this._events.on('resume', this._resume, this);
     }
 
-    private _pause(){
+    pause(){
         this._vidElement.pause();
     }
 
-    private _resume(){
+    resume(){
         this._vidElement.play();
     }
 
@@ -81,9 +82,11 @@ class VideoObject extends BaseGameObject {
 
     destroy(): void {
         this.input.removeInputListener('pointerdown', this._togglePause, this);
-        this._pause();
+        this.pause();
         this._vidElement.parentNode?.removeChild(this._vidElement);
-        this._events.off('pause', this._pause, this);
+        this._events.off('pause', this.pause, this);
+        this._events.off('pause_video', this.pause, this);
+
      //   this._events.off('resume', this._resume, this);
         super.destroy();
     }
