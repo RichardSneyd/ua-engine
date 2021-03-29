@@ -175,6 +175,20 @@ class Debug {
         }
     }
 
+    /**
+     * @description clear the console
+     */
+    public static clear(){
+        console.clear();
+    }
+
+    /**
+     * @description clear the console
+     */
+    public clear(){
+        Debug.clear();
+    }
+
     // From here onward all static methods are repeated as non-static.
     // This is to allow instantiation in the UAE API.
 
