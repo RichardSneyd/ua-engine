@@ -22,7 +22,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     protected _manager: LevelManager;
     protected _bgd: SpriteObject;
     protected _ready: boolean;
-  //  protected _started: boolean;
+    //  protected _started: boolean;
 
     protected _character: SpineObject;
 
@@ -54,7 +54,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         // cookie-cutter event listeners (necessary for the functioning of activities and levels, and for avoiding memory leaks etc)
         this._manager.globalEvents.emit('level_init');
         this._manager.globalEvents.on('newRow', this.onNewRow, this);
-      //  this._manager.globalEvents.on('shutdown', this.shutdown, this);
+        //  this._manager.globalEvents.on('shutdown', this.shutdown, this);
 
         // load activity script, then call manager.init to preprocess the activity script, then call preload
         this._loader.loadActScript(scriptName, (script: any, data: any) => {
@@ -104,9 +104,9 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if (sfx.length > 0) {
             this._loader.addSnds(sfx);
         }
-        
+
         let firstRow = this._manager.script.rows[0];
-        if(firstRow.hasOwnProperty('config') && firstRow.config.hasOwnProperty('graph_trans_in')){
+        if (firstRow.hasOwnProperty('config') && firstRow.config.hasOwnProperty('graph_trans_in')) {
             Debug.info(' ')
             this._loader.addImages([this._manager.script.rows[0].config.graph_trans_in], 'png');
         }
@@ -135,14 +135,14 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         // allows you to test 'ok button' functionality by tapping the O key
         this._manager.input.onKeyDown(this._manager.input.keys.O, this._virtualOKPress, this);
         // allows you skip to next row by tapping the S key, if auto_next is set for active row. faster testing.
-        this._manager.input.onKeyDown(this._manager.input.keys.S, this._skipToNextRow, this); 
+        this._manager.input.onKeyDown(this._manager.input.keys.S, this._skipToNextRow, this);
 
         super.start();
         this._waitForFirstInput();
     }
 
-    protected _skipToNextRow(){
-        if(this.activeRow && !this._manager.script.isFalsy(this.activeRow.auto_next)){
+    protected _skipToNextRow() {
+        if (this.activeRow && !this._manager.script.isFalsy(this.activeRow.auto_next)) {
             this._manager.script.goToAutoNext();
         }
     }
@@ -159,7 +159,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         Debug.info('onNewRow called for row %s: ', this.manager.script.active.id, this.manager.script.active);
         this.loadConfig();
         this.updateCharacterState();
-       // this.playSfx(); // this is already being done elsewhere
+        // this.playSfx(); // this is already being done elsewhere
         if (!this.manager.script.isFalsy(this.manager.script.active.audio_id)) {
             this.manager.audio.playInstructionArr(this.manager.script.active.audio_id, this.onInstructionAudioComplete.bind(this));
         }
@@ -169,8 +169,8 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if (this.activeRow.config && this.activeRow.config.hasOwnProperty('go_to')) {
             this._goto(this.activeRow.config.go_to);
         }
-        if(this.activeRow.id !== 0 && 'forward_tapped'){
-          //  this._outTransition();
+        if (this.activeRow.id !== 0 && 'forward_tapped') {
+            //  this._outTransition();
         }
     }
 
@@ -234,56 +234,55 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * from row to row, gives control to the IDs). Called in BaseLevel.onNewRow by defeault. Override onNewRow to change this.
      */
     loadConfig(): void {
-        if (this.activeRow.hasOwnProperty('config')){
+        if (this.activeRow.hasOwnProperty('config')) {
             if (this.activeRow.config.hasOwnProperty('bgd') && this.activeRow.config.bgd !== '') {
                 this._bgd.changeTexture(this.manager.script.active.config.bgd);
             }
-            if(this.activeRow.config.hasOwnProperty('trans_sfx')){
-                this._manager.audio.play(this.activeRow.config.trans_sfx, ()=>{
-                   // this._manager.globalEvents.emit('transition_finish'); // curtain fall complete, signal this
+            if (this.activeRow.config.hasOwnProperty('trans_sfx')) {
+                this._manager.audio.play(this.activeRow.config.trans_sfx, () => {
+                    // this._manager.globalEvents.emit('transition_finish'); // curtain fall complete, signal this
                 });
             }
-            if(this.activeRow.config.hasOwnProperty('sfx')){
-                this._manager.audio.play(this.activeRow.config.sfx, ()=>{
+            if (this.activeRow.config.hasOwnProperty('sfx')) {
+                this._manager.audio.play(this.activeRow.config.sfx, () => {
                     // yo
                 });
             }
-           
+
         }
     }
 
-    protected _inTransition(){
+    protected _inTransition() {
         let row = this._manager.script.rows[0];
-            let graphic: string = '';
-            if (row.config.graph_trans_in){
-                graphic = row.config.graph_trans_in; // attempting to keep it generic as possible, not coupled to particular projects
-            }
-            else {
-                Debug.warn('no graph_trans_in property on id 0 config');
-            }
-            this._manager.globalEvents.emit('enter_transition', {graphic: graphic}); // start the 'curtain fall'
+        let graphic: string = '';
+        if (row.config.graph_trans_in) {
+            graphic = row.config.graph_trans_in; // attempting to keep it generic as possible, not coupled to particular projects
+        }
+        else {
+            Debug.warn('no graph_trans_in property on id 0 config');
+        }
+        this._manager.globalEvents.emit('enter_transition', { graphic: graphic }); // start the 'curtain fall'
     }
 
-    protected _outTransition(){
+    protected _outTransition() {
         let row = this._manager.script.rows[0];
-            let graphic: string = '';
-            if (row.config.graph_trans_in){
-                graphic = row.config.graph_trans_in; // attempting to keep it generic as possible, not coupled to particular projects
-            }
-            this._manager.globalEvents.emit('exit_transition', {graphic: graphic}); // start the 'curtain fall'
+        let graphic: string = '';
+        if (row.config.graph_trans_in) {
+            graphic = row.config.graph_trans_in; // attempting to keep it generic as possible, not coupled to particular projects
+        }
+        this._manager.globalEvents.emit('exit_transition', { graphic: graphic }); // start the 'curtain fall'
     }
 
     /**
      * @description a method which waits for the first user gesture, before calling the first row in the activityScript
      */
     _waitForFirstInput(): void {
-      //  if (!this.ready) {
-            let canvas = document.getElementsByTagName('canvas')[0];
-            canvas.addEventListener('pointerdown', () => {
-              //  canvas.removeEventListener('pointerdown', this._onFirstInput);
-                this._onFirstInput();
-            }, { once: true });
-      //  }
+        if (this._game.gestureRecieved) {
+            this._onFirstInput();
+        }
+        else {
+            this._events.global.once('gesture_received', this._onFirstInput, this);
+        }
     }
 
     protected _onFirstInput() {
@@ -352,7 +351,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     shutdown() {
         this._events.global.emit('level_shutdown');
         this._events.global.emit('hide_nav_bar');
-       // this._manager.globalEvents.off('shutdown', this.shutdown, this);
+        // this._manager.globalEvents.off('shutdown', this.shutdown, this);
         this._manager.globalEvents.off('newRow', this.onNewRow, this);
         this._manager.input.offKeyDown(this._manager.input.keys.O, this._virtualOKPress, this);
         this._manager.input.offKeyDown(this._manager.input.keys.S, this._skipToNextRow, this);

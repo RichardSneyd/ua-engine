@@ -40,6 +40,7 @@ class Game {
   protected _debug: Debug;
   protected _editor: LevelEditor;
   protected _scene: IScene;
+  protected _gestureRecieved: boolean;
 
   constructor(world: World, loop: Loop, loader: Loader,
     events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
@@ -66,8 +67,29 @@ class Game {
 
     this._activities = [];
     this._gameStarted = false;
+    this._gestureRecieved = false;
     this._exposeGlobal();
     Debug.exposeGlobal(this.startActivity.bind(this), 'goto'); //type goto('script_name') in console to jump to any activity
+  }
+
+  get gestureRecieved() {
+    return this._gestureRecieved;
+  }
+
+  /**
+   * @description a method which waits for the first user gesture, then signals we're good to go (to get around audio playback issue in Chrome etc)
+   */
+  protected _waitForFirstInput(): void {
+    //  if (!this.ready) {
+    let canvas = document.getElementsByTagName('canvas')[0];
+    canvas.addEventListener('pointerdown', () => {
+      //  canvas.removeEventListener('pointerdown', this._onFirstInput);
+      // this._onFirstInput();
+
+      this._events.emit('gesture_received');
+      this._gestureRecieved = true;
+    }, { once: true });
+    //  }
   }
 
   /**
@@ -126,7 +148,7 @@ class Game {
     return this._product;
   }
 
-  get world(){
+  get world() {
     return this._world;
   }
 
@@ -199,7 +221,7 @@ class Game {
   * @description Start the game. Calls world.init internally, to create the game screen.
   * @param configPath the path to the config.json file, which specified Display widht, height, file paths etc
   */
-  public startGame(configPath: string = './config.json') { 
+  public startGame(configPath: string = './config.json') {
     return new Promise((resolve, reject) => {
 
       this._gameConfig.loadConfig(configPath).then((data: any) => {
@@ -299,17 +321,19 @@ class Game {
 
   private _addListeners(): void {
     this._events.addListener('resize', this._onResize, this);
-    
-    window.addEventListener('blur', ()=>{
+
+    window.addEventListener('blur', () => {
       this._events.emit('pause')
     });
-    window.addEventListener('focus', ()=>{
+    window.addEventListener('focus', () => {
       this._events.emit('resume');
     });
 
     window.addEventListener('resize', () => {
       this._events.fire('resize');
     });
+
+    this._waitForFirstInput();
   }
 
   private _initScaleManager(): void {
