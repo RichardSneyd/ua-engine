@@ -19,7 +19,7 @@ class Loader {
   private _newResList: Resource[];
   private _downloadComplete: boolean = false;
   private _startedLoading: boolean = false;
-
+  protected _imgLoadComplete: boolean = false;
   private _base: string;
 
   /**
@@ -116,6 +116,7 @@ class Loader {
     this._downloadComplete = false;
     this._startedLoading = false;
     this._newResList = [];
+    this._imgLoadComplete = false;
     Debug.info('%cLoader initialized', Debug.STYLES.GOOD);
   }
 
@@ -172,7 +173,7 @@ class Loader {
       let url = name;
       // if the file has .json extension, it's an atlas, so change path. Won't be confused with spine assets - they are loaded via addSpine
       if (imgName?.indexOf('.json') !== -1) { url = this._getPath().atlas + name }
-      if (this._getResource(url, false, this.imgList) == null) {
+      if (this.getImgResource(url, false) == null) {
         let res = this._createResource();
         res.initImage(url, false);
 
@@ -186,7 +187,7 @@ class Loader {
       let url = this._getPath().img + name;
       // if the file has .json extension, it's an atlas, so change path. Won't be confused with spine assets - they are loaded via addSpine
       if (name.indexOf('.json') !== -1) { url = this._getPath().atlas + name }
-      if (this._getResource(url, false) == null) {
+      if (this.getImgResource(url, false) == null) {
         let res = this._createResource();
         res.initImage(url, false);
 
@@ -248,7 +249,7 @@ class Loader {
     if (hasPath) {
       if (name.indexOf('.json') == -1) name = name + '.json';
       let url = this._getPath().spn + name;
-      if (this._getResource(url, false, this.spineList) == null) {
+      if (this.getSpnResource(url, false) == null) {
         let res = this._createResource();
         res.initSpine(url, false);
 
@@ -263,7 +264,7 @@ class Loader {
     else {
       if (name.indexOf('.json') == -1) name = name + '.json';
       let url = this._getPath().spn + name;
-      if (this._getResource(url, false) == null) {
+      if (this.getSpnResource(url, false) == null) {
         let res = this._createResource();
         res.initSpine(url, false);
 
@@ -296,7 +297,7 @@ class Loader {
    */
   addSnd(name: string): Loader {
     let url = this._getPath().snd + name;
-    if (this._getResource(url, false) == null) {
+    if (this.getSndResource(url, false) == null) {
       let res = this._createResource();
       res.initSnd(url, false);
 
@@ -341,8 +342,8 @@ class Loader {
         return;
       }
 
-      this._downloadSounds();
       this._downloadImages();
+      this._downloadSounds();
 
       // recursively check if everyhthing is loaded, until true
       setTimeout(() => {
@@ -411,10 +412,11 @@ class Loader {
         }
       }
       this._downloadComplete = isLoaded;
-      if (this._downloadComplete) {
+      if (this._downloadComplete && this._imgLoadComplete) {
         this._events.emit('download_complete');
         Debug.info('%cdownload complete!', Debug.STYLES.GOOD);
         this._startedLoading = false;
+        this._imgLoadComplete = false;
       }
     }
   }
@@ -454,8 +456,9 @@ class Loader {
     this._imgLoader.getResources((blob: any) => {
       // Debug.info(blob.url, blob.data);
 
-      this._downloadedResource(blob.url, blob.data);
-    })
+      this._downloadedImgResource(blob.url, blob.data);
+    });
+    this._imgLoadComplete = true;
   }
 
   /**
@@ -471,11 +474,11 @@ class Loader {
         Debug.info('will not inject a .json_image, no resource in resList for that, is internal PIXI Loader child image resource mapped to atlas json resource');
       }
       else {
-        this._downloadedResource(data.url, data.texture);
+        this._downloadedImgResource(data.url, data.texture);
       }
     } else {
       // Debug.info('spine loaded and returned: ', data2, 'attempting injection...');
-      this._downloadedResource(data.url, data); //Spine!
+      this._downloadedImgResource(data.url, data); //Spine!
 
     }
   }
@@ -487,10 +490,10 @@ class Loader {
 
   private _sndLoaded(data: any) {
     // Debug.info('sound loaded and returned: ', data);
-    this._downloadedResource(data.url, data.data);
+    this._downloadedSndResource(data.url, data.data);
   }
 
-  private _downloadedResource(url: string, data: any) {
+  private _downloadedImgResource(url: string, data: any) {
     // Debug.info(url + ': ', data);
     // don't load json_image resources, which PIXI uses internally as child-resources of the json resources (atlas, spine etc)
     if (data.hasOwnProperty('name') && data.name.indexOf('.json_image') !== -1) {
@@ -501,14 +504,38 @@ class Loader {
       Debug.info('will not inject a json_atlas resource, used by PIXI Loader internally as children of json resources like atlases');
       return;
     }
-    let res = this._getResource(url);
+    let res = this.getImgResource(url, false);
+    if(res == null) res = this.getSpnResource(url, false);
 
     if (res != null) {
       res.loaded = true;
       res.data = data;
     } else {
       //   let res = this._createResource()
-      Debug.info("%c Injection failed: no resource exists in Loader.resList with name %s & url %s", Debug.STYLES.CURIOUS, data.name, url);
+      Debug.info("%c Injection failed: no img resource exists in Loader.resList with name %s & url %s", Debug.STYLES.CURIOUS, data.name, url);
+    }
+
+  }
+
+  private _downloadedSndResource(url: string, data: any) {
+    // Debug.info(url + ': ', data);
+    // don't load json_image resources, which PIXI uses internally as child-resources of the json resources (atlas, spine etc)
+  /*   if (data.hasOwnProperty('name') && data.name.indexOf('.json_image') !== -1) {
+      Debug.info('will not inject a json_image resource, used by PIXI Loader internally as children of json resources like atlases');
+      return;
+    }
+    else if (data.hasOwnProperty('name') && data.name.indexOf('.json_atlas') !== -1) {
+      Debug.info('will not inject a json_atlas resource, used by PIXI Loader internally as children of json resources like atlases');
+      return;
+    } */
+    let res = this.getSndResource(url, false);
+
+    if (res != null) {
+      res.loaded = true;
+      res.data = data;
+    } else {
+      //   let res = this._createResource()
+      Debug.info("%c Injection failed: no snd resource exists in Loader.resList with name %s & url %s", Debug.STYLES.CURIOUS, data.name, url);
     }
 
   }

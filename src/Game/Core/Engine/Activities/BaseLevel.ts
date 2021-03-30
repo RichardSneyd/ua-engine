@@ -345,6 +345,16 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         this._ready = ready;
     }
 
+    protected _totalRounds(): number {
+        if(!this._manager.script.rows[0].hasOwnProperty('round')) Debug.error('no round column in script');
+        return this._game._utils.math.max(this._allRounds());
+    }
+    
+    protected _allRounds(): number[] {
+        if(!this._manager.script.rows[0].hasOwnProperty('round')) Debug.error('no round column in script');
+        return this._manager.script.valueList(['round']);
+    }
+
     /**
      * @description shutdown the scene, in preperation for transition. This involves destroying objects, as well as removing loop callbacks and event listeners etc
      */
