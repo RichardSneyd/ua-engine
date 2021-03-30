@@ -23,6 +23,7 @@ class TextObject extends BaseGameObject {
     }
 
     public init(x: number, y: number, text: string, style: any = {}, parent: IParentChild | null = null): void {
+        if (!style.fontFamily) style.fontFamily = 'gothic';
         this.data = this._screen.createText(x, y, text, style);
         this._core.init(this, x, y, '', this._update);
         super.init();
