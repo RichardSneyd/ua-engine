@@ -101,6 +101,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
             this._loader.addSpine(this.configRow.config.char);
         }
         let sfx = this._manager.script.fileList(['config.sfx', 'config.trans_sfx']);
+      //  alert(sfx);
         if (sfx.length > 0) {
             this._loader.addSnds(sfx);
         }

@@ -44,10 +44,17 @@ class ScriptHandler {
         this._name = name;
         this._raw = raw;
        // this._checkIfColumnNamesValid(parseCols.concat(objectifyCols)); // check if column names provided for processing are valid before proceeding
+        this._forceString(); // force label values to be strings (they can be generated as numbers if they only contain numerical characters)
         this._convertRowsFromRaw(parseCols, objectifyCols, processText);
         this._parseNumbers(['id', 'page', 'auto_next', 'round']);
         this._initialized = true;
         this._active = this._rows[0];
+    }
+
+    protected _forceString(){
+        this._raw.forEach(function (row: any, index: number){
+           if(typeof row.label !== 'string') row.label = String(row.label);
+        });
     }
 
     private _checkIfColumnNamesValid(columns: string[]){
