@@ -164,10 +164,10 @@ class DraggableObject implements IGameObject {
      * @param zone x1, y1: top left corner; x2, y2: bottom right corner; x3, y3: Optional center of the zone, calculated if missing
      * @param vertical If to sort dropped dragged vertically or horizontally. If undefined it'll always use the center
      * @param gap Space between dropped draggables. It can be a negative number
+     * @param limit Maximum number of draggables that can be dropped in the zone
      */
-    addZone(name: string, zone: { x: number, y: number, width: number, height: number },
-        vertical?: boolean, gap: number = 0): Dropzone {
-        let dropzone = this._dropzone.createNew(name, zone, vertical, gap);
+    addZone(name: string, zone: { x: number, y: number, width: number, height: number }, vertical?: boolean, gap: number = 0, limit: number = 0): Dropzone {
+        let dropzone = this._dropzone.createNew(name, zone, vertical, gap, limit);
         this._dropzones.push(dropzone);
         return dropzone;
     }
@@ -333,7 +333,7 @@ class DraggableObject implements IGameObject {
                 if (this._currentDropzone) this._currentDropzone.remove(this);
                 let movedToDropzone;
                 for (let dropzone of this._dropzones) {
-                    if (dropzone.pointerIsInside()) {
+                    if (dropzone.pointerIsInside() && (dropzone.limit == 0 || dropzone.limit > dropzone.draggablesIn)) {
                         this._currentDropzone = dropzone;
                         dropzone.add(this);
                         movedToDropzone = true;
