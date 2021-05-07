@@ -53,7 +53,7 @@ class ScriptHandler {
 
     protected _forceString(){
         this._raw.forEach(function (row: any, index: number){
-           if(typeof row.label !== 'string') row.label = String(row.label);
+           if(row.hasOwnProperty('label') && typeof row.label !== 'string') row.label = String(row.label);
         });
     }
 
