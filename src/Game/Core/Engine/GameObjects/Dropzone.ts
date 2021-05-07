@@ -13,6 +13,7 @@ class Dropzone {
     private _centre: Point;
     private _vertical: boolean | undefined;
     private _gap: number;
+    private _limit: number;
     private _draggables: DraggableObject[];
     private _x: number;
     private _y: number;
@@ -26,19 +27,18 @@ class Dropzone {
         this._draggables = [];
     }
 
-    init(name: string, zone: { x: number, y: number, width: number, height: number },
-        vertical?: boolean, gap: number = 0): void {
+    init(name: string, zone: { x: number, y: number, width: number, height: number }, vertical?: boolean, gap: number = 0, limit: number = 0): void {
         this._name = name;
         this._vertical = vertical;
         this._gap = gap;
+        this._limit = limit;
 
         this._topLeft = this._point.createNew(zone.x, zone.y);
         this._bottomRight = this._point.createNew(zone.x + zone.width, zone.y + zone.height);
         this._centre = this._point.createNew(zone.x + zone.width / 2, zone.y + zone.height / 2);
     }
 
-    createNew(name: string, zone: { x: number, y: number, width: number, height: number },
-        vertical?: boolean, gap: number = 0): Dropzone {
+    createNew(name: string, zone: { x: number, y: number, width: number, height: number }, vertical?: boolean, gap: number = 0, limit: number = 0): Dropzone {
         let dropzone = this.createEmpty();
 
         this._x = zone.x;
@@ -46,7 +46,7 @@ class Dropzone {
         this._width = zone.width;
         this._height = zone.height;
 
-        dropzone.init(name, zone, vertical, gap);
+        dropzone.init(name, zone, vertical, gap, limit);
         return dropzone;
     }
 
@@ -68,6 +68,14 @@ class Dropzone {
 
     get centre(): Point {
         return this._centre;
+    }
+
+    get limit(): number {
+        return this._limit;
+    }
+
+    get draggablesIn(): number {
+        return this._draggables.length;
     }
 
     set topLeft(topLeft: Point) {
@@ -99,8 +107,8 @@ class Dropzone {
                 let y = this._topLeft.y + draggable.origin.y * draggable.height;
                 draggable.moveTo(this._point.createNew(coordinate, y));
             }
-            this._draggables.push(draggable);
         }
+        this._draggables.push(draggable);
     }
 
     remove(draggable: DraggableObject) {
