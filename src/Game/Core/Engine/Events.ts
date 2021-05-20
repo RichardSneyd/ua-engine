@@ -14,9 +14,9 @@ class Events extends AbstractEventEmitter{
         
         // listen for multiplayer messages passed down to IFrame from parent
         this._listenMultiplayer();
+        Debug.exposeGlobal(this, 'events');
 
     /*     //log events easily for testing
-        Debug.exposeGlobal(this, 'events');
         // emit events easily for testing
         Debug.exposeGlobal(this._trigger, 'emit'); */
     }
