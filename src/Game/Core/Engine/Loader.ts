@@ -167,8 +167,8 @@ class Loader {
    * @param name the filename of the image to load, including file extension. This is added to the base path value to find the image URL.
    */
   public addImage(name: string, hasPath: boolean = false, imgName?: string): Loader {
-    if(name.includes(' ')) Debug.error('filename ' + 'contains a space character in the activity script. Please correct');
-    // NOTE: I put seperated whole code that way in case if anything else needed to be specific for now.
+    if(name.includes(' ')) Debug.error('filename ' + name + ' contains a space character in the activity script. Please correct');
+    // NOTE: I put seperated whole code that way in case if anything elsereponeeded to be specific for now.
     if (hasPath) {
       let url = name;
       // if the file has .json extension, it's an atlas, so change path. Won't be confused with spine assets - they are loaded via addSpine
@@ -296,7 +296,7 @@ class Loader {
    * @param filename the filename of the sound to be loaded, without extension.
    */
   addSnd(name: string): Loader {
-    if(name.includes(' ')) Debug.error('filename ' + 'contains a space character in the activity script. Please correct');
+    if(name.includes(' ')) Debug.error('filename ' + name + ' contains a space character in the activity script. Please correct');
     let url = this._getPath().snd + name;
     if (this.getSndResource(url, false) == null) {
       let res = this._createResource();
