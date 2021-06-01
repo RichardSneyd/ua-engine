@@ -92,6 +92,7 @@ class AudioManager {
      */
     public playMusic(name: string, onStop: Function, loop: boolean = false) {
         // todo
+        this.stopMusic();
         this._music = name;
         this.play(name, onStop, loop);
     }
@@ -100,13 +101,15 @@ class AudioManager {
      * @description Stop music playback
      */
     public stopMusic() {
-        this._stop(this._music);
+        if(this._music !== undefined && this._music !== null) this._stop(this._music);
     }
 
     public _stopAll(){
         for (let x = 0; x < this._playing.length; x++) {
             this._stop(this._playing[x]);
         }
+        this.stopMusic();
+
     }
 
     /**
@@ -134,12 +137,14 @@ class AudioManager {
         for (let x = 0; x < this._playing.length; x++) {
             this._pauseFile(this._playing[x]);
         }
+        if(this._music !== undefined) this._pauseFile(this._music);
     }
 
     private _resume() {
         for (let x = 0; x < this._playing.length; x++) {
             this._resumeFile(this._playing[x]);
         }
+        if(this._music !== undefined) this._resumeFile(this._music);
     }
 
     private _pauseFile(name: string) {

@@ -64,6 +64,7 @@ abstract class BaseScene implements IScene {
     }
 
     preload(): void {
+        this._events.global.emit('stop_all_audio');
         // override this to preload your assets, call super.preload at the end to start the promise
         if (Debug.level == Debug.LEVELS.INFO) this._loader.addSnd(Debug.fillerAudio);
         this._loader.download().then(() => {
@@ -75,6 +76,7 @@ abstract class BaseScene implements IScene {
      * @description used to build the scene. override me.
      */
     start() {
+
         this._events.global.emit('scene_start');
         // build the scene
     }
