@@ -32,6 +32,7 @@ class DraggableObject implements IGameObject {
     private _xOffset: number;
     private _yOffset: number;
     private _doBeforeDragging: Function;
+    private _doBeforeDropping: Function;
     private _doAfterDropping: Function;
     private _initialPosition: Point;
     private _currentPosition: Point;
@@ -47,6 +48,7 @@ class DraggableObject implements IGameObject {
         this._enabled = true;
         this._beingDragged = false;
         this._doBeforeDragging = () => { };
+        this._doBeforeDropping = () => { };
         this._doAfterDropping = () => { };
         this._currentDropzone = null;
 
@@ -327,6 +329,7 @@ class DraggableObject implements IGameObject {
     private _drop() {
         //  Debug.  info(this.name + ' _drop');
         if (this._background && this._beingDragged) {
+            this._doBeforeDropping();
             this._beingDragged = false;
 
             if (this._dropzones.length > 0) {
@@ -369,6 +372,14 @@ class DraggableObject implements IGameObject {
      */
     doBeforeDragging(doThis: Function): void {
         this._doBeforeDragging = doThis;
+    }
+
+    /**
+     * @description Executes a function just before the draggable is dropped
+     * @param doThis Function with the action
+     */
+    doBeforeDropping(doThis: Function): void {
+        this._doBeforeDropping = doThis;
     }
 
     /**
