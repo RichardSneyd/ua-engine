@@ -609,6 +609,20 @@ class DraggableObject implements IGameObject {
         return this._enabled;
     }
 
+    /**
+     * @description Gets the X offset used when dragging an element
+     */
+    get xOffset(): number {
+        return this._xOffset;
+    }
+
+    /**
+     * @description Gets the Y offset used when dragging an element
+     */
+    get yOffset(): number {
+        return this._yOffset;
+    }
+
     set name(name: string) {
         this._isInitialized();
         this._background.name = name;
@@ -670,6 +684,14 @@ class DraggableObject implements IGameObject {
     set parent(parent: IGameObject | null) {
         this._isInitialized();
         this._background.parent = parent;
+    }
+
+    set xOffset(offset: number) {
+        this._xOffset = offset;
+    }
+
+    set yOffset(offset: number) {
+        this._yOffset = offset;
     }
 
     get globalX() {
