@@ -318,8 +318,8 @@ class DraggableObject implements IGameObject {
     private _startDragging() {
         if (this._background) {
             this._beingDragged = true;
-            this._xOffset = this._background.x - this._input.pointer.x;
-            this._yOffset = this._background.y - this._input.pointer.y;
+            this._xOffset = this._background.globalX - this._input.pointer.x;
+            this._yOffset = this._background.globalY - this._input.pointer.y;
             this._doBeforeDragging();
         }
     }
