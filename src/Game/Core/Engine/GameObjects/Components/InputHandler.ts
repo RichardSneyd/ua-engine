@@ -37,11 +37,13 @@ class InputHandler {
 
   public makePixelPerfect(threshold: number = 127) {
     // this._screen.addHitMap(this._core.data, threshold);
-    this._pixelPerfect = true;
-    this._pixelPerfectThreshold = threshold;
-    this._go.width = Math.round(this._go.childlessWidth);
-    this._go.height = Math.round(this._go.childlessHeight);
-    this._go.updateHitmap.bind(this._go)();
+    this._go.events.timer(()=>{
+      this._pixelPerfect = true;
+      this._pixelPerfectThreshold = threshold;
+      this._go.width = Math.round(this._go.childlessWidth);
+      this._go.height = Math.round(this._go.childlessHeight);
+      this._go.updateHitmap.bind(this._go)();
+    }, 300, this);
 
     if (!this._go.data.containsPoint) {
      /*  this._go.data.children.forEach((c: any) => {
