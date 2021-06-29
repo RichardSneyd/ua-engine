@@ -97,8 +97,11 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if (!this.manager.script.isFalsy(this._manager.script.levelFile)) this._loader.addLevelFileAssets(this._manager.script.levelFile); // if level_file present, load assets
         this._loader.addSnds(this.manager.script.fileList(['audio_id'])); // 'audio_id' is present in all scripts
         this._loader.addImages(this._manager.script.fileList(['config.bgd']), 'jpg'); // bgd property is common to all types, and added in BaseLevel, so load it here too...
-        if (!this._manager.script.isFalsy(this.configRow.config.char)) {
-            this._loader.addSpine(this.configRow.config.char);
+        let charF = this._manager.script.fileList(['config.char']); // check if the char property has a value in any of the config cells
+     //   if (!this._manager.script.isFalsy(this.configRow.config.char)) {
+        if (charF.length >= 1) {
+            this._loader.addSpine(charF[0]);
+          //  this._loader.addSpine(this.configRow.config.char);
         }
         let sfx = this._manager.script.fileList(['config.sfx', 'config.trans_sfx']);
       //  alert(sfx);
@@ -192,6 +195,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if (this.activeRow.config && this.activeRow.config.hasOwnProperty('char') && !this._manager.script.isFalsy(this.activeRow.config.char) && this._loader.getResource(this.activeRow.config.char, true)) {
             this._addCharacter();
         }
+    
         if (this._character) {
             let loop = (this.activeRow.char_loop == 'y');
             let animation = this.activeRow.char;
