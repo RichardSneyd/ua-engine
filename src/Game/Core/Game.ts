@@ -70,6 +70,7 @@ class Game {
     this._gestureRecieved = false;
     this._exposeGlobal();
     Debug.exposeGlobal(this.startActivity.bind(this), 'goto'); //type goto('script_name') in console to jump to any activity
+    (<any>window).isSerializable = this._utils.coll.isSerializable.bind(this._utils.coll);
   }
 
   get gestureRecieved() {

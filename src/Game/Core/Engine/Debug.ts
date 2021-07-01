@@ -34,6 +34,19 @@ class Debug {
         return source;
     }
 
+    private static _simpleSerialize(obj: any){
+        let keys = Object.keys(obj);
+     //   alert(' simple serialize: ' + keys);
+        let simpleObj: any = {};
+        for (let x = 0; x < keys.length; x++) {
+            if (obj.hasOwnProperty(keys[x])) {
+                simpleObj[keys[x]] = obj[keys[x]].toString();
+            }
+        }
+
+        return '[object signature: ' + JSON.stringify(simpleObj) + ']';
+    }
+
     private static _enableDocumentErrorReports() {
 
         let logger = document.createElement('div');
@@ -49,14 +62,23 @@ class Debug {
             for (var i = 0; i < arguments.length; i++) {
                 if (i > 0) message += ' ';
                 if (typeof arguments[i] == 'object') {
-                    message += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 2) : arguments[i]);
+                    if((<any>window).isSerializable(arguments[i])){
+                        message += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 2) : arguments[i]);
+                    }
+                    else {
+                      //  message += arguments[i].toString();
+                     //   message += typeof arguments[i];
+                       message += Debug._simpleSerialize(arguments[i]);
+                    }
                 } else {
                     message += arguments[i];
                 }
             }
             //  let final = "<p style = 'border-bottom: 1px dotted red; margin 2px'> " + '[' + (console.customErrors.length+1) + ']  ' + message + '</p>';
             // @ts-ignore
-            message = '[' + (console.customErrors.length + 1) + ']  ' + message;
+            let index = '[' + (console.customErrors.length + 1) + ']  ';
+            message = index + message;
+            arguments[0] = index + arguments[0];;
             let final = "<p> " + message + '</p>';
             logger.innerHTML += final;
             // @ts-ignore
@@ -66,6 +88,7 @@ class Debug {
             old.apply(this, arguments);
         }
 
+       
     }
 
  /*    static toPage() {
