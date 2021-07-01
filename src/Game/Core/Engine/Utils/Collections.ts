@@ -53,6 +53,34 @@ class Collections {
         return row;
     }
 
+    /**
+     * @description checks if the provided object is serializable (good, for example, to check this before passing to JSON.stringify, to avoid exceptions)
+     * @param obj the object to evaluate for serialabilitys
+     */
+    public isSerializable(obj: any) : boolean {
+        var isNestedSerializable;
+        function isPlain(val: any) {
+          return (typeof val === 'undefined' || typeof val === 'string' || typeof val === 'boolean' || typeof val === 'number' || Array.isArray(val) || _.isPlainObject(val));
+        }
+        if (!isPlain(obj)) {
+          return false;
+        }
+        for (var property in obj) {
+          if (obj.hasOwnProperty(property)) {
+            if (!isPlain(obj[property])) {
+              return false;
+            }
+            if (typeof obj[property] == "object") {
+              isNestedSerializable = this.isSerializable(obj[property]);
+              if (!isNestedSerializable) {
+                return false;
+              }
+            }
+          }
+        }
+        return true;
+      }
+
   /*   public findObjElWithPropVal(array: any | object, properties: string[], values: any[]): any {
         let row: any = null;
         

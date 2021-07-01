@@ -14,6 +14,10 @@ class Debug {
     private static _fillerAudio: string = 'missing_audio_file'
     private static _STYLES = DebugStyles;
 
+    constructor() {
+        Debug.setLevel(Debug.level); // do this to apply _enableDocumentErrorReports from start if in dev mode
+    }
+
     private static _identifyLogSource(): string {
         if (!Debug._source) {
             let stack = Error().stack + '';
@@ -30,6 +34,79 @@ class Debug {
         return source;
     }
 
+    private static _simpleSerialize(obj: any){
+        let keys = Object.keys(obj);
+     //   alert(' simple serialize: ' + keys);
+        let simpleObj: any = {};
+        for (let x = 0; x < keys.length; x++) {
+            if (obj.hasOwnProperty(keys[x])) {
+                simpleObj[keys[x]] = obj[keys[x]].toString();
+            }
+        }
+
+        return '[object signature: ' + JSON.stringify(simpleObj) + ']';
+    }
+
+    private static _enableDocumentErrorReports() {
+
+        let logger = document.createElement('div');
+        logger.id = 'logger';
+        logger.style.color = 'red';
+        logger.style.textAlign = 'left';
+        document.body.prepend(logger);
+        var old = console.error;
+        // @ts-ignore
+        console.customErrors = [];
+        console.error = function (this: any) {
+            let message = '';
+            for (var i = 0; i < arguments.length; i++) {
+                if (i > 0) message += ' ';
+                if (typeof arguments[i] == 'object') {
+                    if((<any>window).isSerializable(arguments[i])){
+                        message += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 2) : arguments[i]);
+                    }
+                    else {
+                      //  message += arguments[i].toString();
+                     //   message += typeof arguments[i];
+                       message += Debug._simpleSerialize(arguments[i]);
+                    }
+                } else {
+                    message += arguments[i];
+                }
+            }
+            //  let final = "<p style = 'border-bottom: 1px dotted red; margin 2px'> " + '[' + (console.customErrors.length+1) + ']  ' + message + '</p>';
+            // @ts-ignore
+            let index = '[' + (console.customErrors.length + 1) + ']  ';
+            message = index + message;
+            arguments[0] = index + arguments[0];;
+            let final = "<p> " + message + '</p>';
+            logger.innerHTML += final;
+            // @ts-ignore
+            console.customErrors.push(message);
+
+            //@ts-ignore
+            old.apply(this, arguments);
+        }
+
+       
+    }
+
+ /*    static toPage() {
+        alert(arguments[1]);
+        let logger = document.getElementById('logger');
+        if (logger) {
+            for (var i = 0; i < arguments.length; i++) {
+
+                if (typeof arguments[i] == 'object') {
+                    logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 2) : arguments[i]) + '<br />';
+                } else {
+                    logger.innerHTML += arguments[i] + '<br />';
+                }
+            }
+        }
+    } */
+
+
     static get STYLES() {
         return Debug._STYLES;
     }
@@ -38,7 +115,7 @@ class Debug {
         return Debug.STYLES;
     }
 
-    static get fillerAudio(){
+    static get fillerAudio() {
         return this._fillerAudio;
     }
 
@@ -73,8 +150,9 @@ class Debug {
      */
     public static setLevel(level: number) {
         Debug._level = level;
-
-        Debug.info
+        if (level == Debug.LEVELS.INFO) {
+            this._enableDocumentErrorReports();
+        }
     }
 
     private static _setGroup() {
@@ -95,10 +173,10 @@ class Debug {
             Debug._setGroup();
             return console.log.bind(console);
         }
-        return () => {};
+        return () => { };
     }
 
-    
+
     /**
      * @description Logs a message in the browser console using console.table
      * @param args one or more arguments, any type
@@ -108,7 +186,7 @@ class Debug {
             Debug._setGroup();
             return console.table.bind(console);
         }
-        return () => {};
+        return () => { };
     }
 
     /**
@@ -118,9 +196,10 @@ class Debug {
     static get error() {
         if (Debug._level >= LogLevel.ERROR) {
             Debug._setGroup();
+            // Debug.toPage();
             return console.error.bind(console);
         }
-        return () => {};
+        return () => { };
     };
 
     /**
@@ -132,7 +211,7 @@ class Debug {
             Debug._setGroup();
             return console.warn.bind(console);
         }
-        return () => {};
+        return () => { };
     };
 
     /**
@@ -144,7 +223,7 @@ class Debug {
             Debug._setGroup();
             return console.trace.bind(console);
         }
-        return () => {};
+        return () => { };
     };
 
     /**
@@ -178,14 +257,14 @@ class Debug {
     /**
      * @description clear the console
      */
-    public static clear(){
+    public static clear() {
         console.clear();
     }
 
     /**
      * @description clear the console
      */
-    public clear(){
+    public clear() {
         Debug.clear();
     }
 
@@ -227,10 +306,10 @@ class Debug {
         return Debug.info;
     };
 
-     /**
-     * @description Logs a message in the browser console using console.table
-     * @param args one or more arguments, any type
-     */
+    /**
+    * @description Logs a message in the browser console using console.table
+    * @param args one or more arguments, any type
+    */
     get table() {
         return Debug.table;
     };
