@@ -10,9 +10,10 @@ class Debug {
     private static _LEVELS = LogLevel;
     private static _source: string = '';
     private static _previousSource: string = '';
-    private static _level: number = LogLevel.INFO;
+    private static _level: number = LogLevel.WARNING;
     private static _fillerAudio: string = 'missing_audio_file'
     private static _STYLES = DebugStyles;
+   // private static _pageLogging: boolean = false;
 
     constructor() {
         Debug.setLevel(Debug.level); // do this to apply _enableDocumentErrorReports from start if in dev mode
@@ -34,9 +35,9 @@ class Debug {
         return source;
     }
 
-    private static _simpleSerialize(obj: any){
+    private static _simpleSerialize(obj: any) {
         let keys = Object.keys(obj);
-     //   alert(' simple serialize: ' + keys);
+        //   alert(' simple serialize: ' + keys);
         let simpleObj: any = {};
         for (let x = 0; x < keys.length; x++) {
             if (obj.hasOwnProperty(keys[x])) {
@@ -62,13 +63,13 @@ class Debug {
             for (var i = 0; i < arguments.length; i++) {
                 if (i > 0) message += ' ';
                 if (typeof arguments[i] == 'object') {
-                    if((<any>window).isSerializable(arguments[i])){
+                    if ((<any>window).isSerializable(arguments[i])) {
                         message += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 2) : arguments[i]);
                     }
                     else {
-                      //  message += arguments[i].toString();
-                     //   message += typeof arguments[i];
-                       message += Debug._simpleSerialize(arguments[i]);
+                        //  message += arguments[i].toString();
+                        //   message += typeof arguments[i];
+                        message += Debug._simpleSerialize(arguments[i]);
                     }
                 } else {
                     message += arguments[i];
@@ -88,23 +89,23 @@ class Debug {
             old.apply(this, arguments);
         }
 
-       
+
     }
 
- /*    static toPage() {
-        alert(arguments[1]);
-        let logger = document.getElementById('logger');
-        if (logger) {
-            for (var i = 0; i < arguments.length; i++) {
-
-                if (typeof arguments[i] == 'object') {
-                    logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 2) : arguments[i]) + '<br />';
-                } else {
-                    logger.innerHTML += arguments[i] + '<br />';
-                }
-            }
-        }
-    } */
+    /*    static toPage() {
+           alert(arguments[1]);
+           let logger = document.getElementById('logger');
+           if (logger) {
+               for (var i = 0; i < arguments.length; i++) {
+   
+                   if (typeof arguments[i] == 'object') {
+                       logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 2) : arguments[i]) + '<br />';
+                   } else {
+                       logger.innerHTML += arguments[i] + '<br />';
+                   }
+               }
+           }
+       } */
 
 
     static get STYLES() {
