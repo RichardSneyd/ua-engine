@@ -19,6 +19,7 @@ import Debug from './Engine/Debug';
 import LevelEditor from './Engine/LevelEditor/LevelEditor';
 import Activities from './Engine/Activities/Activities';
 import AbstractAppMain from './Engine/Activities/AbstractAppMain';
+import Physics from './Engine/Activities/Physics';
 
 /**
  * @description the game class. There should only ever be one of these.
@@ -41,11 +42,12 @@ class Game {
   protected _editor: LevelEditor;
   protected _scene: IScene;
   protected _gestureRecieved: boolean;
+  protected _physics: Physics;
 
   constructor(world: World, loop: Loop, loader: Loader,
     events: Events, scaleManager: ScaleManager, expose: Expose, gameConfig: GameConfig,
     levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils, tween: TweenManager,
-    debug: Debug, editor: LevelEditor, activityClasses: Activities) {
+    debug: Debug, editor: LevelEditor, activityClasses: Activities, physics: Physics) {
 
     this._world = world;
     this._events = events;
@@ -68,6 +70,7 @@ class Game {
     this._activities = [];
     this._gameStarted = false;
     this._gestureRecieved = false;
+    this._physics = physics;
     this._exposeGlobal();
     Debug.exposeGlobal(this.startActivity.bind(this), 'goto'); //type goto('script_name') in console to jump to any activity
     (<any>window).isSerializable = this._utils.coll.isSerializable.bind(this._utils.coll);
@@ -318,6 +321,7 @@ class Game {
     this._expose.add('debug', this._debug);
     this._expose.add('editor', this._editor);
     this._expose.add('activities', this._activityClasses);
+    this._expose.add('physics', this._physics);
   }
 
   private _addListeners(): void {
