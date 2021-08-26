@@ -10,7 +10,7 @@ class Debug {
     private static _LEVELS = LogLevel;
     private static _source: string = '';
     private static _previousSource: string = '';
-    private static _level: number = LogLevel.INFO;
+    private static _level: number = LogLevel.WARNING;
     private static _fillerAudio: string = 'missing_audio_file'
     private static _STYLES = DebugStyles;
    // private static _pageLogging: boolean = false;

@@ -7,16 +7,19 @@ class P2Factory {
 
     }
 
-    public world(gravity: IPoint = {x: 0, y: 1}){
+    public world(gravity: IPoint = {x: 0, y: 9.82}){
         return new p2.World({
             gravity: [gravity.x, gravity.y]
         })
     }
 
-    body(position: IPoint = {x: 0, y: 0}, mass: number = 5){
+    body(position: IPoint = {x: 0, y: 0}, mass: number = 5, fixedX: boolean = false, fixedY: boolean = false, fixedRotation: boolean = false){
         return new p2.Body({
             mass: 5,
-            position: [position.x, position.y]
+            position: [position.x, position.y],
+            fixedX: fixedX,
+            fixedY: fixedY,
+            fixedRotation: fixedRotation
         })
     }
 

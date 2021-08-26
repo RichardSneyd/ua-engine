@@ -10,11 +10,11 @@ class PhysicsActor {
     private _enabled: boolean = true;
     private _physicsFactory: PhysicsFactory;
 
-    get go(){
+    get go(): IGameObject{
         return this._go;
     }
 
-    get body(){
+    get body(): p2.Body {
         return this._body;
     }
 
@@ -22,16 +22,16 @@ class PhysicsActor {
         this._physicsFactory = physicsFactory;
     }
 
-    init(go: IGameObject){
+    init(go: IGameObject, fixedX: boolean = false, fixedY: boolean = false, fixedRotation: boolean = false){
         this._go = go;
-        this._body = this._physicsFactory.body();
+        this._body = this._physicsFactory.body({x: go.x, y: go.y}, 5, fixedX, fixedY, fixedRotation);
         this._body.addShape(this._physicsFactory.box(this._go.width, this._go.height));
         this._enabled = true;
         return this;
     }
 
-    createNew(go: IGameObject){
-        return this.createEmpty().init(go);
+    createNew(go: IGameObject, fixedX: boolean = false, fixedY: boolean = false, fixedRotation: boolean = false){
+        return this.createEmpty().init(go, fixedX, fixedY, fixedRotation);
     }
 
     createEmpty(){
@@ -51,12 +51,13 @@ class PhysicsActor {
     }
 
     syncPos(){
-        this._go.x = this._body.position[0];
-        this._go.y = this._body.position[1];
+        this._go.x = this._body.interpolatedPosition[0];
+        this._go.y = this._body.interpolatedPosition[1];
+      //  this.body.
     }
 
     syncAngle(){
-        this._go.angle = this._body.angle;
+        this._go.angle = this._body.interpolatedAngle;
     }
 
     destroy(){
