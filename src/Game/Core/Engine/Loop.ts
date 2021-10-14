@@ -140,8 +140,10 @@ class Loop {
   }
 
   private _addListeners() {
-   // this._events.addListener('pause', this._pause, this);
-   // this._events.addListener('resume', this._resume, this);
+    // turned these listeners back on to allow pausing and resuming of physics simulation. Exercise caution, in-case of unintented side effects (had to turn them
+    // off again because of side-effects)
+  //  this._events.addListener('pause', this._pause, this);
+  //  this._events.addListener('resume', this._resume, this);
   }
 }
 

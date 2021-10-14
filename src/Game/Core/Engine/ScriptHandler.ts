@@ -43,6 +43,7 @@ class ScriptHandler {
     init(name: string, raw: any[], parseCols: string[], objectifyCols: string[], processText?: string[]) {
         this._name = name;
         this._raw = raw;
+        this._levelFile = undefined;
        // this._checkIfColumnNamesValid(parseCols.concat(objectifyCols)); // check if column names provided for processing are valid before proceeding
         this._forceString(); // force label values to be strings (they can be generated as numbers if they only contain numerical characters)
         this._convertRowsFromRaw(parseCols, objectifyCols, processText);

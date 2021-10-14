@@ -9,6 +9,7 @@ class GameConfig {
 
   constructor() {
     this._initialized = false;
+    Debug.exposeGlobal(this, 'gameConfig');
   }
 
   get data(): any {

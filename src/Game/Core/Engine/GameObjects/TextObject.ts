@@ -11,19 +11,29 @@ import TweenComponent from "./Components/TweenComponent";
 import Debug from "../Debug";
 import BaseGameObject from "./BaseGameObject";
 import ExtractComponent from "./Components/ExtractComponent";
+import GameConfig from "../GameConfig";
+
 
 /**
  * @description A text game object class. Converts text to sprite object under the hood.
  */
 class TextObject extends BaseGameObject {
+    private _gameConfig: GameConfig;
 
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
-        scaleHandler: ScaleHandler, tweenComponent: TweenComponent, extract: ExtractComponent) {
+        scaleHandler: ScaleHandler, tweenComponent: TweenComponent, extract: ExtractComponent, gameConfig: GameConfig) {
         super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent, extract);
+        this._gameConfig = gameConfig;
     }
 
     public init(x: number, y: number, text: string, style: any = {}, parent: IParentChild | null = null): void {
-        if (!style.fontFamily) style.fontFamily = 'gothic';
+        let defaultFamily = 'gothic';
+        Debug.info('config.DEFAULTS.FONT: ', this._gameConfig.data.DEFAULTS.FONT);
+        if (this._gameConfig.data.DEFAULTS.FONT) { 
+            defaultFamily = this._gameConfig.data.DEFAULTS.FONT;
+            Debug.info('family: ', defaultFamily);
+         }
+        if (!style.fontFamily) style.fontFamily = defaultFamily;
         this.data = this._screen.createText(x, y, text, style);
         this._core.init(this, x, y, '', this._update);
         super.init();
@@ -42,7 +52,7 @@ class TextObject extends BaseGameObject {
     }
 
     public createEmpty(): TextObject {
-        let textObj = new TextObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenComponent.createNew(), this._extract.createEmpty());
+        let textObj = new TextObject(this._core.createNew(), this._pcHandler.createNew(), this._screen, this._input.createNew(), this._scaleHandler.createNew(), this._tweenComponent.createNew(), this._extract.createEmpty(), this._gameConfig);
         return textObj;
     }
 

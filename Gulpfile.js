@@ -51,7 +51,9 @@ const config = {
             'Game',
             'LevelEditor',
             'EditorScene',
-            'InputManager'
+            'InputManager',
+            'Physics',
+            'PhysicsFactory'
         ],
         ignore: [
             'UAENGINE',
