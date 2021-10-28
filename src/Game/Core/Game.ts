@@ -20,6 +20,7 @@ import LevelEditor from './Engine/LevelEditor/LevelEditor';
 import Activities from './Engine/Activities/Activities';
 import AbstractAppMain from './Engine/Activities/AbstractAppMain';
 import Physics from './Engine/Activities/Physics';
+import { isNumber } from 'lodash';
 
 /**
  * @description the game class. There should only ever be one of these.
@@ -57,6 +58,7 @@ class Game {
     this._loop = loop;
     this._loader = loader;
     this._gameConfig = gameConfig;
+  //  this._gameConfig.loadConfig('./config.json');
     this._levelManager = levelManager;
     this._goFactory = goFactory;
     this._activityClasses = activityClasses;
@@ -229,6 +231,7 @@ class Game {
     return new Promise((resolve, reject) => {
 
       this._gameConfig.loadConfig(configPath).then((data: any) => {
+        if(this._gameConfig.data.DEBUG_LEVEL !== undefined) this._debug.setLevel(this._gameConfig.data.DEBUG_LEVEL);
         this._initScaleManager();
 
         this._world.init(this._gameConfig.data.DISPLAY.WIDTH, this._gameConfig.data.DISPLAY.HEIGHT);

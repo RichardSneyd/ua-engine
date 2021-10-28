@@ -1,4 +1,5 @@
 import DebugStyles from "./DebugStyles";
+import GameConfig from "./GameConfig";
 import LogLevel from "./LogLevel";
 
 /**
@@ -10,13 +11,13 @@ class Debug {
     private static _LEVELS = LogLevel;
     private static _source: string = '';
     private static _previousSource: string = '';
-    private static _level: number = LogLevel.WARNING;
+    private static _level: number = LogLevel.INFO; // 1 is errors, 2 is warnings, 3 is info
     private static _fillerAudio: string = 'missing_audio_file'
     private static _STYLES = DebugStyles;
    // private static _pageLogging: boolean = false;
 
     constructor() {
-        Debug.setLevel(Debug.level); // do this to apply _enableDocumentErrorReports from start if in dev mode
+   
     }
 
     private static _identifyLogSource(): string {

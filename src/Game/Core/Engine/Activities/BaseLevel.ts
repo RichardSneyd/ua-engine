@@ -1,3 +1,4 @@
+import { exit } from "process";
 import UAE from "../../../UAE";
 import Game from "../../Game";
 import Debug from "../Debug";
@@ -25,11 +26,14 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     //  protected _started: boolean;
 
     protected _character: SpineObject;
+    protected _extraCharacters: SpineObject[];
+    protected _score: number;
 
     constructor(manager: LevelManager, events: SceneEvents, loop: Loop, goFactory: GOFactory, loader: Loader, game: Game) {
         super(events, loop, goFactory, loader, game);
         this._manager = manager;
         this._ready = false;
+
         //  Debug.exposeGlobal(this, 'level'); // expose all levels globally as 'level' for debugging convenience
     }
 
@@ -38,6 +42,10 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      */
     get manager() {
         return this._manager;
+    }
+
+    get roundCount(){
+        return this.manager.script.rounds.length - 1;
     }
 
     /**@description the init method. Adds a callback to the update method for Loop.ts, adds listeners for shutdown and newRow,
@@ -49,6 +57,8 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      */
     init(scriptName: string, parseCols: string[], objectifyCols: string[], processText?: string[] | undefined): void {
         super.init(scriptName);
+        this._extraCharacters = [];
+        this._score = 0;
         // create 4 basic layers for positioning objects on. More can be added in the subclass where needed
         //   this._HUD = this._goFactory.container(0, 0);
         // cookie-cutter event listeners (necessary for the functioning of activities and levels, and for avoiding memory leaks etc)
@@ -62,6 +72,10 @@ abstract class BaseLevel extends BaseScene implements ILevel {
             this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
             this._onActivityScriptInitialized(scriptName, script);
         });
+    }
+
+    get score(){
+        return this._score;
     }
 
     /**
@@ -98,13 +112,13 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         this._loader.addSnds(this.manager.script.fileList(['audio_id'])); // 'audio_id' is present in all scripts
         this._loader.addImages(this._manager.script.fileList(['config.bgd']), 'jpg'); // bgd property is common to all types, and added in BaseLevel, so load it here too...
         let charF = this._manager.script.fileList(['config.char']); // check if the char property has a value in any of the config cells
-     //   if (!this._manager.script.isFalsy(this.configRow.config.char)) {
+        //   if (!this._manager.script.isFalsy(this.configRow.config.char)) {
         if (charF.length >= 1) {
             this._loader.addSpine(charF[0]);
-          //  this._loader.addSpine(this.configRow.config.char);
+            //  this._loader.addSpine(this.configRow.config.char);
         }
         let sfx = this._manager.script.fileList(['config.sfx', 'config.trans_sfx']);
-      //  alert(sfx);
+        //  alert(sfx);
         if (sfx.length > 0) {
             this._loader.addSnds(sfx);
         }
@@ -193,9 +207,9 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      */
     public updateCharacterState() {
         if (this.activeRow.config && this.activeRow.config.hasOwnProperty('char') && !this._manager.script.isFalsy(this.activeRow.config.char) && this._loader.getResource(this.activeRow.config.char, true)) {
-            this._addCharacter();
+            this._addCharacters();
         }
-    
+
         if (this._character) {
             let loop = (this.activeRow.char_loop == 'y');
             let animation = this.activeRow.char;
@@ -208,20 +222,69 @@ abstract class BaseLevel extends BaseScene implements ILevel {
                 }
             }
         }
+
+        for (let x = 2; x > 1; x++) {
+            let label = 'char_' + x;
+            let index = x - 2;
+            if (this._extraCharacters.length >= x - 1) {
+                let loop = (this.activeRow['char_' + x + '_loop'] == 'y');
+                let char = this._extraCharacters[index];
+                let animation = this.activeRow[label];
+                if (animation && animation !== '') char.animations.play(animation, loop);
+                if (animation && !loop) {
+                    if (char.animations.animationNames.includes('idle')) {
+                        char.animations.addAnimation('idle', true);
+                    } else {
+                        Debug.error('Character "%s" has no "idle" animation', char.name);
+                    }
+                }
+            }
+            else {
+                break;
+            }
+        }
     }
 
-    protected _addCharacter() {
-        let char;
-        if (this.manager.script.levelFile) char = this.manager.script.getLevelFileObject('spines', this.activeRow.config.char);
-        if (!char) { // Default position and scale if char is not on Level file
-            char = { x: 20, y: this._game.height() - 50, scaleX: 1, originX: 0, originY: 1 };
+    protected _addCharacters() {
+        this._destroyCharacters();
+        let charLFObj;
+        if (this.manager.script.levelFile) charLFObj = this.manager.script.getLevelFileObject('spines', this.activeRow.config.char);
+        if (!charLFObj) { // Default position and scale if char is not on Level file
+            charLFObj = { x: 20, y: this._game.height() - 50, scaleX: 1, originX: 0, originY: 1 };
         }
-        if (this._character) this._character.destroy();
-        this._character = this._goFactory.spine(char.x, char.y, this.activeRow.config.char, this._foreground);
-        this._character.scaleHandler.scale = char.scaleX;
-        this._character.setOrigin(char.originX, char.originY);
+
+        this._character = this._goFactory.spine(charLFObj.x, charLFObj.y, this.activeRow.config.char, this._foreground);
+        this._character.scaleHandler.scale = charLFObj.scaleX;
+        this._character.setOrigin(charLFObj.originX, charLFObj.originY);
         //  if(!this._manager.script.levelFile || !this._manager.script.getLevelFileObject('spines', this._manager.script.active.config.char)) 
         Debug.exposeGlobal(this._character, 'char');
+
+        for (let x = 2; x > 1; x++) {
+            let charLabel = 'char_' + x;
+            let index = x - 2;
+            let extraCharLFObj;
+            if (!this.configRow.config[charLabel]) break;
+            if (this.manager.script.levelFile) extraCharLFObj = this.manager.script.getLevelFileObject('spines', this.activeRow.config[charLabel]);
+            if (extraCharLFObj == undefined) {
+                //  Debug.error('no object in LF for ' + charLabel, ', ', this.activeRow.config[charLabel]);
+                extraCharLFObj = { x: this._game.width() - 200, y: this._game.height() - 50, scaleX: 1, originX: 0, originY: 1 }; // just for testing
+            }
+            if (this.activeRow.config.hasOwnProperty(charLabel)) {
+                this._extraCharacters[index] = this._goFactory.spine(extraCharLFObj.x, extraCharLFObj.y, this.activeRow.config[charLabel], this._foreground);
+                this._extraCharacters[index].scaleHandler.scale = extraCharLFObj.scaleX;
+                this._extraCharacters[index].setOrigin(extraCharLFObj.originX, extraCharLFObj.originY);
+            }
+        }
+    }
+
+    protected _destroyCharacters() {
+        if (this._character) this._character.destroy();
+        if (this._extraCharacters && this._extraCharacters.length > 0) {
+            for (let char of this._extraCharacters) {
+                char.destroy();
+            }
+            this._extraCharacters = [];
+        }
     }
 
     /**
@@ -351,12 +414,12 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     }
 
     protected _totalRounds(): number {
-        if(!this._manager.script.rows[0].hasOwnProperty('round')) Debug.error('no round column in script');
+        if (!this._manager.script.rows[0].hasOwnProperty('round')) Debug.error('no round column in script');
         return this._game._utils.math.max(this._allRounds());
     }
-    
+
     protected _allRounds(): number[] {
-        if(!this._manager.script.rows[0].hasOwnProperty('round')) Debug.error('no round column in script');
+        if (!this._manager.script.rows[0].hasOwnProperty('round')) Debug.error('no round column in script');
         return this._manager.script.valueList(['round']);
     }
 
