@@ -144,14 +144,15 @@ class Tween {
     }
   }
 
-  init(name: string, easing: string, object: any, repeat: number = 0, delay: number = 0) {
+  init(name: string, easing: string, object: any, yoyo:boolean, repeat: number = 0, delay: number = 0) {
     this._name = name;
     this._easing = easing;
     this._object = object;
 
     this._data = new TWEEN.Tween(this._object);
+    this._data.yoyo(yoyo);
    // if (repeat !== 0) this._data.repeat(repeat);
-    this._data.repeat(repeat);
+    if(repeat !== 0) this._data.repeat(repeat);
    // if (delay !== 0) this._data.delay(delay);
     this._data.delay(delay);
 

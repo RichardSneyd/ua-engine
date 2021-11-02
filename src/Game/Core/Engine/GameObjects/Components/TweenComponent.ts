@@ -33,9 +33,9 @@ class TweenComponent {
      * @param delay in milliseconds. Defaults to 0.
      * @param tweenName the name of the tween (optional at component level). If not provided, make sure you store the returned tween in a variable
      */
-    public add(easing: string, repeat: number = 0, delay: number = 0, tweenName?: string): Tween {  
+    public add(easing: string, yoyo: boolean = false, repeat: number = 0, delay: number = 0, tweenName?: string): Tween {  
         if(tweenName == undefined) tweenName = this._tweenManager.tempName();
-        return this._tweenManager.add(easing, this._go, repeat, delay, tweenName);
+        return this._tweenManager.add(easing, this._go, yoyo, repeat, delay, tweenName);
     }
 
 

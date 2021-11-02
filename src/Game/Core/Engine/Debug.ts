@@ -152,7 +152,7 @@ class Debug {
      */
     public static setLevel(level: number) {
         Debug._level = level;
-        if (level == Debug.LEVELS.INFO) {
+        if (level == Debug.LEVELS.PAGE) {
             this._enableDocumentErrorReports();
         }
     }

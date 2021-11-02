@@ -39,7 +39,7 @@ class TweenManager {
      * @param repeat 0 for no repeat. Infinity for infinite repeat.
      * @param delay in milliseconds. Defaults to 0.
      */
-    public add(easing: string, object: any, repeat: number = 0, delay: number = 0, tweenName?: string): Tween {
+    public add(easing: string, object: any, yoyo: boolean = false, repeat: number = 0, delay: number = 0, tweenName?: string): Tween {
         if (tweenName == undefined) tweenName = this.tempName();
         let tween = this._getTween(tweenName);
         if (tween != null) {
@@ -47,7 +47,7 @@ class TweenManager {
             return tween;
         }
         tween = this._tweenFact.createNew();
-        tween.init(tweenName, easing, object, repeat, delay);
+        tween.init(tweenName, easing, object, yoyo, repeat, delay);
         Debug.info('created and initiated ', tweenName);
         this._tweens.push(tween);
        // Debug.info(this._tweens)
@@ -112,7 +112,7 @@ class TweenManager {
      */
     public once(easing: string, object: any, toObject: any, duration: number, delay: number = 0, updateFunction?: Function): TweenManager {
         let tweenName = this._tempName();
-        let tween = this.add(easing, object, 0, delay, tweenName)
+        let tween = this.add(easing, object, false, 0, delay, tweenName)
         //  tween._getTween(tweenName);
         if (tween !== null) {
             this.play(tweenName, toObject, duration, updateFunction);

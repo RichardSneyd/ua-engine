@@ -44,8 +44,13 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         return this._manager;
     }
 
-    get roundCount(){
+    get roundCount() {
         return this.manager.script.rounds.length - 1;
+    }
+
+    get maxRounds() {
+        if(this.configRow.config.rounds){ return this.configRow.config.rounds}
+        Debug.error('no rounds property in config cell');
     }
 
     /**@description the init method. Adds a callback to the update method for Loop.ts, adds listeners for shutdown and newRow,
@@ -74,7 +79,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         });
     }
 
-    get score(){
+    get score() {
         return this._score;
     }
 
@@ -111,12 +116,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         if (!this.manager.script.isFalsy(this._manager.script.levelFile)) this._loader.addLevelFileAssets(this._manager.script.levelFile); // if level_file present, load assets
         this._loader.addSnds(this.manager.script.fileList(['audio_id'])); // 'audio_id' is present in all scripts
         this._loader.addImages(this._manager.script.fileList(['config.bgd']), 'jpg'); // bgd property is common to all types, and added in BaseLevel, so load it here too...
-        let charF = this._manager.script.fileList(['config.char']); // check if the char property has a value in any of the config cells
-        //   if (!this._manager.script.isFalsy(this.configRow.config.char)) {
-        if (charF.length >= 1) {
-            this._loader.addSpine(charF[0]);
-            //  this._loader.addSpine(this.configRow.config.char);
-        }
+        this._preloadCharacters();
         let sfx = this._manager.script.fileList(['config.sfx', 'config.trans_sfx']);
         //  alert(sfx);
         if (sfx.length > 0) {
@@ -129,6 +129,24 @@ abstract class BaseLevel extends BaseScene implements ILevel {
             this._loader.addImages([this._manager.script.rows[0].config.graph_trans_in], 'png');
         }
         super.preload();
+    }
+
+    protected _preloadCharacters() {
+        let prefix = 'config.char';
+        for (let x = 1; x > 0; x++) {
+            let tag: string = prefix;
+            if (x !== 1) tag = prefix + '_' + x;
+            let charF = this._manager.script.fileList([tag]); // check if the char property has a value in any of the config cells
+            //   if (!this._manager.script.isFalsy(this.configRow.config.char)) {
+            if (charF == undefined || charF.length == 0) {
+                Debug.warn('no "', tag, '" found');
+                break;
+            }
+            if (charF.length >= 1) {
+                this._loader.addSpine(charF[0]);
+                //  this._loader.addSpine(this.configRow.config.char);
+            }
+        }
     }
 
     /**
@@ -267,7 +285,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
             if (this.manager.script.levelFile) extraCharLFObj = this.manager.script.getLevelFileObject('spines', this.activeRow.config[charLabel]);
             if (extraCharLFObj == undefined) {
                 //  Debug.error('no object in LF for ' + charLabel, ', ', this.activeRow.config[charLabel]);
-                extraCharLFObj = { x: this._game.width() - 200, y: this._game.height() - 50, scaleX: 1, originX: 0, originY: 1 }; // just for testing
+                extraCharLFObj = { x: this._game.width() - 20, y: this._game.height() - 50, scaleX: 1, originX: 1, originY: 1 }; // just for testing
             }
             if (this.activeRow.config.hasOwnProperty(charLabel)) {
                 this._extraCharacters[index] = this._goFactory.spine(extraCharLFObj.x, extraCharLFObj.y, this.activeRow.config[charLabel], this._foreground);
@@ -433,6 +451,8 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         this._manager.globalEvents.off('newRow', this.onNewRow, this);
         this._manager.input.offKeyDown(this._manager.input.keys.O, this._virtualOKPress, this);
         this._manager.input.offKeyDown(this._manager.input.keys.S, this._skipToNextRow, this);
+
+        this._destroyCharacters();
         super.shutdown();
     }
 }
