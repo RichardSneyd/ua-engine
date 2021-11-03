@@ -475,6 +475,10 @@ abstract class BaseGameObject implements IGameObject {
     get height() {
         let height = this._childrenHeight() > this._core.height ? this._childrenHeight() : this._core.height;
         return height;
+    } 
+
+    get center() {
+        return {x: this.left + this.width / 2, y: this.top + this.height / 2};
     }
 
     /**
