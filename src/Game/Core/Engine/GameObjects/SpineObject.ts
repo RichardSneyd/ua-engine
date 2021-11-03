@@ -20,6 +20,10 @@ import ExtractComponent from "./Components/ExtractComponent";
 class SpineObject extends BaseGameObject {
     protected _animationManager: SpineAnimationManager;
 
+   /*  get data(): {
+        return super.data();
+    } */
+    
     constructor(objectCore: ObjectCore, pcHandler: ParentChildHandler, screen: Screen, input: InputHandler,
         scaleHandler: ScaleHandler, animationManager: SpineAnimationManager, tweenComponent: TweenComponent, extract: ExtractComponent) {
         super(objectCore, pcHandler, screen, input, scaleHandler, tweenComponent, extract);

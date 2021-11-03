@@ -1,5 +1,4 @@
 import { spine } from "pixi.js-legacy";
-import IGameObject from "../IGameObject";
 import SpineObject from "../SpineObject";
 import ObjectCore from "./ObjectCore";
 
@@ -57,6 +56,8 @@ class SpineAnimationManager implements IAnimationManager {
         this._go = go; this._core = core;
         this._go.events.on('pause', this.pause, this);
         this._go.events.on('resume', this.resume, this);
+
+        this.spine.stateData.defaultMix = 0.3; // default mix rate when switching animations
     }
 
     createNew() {
@@ -76,7 +77,7 @@ class SpineAnimationManager implements IAnimationManager {
     }
 
     public addAnimation(animName: string, loop: boolean, delay: number = 0) {
-        this._go.data.state.addAnimation(0, animName, loop, delay);
+        this.spine.state.addAnimation(0, animName, loop, delay);
     }
 
     // a helper method for playing a sequence of animations
