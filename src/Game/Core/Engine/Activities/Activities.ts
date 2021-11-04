@@ -1,5 +1,6 @@
 import AbstractAppMain from "./AbstractAppMain";
 import BaseActivity from "./BaseActivity";
+import BaseGamifiedLevel from "./BaseGamifiedLevel";
 import BaseLevel from "./BaseLevel";
 import BaseMenu from "./BaseMenu";
 import BaseScene from "./BaseScene";
@@ -26,6 +27,11 @@ class Activities {
   * @description Extending the BaseLevel class is the quickes, cleanest and easiest way of creaing a barebones Highwood level
   */
   get BaseLevel() { return BaseLevel }
+
+   /**
+  * @description Extending the BaseGamifiedLevel class is the quickes, cleanest and easiest way of creaing a barebones Highwood level, with support for gamified, round based play
+  */
+    get BaseGamifiedLevel() { return BaseGamifiedLevel }
 
   /**
    * @description Extending the BaseScene class is the quickest, cleanest and easiest way of creaing a barebones Highwood scene

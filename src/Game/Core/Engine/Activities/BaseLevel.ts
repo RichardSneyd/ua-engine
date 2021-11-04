@@ -27,7 +27,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
 
     protected _character: SpineObject;
     protected _extraCharacters: SpineObject[];
-    protected _score: number;
+    
 
     constructor(manager: LevelManager, events: SceneEvents, loop: Loop, goFactory: GOFactory, loader: Loader, game: Game) {
         super(events, loop, goFactory, loader, game);
@@ -63,7 +63,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     init(scriptName: string, parseCols: string[], objectifyCols: string[], processText?: string[] | undefined): void {
         super.init(scriptName);
         this._extraCharacters = [];
-        this._score = 0;
+        
         // create 4 basic layers for positioning objects on. More can be added in the subclass where needed
         //   this._HUD = this._goFactory.container(0, 0);
         // cookie-cutter event listeners (necessary for the functioning of activities and levels, and for avoiding memory leaks etc)
@@ -77,10 +77,6 @@ abstract class BaseLevel extends BaseScene implements ILevel {
             this.manager.init(scriptName, script, parseCols, objectifyCols, processText);
             this._onActivityScriptInitialized(scriptName, script);
         });
-    }
-
-    get score() {
-        return this._score;
     }
 
     /**
