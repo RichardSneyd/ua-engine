@@ -7,8 +7,14 @@ import Events from '../Engine/Events';
  * library down the line if we had to. Not to be confused with TweenManager, which is used to create and manage tweens.
  */
 class Tween {
-  private _name: string; _easing: string; _object: any; _data: TWEEN.Tween<any> | null;
-  private _paused: boolean; _pausedTime: number; _time: number; _pauseDiff: number;
+  private _name: string;
+  protected _easing: string;
+  protected _object: any;
+  protected _data: TWEEN.Tween<any> | null;
+  private _paused: boolean;
+  protected _pausedTime: number;
+  protected _time: number;
+  protected _pauseDiff: number;
   private _onCompleteListeners: Function[];
   private _onUpdateListeners: Function[];
   private _onRepeatListeners: Function[];
@@ -33,6 +39,10 @@ class Tween {
 
   get name(): string {
     return this._name;
+  }
+
+  get object() {
+    return this._object;
   }
 
   get isPaused(): boolean {
@@ -134,7 +144,7 @@ class Tween {
   }
 
   private _callOnUpdate() {
- //   Debug.info('tween _callOnUpdate');
+    //   Debug.info('tween _callOnUpdate');
     this._callAll(this._onUpdateListeners);
   }
 
@@ -144,16 +154,16 @@ class Tween {
     }
   }
 
-  init(name: string, easing: string, object: any, yoyo:boolean, repeat: number = 0, delay: number = 0) {
+  init(name: string, easing: string, object: any, yoyo: boolean, repeat: number = 0, delay: number = 0) {
     this._name = name;
     this._easing = easing;
     this._object = object;
 
     this._data = new TWEEN.Tween(this._object);
     this._data.yoyo(yoyo);
-   // if (repeat !== 0) this._data.repeat(repeat);
-    if(repeat !== 0) this._data.repeat(repeat);
-   // if (delay !== 0) this._data.delay(delay);
+    // if (repeat !== 0) this._data.repeat(repeat);
+    if (repeat !== 0) this._data.repeat(repeat);
+    // if (delay !== 0) this._data.delay(delay);
     this._data.delay(delay);
 
     this._data.onComplete(() => { this._callOnComplete() });
@@ -177,13 +187,13 @@ class Tween {
 
   to(toObject: any, time: number, updateFunction: Function = () => { }): Tween {
     this.freeze();
-    Debug.info('tween.to...');
+ //   Debug.info('tween.to...');
     if (this._data != null) {
       let easing = this._easing.split('.')[0];
       let inOut = this._easing.split('.')[1];
-      Debug.info('easing: ', easing, inOut);
+  //    Debug.info('easing: ', easing, inOut);
       this._paused = false;
-      Debug.info('paused: ', this._data.isPaused());
+  //    Debug.info('paused: ', this._data.isPaused());
       this._data.to(toObject, time)
         .easing((<any>TWEEN).Easing[easing][inOut]);
 
@@ -203,7 +213,7 @@ class Tween {
   update(time: number) {
     if (this._data != null) {
       if (!this._paused) {
-        this._data.update(time - this._pauseDiff);
+        if (this._object !== undefined && this._object !== null) this._data.update(time - this._pauseDiff);
       }
     }
 
@@ -239,7 +249,7 @@ class Tween {
   }
 
   resume(): Tween {
-    if (this._data != null) {
+    if (this._data != null && this._paused) {
       this._paused = false;
       this._data.resume();
       let diff = this._time - this._pausedTime;

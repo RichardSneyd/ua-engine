@@ -16,6 +16,7 @@ import ExtractComponent from './Components/ExtractComponent';
 import { RenderTexture } from "pixi.js-legacy";
 import IHitShape from "./Components/HitShapes/IHitShape";
 import IPoint from "../../Geom/IPoint";
+import { emit } from "process";
 
 /**
  * @description A sprite game object class. 
@@ -596,9 +597,13 @@ abstract class BaseGameObject implements IGameObject {
 
         // if (this._pcHandler.parent !== null) this._pcHandler.parent.removeChild(this);
         //   Debug.info('children destroyed, now call core.destroy for...  ', this.name);
+        this.events.emit('removeForObjects', [this.origin, this.scaleHandler, this]); // remove for 'this' last, or the components tweens get reference errors when it's gone
         this._core.events.emit('removeBody', {go: this}); // remove physics body from Physics class if there is one for this gameObject
-        this.destroyChildren();
-        this._core.destroy();
+        // slight delay required to avoid reference errors in the tweens for some reason...
+        setTimeout(() => { 
+            this.destroyChildren();
+            this._core.destroy();
+        }, 20);
     }
 
     /**

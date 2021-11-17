@@ -3,6 +3,8 @@ import Easing from './GameObjects/Components/Easing';
 import Debug from "./Debug";
 import Loop from "./Loop";
 import Events from "./Events";
+import IGameObject from "./GameObjects/IGameObject";
+import { forIn } from "lodash";
 
 
 
@@ -18,8 +20,15 @@ class TweenManager {
         this._loop = loop;
         this._events = events;
         this._tweens = [];
-        loop.addFunction(this.update, this); // TweenManager is singleton, so adding looping call directly makes most sense
+        this.init();
+    }
+    
+    init(){
+        this._loop.addFunction(this.update, this); // TweenManager is singleton, so adding looping call directly makes most sense
         this._events.on('shutdown', this._shutdown, this);
+        this._events.on('removeForObjects', this._removeForObjects, this);
+        Debug.exposeGlobal(this, 'tweens');
+        return this;
     }
 
     createNew() {
@@ -52,6 +61,35 @@ class TweenManager {
         this._tweens.push(tween);
        // Debug.info(this._tweens)
         return tween;
+    }
+
+    // this method will accept an array of objects as tween 'targets', then remove all tweens to are associated with them. Very useful for shutdown and cleanup.
+    // call it by emitting the 'removeForObjects' event on global Event emitter
+    protected _removeForObjects(objects: any[]){
+      //  Debug.info('reached removeForObjects'); debugger;
+
+        for(let t = 0; t < this._tweens.length; t++){
+            for(let o = 0; o < objects.length; o++){
+             //   Debug.info('is ', this._tweens[t].object, ' same as ', objects[o]);
+                if(this._tweens[t].object === objects[o])   {
+                    this.remove(this._tweens[t]);
+               //     Debug.info('yes, removed');
+                } 
+            }
+        }
+    }
+
+
+/**
+ * @description utility method. returns a list of all objects with tweens associated to them
+ */
+    allObjects(){
+      //  let str = '';
+        for(let t = 0; t < this._tweens.length; t++){
+            Debug.info(this._tweens[t].object);
+        }
+
+      //  return str; 
     }
 
 

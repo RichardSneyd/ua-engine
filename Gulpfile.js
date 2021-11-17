@@ -53,7 +53,8 @@ const config = {
             'EditorScene',
             'InputManager',
             'Physics',
-            'PhysicsFactory'
+            'PhysicsFactory',
+            'TweenManager'
         ],
         ignore: [
             'UAENGINE',

@@ -27,7 +27,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
 
     protected _character: SpineObject;
     protected _extraCharacters: SpineObject[];
-    
+
 
     constructor(manager: LevelManager, events: SceneEvents, loop: Loop, goFactory: GOFactory, loader: Loader, game: Game) {
         super(events, loop, goFactory, loader, game);
@@ -49,8 +49,20 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     }
 
     get maxRounds() {
-        if(this.configRow.config.rounds){ return this.configRow.config.rounds}
+        if (this.configRow.config.rounds) { return this.configRow.config.rounds }
         Debug.error('no rounds property in config cell');
+    }
+
+    get background() {
+        return this._background;
+    }
+
+    get playground() {
+        return this._playground;
+    }
+
+    get foreground() {
+        return this._foreground;
     }
 
     /**@description the init method. Adds a callback to the update method for Loop.ts, adds listeners for shutdown and newRow,
@@ -63,7 +75,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
     init(scriptName: string, parseCols: string[], objectifyCols: string[], processText?: string[] | undefined): void {
         super.init(scriptName);
         this._extraCharacters = [];
-        
+
         // create 4 basic layers for positioning objects on. More can be added in the subclass where needed
         //   this._HUD = this._goFactory.container(0, 0);
         // cookie-cutter event listeners (necessary for the functioning of activities and levels, and for avoiding memory leaks etc)

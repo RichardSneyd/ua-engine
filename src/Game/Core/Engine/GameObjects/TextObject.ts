@@ -28,8 +28,8 @@ class TextObject extends BaseGameObject {
 
     public init(x: number, y: number, text: string, style: any = {}, parent: IParentChild | null = null): void {
         let defaultFamily = 'gothic';
-        Debug.info('config.DEFAULTS.FONT: ', this._gameConfig.data.DEFAULTS.FONT);
         if (this._gameConfig.data.DEFAULTS.FONT) { 
+            //Debug.info('config.DEFAULTS.FONT: ', this._gameConfig.data.DEFAULTS.FONT);
             defaultFamily = this._gameConfig.data.DEFAULTS.FONT;
             Debug.info('family: ', defaultFamily);
          }
@@ -38,6 +38,8 @@ class TextObject extends BaseGameObject {
         this._core.init(this, x, y, '', this._update);
         super.init();
         this._pcHandler.init(this, this._core, parent);
+        
+        this._core.updateOrigin();
     }
 
     /*   protected _updateSize() {
@@ -58,6 +60,7 @@ class TextObject extends BaseGameObject {
 
     set text(lett: string) {
         this.core.data.text = lett;
+        this._core.updateOrigin();
         // this.core.data.
     }
 

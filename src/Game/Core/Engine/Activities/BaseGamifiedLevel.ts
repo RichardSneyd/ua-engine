@@ -6,9 +6,16 @@ class BaseGamifiedLevel extends BaseLevel {
     protected _roundEnded: boolean = false;
     protected _currentRound: number;
     protected _selectedRounds: number[];
-    
+
     get score() {
         return this._score;
+    }
+
+    /**
+     * @description returns the max score for this activity. override for activities which involve more than 1 point per round
+     */
+    get maxScore() {
+        return this.configRow.config.rounds;
     }
 
     init(scriptName: string, parseCols: string[], objectifyCols: string[], processText?: string[] | undefined): void {
@@ -48,7 +55,7 @@ class BaseGamifiedLevel extends BaseLevel {
         //  Debug.info('selected: ', this._selectedRounds);
         let row = this._selectedRounds.pop();
         if (row) {
-           this._startNewRound(row);
+            this._startNewRound(row);
         }
         else {
             this._manager.script.goTo(this._manager.script.rowByCellVals(['label'], ['outro']));

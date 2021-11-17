@@ -61,6 +61,11 @@ class SpriteObject extends BaseGameObject {
         return this._animationManager;
     }
 
+    destroy(){
+       // this.events.emit('removeForObjects', [this.origin, this.scaleHandler, this]); // remove for 'this' last, or the components tweens get reference errors when it's gone
+        super.destroy();
+    }
+
 }
 
 export default SpriteObject;
