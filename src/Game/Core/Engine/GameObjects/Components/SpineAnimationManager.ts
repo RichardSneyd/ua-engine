@@ -7,9 +7,14 @@ import ObjectCore from "./ObjectCore";
  */
 class SpineAnimationManager implements IAnimationManager {
     protected _go: SpineObject; protected _core: ObjectCore;
+    protected _activeAnimation: string;
 
     constructor() {
 
+    }
+
+    get current() {
+        return this.spine.state.getCurrent(0).animation.name;
     }
 
     /**
@@ -25,7 +30,7 @@ class SpineAnimationManager implements IAnimationManager {
     get animationNames(): string[] {
         let anims = this.animations;
         let names: string[] = [];
-        anims.forEach((anim: any)=>{
+        anims.forEach((anim: any) => {
             names.push(anim.name);
         })
         return names;
@@ -44,14 +49,14 @@ class SpineAnimationManager implements IAnimationManager {
     }
 
     get spineData(): spine.core.SkeletonData {
-        return this._core.data.spineData;
-        this._core.data
+        return this.spine.spineData;
+        //this._core.data
     }
 
     get spine(): PIXI.spine.Spine {
         return this._go.data;
     }
-  
+
     init(go: SpineObject, core: ObjectCore) {
         this._go = go; this._core = core;
         this._go.events.on('pause', this.pause, this);
@@ -65,15 +70,15 @@ class SpineAnimationManager implements IAnimationManager {
     }
 
     play(animName: string, loop: boolean = false) {
-        this._go.data.state.setAnimation(0, animName, loop);
+        this.spine.state.setAnimation(0, animName, loop);
     }
 
     pause() {
-        this._go.data.state.timeScale = 0;
+        this.spine.state.timeScale = 0;
     }
 
     resume() {
-        this._go.data.state.timeScale = 1;
+        this.spine.state.timeScale = 1;
     }
 
     public addAnimation(animName: string, loop: boolean, delay: number = 0) {
@@ -83,16 +88,16 @@ class SpineAnimationManager implements IAnimationManager {
     // a helper method for playing a sequence of animations
     public playAnimations(animNames: string[], loop: boolean = false) {
         for (let x = 0; x < animNames.length; x++) {
-            this._go.data.state.addAnimation(0, animNames[x], loop, 0);
+            this.spine.state.addAnimation(0, animNames[x], loop, 0);
         }
     }
 
     public clearAnimations() {
-        this._go.data.state.clearTrack(0);
+        this.spine.state.clearTrack(0);
     }
 
     public setToSetupPose() {
-        this._go.data.skeleton.setToSetupPose();
+        this.spine.skeleton.setToSetupPose();
     }
 
     destroy() {
