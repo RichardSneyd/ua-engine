@@ -89,7 +89,7 @@ class ScriptHandler {
     }
 
     get rounds(): any[]{
-        let rounds:any[] = [];
+        /* let rounds:any[] = [];
         let first = this._rowByCellVals(['label'], ['start_pool']);
         if(first == undefined) UAE.debug.error('no row with label "start_pool"');
         let last = this._rowByCellVals(['label'], ['end_pool']);
@@ -100,9 +100,10 @@ class ScriptHandler {
             let stop = last.id;
             for(let x = start; x <= stop; x++) rounds.push(this.rows[x]);
         }
-        else UAE.debug.error('first or last row not retrieved');
+        else UAE.debug.error('first or last row not retrieved'); 
 
-        return rounds;
+        return rounds;*/
+        return this._rowsByCellVals(['label'], ['new_round']);
     }
 
     get levelFile(): any {
@@ -293,8 +294,12 @@ class ScriptHandler {
     }
 
     private _rowByCellVals(colnames: string[], vals: any[]): any | null {
-
         let result = this._utils.rowByColsWithVals(this.rows, colnames, vals);
+        return result;
+    }
+
+    private _rowsByCellVals(colnames: string[], vals: any[]): any | null {
+        let result = this._utils.rowsByColsWithVals(this.rows, colnames, vals);
         return result;
     }
 
