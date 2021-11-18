@@ -45,7 +45,11 @@ class Tween {
     return this._object;
   }
 
-  get isPaused(): boolean {
+  get data(){
+    return this._data;
+  }
+
+  get isPaused(): boolean { 
     if (this._data) {
       return this._data.isPaused();
     }

@@ -284,7 +284,7 @@ abstract class AbstractEventEmitter {
         //  Debug.info('looking for callback %s of event %s for object: ', callback, event, context);
         for (let x = 0; x < event.length; x++) {
             //   Debug.warn('checking if it matches: ', event[x]);
-            if (event[x].callback == callback && event[x].context == context) {
+            if (event[x].callback === callback && event[x].context === context) {
                 //   Debug.info('it matches!!');
                 // debugger;
                 return event[x];
@@ -322,7 +322,7 @@ abstract class AbstractEventEmitter {
     public getTimer(callback: Function): any {
         for (let x = 0; x < this._timers.length; x++) {
             let timer = this._timers[x];
-            if (timer.callback == callback) {
+            if (timer.callback === callback) { // === is a perfect comparison, checking if same instance, instead of just 'value'
                 return timer;
             }
         }

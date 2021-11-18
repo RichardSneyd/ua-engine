@@ -117,7 +117,7 @@ class Loop {
 
   private _getFunObj(f: Function, context: any): FunObj | null {
     for (let c = 0; c < this._fList.length; c++) {
-      if (f == this._fList[c].function && this._fList[c].context == context) return this._fList[c];
+      if (f === this._fList[c].function && this._fList[c].context === context) return this._fList[c];
     }
 
     // Debug.info("No existing loop listener with context %s...", context);

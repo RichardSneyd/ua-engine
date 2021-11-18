@@ -89,20 +89,6 @@ class ScriptHandler {
     }
 
     get rounds(): any[]{
-        /* let rounds:any[] = [];
-        let first = this._rowByCellVals(['label'], ['start_pool']);
-        if(first == undefined) UAE.debug.error('no row with label "start_pool"');
-        let last = this._rowByCellVals(['label'], ['end_pool']);
-        if(last == undefined) UAE.debug.error('no row with label "end_pool"');
-
-        if(first && last){
-            let start = first.id;
-            let stop = last.id;
-            for(let x = start; x <= stop; x++) rounds.push(this.rows[x]);
-        }
-        else UAE.debug.error('first or last row not retrieved'); 
-
-        return rounds;*/
         return this._rowsByCellVals(['label'], ['new_round']);
     }
 
