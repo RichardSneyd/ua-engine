@@ -105,8 +105,8 @@ class TweenManager {
     }
 
     private _remove(tween: Tween) {
-        tween.remove();
         this._tweens.splice(this._tweens.indexOf(tween), 1);
+        tween.remove();
     }
 
 

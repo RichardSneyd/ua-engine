@@ -600,10 +600,11 @@ abstract class BaseGameObject implements IGameObject {
         this.events.emit('removeForObjects', [this.origin, this.scaleHandler, this]); // remove for 'this' last, or the components tweens get reference errors when it's gone
         this._core.events.emit('removeBody', {go: this}); // remove physics body from Physics class if there is one for this gameObject
         // slight delay required to avoid reference errors in the tweens for some reason...
-        setTimeout(() => { 
+        this._core.events.timer(()=>{
             this.destroyChildren();
             this._core.destroy();
-        }, 20);
+
+        }, 20, this);
     }
 
     /**

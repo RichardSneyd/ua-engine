@@ -180,7 +180,7 @@ class Tween {
     this.reset();
   }
 
-  remove(tweenName?: string) {
+  remove() {
     this._events.off('pause', this.pause, this);
     this._events.off('resume', this.resume, this);
     if (this._data) {

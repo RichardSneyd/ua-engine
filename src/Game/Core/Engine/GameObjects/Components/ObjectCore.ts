@@ -76,7 +76,7 @@ class ObjectCore {
   //  this._updateSize(); // experimentally removing this, to see if it fixes text width height issues
     this._setListners();
     this._loop.addFunction(this.update, this);
-    this.objectHandler.setAutoSortZ(this.data, true); // auto-sort children when zIndex is updated
+    if(this._data) this.objectHandler.setAutoSortZ(this.data, true); // auto-sort children when zIndex is updated
    // this._events.on('shutdown', this._go.destroy, this._go); // every object has it's own 'shutdown' listener
   }
 
@@ -102,14 +102,14 @@ class ObjectCore {
 
   set x(xVal: number) {
     this._x = Number(xVal);
-    this.objectHandler.setX(this._data, this._x);
+    if(this._data)  this.objectHandler.setX(this._data, this._x);
     // this._updateXY();
     // this.updateOrigin();
   }
 
   set y(yVal: number) {
     this._y = Number(yVal);
-    this.objectHandler.setY(this._data, this.y);
+    if(this._data)  this.objectHandler.setY(this._data, this.y);
     //  this._updateXY();
     //  this.updateOrigin();
   }
@@ -293,7 +293,7 @@ class ObjectCore {
   }
 
   set zIndex(index: number){
-    this.objectHandler.setZIndex(this._data, index);
+    if(this._data) this.objectHandler.setZIndex(this._data, index);
   }
 
   sortChildren(){
@@ -343,7 +343,7 @@ class ObjectCore {
     //  let scaleY = this._scaleHandler.getScale(this._scaleHandler.scaleY);
 
     let p = this._pointFactory.createNew(this._origin.x * this._scaleHandler.x, this._origin.y * this._scaleHandler.y);
-    this._objectHandler.setPivot(this._data, p);
+    if(this._data) this._objectHandler.setPivot(this._data, p);
     this.updateXY();
   }
 
@@ -394,7 +394,7 @@ class ObjectCore {
  
        target = this._scaleHandler.getXY(this._x, this._y);
     } */
-    this._objectHandler.setXy(this._data, target.x, target.y);
+    if(this._data) this._objectHandler.setXy(this._data, target.x, target.y);
   }
 
   importSize(){
@@ -407,7 +407,7 @@ class ObjectCore {
   }
 
   protected _updateSize() {
-    this._objectHandler.setSize(this._data, this._width * this._go.scaleHandler.x, this._height * this._go.scaleHandler.y);
+    if(this._data) this._objectHandler.setSize(this._data, this._width * this._go.scaleHandler.x, this._height * this._go.scaleHandler.y);
     // this._objectHandler.setSize(this._data, this._width * scaleX, this._height * scaleY);
   }
 

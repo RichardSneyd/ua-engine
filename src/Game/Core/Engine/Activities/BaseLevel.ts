@@ -200,7 +200,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * new row is loaded
      */
     public onNewRow(): void {
-        Debug.info('onNewRow called for row %s: ', this.manager.script.active.id, this.manager.script.active);
+       // Debug.info('onNewRow called for row %s: ', this.manager.script.active.id, this.manager.script.active);
         this.loadConfig();
         this.updateCharacterState();
         // this.playSfx(); // this is already being done elsewhere

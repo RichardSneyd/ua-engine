@@ -376,6 +376,7 @@ abstract class AbstractEventEmitter {
             let timer = this._timers[x];
             timer.remaining -= this._delta;
             if (timer.remaining <= 0) {
+                timer.callback.bind(timer.context)(); // call BEFORE removing, or it breaks the loop in a painful, errorless way
                 if (timer.repeat > 0 || timer.repeat === -1) {
                     timer.remaining = timer.delay;
                     if (timer.repeat > 0) {
@@ -383,9 +384,8 @@ abstract class AbstractEventEmitter {
                     }
                 }
                 else {
-                    this._removeTimer(this._timers.indexOf(timer));
+                    this._removeTimer(timer);
                 }
-                timer.callback.bind(timer.context)();
             }
 
         }
