@@ -388,7 +388,7 @@ abstract class AbstractEventEmitter {
     }
 
     protected _updateTimers() {
-
+     //   Debug.info('offsetTime: ', this._loop.offsetTime, 'lastTime: ', this._loop.lastTime, 'delta: ', this._loop.delta);
         for (let x = this._timers.length - 1; x >= 0; x--) {
             let timer = this._timers[x];
             timer.remaining -= this._loop.delta;

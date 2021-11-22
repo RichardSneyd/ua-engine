@@ -15,6 +15,7 @@ class Loop {
   private _events: Events;
   private _paused: number; //0: false, 1: true, 2: just turned true
   private _lastTime: number;
+  private _pauseTime: number;
   private _time: number;
   private _delay: number;
   private _oldDelay: number;
@@ -24,7 +25,7 @@ class Loop {
     this._funObj = funObj;
     this._fList = [];
     this._paused = 0;
-    this._lastTime = 0;
+    this._pauseTime = 0;
     this._delay = 0;
     this._oldDelay = 0;
   }
@@ -51,11 +52,19 @@ class Loop {
     return this._time;
   }
 
+  get lastTime(){
+    return this._lastTime;
+  }
+
+  get offsetLastTime(){
+    return this.lastTime - this._delay;
+  }
+
   /**
    * @description the time that has elapsed since the last update, or 'tick'
    */
   get delta() {
-    return this.offsetTime - this._lastTime;
+    return this.naturalTime - this.lastTime;
   }
 
   /**
@@ -115,12 +124,12 @@ class Loop {
     this._time = time;
     // Debug.info('execute all.. at %s: ', new Date().getTime(), this._fList);
     if (this._paused == 1) {
-      this._delay = this._oldDelay + (time - this._lastTime);
+      this._delay = this._oldDelay + (time - this._pauseTime);
       // Debug.info("delay %s", this._delay);
     } else if (this._paused == 2) {
       this._paused = 1;
       this._oldDelay = this._delay;
-      this._lastTime = time;
+      this._pauseTime = time;
     } else if (this._paused == 0) {
 
       // Debug.info('fList length: ', this._fList.length);
@@ -128,8 +137,8 @@ class Loop {
         // Debug.info('exec loop callback %s', c);
         this._fList[c].execute({ time: this.offsetTime, delta: this.delta });
       }
-
     }
+    this._lastTime = time;
     //   debugger;
     window.requestAnimationFrame(this._boundExecuteAll);
   }
