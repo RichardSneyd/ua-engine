@@ -604,7 +604,7 @@ abstract class BaseGameObject implements IGameObject {
             this.destroyChildren();
             this._core.destroy();
 
-        }, 20, this);
+        }, 40, this);
     }
 
     /**

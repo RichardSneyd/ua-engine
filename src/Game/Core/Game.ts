@@ -50,15 +50,17 @@ class Game {
     levelManager: LevelManager, goFactory: GOFactory, geom: Geom, utils: Utils, tween: TweenManager,
     debug: Debug, editor: LevelEditor, activityClasses: Activities, physics: Physics) {
 
-    this._world = world;
     this._events = events;
+    this._loop = loop;
+    loop.init(this._events); // pass the global events object through init (can't add to constructor because of circular reference error)
+    events.init();
+    this._world = world;
     // Debug.info("TARGET: ", events);
     this._scaleManager = scaleManager;
     this._expose = expose;
-    this._loop = loop;
     this._loader = loader;
     this._gameConfig = gameConfig;
-  //  this._gameConfig.loadConfig('./config.json');
+    //  this._gameConfig.loadConfig('./config.json');
     this._levelManager = levelManager;
     this._goFactory = goFactory;
     this._activityClasses = activityClasses;
@@ -231,7 +233,7 @@ class Game {
     return new Promise((resolve, reject) => {
 
       this._gameConfig.loadConfig(configPath).then((data: any) => {
-        if(this._gameConfig.data.DEBUG_LEVEL !== undefined) this._debug.setLevel(this._gameConfig.data.DEBUG_LEVEL);
+        if (this._gameConfig.data.DEBUG_LEVEL !== undefined) this._debug.setLevel(this._gameConfig.data.DEBUG_LEVEL);
         this._initScaleManager();
 
         this._world.init(this._gameConfig.data.DISPLAY.WIDTH, this._gameConfig.data.DISPLAY.HEIGHT);

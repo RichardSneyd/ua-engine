@@ -73,30 +73,32 @@ class Tween {
     return this._onUpdate;
   }
 
-  start(tweenName?: string): Tween {
+  start(): Tween {
     if (this._data) {
       this._data.start.bind(this._data)();
       return this;
     }
-    Debug.error('cannot return start property for uninitialized tween object');
+    Debug.error('cannot return start property for undefined tween object');
     return this;
   }
 
-  stop(tweenName?: string): Tween {
+  stop(): Tween {
     if (this._data) {
       this._data.stop.bind(this._data)();
       return this;
     }
-    Debug.error('cannot return stop property for uninitialized tween object');
-    return this;
+    else {
+      Debug.warn('cannot return stop property for undefined tween object');
+      return this;
+    }
   }
 
-  end(tweenName?: string): Tween {
+  end(): Tween {
     if (this._data) {
       this._data.end.bind(this._data)();
       return this;
     }
-    Debug.error('cannot return end property for uninitialized tween object');
+    Debug.warn  ('cannot return end property for undefined tween object');
     return this;
   }
 
@@ -181,6 +183,7 @@ class Tween {
   }
 
   remove() {
+    this.stop();
     this._events.off('pause', this.pause, this);
     this._events.off('resume', this.resume, this);
     if (this._data) {

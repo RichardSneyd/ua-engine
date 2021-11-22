@@ -1,34 +1,51 @@
 import Debug from "./Debug";
+import Loop from "./Loop";
+
 
 /**
- * An EventEmitter which implements the pub/sub design pattern. Listen for events, emit them, pass data, and even optionally trigger a 'multiplayer' event
+ *@description An EventEmitter which implements the pub/sub design pattern. Listen for events, emit them, pass data, and even optionally trigger a 'multiplayer' event
  * which will communicate with the parent window (if in an Iframe)
  */
+
 abstract class AbstractEventEmitter {
     protected _events: any;
     protected _timers: any;
-    protected _time: number;
-    protected _lastTime: number;
-    protected _delta: number;
+  //  protected _time: number;
+  //  protected _lastTime: number;
+ //   protected _delta: number;
     protected _paused: boolean;
-    protected _timer: any; // ID of the timer (integer), passed to clearInterval for deletion
+   // protected _timer: any; // ID of the timer (integer), passed to clearInterval for deletion
     protected _step: number;
+    protected _loop: Loop;
 
-    constructor() {
+    constructor(loop: Loop) {
         this._events = {};
         this._timers = [];
         this._paused = false;
         this._step = 25; // cannot execute every millisecond, browser isn't fast enough. 40 ticks per second should be adequate.
-        this._time = new Date().getTime();
-        this._lastTime = this._time - this._step;
-        this._delta = this._time - this._lastTime;
-        this._startTimer();
+        this._loop = loop;
+       // this.init();
+    }
 
+    get ticker(){
+        return this._ticker;
+    }
+    
+    init(){
+        this._loop.addFunction(this._ticker, this);
+      //  this._time = new Date().getTime();
+      //  this._lastTime = this._time - this._step;
+     //   this._delta = this._time - this._lastTime;
+      //  this._startTimer();
+    
     /*     //log events easily for testing
         Debug.exposeGlobal(this, 'events');
         // emit events easily for testing
         Debug.exposeGlobal(this._trigger, 'emit'); */
+
     }
+
+    
 
     get events() {
         return this._events;
@@ -336,7 +353,7 @@ abstract class AbstractEventEmitter {
      */
     public pause() {
         this._paused = true;
-        clearInterval(this._timer);
+      //  clearInterval(this._timer);
     }
 
     /**
@@ -344,7 +361,7 @@ abstract class AbstractEventEmitter {
      */
     public resume() {
         this._paused = false;
-        this._startTimer();
+      //  this._startTimer();
     }
 
     protected _addTimer(callback: Function, delay: number, context: any, repeat: number = 0): any {
@@ -363,10 +380,10 @@ abstract class AbstractEventEmitter {
         }
     }
 
-    protected _ticker() {
-        this._lastTime = this._time;
-        this._time = new Date().getTime();
-        this._delta = this._time - this._lastTime;
+    protected _ticker(time: number) {
+      //  this._lastTime = this._time;
+      //  this._time = new Date().getTime();
+      //  this._delta = this._time - this._lastTime;
         this._updateTimers();
     }
 
@@ -374,7 +391,7 @@ abstract class AbstractEventEmitter {
 
         for (let x = this._timers.length - 1; x >= 0; x--) {
             let timer = this._timers[x];
-            timer.remaining -= this._delta;
+            timer.remaining -= this._loop.delta;
             if (timer.remaining <= 0) {
                 timer.callback.bind(timer.context)(); // call BEFORE removing, or it breaks the loop in a painful, errorless way
                 if (timer.repeat > 0 || timer.repeat === -1) {
@@ -391,13 +408,13 @@ abstract class AbstractEventEmitter {
         }
     }
 
-    protected _startTimer() {
+ /*    protected _startTimer() {
         // let _this = this;
         this._time = new Date().getTime();
         this._timer = setInterval(() => {
             this._ticker();
         }, this._step);
-    }
+    } */
 
 }
 
