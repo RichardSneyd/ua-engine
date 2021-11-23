@@ -135,7 +135,7 @@ class Loop {
       // Debug.info('fList length: ', this._fList.length);
       for (let c = 0; c < this._fList.length; c++) {
         // Debug.info('exec loop callback %s', c);
-        this._fList[c].execute({ time: this.offsetTime, delta: this.delta });
+        this._fList[c].execute(this.offsetTime);
       }
     }
     this._lastTime = time;

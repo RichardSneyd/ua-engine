@@ -176,8 +176,9 @@ class Tween {
     this._data.onRepeat(() => { this._callOnRepeat() });
     this._data.onStart(() => { this._callOnStart() });
     this._data.onUpdate(this._callOnUpdate.bind(this));
-    this._events.on('pause', this.pause, this);
-    this._events.on('resume', this.resume, this);
+    // turned these off, because pausing of tweens is being handled by Loop.ts, which stops updating the time during pause.
+  //  this._events.on('pause', this.pause, this); 
+ //   this._events.on('resume', this.resume, this);
     if (this._easing.split('.').length != 2) Debug.error("invalid easing: %s", easing);
     this.reset();
   }
