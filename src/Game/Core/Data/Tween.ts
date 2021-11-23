@@ -223,16 +223,15 @@ class Tween {
     this._time = time;
     if (this._data != null) {
       if (!this._paused) {
-        let calc = time - this._delay;
-        Debug.info('tween time for ', this._name, ' ', calc);
-        if (this._object !== undefined && this._object !== null) this._data.update(calc);
+      //  Debug.info('tween time for ', this._name, ' ', calc);
+        if (this._object !== undefined && this._object !== null) this._data.update(time - this._delay);
       }
     }
   }
 
   pause(): Tween {
-    Debug.info('pause tween ', this._name);
     if (this._data != null) {
+      //  Debug.info('pause tween ', this._name);
       this._paused = true;
     //  this._data.pause(); // the internal tween.js pause is super buggy - we use our own instead now
       this._pausedTime = this._time;
@@ -261,9 +260,9 @@ class Tween {
 
   resume(): Tween {
     if (this._data != null && this._paused) {
-      Debug.info('resume tween ', this._name);
+     // Debug.info('resume tween ', this._name);
       this._delay += (this._time - this._pausedTime);
-      Debug.info('delay: ', this._delay);
+    //  Debug.info('delay: ', this._delay);
       this._paused = false;
     //  this._data.resume(); // the internal tween.js pause/resume is super buggy - we use our own instead now
     } else {
