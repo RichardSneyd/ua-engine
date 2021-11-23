@@ -52,11 +52,11 @@ class Loop {
     return this._time;
   }
 
-  get lastTime(){
+  get lastTime() {
     return this._lastTime;
   }
 
-  get offsetLastTime(){
+  get offsetLastTime() {
     return this.lastTime - this._delay;
   }
 
@@ -72,11 +72,11 @@ class Loop {
    * @param f the function to add to the list of callbacks
    * @param context the context
    */
-  public addFunction(f: Function, context: any) {
+  public addFunction(f: Function, context: any, pausable: boolean = true) {
     let fObj: FunObj | null = this._getFunObj(f, context);
 
     if (fObj == null) {
-      let o = this._newFunObj(f, context);
+      let o = this._newFunObj(f, context, pausable);
       this._fList.push(o);
       //  Debug.info(`%csuccessfully added listener with context %s to Loop`, Debug.STYLES.GOOD, context);
     } else {
@@ -125,22 +125,36 @@ class Loop {
     // Debug.info('execute all.. at %s: ', new Date().getTime(), this._fList);
     if (this._paused == 1) {
       this._delay = this._oldDelay + (time - this._pauseTime);
+      this._executeUnpausableCallbacks();
       // Debug.info("delay %s", this._delay);
     } else if (this._paused == 2) {
       this._paused = 1;
       this._oldDelay = this._delay;
       this._pauseTime = time;
+      this._executeUnpausableCallbacks();
     } else if (this._paused == 0) {
-
-      // Debug.info('fList length: ', this._fList.length);
-      for (let c = 0; c < this._fList.length; c++) {
-        // Debug.info('exec loop callback %s', c);
-        this._fList[c].execute(this.offsetTime);
-      }
+      this._executeUnpausableCallbacks();
+      this._executePausableCallbacks();
     }
     this._lastTime = time;
     //   debugger;
     window.requestAnimationFrame(this._boundExecuteAll);
+  }
+
+  private _executeUnpausableCallbacks() {
+    // Debug.info('fList length: ', this._fList.length);
+    for (let c = 0; c < this._fList.length; c++) {
+      // Debug.info('exec loop callback %s', c);
+      if (!this._fList[c].pausable) this._fList[c].execute(this.naturalTime);
+    }
+  }
+
+  private _executePausableCallbacks() {
+    // Debug.info('fList length: ', this._fList.length);
+    for (let c = 0; c < this._fList.length; c++) {
+      // Debug.info('exec loop callback %s', c);
+      if (this._fList[c].pausable) this._fList[c].execute(this.offsetTime);
+    }
   }
 
   /*  private _findFunction(f: Function, context: any): number | null {
@@ -160,9 +174,9 @@ class Loop {
     return null;
   }
 
-  private _newFunObj(f: Function, context: any): FunObj {
+  private _newFunObj(f: Function, context: any, pausable: boolean = true): FunObj {
     let obj = this._funObj.createNew();
-    obj.init(f, context);
+    obj.init(f, context, pausable);
 
     return obj;
   }

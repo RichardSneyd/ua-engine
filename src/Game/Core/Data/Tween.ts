@@ -14,12 +14,13 @@ class Tween {
   private _paused: boolean;
   protected _pausedTime: number;
   protected _time: number;
-  protected _pauseDiff: number;
   private _onCompleteListeners: Function[];
   private _onUpdateListeners: Function[];
   private _onRepeatListeners: Function[];
   private _onStartListeners: Function[];
   protected _events: Events;
+  protected _startTimeOffset: number; // needed because Loop is handling timing, to avoid unintended quirks
+  protected _delay: number = 0;
 
   constructor(events: Events) {
     this._events = events;
@@ -30,7 +31,7 @@ class Tween {
     this._paused = false;
     this._pausedTime = 0;
     this._time = 0;
-    this._pauseDiff = 0;
+    this._delay = 0;
     this._onCompleteListeners = [];
     this._onRepeatListeners = [];
     this._onStartListeners = [];
@@ -177,8 +178,8 @@ class Tween {
     this._data.onStart(() => { this._callOnStart() });
     this._data.onUpdate(this._callOnUpdate.bind(this));
     // turned these off, because pausing of tweens is being handled by Loop.ts, which stops updating the time during pause.
-  //  this._events.on('pause', this.pause, this); 
- //   this._events.on('resume', this.resume, this);
+    this._events.on('pause', this.pause, this); 
+    this._events.on('resume', this.resume, this);
     if (this._easing.split('.').length != 2) Debug.error("invalid easing: %s", easing);
     this.reset();
   }
@@ -219,19 +220,21 @@ class Tween {
   }
 
   update(time: number) {
+    this._time = time;
     if (this._data != null) {
       if (!this._paused) {
-        if (this._object !== undefined && this._object !== null) this._data.update(time - this._pauseDiff);
+        let calc = time - this._delay;
+        Debug.info('tween time for ', this._name, ' ', calc);
+        if (this._object !== undefined && this._object !== null) this._data.update(calc);
       }
     }
-
-    this._time = time;
   }
 
-  pause(tweenName?: string): Tween {
+  pause(): Tween {
+    Debug.info('pause tween ', this._name);
     if (this._data != null) {
       this._paused = true;
-      this._data.pause();
+    //  this._data.pause(); // the internal tween.js pause is super buggy - we use our own instead now
       this._pausedTime = this._time;
     } else {
       Debug.warn("Tween doesn't exist to be paused!");
@@ -258,10 +261,11 @@ class Tween {
 
   resume(): Tween {
     if (this._data != null && this._paused) {
+      Debug.info('resume tween ', this._name);
+      this._delay += (this._time - this._pausedTime);
+      Debug.info('delay: ', this._delay);
       this._paused = false;
-      this._data.resume();
-      let diff = this._time - this._pausedTime;
-      this._pauseDiff = this._pauseDiff + diff;
+    //  this._data.resume(); // the internal tween.js pause/resume is super buggy - we use our own instead now
     } else {
       Debug.warn("Tween._data doesn't exist to be resumed!");
     }

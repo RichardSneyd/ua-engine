@@ -24,7 +24,7 @@ class TweenManager {
     }
     
     init(){
-        this._loop.addFunction(this.update, this); // TweenManager is singleton, so adding looping call directly makes most sense
+        this._loop.addFunction(this.update, this, false); // TweenManager is singleton, so adding looping call directly makes most sense
         this._events.on('shutdown', this._shutdown, this);
         this._events.on('removeForObjects', this._removeForObjects, this);
         Debug.exposeGlobal(this, 'tweens');

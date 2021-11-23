@@ -4,6 +4,7 @@
 class FunObj {
   private _f: any;
   private _context: any;
+  private _pausable: boolean = true;
 
   private _function: any;
 
@@ -19,9 +20,14 @@ class FunObj {
     return this._context;
   }
 
-  init(f: Function, context: any) {
+  get pausable(){
+    return this._pausable;
+  }
+
+  init(f: Function, context: any, pausable: boolean = true) {
     this._f = f;
     this._context = context;
+    this._pausable = pausable;
     this._function = f.bind(context);
   }
 
