@@ -71,7 +71,8 @@ class TweenManager {
         for(let t = 0; t < this._tweens.length; t++){
             for(let o = 0; o < objects.length; o++){
              //   Debug.info('is ', this._tweens[t].object, ' same as ', objects[o]);
-                if(this._tweens[t].object === objects[o])   {
+             let tween = this._tweens[t];
+                if(tween.object !== undefined && tween.object === objects[o])   {
                     this.remove(this._tweens[t]);
                //     Debug.info('yes, removed');
                 } 

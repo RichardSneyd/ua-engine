@@ -67,16 +67,19 @@ class BaseGamifiedLevel extends BaseLevel {
      * @param row the round row to execute
      */
     protected _startNewRound(row: any) {
+        this._manager.audio.stopInstruction();
         this._manager.script.goTo(row);
         this._currentRound = this.activeRow.round;
     }
 
     protected _winRound() {
         // override
+      
     }
 
     protected _loseRound() {
         // override
+      
     }
 
     protected _endRound(...args: any[]) {

@@ -24,7 +24,8 @@ abstract class AbstractEventEmitter {
         this._paused = false;
         this._step = 25; // cannot execute every millisecond, browser isn't fast enough. 40 ticks per second should be adequate.
         this._loop = loop;
-       // this.init();
+      //  this.init();
+
     }
 
     get ticker(){

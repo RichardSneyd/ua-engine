@@ -14,6 +14,7 @@ class SceneEvents extends AbstractEventEmitter {
     constructor(loop: Loop, events: Events) {
         super(loop);
         this._globalEvents = events;
+        this.init();
         //   Debug.info('scene events instantiated');
     }
 
