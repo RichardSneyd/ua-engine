@@ -125,7 +125,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
         this._loader.addSnds(this.manager.script.fileList(['audio_id'])); // 'audio_id' is present in all scripts
         this._loader.addImages(this._manager.script.fileList(['config.bgd']), 'jpg'); // bgd property is common to all types, and added in BaseLevel, so load it here too...
         this._preloadCharacters();
-        let sfx = this._manager.script.fileList(['config.sfx', 'config.trans_sfx']);
+        let sfx = this._manager.script.fileList(['config.sfx', 'config.trans_sfx', 'config.music']);
         //  alert(sfx);
         if (sfx.length > 0) {
             this._loader.addSnds(sfx);
@@ -341,6 +341,13 @@ abstract class BaseLevel extends BaseScene implements ILevel {
                 this._manager.audio.play(this.activeRow.config.sfx, () => {
                     // yo
                 });
+            }
+            if (this.activeRow.config.hasOwnProperty('music')) {
+                let loop = false;
+                if(this.activeRow.config.music_loop) loop = true;
+                this._manager.audio.play(this.activeRow.config.music, () => {
+                    // yo
+                }, loop);
             }
 
         }
