@@ -1,5 +1,4 @@
-import { exit } from "process";
-import UAE from "../../../UAE";
+
 import Game from "../../Game";
 import Debug from "../Debug";
 import Events from "../Events";
@@ -222,6 +221,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
      * @description callback for playInstructionArr in onNewRow when the instructional audio for the current row completes. Override to change logic
      */
     public onInstructionAudioComplete() {
+        this.events.global.emit('instructional_audio_complete'); // listen for this to fire a callback fron newRound after the audio for that row has completed, can be useful
         // override for different logic
         if (!this.manager.script.isFalsy(this.manager.script.active.auto_next)) {
             this.manager.script.goToAutoNext();
@@ -345,7 +345,7 @@ abstract class BaseLevel extends BaseScene implements ILevel {
             if (this.activeRow.config.hasOwnProperty('music')) {
                 let loop = false;
                 if(this.activeRow.config.music_loop) loop = true;
-                this._manager.audio.play(this.activeRow.config.music, () => {
+                this._manager.audio.playMusic(this.activeRow.config.music, () => {
                     // yo
                 }, loop);
             }

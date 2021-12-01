@@ -28,8 +28,8 @@ class BaseGamifiedLevel extends BaseLevel {
         // configRow is set in BaseLevel.start - it's undefined at the init stage
         // UAE.debug.info('rounds..');
         // UAE.debug.info('rounds: ', this.manager.script.rounds);
-        this._selectedRounds = this.manager.utils.coll.shuffle(this._manager.script.rounds).splice(0, this.maxRounds); // return random selection of rounds
-
+        if(this._manager.script.rows[0].config.random == 'true') this._selectedRounds = this.manager.utils.coll.shuffle(this._manager.script.rounds).splice(0, this.maxRounds); // return random selection of rounds
+        else this._selectedRounds = this._manager.script.rounds.splice(0, this.maxRounds);
         super._onActivityScriptInitialized(scriptName, script);
     }
 
