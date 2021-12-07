@@ -28,8 +28,12 @@ class BaseGamifiedLevel extends BaseLevel {
         // configRow is set in BaseLevel.start - it's undefined at the init stage
         // UAE.debug.info('rounds..');
         // UAE.debug.info('rounds: ', this.manager.script.rounds);
-        if(this._manager.script.rows[0].config.random == 'true') this._selectedRounds = this.manager.utils.coll.shuffle(this._manager.script.rounds).splice(0, this.maxRounds); // return random selection of rounds
-        else this._selectedRounds = this._manager.script.rounds.splice(0, this.maxRounds);
+        if (this._manager.script.rows[0].config.hasOwnProperty('random') && this._manager.script.rows[0].config.random == 'false') {
+            this._selectedRounds = this._manager.script.rounds.splice(0, this.maxRounds);
+        }
+        else {
+            this._selectedRounds = this.manager.utils.coll.shuffle(this._manager.script.rounds).splice(0, this.maxRounds); // return random selection of rounds
+        }
         super._onActivityScriptInitialized(scriptName, script);
     }
 
@@ -53,7 +57,7 @@ class BaseGamifiedLevel extends BaseLevel {
         // override
         this._roundEnded = false;
         //  Debug.info('selected: ', this._selectedRounds);
-        let row = this._selectedRounds.pop();
+        let row = this._selectedRounds.shift();
         if (row) {
             this._startNewRound(row);
         }
@@ -74,12 +78,12 @@ class BaseGamifiedLevel extends BaseLevel {
 
     protected _winRound() {
         // override
-      
+
     }
 
     protected _loseRound() {
         // override
-      
+
     }
 
     protected _endRound(...args: any[]) {
