@@ -231,7 +231,9 @@ abstract class AbstractEventEmitter {
      */
     public removeTimer(callback: Function) {
         let timer = this.getTimer(callback);
-        this._removeTimer(timer);
+        Debug.info('removing timer ', timer);
+        if(timer !== null) this._removeTimer(timer);
+        else Debug.warn('cannot remove null timer ', timer);
     }
 
     protected _eventNames(): string[] {
@@ -319,7 +321,7 @@ abstract class AbstractEventEmitter {
     }
 
     protected _removeTimer(timer: any) {
-        if (timer !== null) {
+        if (timer !== null && this._timers.indexOf(timer) !== -1) {
             this._timers.splice(this._timers.indexOf(timer), 1);
         }
         else {
@@ -337,7 +339,7 @@ abstract class AbstractEventEmitter {
      * @description Find the timer object from the _timers array which contains the specified callback mathod 
      * @param callback the callback of the timer object to be retrieved
      */
-    public getTimer(callback: Function): any {
+    public getTimer(callback: Function): object | null {
         for (let x = 0; x < this._timers.length; x++) {
             let timer = this._timers[x];
             if (timer.callback === callback) { // === is a perfect comparison, checking if same instance, instead of just 'value'
@@ -390,7 +392,13 @@ abstract class AbstractEventEmitter {
 
     protected _updateTimers() {
      //   Debug.info('offsetTime: ', this._loop.offsetTime, 'lastTime: ', this._loop.lastTime, 'delta: ', this._loop.delta);
+     //   let lastLength = this._timers.length;
         for (let x = this._timers.length - 1; x >= 0; x--) {
+            // an attempt to compensate if an item as been removed asynchronously during execution of loop (not miss anything) - experimental
+          /*   if(lastLength !== this._timers.length) {
+                x = this._timers.length - 1;
+                lastLength = this._timers.length;
+            } */
             let timer = this._timers[x];
             timer.remaining -= this._loop.delta;
             if (timer.remaining <= 0) {
@@ -403,9 +411,10 @@ abstract class AbstractEventEmitter {
                 }
                 else {
                     this._removeTimer(timer);
+                 //   lastLength = this._timers.length;
                 }
             }
-
+            
         }
     }
 
