@@ -1,5 +1,5 @@
 ## Introduction
-Universal Activity Engine, or UAE, is a HTML5 engine, developed by Highwood Education, for building visually and sonicly rich games and activities. It is specifically designed to support the design of 'audio-driven' learning activities, with the flow of the activity being determined by the audio. UAE utilised a custom DI/IoC framework, and leverages PIXI.js for rendering and Howler.js for audio, at the service layer. It supports spine animations, and now comes with it's own basic level editor which can be accessed via UAE.editor.launch().
+Universal Activity Engine, or UAE, is a HTML5 engine, developed by Highwood Education, for building visually and sonicly rich games and activities. It is specifically designed to expedite the creation of 'audio-driven' learning activities, with the flow of the activity being determined by 'activity scripts', which are json files generated from excel spreadhseets (which are generally created by instructional designers). UAE utilises a custom DI/IoC framework, and leverages PIXI.js for rendering and Howler.js for audio. It supports spine animations, and now comes with it's own basic level editor which can be accessed in the API via UAE.editor.launch().
 
 ## Installation & Build
 ```
@@ -9,7 +9,7 @@ npm install -g dts-bundle
 gulp
 ```
 ## Engine Structure
-Inside the src folder, there are 2 subfolder - Dep and Game. Dep contains the DI framework, which auto-generates an IoC container and saves it ad src/Dep/ControlContainer.ts. All other source files, including core engine files, and services, are in src/Game.
+Inside the src folder, there are 2 subfolders - Dep and Game. Dep contains the DI framework, which auto-generates an IoC container and saves it ad src/Dep/ControlContainer.ts. All other source files, including core engine files, and services, are in src/Game.
 
 ## API Exposure
 to add a class to the API root, you must do 2 things - expose it in the _exposeGlobal() method of src/Game/Core/Game.ts
